@@ -30,7 +30,7 @@ test_that("Mentions only first non-matching element", {
   x <- quote(log(1))
   y <- quote(sqrt(log(2)))
   z <- quote(sqrt(log(1)))
-  
+
   expect_equal(strict_check(z, z), "Correct!")
   expect_equal(strict_check(w, z), does_not_match(w, z))
   expect_equal(strict_check(x, z), does_not_match(x, z))
@@ -56,5 +56,3 @@ test_that("Ignore differences in argument positions", {
   expect_equal(strict_check(b, a), "Correct!")
   expect_equal(strict_check(c, a), expected(a[[3]], .name = "trim"))
 })
-
-
