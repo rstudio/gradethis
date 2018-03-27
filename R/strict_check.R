@@ -1,6 +1,9 @@
-strict_check <- function(user = NULL,
+strict_check <- function(success = "Correct!",
                          solution = NULL,
-                         success = "Correct!") {
+                         user = NULL) {
+  if (is.null(solution)) {
+    return("No solution is provided for this exercise.")
+  }
   message <- detect_mistakes(user, solution)
   if (is.null(message)) {
     return(success)

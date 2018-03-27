@@ -2,15 +2,15 @@ library(tidyverse)
 context("Spot differences")
 
 test_that("Spots differences in atomics", {
-  expect_match(strict_check("1", "1"), "Correct!")
-  expect_equal(strict_check(quote(1), quote(2)), does_not_match(quote(1), quote(2)))
+  expect_match(strict_check(user = "1", solution = "1"), "Correct!")
+  expect_equal(strict_check(user = quote(1), solution = quote(2)), does_not_match(quote(1), quote(2)))
 })
 
 test_that("Spots differences in names", {
   y <- 5
-  expect_equal(strict_check(quote(x), quote(x)), "Correct!")
-  expect_equal(strict_check(quote(x), quote(y)), does_not_match(quote(x), quote(y)))
-  expect_equal(strict_check(quote(5), quote(y)), does_not_match(quote(5), quote(y)))
+  expect_equal(strict_check(user = quote(x), solution = quote(x)), "Correct!")
+  expect_equal(strict_check(user = quote(x), solution = quote(y)), does_not_match(quote(x), quote(y)))
+  expect_equal(strict_check(user = quote(5), solution = quote(y)), does_not_match(quote(5), quote(y)))
 })
 
 test_that("Spots differences in calls", {
@@ -19,10 +19,10 @@ test_that("Spots differences in calls", {
   c <- quote(map(lists, mean))
   d <- quote(map(vecs, mean))
 
-  expect_equal(strict_check(a, a), "Correct!")
-  expect_equal(strict_check(a, b), does_not_match(quote(lists), quote(vecs), ".x"))
-  expect_equal(strict_check(a, c), did_not_expect(a[[4]], .name = "na.rm"))
-  expect_equal(strict_check(c, a), expected(a[[4]], .name = "na.rm"))
+  expect_equal(strict_check(user = a, solution = a), "Correct!")
+  expect_equal(strict_check(user = a, solution = b), does_not_match(quote(lists), quote(vecs), ".x"))
+  expect_equal(strict_check(user = a, solution = c), did_not_expect(a[[4]], .name = "na.rm"))
+  expect_equal(strict_check(user = c, solution = a), expected(a[[4]], .name = "na.rm"))
 })
 
 test_that("Mentions only first non-matching element", {
@@ -31,10 +31,10 @@ test_that("Mentions only first non-matching element", {
   y <- quote(sqrt(log(2)))
   z <- quote(sqrt(log(1)))
 
-  expect_equal(strict_check(z, z), "Correct!")
-  expect_equal(strict_check(w, z), does_not_match(w, z))
-  expect_equal(strict_check(x, z), does_not_match(x, z))
-  expect_equal(strict_check(y, z), does_not_match(quote(2), quote(1)))
+  expect_equal(strict_check(user = z, solution = z), "Correct!")
+  expect_equal(strict_check(user = w, solution = z), does_not_match(w, z))
+  expect_equal(strict_check(user = x, solution = z), does_not_match(x, z))
+  expect_equal(strict_check(user = y, solution = z), does_not_match(quote(2), quote(1)))
 })
 
 test_that("Spots differences in argument names", {
@@ -42,9 +42,9 @@ test_that("Spots differences in argument names", {
   b <- quote(mean(1:10, 1, TRUE))
   c <- quote(mean(1:10, cut = 1, na.rm = TRUE))
 
-  expect_equal(strict_check(a, a), "Correct!")
-  expect_equal(strict_check(b, a), expected(a[[3]], .name = "trim"))
-  expect_equal(strict_check(c, a), did_not_expect(c[[3]], .name = "cut"))
+  expect_equal(strict_check(user = a, solution = a), "Correct!")
+  expect_equal(strict_check(user = b, solution = a), expected(a[[3]], .name = "trim"))
+  expect_equal(strict_check(user = c, solution = a), did_not_expect(c[[3]], .name = "cut"))
 })
 
 test_that("Ignore differences in argument positions", {
@@ -52,7 +52,13 @@ test_that("Ignore differences in argument positions", {
   b <- quote(mean(1:10, na.rm = TRUE, trim = 1))
   c <- quote(mean(1:10, na.rm = TRUE, 1))
 
-  expect_equal(strict_check(a, a), "Correct!")
-  expect_equal(strict_check(b, a), "Correct!")
-  expect_equal(strict_check(c, a), expected(a[[3]], .name = "trim"))
+  expect_equal(strict_check(user = a, solution = a), "Correct!")
+  expect_equal(strict_check(user = b, solution = a), "Correct!")
+  expect_equal(strict_check(user = c, solution = a), expected(a[[3]], .name = "trim"))
 })
+
+test_that("Returns intelligent message when no solution code", {
+  expect_equal(strict_check(), "No solution is provided for this exercise.")
+})
+
+
