@@ -1,20 +1,16 @@
-for_learnr <- function(label, user_code, check_code, envir_result, evaluate_result, success, ...) {
-  message <- detect_mistakes(user_code, solution_code)
-  if (is.null(message)) return(list(message = success, correct = TRUE, type = "success", location = "append"))
-  else return(list(message = message, correct = FALSE, type = "error", location = "append"))
-}
-
-
-strict_check <- function(user, solution, success = "Correct!") {
+strict_check <- function(user = NULL, solution = NULL, success = "Correct!") {
   message <- detect_mistakes(user, solution)
   if (is.null(message)) return(success)
   else return(message)
 }
 
 detect_mistakes <- function(user, solution, .name = NULL) {
+
   # unmatched
-  if (is.null(user)) return(expected(solution, .name))
-  else if (is.null(solution)) return(did_not_expect(user, .name))
+  if (is.null(user) && !is.null(solution)) 
+    return(expected(solution, .name))
+  else if (is.null(solution) && !is.null(user)) 
+    return(did_not_expect(user, .name))
 
   # atomic or name
   else if (is.atomic(user) || is.name(user)) {
@@ -77,6 +73,9 @@ did_not_expect <- function(that, .name = NULL) {
 }
 
 does_not_match <- function(user, solution, .name = NULL) {
+  if (length(solution) > 1) solution <- solution[[1]]
+  if (length(user) > 1) user <- user[[1]]
+  
   if (is.null(.name)) {
     return(glue::glue("I expected {deparse(solution)} where you wrote {deparse(user)}. ",
       "Please try again."))
