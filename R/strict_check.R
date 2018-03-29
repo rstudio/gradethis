@@ -42,6 +42,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{grading_demo()}
 strict_check <- function(success = "Correct!",
                          solution = NULL,
                          user = NULL) {

@@ -30,6 +30,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{grading_demo()}
 grade_learnr <- function(label = NULL,
                          solution_code = NULL,
                          user_code = NULL,

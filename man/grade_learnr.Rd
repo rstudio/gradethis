@@ -45,3 +45,6 @@ of your tutorial.
 Run \code{grading_demo()} to see an example learnr document
 that uses \code{grade_learnr()}.
 }
+\examples{
+\dontrun{grading_demo()}
+}

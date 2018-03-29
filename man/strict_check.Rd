@@ -51,3 +51,6 @@ that the student submits when it runs \code{strict_check()}.
 
 For best results, name all arguments provided in the solution code.
 }
+\examples{
+\dontrun{grading_demo()}
+}
