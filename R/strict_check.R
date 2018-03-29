@@ -79,8 +79,13 @@ detect_mistakes <- function(user,
     solution <- rlang::call_standardise(solution)
     named_args <- union(names(user), names(solution))
     named_args <- named_args[named_args != ""]
+    first_name <- named_args[1]
     for (name in named_args) {
-      message <- detect_mistakes(user[[name]], solution[[name]], name)
+      if (name == first_name) {
+        message <- detect_mistakes(user[[name]], solution[[name]])
+      } else {
+        message <- detect_mistakes(user[[name]], solution[[name]], name)
+      }
       if (!is.null(message)) return(message)
     }
 

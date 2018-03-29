@@ -20,7 +20,7 @@ test_that("Spots differences in calls", {
   d <- quote(map(vecs, mean))
 
   expect_equal(strict_check(user = a, solution = a), "Correct!")
-  expect_equal(strict_check(user = a, solution = b), does_not_match(quote(lists), quote(vecs), ".x"))
+  expect_equal(strict_check(user = a, solution = b), does_not_match(quote(lists), quote(vecs)))
   expect_equal(strict_check(user = a, solution = c), did_not_expect(a[[4]], .name = "na.rm"))
   expect_equal(strict_check(user = c, solution = a), expected(a[[4]], .name = "na.rm"))
 })
