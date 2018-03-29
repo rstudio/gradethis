@@ -75,8 +75,8 @@ detect_mistakes <- function(user,
     if (user[[1]] != solution[[1]]) return(does_not_match(user, solution, .name))
 
     # ensure the same named/matched arguments
-    user <- pryr::standardise_call(user)
-    solution <- pryr::standardise_call(solution)
+    user <- rlang::call_standardise(user)
+    solution <- rlang::call_standardise(solution)
     named_args <- union(names(user), names(solution))
     named_args <- named_args[named_args != ""]
     for (name in named_args) {
