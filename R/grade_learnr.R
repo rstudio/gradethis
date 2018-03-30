@@ -13,8 +13,8 @@
 #' The grader package provides \code{grade_learnr()} for this purpose. To enable
 #' exercise checking in your learnr tutorial, set
 #' \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
-#' of your tutorial. 
-#' 
+#' of your tutorial.
+#'
 #' Run \code{grading_demo()} to see an example learnr document
 #' that uses \code{grade_learnr()}.
 #'
@@ -39,10 +39,54 @@ grade_learnr <- function(label = NULL,
                          evaluate_result = NULL,
                          ...) {
 
+  # Sometimes no user code is provided, but
+  # that means there is nothing to check. Also,
+  # you do not want to parse NULL
+  if (is.null(user_code)) {
+    return(list(
+      message = "I didn't receive your code. Did you write any?",
+      correct = FALSE,
+      type = "error",
+      location = "append"
+    ))
+  } else {
+    user_code <- parse(text = user_code)
+    if (length(user_code) == 0) {
+      return(list(
+        message = "I didn't receive your code. Did you write any?",
+        correct = FALSE,
+        type = "error",
+        location = "append"
+      ))
+    }
+  }
+
+  # Sometimes no solution is provided, but that
+  # means there is nothing to check against. Also,
+  # you do not want to parse NULL
+  if (is.null(solution_code)) {
+    return(list(
+      message = "No solution is provided for this exercise.",
+      correct = TRUE,
+      type = "info",
+      location = "append"
+    ))
+  } else {
+    solution_code <- parse(text = solution_code)
+    if (length(solution_code) == 0) {
+      return(list(
+        message = "No solution is provided for this exercise.",
+        correct = TRUE,
+        type = "info",
+        location = "append"
+      ))
+    }
+  }
+
   # Run checking code to get feedback
-  grading_code <- pryr::call_standardise(parse(text = check_code)[[1]])
-  grading_code$user <- rlang::as_quosure(parse(text = user_code)[[1]])
-  grading_code$solution <- rlang::as_quosure(parse(text = solution_code)[[1]])
+  grading_code <- pryr::standardise_call(parse(text = check_code)[[1]])
+  grading_code$user <- rlang::as_quosure(user_code[[1]])
+  grading_code$solution <- rlang::as_quosure(solution_code[[1]])
 
   feedback <- eval(grading_code)
 
