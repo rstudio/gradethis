@@ -46,14 +46,31 @@
 strict_check <- function(success = "Correct!",
                          solution = NULL,
                          user = NULL) {
+
+  # Sometimes no solution is provided, but that
+  # means there is nothing to check against
   if (is.null(solution)) {
     return("No solution is provided for this exercise.")
-  }
-  message <- detect_mistakes(user, solution)
-  if (is.null(message)) {
+
+    # Sometimes no user code is provided, but
+    # that means there is nothing to check
+  } else if (is.null(user)) {
+    return("I didn't receive your code. Did you write any?")
+
+    # Correct answers are all alike
+  } else if (suppressWarnings(user == solution)) {
     return(success)
+
+    # But incorrect answers are each incorrect in their own way
+    # (and we should let the student know how their answer is
+    # incorrect)
   } else {
-    return(message)
+    message <- detect_mistakes(user, solution)
+    if (is.null(message)) {
+      return(success)
+    } else {
+      return(message)
+    }
   }
 }
 
@@ -61,37 +78,37 @@ detect_mistakes <- function(user,
                             solution,
                             .name = NULL) {
 
-  # Stop and notify the student if their value has no 
+  # Stop and notify the student if their value has no
   # match in the solution (or vice versa)
   if (is.null(user) && !is.null(solution)) {
     return(expected(solution, .name))
   } else if (is.null(solution) && !is.null(user)) {
     return(did_not_expect(user, .name))
 
-  # directly compare values that are atomics or names
+    # directly compare values that are atomics or names
   } else if (is.atomic(user) || is.name(user)) {
     if (user != solution) return(does_not_match(user, solution, .name))
 
-  # iterate over the elements of a call (or pairlist?)
+    # iterate over the elements of a call (or pairlist?)
   } else {
-    
-    # calls should be treated the same 
+
+    # calls should be treated the same
     # whether or not they use the pipe
     user <- unpipe(user)
     solution <- unpipe(solution)
-    
+
     # ensure the submission and the solution use the same call
     if (user[[1]] != solution[[1]]) return(does_not_match(user, solution, .name))
 
     # match unnamed arguments to names as R would, then compare the named
-    # elements in the submission to the named elements in the solution one 
+    # elements in the submission to the named elements in the solution one
     # at a time
     user <- pryr::standardise_call(user)
     solution <- pryr::standardise_call(solution)
     named_args <- union(names(user), names(solution))
     named_args <- named_args[named_args != ""]
-    first_name <- named_args[1] # it would be distracting to name the 
-                                # first argument in feedback (e.g. .x)
+    first_name <- named_args[1] # it would be distracting to name the
+    # first argument in feedback (e.g. .x)
     for (name in named_args) {
       if (name == first_name) {
         message <- detect_mistakes(user[[name]], solution[[name]])
@@ -117,7 +134,7 @@ detect_mistakes <- function(user,
     }
 
     max_length <- max(length(user_unnamed), length(solution_unnamed))
-    
+
     for (i in seq_len(max_length)) {
       message <- detect_mistakes(user_unnamed[[i]], solution_unnamed[[i]])
       if (!is.null(message)) return(message)

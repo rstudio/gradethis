@@ -64,6 +64,10 @@ test_that("Returns intelligent message when no solution code", {
   expect_equal(strict_check(), "No solution is provided for this exercise.")
 })
 
+test_that("Returns intelligent message when no user code", {
+  expect_equal(strict_check(solution = quote(5)), "I didn't receive your code. Did you write any?")
+})
+
 test_that("Spot differences when pipes are involved", {
   pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length))
   func <- quote(select(iris %>% filter(Species == "Virginica"), Sepal.Length))
