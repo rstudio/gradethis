@@ -85,8 +85,8 @@ grade_learnr <- function(label = NULL,
 
   # Run checking code to get feedback
   grading_code <- pryr::standardise_call(parse(text = check_code)[[1]])
-  grading_code$user <- rlang::as_quosure(user_code[[1]])
-  grading_code$solution <- rlang::as_quosure(solution_code[[1]])
+  grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]])
+  grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]])
 
   feedback <- eval(grading_code)
 
