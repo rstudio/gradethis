@@ -50,12 +50,12 @@ strict_check <- function(success = "Correct!",
   # Sometimes no solution is provided, but that
   # means there is nothing to check against
   if (is.null(solution)) {
-    return("No solution is provided for this exercise.")
+    stop("No solution is provided for this exercise.")
 
     # Sometimes no user code is provided, but
     # that means there is nothing to check
   } else if (is.null(user)) {
-    return("I didn't receive your code. Did you write any?")
+    stop("I didn't receive your code. Did you write any?")
 
     # Correct answers are all alike
   } else if (suppressWarnings(user == solution)) {

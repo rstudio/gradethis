@@ -60,12 +60,12 @@ test_that("Ignore differences in argument positions", {
   expect_equal(strict_check(user = a, solution = d), did_not_expect(a[[3]], .name = "trim"))
 })
 
-test_that("Returns intelligent message when no solution code", {
-  expect_equal(strict_check(), "No solution is provided for this exercise.")
+test_that("Returns intelligent error when no solution code", {
+  expect_error(strict_check(), "No solution is provided for this exercise.")
 })
 
-test_that("Returns intelligent message when no user code", {
-  expect_equal(strict_check(solution = quote(5)), "I didn't receive your code. Did you write any?")
+test_that("Returns intelligent error when no user code", {
+  expect_error(strict_check(solution = quote(5)), "I didn't receive your code. Did you write any?")
 })
 
 test_that("Spot differences when pipes are involved", {
