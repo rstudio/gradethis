@@ -51,14 +51,48 @@ test_that("Ignore differences in argument positions", {
   a <- quote(mean(1:10, trim = 1, na.rm = TRUE))
   b <- quote(mean(1:10, na.rm = TRUE, trim = 1))
   c <- quote(mean(1:10, na.rm = TRUE, 1))
+  d <- quote(mean(1:10))
 
   expect_equal(strict_check(user = a, solution = a), "Correct!")
   expect_equal(strict_check(user = b, solution = a), "Correct!")
   expect_equal(strict_check(user = c, solution = a), expected(a[[3]], .name = "trim"))
+  expect_equal(strict_check(user = d, solution = a), expected(a[[3]], .name = "trim"))
+  expect_equal(strict_check(user = a, solution = d), did_not_expect(a[[3]], .name = "trim"))
 })
 
 test_that("Returns intelligent message when no solution code", {
   expect_equal(strict_check(), "No solution is provided for this exercise.")
+})
+
+test_that("Spot differences when pipes are involved", {
+  pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length))
+  func <- quote(select(iris %>% filter(Species == "Virginica"), Sepal.Length))
+  func1 <- quote(select(filter(iris, Species == "Virginica"), Sepal.Length))
+  pipe1 <- quote(iris %>% filter(Species == "Virginica") %>% select(Petal.Length))
+  pipe2 <- quote(iris %>% arrange(Species) %>% select(Sepal.Length))
+  pipe3 <- quote(iris %>% lm(Sepal.Length ~ Sepal.Width, data = .))
+  func3 <- quote(lm(Sepal.Length ~ Sepal.Width, data = iris))
+  
+  expect_equal(strict_check(user = func,  solution = pipe), "Correct!")
+  expect_equal(strict_check(user = func1, solution = pipe), "Correct!")
+  expect_equal(strict_check(user = pipe,  solution = func), "Correct!")
+  expect_equal(strict_check(user = pipe,  solution = func1), "Correct!")
+  expect_equal(strict_check(user = pipe,  solution = pipe), "Correct!")
+  expect_equal(strict_check(user = func,  solution = func1), "Correct!")
+  expect_equal(strict_check(user = func1, solution = func1), "Correct!")
+  
+  expect_equal(strict_check(user = pipe1, solution = pipe), does_not_match(quote(Petal.Length), quote(Sepal.Length)))
+  expect_equal(strict_check(user = pipe1, solution = func), does_not_match(quote(Petal.Length), quote(Sepal.Length)))
+  expect_equal(strict_check(user = pipe1, solution = func1), does_not_match(quote(Petal.Length), quote(Sepal.Length)))
+  expect_equal(strict_check(user = pipe2, solution = pipe), does_not_match(quote(arrange), quote(filter)))
+  expect_equal(strict_check(user = pipe2, solution = func), does_not_match(quote(arrange), quote(filter)))
+  expect_equal(strict_check(user = pipe2, solution = func1), does_not_match(quote(arrange), quote(filter)))
+  
+  
+  expect_equal(strict_check(user = func3, solution = pipe3), "Correct!")
+  expect_equal(strict_check(user = pipe3, solution = func3), "Correct!")
+  expect_equal(strict_check(user = pipe3, solution = pipe3), "Correct!")
+  
 })
 
 
