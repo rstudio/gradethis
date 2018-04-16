@@ -1,0 +1,49 @@
+---
+title: "Recording demo"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(grader)
+library(googlesheets)
+
+# Specify a googlesheet to record to
+demo_sheet <- gs_url("https://docs.google.com/spreadsheets/d/1D2qEB-PrNrHEEjrBYY0-qW4hGbJOZcb_SgV6jG3ceQA/edit#gid=0")
+
+options(tutorial.event_recorder = record_learnr(gs = demo_sheet))
+tutorial_options(exercise.timelimit = 60, exercise.checker = grade_learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Topic 1
+
+### Exercise 
+
+Here is a number. You can do great things with it, like this:  
+
+* Take the square root of the log of the number. Then click Submit Answer.
+
+```{r number, exercise = TRUE}
+1
+```
+
+```{r number-hint-1}
+"You can take the log with `log()`"
+```
+
+```{r number-hint-2}
+"You can take the square root with `sqrt()`"
+```
+
+```{r number-solution}
+sqrt(log(1))
+```
+
+```{r number-check}
+strict_check("Good job. Don't worry, things will soon get harder.")
+```
+
+
