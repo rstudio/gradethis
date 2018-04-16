@@ -15,7 +15,6 @@ extract_chunks <- function(file) {
 #'
 #' @param file The filepath to a learnr tutorial
 #'
-#' @return
 #' @export
 test_solutions <- function(file) {
 
@@ -31,9 +30,9 @@ test_solutions <- function(file) {
     setup_chunk <- chunks[[setup_label]]
 
     # If so, evaluate first
-    if (!is_null(exercise_setup)) {
+    if (!purrr::is_null(exercise_setup)) {
       eval(parse(text = chunks[[exercise_setup]]))
-    } else if (!is.null(setup_chunk)) {
+    } else if (!purrr::is_null(setup_chunk)) {
       eval(parse(text = setup_chunk))
     }
 
@@ -48,7 +47,22 @@ test_solutions <- function(file) {
     eval(parse(text = unlist(chunks[["setup"]])))
   }
 
-  # test solutions
   solutions <- chunks[grep("-solution$", names(chunks))]
-  imap(solutions, test_solution)
+  safe_test <- purrr::safely(test_solution, otherwise = NULL)
+  results <- purrr::imap(solutions, safe_test)
+  format_results(results)
 }
+
+format_results <- function(res) {
+  final <- purrr::imap(res, ~{
+    if(is.null(.x$error)) {
+      .x$result
+    } else {
+      .x$error
+    }
+  })
+  names(final) <- sub("-solution$", "", names(final))
+  final
+}
+  
+# add an S3 class, write a format method, use crayon and conditionMessage(e4) for errors.
