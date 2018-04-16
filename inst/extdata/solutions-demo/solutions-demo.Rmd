@@ -1,0 +1,136 @@
+---
+title: "Solutions demo"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(purrr)
+
+params <- list(
+  "n"  = c(1, 2),
+  "mu" = c(0, 1),
+  "sd" = c(1, 2)
+)
+
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## Hello
+
+### \t 
+
+This tutorial relies on several different exercise setup schemes. A solution checker function will need to navigate these schemes to ensure that each solution runs correctly given the setup code that is associated with it.
+
+### Exercise 0
+
+Exercise 0 is a stand alone solution. It requires zero setup code.
+
+* Type `log(1)`. Then click Submit Answer.
+
+```{r e0, exercise=TRUE}
+
+```
+
+```{r e0-solution}
+log(1)
+```
+
+### Exercise 1
+
+Exercise 1 requires `params`, which is an object that is defined in the global `setup` chunk of this document.
+
+* Type `length(params)`. Then click Submit Answer.
+
+
+```{r e1, exercise = TRUE}
+
+```
+
+```{r e1-solution}
+length(params)
+```
+
+```{r e1-check}
+"Good job!"
+```
+
+### Exercise 2
+
+Exercise 2 requires two objects created in setup:
+
+1. `params`, which is an object that is defined in the global `setup` chunk.
+1. `rlnorm2`, which is a function created in a chunk referenced with the `exercise.setup` chunk option.
+
+```{r rlnorm2}
+rlnorm2 <- function(n, mu, sd) {
+  rlnorm(n, meanlog = mu, sdlog = sd)
+}
+```
+
+* Type `params %>% pmap(rlnorm2)`. Then click Submit Answer.
+
+```{r e2, exercise = TRUE, exercise.setup = "rlnorm2"}
+
+```
+
+```{r e2-solution}
+params %>% pmap(rlnorm2)
+```
+
+```{r e2-check}
+"Good job!"
+```
+
+### Exercise 3
+
+Exercise 3 requires three objects created in setup:
+
+1. `params`, which is an object that is defined in the global `setup` chunk.
+1. `rlnorm2` and `rcauchy2`, which are both functions created in a chunk referenced by the syntax of its chunk label (which ends in `-setup`).
+
+* Type `list(rlnorm2, rcauchy2) %>% invoke_map(transpose(params))`. Then click Submit Answer.
+
+```{r e3-setup}
+rlnorm2 <- function(n, mu, sd) {
+  rlnorm(n, meanlog = mu, sdlog = sd)
+}
+
+rcauchy2 <- function(n, mu, sd) {
+  rcauchy(n, location = mu, scale = sd)
+}
+```
+
+```{r e3, exercise = TRUE}
+
+```
+
+```{r e3-solution}
+list(rcauchy2, rcauchy2) %>% invoke_map(transpose(params))
+```
+
+```{r e3-check}
+"Good job!"
+```
+
+### Exercise 4
+
+This exercise has a solution that returns an error.
+
+* Click Submit Answer.
+
+```{r e4, exercise = TRUE}
+
+```
+
+```{r e4-solution}
+lists2
+```
+
+```{r e4-check}
+"Good Job!"
+```
+
+
