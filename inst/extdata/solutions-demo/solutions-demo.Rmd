@@ -133,4 +133,18 @@ lists2
 "Good Job!"
 ```
 
+### Exercise 5
+
+This exercise works, but the solution returns a warning message.
+
+* Click Submit Answer.
+
+```{r e5, exercise = TRUE}
+
+```
+
+```{r e5-solution}
+warning("This is a warning message!")
+```
+
 
