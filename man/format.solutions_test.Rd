@@ -7,8 +7,6 @@
 \method{format}{solutions_test}(x, ...)
 }
 \arguments{
-\item{x}{}
-
 \item{...}{}
 }
 \description{
