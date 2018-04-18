@@ -16,43 +16,20 @@ extract_chunks <- function(file) {
 #' @param file The filepath to a learnr tutorial
 #'
 #' @export
-test_solutions <- function(file,
+test_solutions <- function(file = NULL,
                            show.answers = FALSE,
                            .params = NULL) {
   
-  safe_eval <- purrr::safely(purrr::quietly(eval))
-  
-  safe_test <- function(label, envir) {
-    safe_eval(parse(text = chunks[[label]]), envir = parent.frame(2))
-  }
-  
-  test_solution <- function(label) {
-    exercise <- sub("-solution", "", label)
-    if (grepl("-solution$", label) && !(exercise %in% names(chunks))) {
-      stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
+  if (is.null(file)) {
+    files <- dir()
+    rmds <- files[grepl("(.Rmd|.rmd)$", files)]
+    if (length(rmds) == 0) {
+      stop("No .Rmd file found in the current directory. Please provide a file path.", call. = FALSE)
+    } else if (length(rmds) > 1) {
+      stop("Multiple .Rmd files found in the current directory. Please provide a file path.", call. = FALSE)
+    } else {
+      file <- rmds
     }
-
-    code <- chunks[[label]]
-    # Does the chunk require a setup chunk?
-    setup_option <- attr(chunks[[exercise]], "chunk_opts")$exercise.setup
-    setup_suffix <- paste0(exercise, "-setup")
-
-    if (!is.null(setup_option)) {
-      setup <- safe_test(setup_option)
-      print_result(setup_option, 
-                   setup, 
-                   show.answers = show.answers)
-    } else if (setup_suffix %in% names(chunks)) {
-      setup <- safe_test(setup_suffix)
-      print_result(setup_suffix, 
-                   setup,
-                   show.answers = show.answers)
-    }
-
-    result <- safe_test(label)
-    print_result(label, 
-                 result,
-                 show.answers = show.answers)
   }
   
   # Exercises have access to all computations
@@ -67,9 +44,45 @@ test_solutions <- function(file,
   labels <- names(chunks)
   solutions <- grep("-solution$", labels, value = TRUE)
 
-  for (solution in solutions) {
-    test_solution(solution)
+  purrr::walk(solutions, 
+              test_solution, 
+              chunks = chunks, 
+              show.answer = show.answers)
+}
+
+test_solution <- function(label, chunks, show.answer = FALSE) {
+  exercise <- sub("-solution", "", label)
+  if (grepl("-solution$", label) && !(exercise %in% names(chunks))) {
+    stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
   }
+  
+  code <- chunks[[label]]
+  # Does the chunk require a setup chunk?
+  setup_option <- attr(chunks[[exercise]], "chunk_opts")$exercise.setup
+  setup_suffix <- paste0(exercise, "-setup")
+  
+  if (!is.null(setup_option)) {
+    setup <- safe_test(setup_option)
+    print_result(setup_option, 
+                 setup, 
+                 show.answers = show.answer)
+  } else if (setup_suffix %in% names(chunks)) {
+    setup <- safe_test(setup_suffix)
+    print_result(setup_suffix, 
+                 setup,
+                 show.answers = show.answer)
+  }
+  
+  result <- safe_test(label)
+  print_result(label, 
+               result,
+               show.answers = show.answer)
+}
+
+safe_eval <- purrr::safely(purrr::quietly(eval))
+
+safe_test <- function(label, envir) {
+  safe_eval(parse(text = chunks[[label]]), envir = parent.frame(2))
 }
 
 print_result <- function(label, result, show.answers = FALSE) {    
