@@ -28,6 +28,11 @@ This tutorial relies on several different exercise setup schemes. A solution che
 
 Exercise 0 is a stand alone solution. It requires zero setup code.
 
+```{r eval = FALSE}
+(pm <- "pardon me")
+```
+
+
 * Type `log(1)`. Then click Submit Answer.
 
 ```{r e0, exercise=TRUE}
@@ -62,7 +67,7 @@ length(params)
 Exercise 2 requires two objects created in setup:
 
 1. `params`, which is an object that is defined in the global `setup` chunk.
-1. `rlnorm2`, which is a function created in a chunk referenced with the `exercise.setup` chunk option.
+1. `rlnorm2`, which is a function created in a chunk that is referenced with the `exercise.setup` chunk option.
 
 ```{r rlnorm2}
 rlnorm2 <- function(n, mu, sd) {

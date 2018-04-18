@@ -4,7 +4,7 @@
 \alias{test_solutions}
 \title{Test Solutions}
 \usage{
-test_solutions(file, show.answers = FALSE)
+test_solutions(file, show.answers = FALSE, .params = NULL)
 }
 \arguments{
 \item{file}{The filepath to a learnr tutorial}
