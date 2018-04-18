@@ -13,7 +13,31 @@ extract_chunks <- function(file) {
 
 #' Test Solutions
 #'
-#' @param file The filepath to a learnr tutorial
+#' \code{test_solutions} checks that the solution and setup code provided in a
+#' learnr tutorial runs without errors or warnings. When checking code chunks,
+#' 
+#' \code{test_solutions} applies the same scoping rules that are applied within
+#' the tutorial: every solution chunk has access to the results of evaluated
+#' knitr chunks that are not associated with learnr exercises. If a solution is
+#' associated with an exercise that has a setup chunk, the setup chunk is
+#' evaluated (and tested) before the solution chunk.
+#'
+#' @param file The filepath to a learnr tutorial. If a file path is not provided
+#'   and only a single .Rmd file exists in the current directory,
+#'   \code{test_solutions} will test that .Rmd file.
+#' @param show.answers TRUE or FALSE. Should solution results be printed in the
+#'   output?
+#' @param .params A list of parameters to use when evauating code in a
+#'   parameterized R Markdown document. This should be identical to the list
+#'   that you would use to render the document.
+#'
+#' @return \code{test_solutions} does not return a value; it prints an
+#'   informative summary of the testing results. Each solution and setup block
+#'   is listed by name alongside a result status. Within the RStudio IDE, chunks
+#'   that run without an error or warning are printed with a green checkmark.
+#'   Chunks that run but return a warning message are printed with a yellow
+#'   checkmark and the warning message. Chunks that produce an error are printed
+#'   with a red x and the error message.
 #'
 #' @export
 test_solutions <- function(file = NULL,
