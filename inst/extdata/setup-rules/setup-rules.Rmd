@@ -1,0 +1,193 @@
+---
+title: "learnr Setup Rules v 0.9.2"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+## Code execution
+
+### \t
+
+When you render a learnr tutorial, R Markdown will start a fresh R session and then evaluate all of the non-exercise related knitr chunks in the global environment of that R session. This includes the global setup chunk.
+
+```{r setup}
+# the setup chunk
+library(learnr)
+(a <- Sys.time())
+environment()
+```
+
+```{r}
+x <- 1
+environment()
+```
+
+### Exercise execution
+
+When you run an exercise chunk, learnr will create a new environment to run the code in. The parent of this environment will be the global environment. As a result, the exercise code will have access to every object created in a non-exercise chunk---even if the object is created in a non-exercise chunk that appears _after_ the exercise. 
+
+* Click Run Code. The exercise works because R Markdown has already evaluated the chunks that creat `x` and `y`.
+
+```{r e1, exercise = TRUE}
+(z <- x + y)
+environment()
+parent.env(environment())
+```
+
+Note that the chunk that creates `y` appears _afer_ the exercise:
+
+```{r}
+y <- 1
+environment()
+```
+
+### \t
+
+Everytime you run an exercise, R Markdown creates a new child environment of the global environment to run the code in. In fact, R Markdown will create a new child environment _each time_ you run the same exercise. 
+
+* Run the code below several times. Compare the results to each other as well as to the environment displayed for the previous exercise.
+
+```{r e2, exercise = TRUE}
+environment()
+parent.env(environment())
+```
+
+### \t
+
+This constraint is imposed so that users can execute exercises in any order (i.e. correct execution of one exercise never depends on completion of a prior exercise).
+
+* So for example, the code below will fail because `z` was created in an exercise. Hence, `z` was saved in an environment that is not in this exercises search path. 
+
+```{r e3, exercise = TRUE}
+z
+```
+
+## Exercise setup
+
+### \t
+
+Sometimes an exercise will require an object that is not created in a non-exercise chunk. For example, an exercise may require an object that was created in a previous exercise, like `z`.
+
+You can provide these objects by creating a setup chunk for the exercise. R Markdown will evaluate the setup chunk before it evaluates the code in the exercise. 
+
+There are two ways to provide setup chunks:
+
+### 1. The `-setup` suffix
+
+Create a setup chunk that’s specific to an exercise using a `-setup` chunk suffix. To do this give your exercise chunk a label (e.g. `filter`) then add another chunk with the same label plus a `-setup` suffix (e.g. `filter-setup`). 
+
+When you run the exercise R Markdown will proceed in the normal way. It will:
+
+1. Create a new environment to run the exercise code in
+1. Set the parent of that environment to the global environment
+
+R Markdown will then run the code in the setup chunk before running the code in the exercise chunk.
+
+### \t
+
+To illustrate, the exercise chunk below is labeled `s` in the .rmd file. It is accompanied by a setup chunk labeled `s-setup` that looks like this.
+
+```{r eval = FALSE}
+s <- 1
+environment()
+parent.env(environment())
+```
+
+* Click Run code. The code will work because the setup chunk provides a value for `s`. You can verify that both the setup code and the exercise code are run in the same, new environment.
+
+```{r s, exercise = TRUE}
+s
+environment()
+parent.env(environment())
+```
+
+```{r s-setup}
+s <- 1
+environment()
+parent.env(environment())
+```
+
+### \t
+
+Note that my description of the setup chunk above was not the setup chunk. I made a duplicate, unevaluated chunk to show you what my setup chunk looked like. Why? Because R Markdown treats setup chunks in a special way. R Markdown will not:
+
+1. Evaluate a setup chunk when it renders the document
+1. Display the content of a setup chunk within the document
+
+Moreover, when you use the `-setup` method to create a setup chunk, R Markdown will only evaluate the setup code when you run the exercise that the setup code is associated with. To illustrate, this new exercise labelled `t` will fail because it is not associated with the setup chunk labelled `s-setup`.
+
+```{r t, exercise = TRUE}
+s
+```
+
+### 2. The `exercise.setup` option
+
+You can use an exercise's `exercise.setup` chunk attribute to provide the label of another chunk that will perform setup tasks. When you do, this chunk becomes a setup chunk associated with the exercise. Importantly, R Markdonw will not evaluate the chunk upon render nor show its results within the document.
+
+This method let's you associate the same setup chunk with multiple exercises.
+
+To illustrate, I've created a chunk labelled `u` that looks like this
+
+```{r eval = FALSE}
+# chunk labelled u
+u <- 100
+environment()
+parent.env(environment())
+```
+
+```{r u}
+u <- 100
+environment()
+parent.env(environment())
+```
+
+The first two of these exercises include the chunk attribute `exercise.setup = "u"`, but the last does not (you will need to examine the .rmd file to see these attributes). As a result, the first two exercises will run successfully, but the last will not.
+
+```{r e4, exercise = TRUE, exercise.setup = "u"}
+u
+environment()
+parent.env(environment())
+```
+
+```{r e5, exercise = TRUE, exercise.setup = "u"}
+u
+environment()
+parent.env(environment())
+```
+
+```{r e6, exercise = TRUE}
+u
+environment()
+parent.env(environment())
+```
+
+## What ifs
+
+### Why not both?
+
+If you specify an `exercise.setup` chunk attribute _and_ create a `-setup` chunk for the same exercise, R Markdown will ignore the `-setup` chunk.
+
+At the moment, you also cannot specify more than one chunk in the `exercise.setup` chunk attribute. If you do, R Markdown will ignore all setup chunks listed in the attribute for that exercise.
+
+### What about `dependson`?
+
+R Markdown (that is knitr) chunks also recognize a `dependson` chunk attribute. `dependson` is used to help knitr update cached results in documents that use caching. You cannot use `dependson` as a substitute for a setup method.
+
+If you set the `dependson` chunk attribute for an exercise, R Markdown will treat the specified chunk as a normal non-exercise chunk. It will be evaluated when the document is rendered, and its results will be included in the document in the normal way.
+
+For example, the exercise below lists this chunk as a `dependson`. 
+
+```{r v}
+v <- 50
+environment()
+```
+
+* Click Run Code. The code runs because the output of the above chunk is included in the global environment; the output can be accessed by any chunk.
+
+```{r e7, exercise = TRUE, dependson = "v"}
+v
+environment()
+parent.env(environment())
+```
+
+

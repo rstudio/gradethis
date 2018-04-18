@@ -147,33 +147,3 @@ This exercise works, but the solution returns a warning message.
 warning("This is a warning message!")
 ```
 
-### Exercise 6
-
-This exercise depends on two objects defined in odd setup places:
-
-1. `a` which is defined in the exercise set chunk
-1. `b` which is defined in a chunk listed in the dependson option of the exercise setup chunk.
-
-* Type `a + b`, then click Submit Answer.
-
-```{r e6, exercise = TRUE}
-
-```
-
-```{r e6-solution}
-a + b
-```
-
-```{r e6-check}
-"Good Job!"
-```
-
-
-```{r e6-setup, dependson="e6ss"}
-a <- 1
-```
-
-```{r e6ss}
-b <- 2
-```
-
