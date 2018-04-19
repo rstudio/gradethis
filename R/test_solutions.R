@@ -86,18 +86,26 @@ test_solution <- function(label, chunks, show.answer = FALSE) {
   setup_suffix <- paste0(exercise, "-setup")
   
   if (!is.null(setup_option)) {
-    setup <- safe_test(setup_option)
-    print_result(setup_option, 
-                 setup, 
-                 show.answers = show.answer)
+    if (!is.character(setup_option)) {
+      print_author_error(label, "exercise.setup chunk_opt is not a single string.")
+      return()
+    } else if (!(setup_option %in% names(chunks))) {
+      print_author_error(label, "exercise.setup chunk_opt points to unknown chunk.")
+      return()
+    } else {
+      setup <- safe_test(setup_option, chunks = chunks)
+      print_result(setup_option, 
+                   setup, 
+                   show.answers = show.answer)
+    }
   } else if (setup_suffix %in% names(chunks)) {
-    setup <- safe_test(setup_suffix)
+    setup <- safe_test(setup_suffix, chunks = chunks)
     print_result(setup_suffix, 
                  setup,
                  show.answers = show.answer)
   }
   
-  result <- safe_test(label)
+  result <- safe_test(label, chunks = chunks)
   print_result(label, 
                result,
                show.answers = show.answer)
@@ -105,7 +113,7 @@ test_solution <- function(label, chunks, show.answer = FALSE) {
 
 safe_eval <- purrr::safely(purrr::quietly(eval))
 
-safe_test <- function(label, envir) {
+safe_test <- function(label, chunks) {
   safe_eval(parse(text = chunks[[label]]), envir = parent.frame(2))
 }
 
@@ -126,5 +134,14 @@ print_result <- function(label, result, show.answers = FALSE) {
     cat(crayon::green(clisymbols::symbol$tick), "\n")
     if (show.answers) print(result$result$result)
   }
+}
+
+print_author_error <- function(label, message){
+  purple <- crayon::make_style("purple")
+  cat(label, crayon::silver(": "), sep = "")
+  cat(
+    purple(clisymbols::symbol$warning),
+    purple(message), "\n"
+  )
 }
 
