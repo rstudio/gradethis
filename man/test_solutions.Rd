@@ -25,7 +25,9 @@ that you would use to render the document.}
   that run without an error or warning are printed with a green checkmark.
   Chunks that run but return a warning message are printed with a yellow
   checkmark and the warning message. Chunks that produce an error are printed
-  with a red x and the error message.
+  with a red x and the error message. Chunks that contain an error related to
+  how learnr processes the chunk contain are printed with a purple error
+  symbol followed by a message.
 }
 \description{
 \code{test_solutions} checks that the solution and setup code provided in a
