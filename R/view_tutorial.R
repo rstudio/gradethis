@@ -12,7 +12,7 @@
 #'
 #' @export
 view_tutorial <- function(name, package) {
-  
+
   # launch in separate R session
   r2 <- callr::r_bg(function(name, package) {
     learnr::run_tutorial(
@@ -24,25 +24,26 @@ view_tutorial <- function(name, package) {
         host = "127.0.0.1"
       )
     )
-  }, supervise = TRUE,
-  args = list(name = name, package = package))
-  
-  # If you open the viewer before the app loads, it will 
+  },
+  supervise = TRUE,
+  args = list(name = name, package = package)
+  )
+
+  # If you open the viewer before the app loads, it will
   # display a blank screen until you click refresh
   status <- r2$read_error()
   n <- 1
-  while(!grepl("Listening", status)) {
+  while (!grepl("Listening", status)) {
     status <- r2$read_error()
     Sys.sleep(0.5)
     n <- n + 1
     if (n == 20) {
-      print("Click refresh in the viewer pane if you do not see a tutorial.")
+      print("Click refresh in the Viewer pane if you do not see a tutorial.")
       break
     }
   }
-  
-  viewer <- getOption("viewer")
-  viewer(
+
+  rstudioapi::viewer(
     url = "http://localhost:8000",
     height = "maximize"
   )
@@ -50,6 +51,12 @@ view_tutorial <- function(name, package) {
 
 
 #' Add a tutorial to a project
+#'
+#' Warning: \code{add_tutorial} does not work as written because it assumes that
+#' R will recognize that RStudio IDE is running when R evaluates .Rprofile. This
+#' is an incorrect assumption. However, \code{add_tutorial} and
+#' \code{remove_tutorial} should be easy to adapt to a an RStudio-specific
+#' startup file should RStudio implement one.
 #'
 #' \code{add_tutorial()} inserts a call to \link[grader]{\code{view_tutorial()}}
 #' into the .Rprofile file contained in the current working directory. As a
@@ -68,22 +75,60 @@ view_tutorial <- function(name, package) {
 #' @seealso \link[grader]{\code{view_tutorial}}
 #'
 #' @param name A character string. The name of a tutorial saved in a package.
-#' @param package A character string. The name of the package that contains a tutorial.
+#' @param package A character string. The name of the package that contains a
+#'   tutorial.
 #'
 #' @export
 add_tutorial <- function(name, package) {
   rprofile <- paste0(getwd(), "/.Rprofile")
 
+  # load packages
+  
   # Check that the .Rprofile does not already load a tutorial
   if (file.exists(rprofile)) {
     text <- readr::read_file(rprofile)
     if (stringr::str_detect(text, "view_tutorial\\(")) {
-      stop("This project already loads a tutorial upon opening. Please remove the tutorial before proceeding by opening the .Rprofile file in the project's working directory and removing the call to view_tutorial.")
+      stop(
+        "This project already loads a tutorial upon opening.\n",
+        "Please remove the tutorial by manually opening the ",
+        ".Rprofile file in the project's working directory and ",
+        "removing the view_tutorial call (safer). Or by running ",
+        "remove_tutorial (less safe)."
+      )
     }
   }
-  cat(glue::glue("view_tutorial(name = {name}, package = {package})"),
-    file = rprofile,
-    sep = "\n",
-    append = TRUE
+  cat(paste0(
+    'grader::view_tutorial(name = "',
+    name, '", package = "', package, 
+    '")  ## Learnr tutorial added on ', 
+    Sys.Date()
+  ),
+  file = rprofile,
+  sep = "\n",
+  append = TRUE
   )
+  
+  # return message
 }
+
+remove_tutorial <- function(dir = NULL) {
+  if (!is.null(dir)) dir <- getwd()
+  rprofile <- paste0(dir, "/.Rprofile")
+  
+  if (file.exists(rprofile)) {
+    text <- readr::read_lines(rprofile)
+  } else {
+    stop("Directory does not have a .Rprofile ",
+         "file to remove tutorial from.")
+  }
+  
+  tutorial_calls <- grepl("\\)  ## Learnr tutorial added on ", text)
+  if (!any(tutorial_calls)) {
+    message("No tutorials detected to remove.")
+  } else {
+    text <- text[!tutorial_calls]
+    readr::write_lines(text, path = rprofile)
+    message("Tutorial removed.")
+  }
+}
+  
