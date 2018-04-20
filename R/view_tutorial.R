@@ -12,21 +12,49 @@
 #'
 #' @export
 view_tutorial <- function(name, package) {
-  learnr::run_tutorial(
-    name = name,
-    package = package,
-    shiny_args = list(
-      launch.browser = rstudioapi::viewer
+  
+  # launch in separate R session
+  r2 <- callr::r_bg(function(name, package) {
+    learnr::run_tutorial(
+      name = name,
+      package = package,
+      shiny_args = list(
+        launch.browser = FALSE,
+        port = 8000,
+        host = "127.0.0.1"
+      )
     )
+  }, supervise = TRUE,
+  args = list(name = name, package = package))
+  
+  # If you open the viewer before the app loads, it will 
+  # display a blank screen until you click refresh
+  status <- r2$read_error()
+  n <- 1
+  while(!grepl("Listening", status)) {
+    status <- r2$read_error()
+    Sys.sleep(0.5)
+    n <- n + 1
+    if (n == 20) {
+      print("Click refresh in the viewer pane if you do not see a tutorial.")
+      break
+    }
+  }
+  
+  viewer <- getOption("viewer")
+  viewer(
+    url = "http://localhost:8000",
+    height = "maximize"
   )
 }
+
 
 #' Add a tutorial to a project
 #'
 #' \code{add_tutorial()} inserts a call to \link[grader]{\code{view_tutorial()}}
 #' into the .Rprofile file contained in the current working directory. As a
 #' result, R will launch the tutorial in the RStudio IDE viewer pane whenever
-#' the current project is opened or re-opened. 
+#' the current project is opened or re-opened.
 #'
 #' If an .Rprofile file does not exist in the current working directory,
 #' \code{add_tutorial()} will create one. If the .Rprofile file in the current
@@ -36,7 +64,7 @@ view_tutorial <- function(name, package) {
 #' home directory. If one of these files contains a call to
 #' \code{view_tutorial()}, \code{add_tutorial} will override the call without a
 #' warning message.
-#' 
+#'
 #' @seealso \link[grader]{\code{view_tutorial}}
 #'
 #' @param name A character string. The name of a tutorial saved in a package.
@@ -59,4 +87,3 @@ add_tutorial <- function(name, package) {
     append = TRUE
   )
 }
-
