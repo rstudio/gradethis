@@ -16,5 +16,5 @@
 #'
 #' @export
 grading_demo <- function() {
-  rstudioapi::navigateToFile(system.file("extdata", "grading-demo/grading-demo.Rmd", package = "grader"))
+  rstudioapi::navigateToFile(system.file("tutorials", "grading-demo/grading-demo.Rmd", package = "grader"))
 }
