@@ -1,75 +1,54 @@
 ---
-title: "Tutorial"
+title: "What do exercise chunks have access to?"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo = FALSE}
 library(learnr)
-knitr::opts_chunk$set(echo = FALSE)
 ```
 
+## Section 1
 
-## Topic 1
+The best way to reproduce the effects described in this tutorial is to run this code and then work through the tutorial:
 
-### Exercise 
+```{r eval = FALSE}
+foo <- "I was created in the current from which you ran learnr::run_tutorial" # this will be significant
 
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
-
-Write the R code required to add two plus two:
-
-```{r two-plus-two, exercise=TRUE}
-
+devtools::install_packages("rstudio-education/grader")
+learnr::run_tutorial("scoping-rules", package = "grader")
 ```
 
-### Exercise with Code
+### Knitr chunks
 
-*Here's an exercise with some prepopulated code as well as `exercise.lines = 5` to provide a bit more initial room to work.*
+Where does knitr save the results of code chunks? In the global environment of a _fresh_ R session. Notice that `foo` does not exist in this session.
 
-Now write a function that adds any two numbers and then call it:
-
-```{r add-function, exercise=TRUE, exercise.lines = 5}
-add <- function() {
-  
-}
+```{r}
+knitr_obj <- "I was created in a knitr chunk."
+environment()
+ls.str(environment())
 ```
 
-## Topic 2
+### What's in scope?
 
-### Exercise with Hint
+Which environments are in scope for a learnr exercise chunk? Not the environment above.
 
-*Here's an exercise where the chunk is pre-evaulated via the `exercise.eval` option (so the user can see the default output we'd like them to customize). We also add a "hint" to the correct solution via the chunk immediate below labeled `print-limit-hint`.*
+Exercise chunks will be evaluated in the R session that calls `learnr::run_tutorial`. Everything in the global environment of that session will be in scope and hence available to the exercise chunk---like `foo`! 
 
-Modify the following code to limit the number of rows printed to 5:
-
-```{r print-limit, exercise=TRUE, exercise.eval=TRUE}
-mtcars
+```{r ex, exercise = TRUE}
+environment()
+parent.env(environment())
+ls.str(parent.env(environment()))
+foo
 ```
 
-```{r print-limit-hint}
-head(mtcars)
-```
+### The big exception
 
-### Quiz
+If a tutorial is launched from the RStudio IDE GUI (by clicking the Run Document button). The exercise chunks will be evaluated in the _fresh_ R process. As a result, everything created by the knitr chunks in the document will be in scope and available to the exercise (which makes a big difference).
 
-*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+To try this, close the tutorial and then run this code and click the Run Document button.
 
-Some questions to verify that you understand the purposes of various base and recommended R packages:
-
-```{r quiz}
-quiz(
-  question("Which package contains functions for installing other R packages?",
-    answer("base"),
-    answer("tools"),
-    answer("utils", correct = TRUE),
-    answer("codetools")
-  ),
-  question("Which of the R packages listed below are used to create plots?",
-    answer("lattice", correct = TRUE),
-    answer("tools"),
-    answer("stats"),
-    answer("grid", correct = TRUE)
-  )
-)
+```{r eval = FALSE}
+rstudioapi::navigateToFile(system.file("tutorials", "scoping-rules/scoping-rules.Rmd", package = "grader"))
 ```
 
