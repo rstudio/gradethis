@@ -10,8 +10,8 @@
 
 
 
-<meta name="progressive" content="false" />
-<meta name="allow-skip" content="false" />
+<meta name="progressive" content="true" />
+<meta name="allow-skip" content="true" />
 
 <title>What do exercise chunks have access to?</title>
 
@@ -47,9 +47,9 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <div id="section-section-1" class="section level2">
 <h2>Section 1</h2>
 <p>The best way to reproduce the effects described in this tutorial is to run this code and then work through the tutorial:</p>
-<pre class="r"><code>foo &lt;- &quot;I was created in the current from which you ran learnr::run_tutorial&quot; # this will be significant
+<pre class="r"><code>foo &lt;- &quot;Remember me.&quot; # this will be significant
 
-devtools::install_packages(&quot;rstudio-education/grader&quot;)
+devtools::install_github(&quot;rstudio-education/grader&quot;)
 learnr::run_tutorial(&quot;scoping-rules&quot;, package = &quot;grader&quot;)</code></pre>
 <div id="section-knitr-chunks" class="section level3">
 <h3>Knitr chunks</h3>
@@ -63,21 +63,25 @@ environment()</code></pre>
 <div id="section-whats-in-scope" class="section level3">
 <h3>What’s in scope?</h3>
 <p>Which environments are in scope for a learnr exercise chunk? Not the environment above.</p>
-<p>Exercise chunks will be evaluated in the R session that calls <code>learnr::run_tutorial</code>. Everything in the global environment of that session will be in scope and hence available to the exercise chunk—like <code>foo</code>!</p>
+<p>Exercise chunks will be evaluated in the R session that calls <code>learnr::run_tutorial</code>. This will be your current R Session, not the fresh one that R Markdown generates. Everything in your global environment will be in scope and hence available to the exercise chunks—like <code>foo</code>!</p>
 <div class="tutorial-exercise" data-label="ex" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>environment()
 parent.env(environment())
-ls.str(parent.env(environment()))
-foo</code></pre>
+ls.str(parent.env(environment()))</code></pre>
 <script type="application/json" data-opts-chunk="1">{"fig.width":6.5,"fig.height":4,"fig.retina":2,"fig.align":"default","fig.keep":"high","fig.show":"asis","out.width":624,"warning":true,"error":false,"message":true,"exercise.df_print":"paged","exercise.checker":"NULL"}</script>
 </div>
 </div>
 <div id="section-the-big-exception" class="section level3">
 <h3>The big exception</h3>
-<p>If a tutorial is launched from the RStudio IDE GUI (by clicking the Run Document button). The exercise chunks will be evaluated in the <em>fresh</em> R process. As a result, everything created by the knitr chunks in the document will be in scope and available to the exercise (which makes a big difference).</p>
+<p>If a tutorial is launched from the RStudio IDE GUI by clicking the Run Document button, the exercise chunks will be evaluated in the <em>fresh</em> R process.</p>
+<p>As a result, the objects in <em>your</em> global environment will not be available when you run an exercise. However, the objects in the global environment of the fresh R session will be available. This includes everything created by a knitr code chunk.</p>
 <p>To try this, close the tutorial and then run this code and click the Run Document button.</p>
 <pre class="r"><code>rstudioapi::navigateToFile(system.file(&quot;tutorials&quot;, &quot;scoping-rules/scoping-rules.Rmd&quot;, package = &quot;grader&quot;))</code></pre>
-
+</div>
+<div id="section-the-third-case" class="section level3">
+<h3>The third case</h3>
+<p>If you publish the tutorial to shinyapps.io, the exercise chunks will have access to neither the objects in your current global environment nor the objects created by knitr code chunks. Here they truly are run in a clean scope, e.g.</p>
+<a href="https://tutorials.shinyapps.io/scoping-rules/" class="uri">https://tutorials.shinyapps.io/scoping-rules/</a> 
 <script type="application/shiny-prerendered" data-context="server-start">
 library(learnr)
 </script>

@@ -1,6 +1,9 @@
 ---
 title: "What do exercise chunks have access to?"
-output: learnr::tutorial
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
 runtime: shiny_prerendered
 ---
 
@@ -13,9 +16,9 @@ library(learnr)
 The best way to reproduce the effects described in this tutorial is to run this code and then work through the tutorial:
 
 ```{r eval = FALSE}
-foo <- "I was created in the current from which you ran learnr::run_tutorial" # this will be significant
+foo <- "Remember me." # this will be significant
 
-devtools::install_packages("rstudio-education/grader")
+devtools::install_github("rstudio-education/grader")
 learnr::run_tutorial("scoping-rules", package = "grader")
 ```
 
@@ -33,18 +36,19 @@ ls.str(environment())
 
 Which environments are in scope for a learnr exercise chunk? Not the environment above.
 
-Exercise chunks will be evaluated in the R session that calls `learnr::run_tutorial`. Everything in the global environment of that session will be in scope and hence available to the exercise chunk---like `foo`! 
+Exercise chunks will be evaluated in the R session that calls `learnr::run_tutorial`. This will be your current R Session, not the fresh one that R Markdown generates. Everything in your global environment will be in scope and hence available to the exercise chunks---like `foo`! 
 
 ```{r ex, exercise = TRUE}
 environment()
 parent.env(environment())
 ls.str(parent.env(environment()))
-foo
 ```
 
 ### The big exception
 
-If a tutorial is launched from the RStudio IDE GUI (by clicking the Run Document button). The exercise chunks will be evaluated in the _fresh_ R process. As a result, everything created by the knitr chunks in the document will be in scope and available to the exercise (which makes a big difference).
+If a tutorial is launched from the RStudio IDE GUI by clicking the Run Document button, the exercise chunks will be evaluated in the _fresh_ R process. 
+
+As a result, the objects in _your_ global environment will not be available when you run an exercise. However, the objects in the global environment of the fresh R session will be available. This includes everything created by a knitr code chunk.
 
 To try this, close the tutorial and then run this code and click the Run Document button.
 
@@ -52,3 +56,8 @@ To try this, close the tutorial and then run this code and click the Run Documen
 rstudioapi::navigateToFile(system.file("tutorials", "scoping-rules/scoping-rules.Rmd", package = "grader"))
 ```
 
+### The third case
+
+If you publish the tutorial to shinyapps.io, the exercise chunks will have access to neither the objects in your current global environment nor the objects created by knitr code chunks. Here they truly are run in a clean scope, e.g.
+
+[https://tutorials.shinyapps.io/scoping-rules/](https://tutorials.shinyapps.io/scoping-rules/)
