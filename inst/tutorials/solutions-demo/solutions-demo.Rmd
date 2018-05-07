@@ -16,15 +16,13 @@ params <- list(
 ```
 
 
-## Hello
+## Simple exercises
 
 ### \t 
 
 This tutorial relies on several different exercise setup schemes. A solution checker function will need to navigate these schemes to ensure that each solution runs correctly given the setup code that is associated with it.
 
-### Simple exercises
-
-This exercise has a stand alone solution. It requires zero setup code, which makes it the most simple type of solution to test.
+The exercises in this section have stand alone solutions. They require zero setup code, so a solution checker only needs to check whether or not the code runs.
 
 * Click Run Code. The code should run successfully.
 
@@ -36,13 +34,33 @@ log(1)
 log(1)
 ```
 
+* Click Run Code. The code should run with a warning message.
+
+```{r warning-2, exercise=TRUE}
+log(-1)
+```
+
+```{r warning-2-solution}
+log(-1)
+```
+
+* Click Run Code. The code should return an error message.
+
+```{r failure-3, exercise=TRUE}
+log(y = 1)
+```
+
+```{r failure-3-solution}
+log(y = 1)
+```
+
 ### Complex exercises
 
-It is more complicated to test solutions that use objects that are created outside of the exercise chunk. Each object used by the solution must be accessible within the scope of the exercise chunk. 
+It is more complicated to test solutions that use objects that are created outside of the exercise chunk. Each object used by the solution must be accessible within the scope of the exercise chunk.
 
-Each exercise in a learnr tutorial has access to the results of several types of code:
+The results of three types of chunk fall into this scope:
 
-1. knitr code chunks, including the global setup chunk
+1. a specific knitr chunk labeled `setup` (the global setup chunk)
 1. setup chunks that are defined through learnr's `-setup` naming convention
 1. setup chunks that are defined with an `exercise.setup` code attribute
 
@@ -50,76 +68,36 @@ Each exercise in a learnr tutorial has access to the results of several types of
 
 ### \t
 
-Every exercise can access the code results of knitr chunks that are not associated with a learnr exercise. 
+A solution tester must mark correct chunks that rely on computations in the global setup chunk. For example, solutions in this document can use `params`, an object created in the `setup` chunk of this document. Solutions can also use functions in the purrr pacakge, which was loaded in the `setup` chunk.
 
-When you render a learnr document, R Markdown opens a new R session and runs non-exercise code chunks in the global environment of that sesssion. Since each exercise will be run at a later time in its own child environment of the global environment, each exercise will have access to the code results from any knitr chunk, including the chunks that come after the exercise in a tutorial.
+* Click Run Code. The code should run successfully.
 
-### Preceding chunks
+```{r success-4, exercise=TRUE}
+params %>% map(length)
+```
 
-So, for example, each exercise should be able to use the object `knitr_result` that is produced in the normal knitr chunk below. 
+```{r success-4-solution}
+params %>% map(length)
+```
+
+### \t
+
+Exercise chunks _will not_ have access to objects that are created in knitr chunks unless those chunks are specifically designated as a setup chunk for the exercise.
+
+For example, an exercise should not be able to use the object `knitr_result` that is produced in the normal knitr chunk below. 
     
 ```{r}
 knitr_result <- 25
 ```
 
-* Click Run Code. The code should run successfully.
-
-```{r success-2, exercise = TRUE}
-knitr_result
-```
-
-```{r success-2-solution}
-knitr_result
-```
-
-### Following chunks
-
-Each exercise should also be able to use the object `end_result`, which is produced in a normal knitr code chunk at the end of this document.
-
-* Click Run Code. The code should run successfully.
- 
-```{r success-3, exercise = TRUE}
-end_result
-```
-
-```{r success-3-solution}
-end_result
-``` 
-    
-### eval = FALSE
-
-Note that there are some simple exceptions to this rule. Exercises should not be able to use objects that are created in knitr code chunks that contain the chunk attribute `eval = FALSE`. These chunks are not evaluated when the document is rendered. 
-
-For example, an exercise should not be able to find `unevaluated_result`, which is created in the code chunk below. The code chunk includes the chunk attribute `eval = FALSE` (you will have to inspect the .Rmd file to verify this).
-    
-```{r eval = FALSE}
-unevaluated_result <- 50
-```   
-
 * Click Run Code. The code should return an error.
- 
-```{r failure-4, exercise = TRUE}
-unevaluated_result
+
+```{r failure-5, exercise = TRUE}
+knitr_result
 ```
 
-```{r failure-4-solution}
-unevaluated_result
-``` 
-    
-### The setup chunk
-
-Finally, each solution should have access to the results of the global setup chunk. This is a knitr chunk that has the label `setup`. `setup` chunks normally appear at the start of the document and do things like load the packages that will be used in the document.
-
-This exercise requires `params`, which is an object that is defined in the global `setup` chunk of this document.
-
-* Click Run Code. The code should run successfully.
-
-```{r success-5, exercise = TRUE}
-params
-```
-
-```{r success-5-solution}
-params
+```{r failure-5-solution}
+knitr_result
 ```
 
 ## exercise-setup label
@@ -134,8 +112,6 @@ An _exercise setup chunk_ is a chunk that is
 1. evaluated each time an associated exercise chunk is run, before the code in the exercise chunk is evaluated
 
 Each exercise can only have on exercise setup chunk.
-
-It can be helpful to realize that an exercise setup chunk exists not so much to set up a specific exercise, but to _only_ setup a specific exercise. In a way, regular knitr chunks will setup every exercise because every exercise will have access to their results. Only the exercise associated with an exercise setup chunk will have access to its results.  
 
 ### -setup suffix
 
@@ -169,32 +145,55 @@ params %>% pmap(rlnorm2)
 params %>% pmap(rlnorm2)
 ```
 
+### Warning in the setup
+
+To be most useful, a solution checker should reveal whether or not a warning is generated in the setup chunk, or a solution chunk.
+
+This exercise is labeled `warning-15`. It is accompanied by a chunk labeled `warning-15-setup`.
+
+* Click Run Code. The code should run with a warning message.
+
+```{r warning-7-setup}
+three <- 1 + 2
+warning("This is a warning message!")
+```
+
+```{r warning-7, exercise = TRUE}
+three^2
+```
+
+```{r warning-7-solution}
+three^2
+```
+
+
 ### Error in the setup
 
 Solution checking code needs to be able to spot errors that occur in setup chunks.
 
-This exercise is labelled `failure-7`. It is accompanied by a chunk labelled `failure-7-setup`, which looks like this:
+This exercise is labelled `failure-8`. It is accompanied by a chunk labelled `failure-8-setup`, which looks like this:
 
 ```{r eval = FALSE}
-two <- 1 + 1
 stop("Uh oh. An error!")
+two <- 1 + 1
 ```
 
-```{r failure-7-setup}
-two <- 1 + 1
+```{r failure-8-setup}
 stop("Uh oh. An error!")
+two <- 1 + 1
 ```
 
-Notice that `failure-7-setup` returns an error when run.
+Notice that `failure-8-setup` returns an error when run.
 
-```{r failure-7, exercise = TRUE}
+* Click Run Code. The code should return an error.
+
+```{r failure-8, exercise = TRUE}
 sqrt(two)
 ```
 
-```{r failure-7-solution}
+```{r failure-8-solution}
 sqrt(two)
 ```
-
 
 ## exercise.setup attribute
 
@@ -202,13 +201,13 @@ sqrt(two)
 
 Alternatively, you can create an exercise setup chunk by adding an `exercise.setup` chunk attribute to a learnr exercise chunk. To do this, set `exercise.setup` equal to a character string that contains the label of a knitr code chunk to use as the exercise setup chunk.
 
-The new chunk will now be treated as an exercise setup chunk associated with that exercise (i.e. it will not be evaluated when the document is rendered, and it will not appear in the document). The label of the code chunk does not need to follow ant learnr suffix conventions.
+The new chunk will now be treated as an exercise setup chunk associated with that exercise (i.e. it will not be evaluated when the document is rendered, and it will not appear in the document). The label of the code chunk does not need to follow any learnr suffix conventions.
 
 This method is useful when you would like to use the same chunk as an exercise setup chunk for two or more exercises.
 
 ### Exercise with exercise.setup
 
-This exercise is labelled `success-8`. It relies on an exercise setup chunk that is labelled `for-success-8`, which looks like this (note that this is a manual copy of the exercise setup chunk; the actual chunk will not appear in the rendered document).
+This exercise is labelled `success-9`. It relies on an exercise setup chunk that is labelled `success-for-9`, which looks like this (note that this is a manual copy of the exercise setup chunk; the actual chunk will not appear in the rendered document).
 
 ```{r eval = FALSE}
 rcauchy2 <- function(n, mu, sd) {
@@ -216,7 +215,7 @@ rcauchy2 <- function(n, mu, sd) {
 }
 ```
 
-```{r for-success-8}
+```{r success-for-9}
 rcauchy2 <- function(n, mu, sd) {
   rcauchy(n, location = mu, scale = sd)
 }
@@ -224,63 +223,159 @@ rcauchy2 <- function(n, mu, sd) {
 
 * Click Run Code. The code should run successfully.
 
-```{r success-8, exercise = TRUE, exercise.setup = "for-success-8"}
+```{r success-9, exercise = TRUE, exercise.setup = "success-for-9"}
 params %>% pmap(rcauchy2)
-```
-
-```{r success-8-solution}
-params %>% pmap(rcauchy2)
-```
-
-### Exercises that share an exercise.setup
-
-One advantage of the `exercise.setup` attribute is that you can set the `exercise.setup` attribute of multiple exercises to use the same chunk.
-
-Both of the exercises below rely on a single exercise setup chunk labelled `success-rlnorm2` that looks like this:
-
-```{r eval = FALSE}
-rlnorm2 <- function(n, mu, sd) {
-  rlnorm(n, meanlog = mu, sdlog = sd)
-}
-```
-
-```{r success-rlnorm2}
-rlnorm2 <- function(n, mu, sd) {
-  rlnorm(n, meanlog = mu, sdlog = sd)
-}
-```
-
-* Run each exercise. Both should run successfully.
-
-```{r success-9, exercise = TRUE, exercise.setup = "success-rlnorm2"}
-params %>% pmap(rlnorm2)
 ```
 
 ```{r success-9-solution}
+params %>% pmap(rcauchy2)
+```
+
+### \t
+
+This exercise relies on a setup chunk named `warning-for-10` that returns a warning message.
+
+* Click Run Code. The code should run with a warning message.
+
+```{r warning-for-10}
+rcauchy3 <- function(n, mu, sd) {
+  rcauchy(n, location = mu, scale = sd)
+}
+
+warning("Uh oh. A Warning!")
+```
+
+```{r warning-10, exercise = TRUE, exercise.setup = "warning-for-10"}
+params %>% pmap(rcauchy3)
+```
+
+```{r warning-10-solution}
+params %>% pmap(rcauchy3)
+```
+
+### \t
+
+This exercise relies on a setup chunk named `failure-for-11` that contains an error.
+
+* Click Run Code. The code should return an error.
+
+```{r failure-for-11}
+stop("Uh oh. An error!")
+
+rcauchy4 <- function(n, mu, sd) {
+  rcauchy(n, location = mu, scale = sd)
+}
+```
+
+```{r failure-11, exercise = TRUE, exercise.setup = "failure-for-11"}
+params %>% pmap(rcauchy4)
+```
+
+```{r failure-11-solution}
+params %>% pmap(rcauchy4)
+```
+
+## Shared exercise.setup chunks
+
+### \t
+
+One advantage of the `exercise.setup` attribute is that you can set the `exercise.setup` attribute of multiple exercises to use the same chunk.
+
+Both of the exercises below rely on the single exercise setup chunk labelled `success-for-9`.
+
+* Run each exercise. Both should run successfully.
+
+```{r success-12, exercise = TRUE, exercise.setup = "success-for-9"}
+params %>% pmap(rcauchy2) %>% map(abs)
+```
+
+```{r success-12-solution}
+params %>% pmap(rcauchy2) %>% map(abs)
+```
+
+```{r success-13, exercise = TRUE, exercise.setup = "success-for-9"}
+params %>% pmap(rcauchy2) %>% map(round)
+```
+
+```{r success-13-solution}
+params %>% pmap(rcauchy2) %>% map(round)
+```
+
+### \t
+
+Both of the exercises below rely on the single exercise setup chunk labelled `warning-for-10`.
+
+* Run each exercise. Both should run with a warning message.
+
+```{r warning-14, exercise = TRUE, exercise.setup = "warning-for-10"}
+params %>% pmap(rcauchy3) %>% map(abs)
+```
+
+```{r warning-14-solution}
+params %>% pmap(rcauchy3) %>% map(abs)
+```
+
+```{r warning-15, exercise = TRUE, exercise.setup = "warning-for-10"}
+params %>% pmap(rcauchy3) %>% map(round)
+```
+
+```{r warning-15-solution}
+params %>% pmap(rcauchy3) %>% map(round)
+```
+
+### \t
+
+Both of the exercises below rely on the single exercise setup chunk labelled `failure-for-11`.
+
+* Run each exercise. Both should return errors.
+
+```{r failure-16, exercise = TRUE, exercise.setup = "failure-for-11"}
+params %>% pmap(rcauchy4) %>% map(abs)
+```
+
+```{r failure-16-solution}
+params %>% pmap(rcauchy4) %>% map(abs)
+```
+
+```{r failure-17, exercise = TRUE, exercise.setup = "failure-for-11"}
+params %>% pmap(rcauchy4) %>% map(round)
+```
+
+```{r failure-17-solution}
+params %>% pmap(rcauchy4) %>% map(round)
+```
+
+## User errors
+
+### \t
+
+There are several ways for a tutorial author to generate errors that are unrelated to the code in a solution chunk.
+
+### Incorrect label
+
+An author may rely on a setup chunk that is not associated with the exercise. For example, this exercise chunk is labelled `usererr-18`, but relies on `rlnorm2`, which is defined in `success-6-setup`.
+
+* Click Run Code. The code should return an error.
+
+```{r usererr-18, exercise = TRUE}
 params %>% pmap(rlnorm2)
 ```
 
-```{r success-10, exercise = TRUE, exercise.setup = "success-rlnorm2"}
-params %>% pmap(rlnorm2) %>% map(round)
-```
-
-```{r success-10-solution}
-params %>% pmap(rlnorm2) %>% map(round)
+```{r usererr-18-solution}
+params %>% pmap(rlnorm2)
 ```
 
 ### Multiple entries
 
-Since each exercise can only have a single exercise setup chunk, you cannot provide multiple chunk labels to the `exercise.setup` attribute.
-
-For example, this exercise contains the attribute `exercise.setup = c("for-success-8", "success-rlnorm2")`. As a result, neither chunk will be used as the exercise setup chunk.
+Since each exercise can only have a single exercise setup chunk, you cannot provide multiple chunk labels to the `exercise.setup` attribute. For example, this exercise contains the attribute `exercise.setup = c("success-for-8", "success-6-setup")`. As a result, neither chunk will be used as the exercise setup chunk.
 
 * Click Run Code. The code should return an error (`object 'rcauchy2' not found`).
 
-```{r success-11, exercise = TRUE, exercise.setup = c("for-success-8", "success-rlnorm2")}
+```{r usererr-19, exercise = TRUE, exercise.setup = c("for-success-8", "success-6-setup")}
 list(rcauchy2, rlnorm2) %>% invoke_map(transpose(params))
 ```
 
-```{r success-11-solution}
+```{r usererr-19-solution}
 list(rcauchy2, rlnorm2) %>% invoke_map(transpose(params))
 ```
 
@@ -290,93 +385,22 @@ Likewise, you should not try to create two exercise setup chunks for an exercise
 
 In this case, R Markdown will use the exercise setup chunk defined by `exercise.setup` and ignore the exercise setup chunk defined by the -setup chunk label.
 
-To illustrate, the exercise below is labelled `failure-12`. It contains the attribute `exercise.setup = "success-rlnorm2`. It is also accompanied by a chunk labelled `failure-12-setup`, which looks like this:
+To illustrate, the exercise below is labelled `usererr-20`. It contains the attribute `exercise.setup = "success-6-setup`. It is also accompanied by a chunk labelled `usererr-20-setup`, which looks like this:
 
 ```{r eval = FALSE}
 add_one <- function(x) x + 1
 ```
 
-```{r failure-12-setup}
+```{r usererr-20-setup}
 add_one <- function(x) x + 1
 ```
 
-* Run the code. The code should return an error because the `option-5-setup` chunk is not evaluated (i.e. `could not find function "add_one"`).
+* Run the code. The code should return an error.
 
-```{r failure-12, exercise = TRUE, exercise.setup = "success-rlnorm2"}
+```{r usererr-20, exercise = TRUE, exercise.setup = "success-6-setup"}
 rlnorm2(1, mu = 1, sd = 1) %>% add_one()
 ```
 
-```{r failure-12-solution}
+```{r usererr-20-solution}
 rlnorm2(1, mu = 1, sd = 1) %>% add_one()
 ```
-
-## Errors
-
-### \t
-
-Solution checking code should also recognize non-scoping related errors and warning messages.
-
-### An error
-
-This exercise has a solution that returns an error.
-
-* Click Run Code. The code should return an error.
-
-```{r failure-13, exercise = TRUE}
-lists2
-```
-
-```{r failure-13-solution}
-lists2
-```
-
-### A warning
-
-This exercise works, but the solution returns a warning message.
-
-* Click Run Code. The code should run with a warning message.
-
-```{r warning-14, exercise = TRUE}
-warning("This is a warning message!")
-```
-
-```{r warning-14-solution}
-warning("This is a warning message!")
-```
-
-### A warning in the setup
-
-To be most useful, a solution checker should reveal whether or not a warning is generated in the setup chunk, or a solution chunk.
-
-This exercise is labeled `warning-15`. It is accompanied by a chunk labeled `warning-15-setup`, which looks like this:
-
-```{r eval = FALSE}
-three <- 1 + 2
-warning("This is a warning message!")
-```
-
-```{r warning-15-setup}
-three <- 1 + 2
-warning("This is a warning message!")
-```
-
-* Click Run Code. The code should run with a warning message.
-
-```{r warning-15, exercise = TRUE}
-three^2
-```
-
-```{r warning-15-solution}
-three^2
-```
-
-
-
-### \t
-
-Here's a regular knitr code chunk whose results we used earlier in the document.
-
-```{r end}
-end_result <- 5
-```
-

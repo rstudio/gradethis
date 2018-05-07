@@ -15,7 +15,7 @@ extract_chunks <- function(file) {
 #'
 #' \code{test_solutions} checks that the solution and setup code provided in a
 #' learnr tutorial runs without errors or warnings. When checking code chunks,
-#' 
+#'
 #' \code{test_solutions} applies the same scoping rules that are applied within
 #' the tutorial: every solution chunk has access to the results of evaluated
 #' knitr chunks that are not associated with learnr exercises. If a solution is
@@ -37,12 +37,14 @@ extract_chunks <- function(file) {
 #'   that run without an error or warning are printed with a green checkmark.
 #'   Chunks that run but return a warning message are printed with a yellow
 #'   checkmark and the warning message. Chunks that produce an error are printed
-#'   with a red x and the error message.
+#'   with a red x and the error message. Chunks that contain an error related to
+#'   how learnr processes the chunk contain are printed with a purple error
+#'   symbol followed by a message.
 #'
 #' @export
 test_solutions <- function(file = NULL,
-                           show.answers = FALSE,
-                           .params = NULL) {
+                           show.answers = FALSE
+                           ) {
   
   if (is.null(file)) {
     files <- dir()
@@ -55,17 +57,19 @@ test_solutions <- function(file = NULL,
       file <- rmds
     }
   }
-  
-  # Exercises have access to all computations
-  # performed at render time
-  rmarkdown::render(demo,
-    params = .params,
-    quiet = TRUE,
-    envir = parent.frame()
-  )
 
   chunks <- extract_chunks(file)
   labels <- names(chunks)
+  
+  # Exercises have access to the computations
+  # performed in the setup chunk
+  if ("setup" %in% labels) {
+    setup_result <- safe_test("setup", chunks = chunks)
+    print_result("setup", 
+                 setup_result,
+                 show.answers = show.answers)
+  }
+  
   solutions <- grep("-solution$", labels, value = TRUE)
 
   purrr::walk(solutions, 
@@ -80,7 +84,6 @@ test_solution <- function(label, chunks, show.answer = FALSE) {
     stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
   }
   
-  code <- chunks[[label]]
   # Does the chunk require a setup chunk?
   setup_option <- attr(chunks[[exercise]], "chunk_opts")$exercise.setup
   setup_suffix <- paste0(exercise, "-setup")
@@ -114,7 +117,7 @@ test_solution <- function(label, chunks, show.answer = FALSE) {
 safe_eval <- purrr::safely(purrr::quietly(eval))
 
 safe_test <- function(label, chunks) {
-  safe_eval(parse(text = chunks[[label]]), envir = parent.frame(2))
+  safe_eval(parse(text = chunks[[label]]), envir = parent.frame(1))
 }
 
 print_result <- function(label, result, show.answers = FALSE) {    
@@ -144,4 +147,5 @@ print_author_error <- function(label, message){
     purple(message), "\n"
   )
 }
+
 
