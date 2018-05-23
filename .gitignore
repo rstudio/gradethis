@@ -27,3 +27,5 @@ vignettes/*.pdf
 grader.Rproj
 scratch.R
 NEXT_STEPS.Rmd
+tmp
+*/rsconnect/
