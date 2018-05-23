@@ -29,3 +29,4 @@ scratch.R
 NEXT_STEPS.Rmd
 tmp
 */rsconnect/
+inst/tutorials/*/rsconnect/
