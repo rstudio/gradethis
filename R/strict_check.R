@@ -52,7 +52,7 @@ strict_check <- function(success = "Correct!",
   if (is.null(solution)) {
     stop("No solution is provided for this exercise.")
 
-    # Sometimes no user code is provided, but
+    # Sometimes no user code is provided,
     # that means there is nothing to check
   } else if (is.null(user)) {
     stop("I didn't receive your code. Did you write any?")
@@ -78,8 +78,8 @@ detect_mistakes <- function(user,
                             solution,
                             .name = NULL) {
 
-  # Stop and notify the student if their value has no
-  # match in the solution (or vice versa)
+  # Check that the student's value has a
+  # match in the solution (and vice versa)
   if (is.null(user) && !is.null(solution)) {
     return(expected(solution, .name))
   } else if (is.null(solution) && !is.null(user)) {
@@ -89,7 +89,7 @@ detect_mistakes <- function(user,
   } else if (is.atomic(user) || is.name(user)) {
     if (user != solution) return(does_not_match(user, solution, .name))
 
-    # iterate over the elements of a call (or pairlist?)
+    # if a value is a call, iterate over its elements
   } else {
 
     # calls should be treated the same
@@ -97,19 +97,25 @@ detect_mistakes <- function(user,
     user <- unpipe(user)
     solution <- unpipe(solution)
 
-    # ensure the submission and the solution use the same call
-    if (user[[1]] != solution[[1]]) return(does_not_match(user, solution, .name))
+    # ensure that the submission and 
+    # the solution use the same call
+    if (user[[1]] != solution[[1]]) {
+      return(does_not_match(user, solution, .name))
+    }
 
-    # match unnamed arguments to names as R would, then compare the named
-    # elements in the submission to the named elements in the solution one
-    # at a time
+    # match unnamed arguments to names as R would, then 
+    # compare the named elements in the submission to 
+    # the named elements in the solution one at a time
     user <- pryr::standardise_call(user)
     solution <- pryr::standardise_call(solution)
     named_args <- union(names(user), names(solution))
     named_args <- named_args[named_args != ""]
-    first_name <- named_args[1] # it would be distracting to name the
-    # first argument in feedback (e.g. .x)
+    first_name <- named_args[1] 
+    
     for (name in named_args) {
+      
+      # it would be distracting to name the
+      # first argument when giving feedback (e.g. .x)
       if (name == first_name) {
         message <- detect_mistakes(user[[name]], solution[[name]])
       } else {
@@ -118,10 +124,11 @@ detect_mistakes <- function(user,
       if (!is.null(message)) return(message)
     }
 
-    # Some arguments in the submission and solution may still be unnamed. These
-    # arguments were not named by the author, nor matched to a name by R. Get
-    # these arguments and then compare them to each other one at a time by the
-    # order that they appear in.
+    # Some arguments in the submission and solution may still be 
+    # unnamed. These arguments were not named by the author, nor 
+    # matched to a name by R. Get these arguments and then compare 
+    # them to each other one at a time by the order that they 
+    # appear in.
     if (is.null(names(user))) {
       user_unnamed <- user
     } else {
