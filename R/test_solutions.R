@@ -57,7 +57,54 @@ test_solutions <- function(file = NULL,
       file <- rmds
     }
   }
-
+  
+  # the functions that test the solutions are defined here so they can find the
+  # results of the global setup chunk through lexical scoping
+  safe_eval <- purrr::safely(purrr::quietly(eval))
+  
+  safe_test <- function(label, chunks) {
+    safe_eval(parse(text = chunks[[label]]), envir = parent.frame(1))
+  }
+  
+  test_solution <- function(label, chunks, show.answer = FALSE) {
+    exercise <- sub("-solution", "", label)
+    if (grepl("-solution$", label) && !(exercise %in% names(chunks))) {
+      stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
+    }
+    
+    # Does the chunk require a setup chunk?
+    setup_option <- attr(chunks[[exercise]], "chunk_opts")$exercise.setup
+    setup_suffix <- paste0(exercise, "-setup")
+    
+    if (!is.null(setup_option)) {
+      if (!is.character(setup_option)) {
+        print_author_error(label, "exercise.setup chunk_opt is not a single string.")
+        return()
+      } else if (!(setup_option %in% names(chunks))) {
+        print_author_error(label, "exercise.setup chunk_opt points to unknown chunk.")
+        return()
+      } else if (setup_suffix %in% names(chunks)) {
+        print_author_error(label, "More than one setup chunk is assigned to exercise.")
+        return()
+      } else {
+        setup <- safe_test(setup_option, chunks = chunks)
+        print_result(setup_option, 
+                     setup, 
+                     show.answers = show.answer)
+      }
+    } else if (setup_suffix %in% names(chunks)) {
+      setup <- safe_test(setup_suffix, chunks = chunks)
+      print_result(setup_suffix, 
+                   setup,
+                   show.answers = show.answer)
+    }
+    
+    result <- safe_test(label, chunks = chunks)
+    print_result(label, 
+                 result,
+                 show.answers = show.answer)
+  }
+  
   chunks <- extract_chunks(file)
   labels <- names(chunks)
   
@@ -76,48 +123,6 @@ test_solutions <- function(file = NULL,
               test_solution, 
               chunks = chunks, 
               show.answer = show.answers)
-}
-
-test_solution <- function(label, chunks, show.answer = FALSE) {
-  exercise <- sub("-solution", "", label)
-  if (grepl("-solution$", label) && !(exercise %in% names(chunks))) {
-    stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
-  }
-  
-  # Does the chunk require a setup chunk?
-  setup_option <- attr(chunks[[exercise]], "chunk_opts")$exercise.setup
-  setup_suffix <- paste0(exercise, "-setup")
-  
-  if (!is.null(setup_option)) {
-    if (!is.character(setup_option)) {
-      print_author_error(label, "exercise.setup chunk_opt is not a single string.")
-      return()
-    } else if (!(setup_option %in% names(chunks))) {
-      print_author_error(label, "exercise.setup chunk_opt points to unknown chunk.")
-      return()
-    } else {
-      setup <- safe_test(setup_option, chunks = chunks)
-      print_result(setup_option, 
-                   setup, 
-                   show.answers = show.answer)
-    }
-  } else if (setup_suffix %in% names(chunks)) {
-    setup <- safe_test(setup_suffix, chunks = chunks)
-    print_result(setup_suffix, 
-                 setup,
-                 show.answers = show.answer)
-  }
-  
-  result <- safe_test(label, chunks = chunks)
-  print_result(label, 
-               result,
-               show.answers = show.answer)
-}
-
-safe_eval <- purrr::safely(purrr::quietly(eval))
-
-safe_test <- function(label, chunks) {
-  safe_eval(parse(text = chunks[[label]]), envir = parent.frame(1))
 }
 
 print_result <- function(label, result, show.answers = FALSE) {    
