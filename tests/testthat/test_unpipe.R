@@ -1,5 +1,5 @@
-library(tidyverse)
 context("Unpipe pipes")
+library(tidyverse)
 
 test_that("unpipe() strips off the top level of piping", {
   pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length))

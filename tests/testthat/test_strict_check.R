@@ -1,5 +1,5 @@
-library(tidyverse)
 context("Strict check")
+library(tidyverse)
 
 test_that("Spots differences in atomics", {
   expect_match(strict_check(user = "1", solution = "1"), "Correct!")

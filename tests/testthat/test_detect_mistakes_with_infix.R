@@ -1,5 +1,5 @@
-library(tidyverse)
 context("Check code with infix operators")
+library(tidyverse)
 
 test_that("strict_check() returns sensible message for code with infix operator", {
   
