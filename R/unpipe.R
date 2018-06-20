@@ -35,15 +35,8 @@ is_dot <- function(name) {
   length(name) == 1 && as.character(name) == "."
 }
 
-#' @export
 unpipe_all <- function(code) {
   if (length(code) == 1) return(code)
   code <- as.call(purrr::map(as.list(code), unpipe_all))
-  unpipe(code)
-}
-
-unpipe_lhs <- function(code) {
-  if (!is_pipe(code)) return(code)
-  if (is_pipe(code[[2]])) code[[2]] <- unpipe_all(code[[2]])
   unpipe(code)
 }

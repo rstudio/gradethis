@@ -2,54 +2,51 @@ compare_infixes <- function(user,
                             solution,
                             .name = NULL) {
   
-  .solution <- unpipe_all(solution)
-  .user <- unpipe_all(user)
-  .user_lhs <- unpipe_all(user[[2]])
+  # It is useful to check infix code in the order 
+  # that the user writes it, which is not the order 
+  # in which R parses it
+  user <- order_infixes(user)
+  solution <- order_infixes(solution)
   
-  # Did the user write too much?
-  if (length(.user_lhs) == length(.solution) &&
-      .user_lhs == .solution) {
-    excess <- paste(deparse(user[[1]]), deparse(user[[3]]))
-    return(did_not_expect_after(user[[2]], excess))
-  } 
+  max_length <- max(length(user), length(solution))
   
-  if (is_infix(solution)) {
-    .solution_lhs <- unpipe_all(solution[[2]])
+  for (i in seq_len(max_length)) {
     
-    # Did the user write too little?
-    if (length(.user) == length(.solution_lhs) &&
-        .user == .solution_lhs) {
-      missing <- paste(deparse(solution[[1]]), deparse(solution[[3]]))
-      return(expected_after(user[[3]], missing, .name))
+    # Did user write too much?
+    if (i > length(solution)) {
+      excess <- paste(purrr::map(user[seq(i, to = length(user))], deparse), collapse = " ")
+      return(did_not_expect_after(user[[i - 1]], excess))
+      
+    # Did user write too little?
+    } else if (i > length(user)) {
+      if (i < length(solution) &&
+          as.character(solution[[i]]) %in% c(.infixes, .pipes)) {
+        missing <- paste(deparse(solution[[i]]), deparse(solution[[i + 1]]))
+      } else {
+        missing <- paste(deparse(solution[[i]]))
+      }
+      return(expected_after(user[[i - 1]], missing))  
     }
     
-    # Did the user write the wrong thing on the lhs?
-    if (length(.user_lhs) != length(.solution_lhs) ||
-        .user_lhs != .solution_lhs) {
-      return(detect_code_mistakes(user[[2]], solution[[2]]))
-    }
-    
-    # Did the user use the correct infix operator?
-    if (user[[1]] != solution[[1]]) {
-      return(does_not_match(user, solution))
-    }
-    
-    # Did the user write the wrong thing on the rhs?
-    if (length(user[[3]]) != length(solution[[3]]) ||
-        user[[3]] != solution[[3]]) {
-      return(detect_code_mistakes(user[[3]], solution[[3]]))
-    }
-  
-  # Did the solution use an infix operator?
-  } else {
-    return(did_not_expect_infix_after(user[[2]], user[[1]], solution[[1]])) 
+    message <- detect_code_mistakes(user[[i]], solution[[i]])
+    if (!is.null(message)) return(message)
   }
 }
 
+# Returns a call to an infix operator (+, -, etc.) as a list of symbols that
+# appear in the order that the user writes them. From the student's point of
+# view, this is the most straightforward way to check them. Returns the results
+# as a list that can be iterated over.
 order_infixes <- function(code) {
+  code <- infix_orderer(code)
+  if (is.call(code)) code <- list(code)
+  code
+}
+
+infix_orderer <- function(code) {
   if(is_infix(code)) {
     code <- as.list(code[c(2, 1, 3)])
-    return(unlist(purrr::map(code, order_infixes)))
+    return(unlist(purrr::map(code, infix_orderer)))
   }
-  unlist(code)
+  code
 }
