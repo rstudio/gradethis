@@ -19,7 +19,7 @@ compare_calls <- function(user,
     # Did the user not write enough?
     if (user == solution[[2]]) {
       missing <- paste(deparse(solution[[1]]), deparse(solution[[3]]))
-      return(expected_after(user[[3]], missing, .name))
+      return(expected_after(deparse(user), missing, .name))
       
       # Or use a call when they should've used an infix?
     } else if (user[[2]] == solution[[2]]) {
@@ -29,7 +29,7 @@ compare_calls <- function(user,
   
   # ensure that the submission and 
   # the solution use the same call
-  if (user[[1]] != solution[[1]]) {
+  if (!is.call(solution) || user[[1]] != solution[[1]]) {
     return(does_not_match(user, solution, .name))
   }
   

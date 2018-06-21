@@ -23,6 +23,10 @@ test_that("compare_calls detects surplus code", {
   expect_equal(compare_calls(user, solution), message)
   
   # internal atomic
+  user <-     quote(b(1))
+  solution <- quote(b())
+  message <- did_not_expect(quote(1))
+  expect_equal(compare_calls(user, solution), message)
   
   # internal function
   user <-     quote(b(b(1)))
@@ -198,4 +202,124 @@ test_that("compare_calls detects mis-matched code", {
   solution <- quote(a(2 + log(1)))
   message <- expected_infix_after("2", "+", "abs")
   expect_equal(compare_calls(user, solution), message)
+})
+
+test_that("compare_calls works with atomic solutions", {
+
+  # function
+  user <-     quote(a(1))
+  solution <- quote(1)
+  message <- does_not_match(quote(a), quote(1))
+  expect_equal(compare_calls(user, solution), message)
+  
+  user <-     quote(a())
+  solution <- quote(1)
+  expect_equal(
+    compare_calls(user, solution),
+    does_not_match(quote(a()), quote(1))
+  )
+  
+  user <-     quote(a(1))
+  solution <- quote(pi)
+  expect_equal(
+    compare_calls(user, solution),
+    does_not_match(quote(a), quote(pi))
+  )
+  
+  # non-function
+  user <-     quote(pi(1))
+  solution <- quote(pi)
+  expect_equal(
+    compare_calls(user, solution),
+    not_a_call(quote(pi))
+  )
+  
+  # internal atomics, functions, non-functions, infixes, 
+  # and pipes will not matter if the above tests pass. 
+  # Why? Because checking will stop at the initial call 
+  # because it is not an atomic.
+  
+})
+
+test_that("compare_calls works with infix solutions", {
+  
+  # function
+  user <-     quote(a(1))
+  solution <- quote(1 + pi)
+  expect_equal(
+    compare_calls(user, solution),
+    expected_infix_after(quote(1), "+", quote(a))
+  )
+  
+  user <-     quote(b(1))
+  solution <- quote(b(1) + 2)
+  expect_equal(
+    compare_calls(user, solution),
+    expected_after(user, "+ 2")
+  )
+  
+  user <-     quote(b(1))
+  solution <- quote(b(1) + a(2))
+  expect_equal(
+    compare_calls(user, solution),
+    expected_after(user, "+ a(2)")
+  )
+  
+  # non-function
+  user <-     quote(pi(1))
+  solution <- quote(1 + pi)
+  expect_equal(
+    compare_calls(user, solution),
+    not_a_call(quote(pi))
+  )
+  
+  user <-     quote(1(1))
+  solution <- quote(b(1) + 2)
+  expect_equal(
+    compare_calls(user, solution),
+    not_a_call(quote(1))
+  )
+  
+  # internal atomics, functions, non-functions, infixes, 
+  # and pipes will not matter if the above tests pass. 
+  # Why? Because checking will stop at the initial call 
+  # because it is not an infix.
+})
+
+test_that("compare_calls works with pipe solutions", {
+  
+  # function
+  user <-     quote(b(1))
+  solution <- quote(b(1) %>% a())
+  expect_equal(
+    compare_calls(user, solution),
+    expected_infix_after(quote(1), "+", quote(a))
+  )
+  
+  # non-function
+  # internal atomic
+  # internal function
+  # internal non-function
+  # internal infix
+  # internal pipe
+})
+
+# Does compare_calls work with pipe solutions?
+compare_calls(user = quote(b(1)), solution = quote(b(1) %>% a()))
+# Is compare_calls pipe agnostic?
+# Is compare_call argumnet name agnostic?
+# Is compare calls argument order agnostic?
+# Is compare calls agnostic to redundantly specifying default argument values?
+
+# weird cases
+compare_calls(user = quote(sum(sum(1, 2), 3)), solution = quote(sum(1, 2, 3)))
+
+test_that("compare_calls works with ", {
+# function
+# non-function
+# internal atomic
+# internal function
+# internal non-function
+# internal infix
+# internal pipe
 })
