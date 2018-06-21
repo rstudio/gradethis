@@ -26,7 +26,7 @@ test_that("compare_pipes identifies an extra pipe", {
   user <-     quote(1 %>% log())
   solution <- quote(1 %>% log() %>% abs())
   message <- expected_after(quote(log()), quote("%>% abs()"))
-  expect_equal(compare_calls(user, solution), message)
+  expect_equal(compare_pipes(user, solution), message)
 })
 
 test_that("compare_pipes identifies a missing pipe", {

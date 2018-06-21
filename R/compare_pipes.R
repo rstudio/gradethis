@@ -3,19 +3,19 @@ compare_pipes <- function(user,
                           .name = NULL) {
   
   # Did the user write too little?
-  if (is_infix(solution)) {
-    u <- unpipe_all(user)
-    s2 <- unpipe_all(solution[[2]])
-    if (length(u) == length(s2) && u == s2) {
-      missing <- paste(deparse(solution[[1]]), deparse(solution[[3]]))
+  if (is_pipe(solution) || is_infix(solution)) {
+    .user <- unpipe_all(user)
+    .solution_rhs <- unpipe_all(solution[[2]])
+    if (length(.user) == length(.solution_rhs) && .user == .solution_rhs) {
+      missing <- paste(deparse(solution[[1]]), deparse(solution[[3]][1]))
       return(expected_after(user[[3]], missing, .name))
     }
   }
   
   # Did the user write too much?
-  u2 <- unpipe_all(user[[2]])
-  s <- unpipe_all(solution)
-  if (length(u2) == length(s) && u2 == s) {
+  .user_rhs <- unpipe_all(user[[2]])
+  .solution <- unpipe_all(solution)
+  if (length(.user_rhs) == length(.solution) && .user_rhs == .solution) {
     excess <- paste(deparse(user[[1]]), deparse(user[[3]]))
     return(did_not_expect_after(user[[2]], excess))
   }
@@ -32,7 +32,10 @@ compare_pipes <- function(user,
   } else {
     user <- unpipe(user)
     solution <- unpipe(solution)
-    if (user != solution) return(detect_code_mistakes(user, solution))
+    if (length(user) != length(solution) ||
+        user != solution) {
+      return(detect_code_mistakes(user, solution))
+    }
   }
 }
 
