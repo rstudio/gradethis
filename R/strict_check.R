@@ -75,78 +75,25 @@ strict_check <- function(success = "Correct!",
 }
 
 detect_mistakes <- function(user,
-                            solution,
-                            .name = NULL) {
-
-  # Check that the student's value has a
-  # match in the solution (and vice versa)
-  if (is.null(user) && !is.null(solution)) {
-    return(expected(solution, .name))
-  } else if (is.null(solution) && !is.null(user)) {
-    return(did_not_expect(user, .name))
-
-    # directly compare values that are atomics or names
-  } else if (is.atomic(user) || is.name(user)) {
-    if (user != solution) return(does_not_match(user, solution, .name))
-
-    # if a value is a call, iterate over its elements
-  } else {
-
-    # calls should be treated the same
-    # whether or not they use the pipe
-    user <- unpipe(user)
-    solution <- unpipe(solution)
-
-    # ensure that the submission and 
-    # the solution use the same call
-    if (user[[1]] != solution[[1]]) {
-      return(does_not_match(user, solution, .name))
-    }
-
-    # match unnamed arguments to names as R would, then 
-    # compare the named elements in the submission to 
-    # the named elements in the solution one at a time
-    user <- pryr::standardise_call(user)
-    solution <- pryr::standardise_call(solution)
-    named_args <- union(names(user), names(solution))
-    named_args <- named_args[named_args != ""]
-    first_name <- named_args[1] 
+                            solution) {
+  
+  # code should be checked in the order 
+  # of evaluation, whether or not the 
+  # student (and/or teacher) used a pipe
+  user <- order_calls(unpipe_all(user))
+  solution <- order_calls(unpipe_all(solution))
+  
+  max_length <- max(length(user), length(solution))
+  
+  for (i in seq_len(max_length)) {
+    if (i > length(user)) return("you missed something!")
+    if (i > length(solution)) return("you wrote too much!")
     
-    for (name in named_args) {
-      
-      # it would be distracting to name the
-      # first argument when giving feedback (e.g. .x)
-      if (name == first_name) {
-        message <- detect_mistakes(user[[name]], solution[[name]])
-      } else {
-        message <- detect_mistakes(user[[name]], solution[[name]], name)
-      }
-      if (!is.null(message)) return(message)
-    }
-
-    # Some arguments in the submission and solution may still be 
-    # unnamed. These arguments were not named by the author, nor 
-    # matched to a name by R. Get these arguments and then compare 
-    # them to each other one at a time by the order that they 
-    # appear in.
-    if (is.null(names(user))) {
-      user_unnamed <- user
-    } else {
-      user_unnamed <- user[names(user) == ""][-1]
-    }
-    if (is.null(names(solution))) {
-      solution_unnamed <- solution
-    } else {
-      solution_unnamed <- solution[names(solution) == ""][-1]
-    }
-
-    max_length <- max(length(user_unnamed), length(solution_unnamed))
-
-    for (i in seq_len(max_length)) {
-      message <- detect_mistakes(user_unnamed[[i]], solution_unnamed[[i]])
-      if (!is.null(message)) return(message)
+    if (user[[i]] != solution[[i]]) {
+      return(does_not_match(user[[i]], solution[[i]]))
     }
   }
+  NULL
 }
 
 expected <- function(this, .name = NULL) {
