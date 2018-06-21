@@ -7,7 +7,6 @@
 #' contain a top-level call to \%>\%, \code{unpipe()} returns it as is.
 #'
 #' @param code a quoted piece of code
-#' @export
 unpipe <- function(code) {
 
   # Ceci n'est pas une pipe
