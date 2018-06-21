@@ -30,7 +30,7 @@
 #'   the solution code
 #' @param solution (Optional) solution code surrounded by \code{quote()},
 #'   \code{rlang::quo()}, or provided as a character string.
-#' @param user (Optional) student code to check against the solution surrounded
+#' @param user (Optional) student code to check against the solution, surrounded
 #'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
 #'
 #' @return (character) A message. If the student answer differs from the
@@ -65,135 +65,50 @@ strict_check <- function(success = "Correct!",
     # (and we should let the student know how their answer is
     # incorrect)
   } else {
-    message <- detect_mistakes(user, solution)
-    if (is.null(message)) {
-      return(success)
-    } else {
-      return(message)
-    }
+    if (as.character(user)) user <- parse(text = "user")[[1]]
+    if (as.character(user)) solution <- parse(text = "solution")[[1]]
+    message <- detect_code_mistakes(user, solution)
+    
+    if (is.null(message)) return(success)
+    else return(message)
   }
 }
 
-detect_mistakes <- function(user,
+detect_code_mistakes <- function(user,
                             solution,
                             .name = NULL) {
-
-  # Check that the student's value has a
-  # match in the solution (and vice versa)
+  
+  # detect_code_mistakes will be run recursively and
+  # iteratively on each element of an answer
+  
+  # check if the user wrote too little
   if (is.null(user) && !is.null(solution)) {
     return(expected(solution, .name))
+    
+    # check if the user wrote too much
   } else if (is.null(solution) && !is.null(user)) {
     return(did_not_expect(user, .name))
-
-    # directly compare values that are atomics or names
-  } else if (is.atomic(user) || is.name(user)) {
-    if (user != solution) return(does_not_match(user, solution, .name))
-
-    # if a value is a call, iterate over its elements
-  } else {
-
-    # calls should be treated the same
-    # whether or not they use the pipe
-    user <- unpipe(user)
-    solution <- unpipe(solution)
-
-    # ensure that the submission and 
-    # the solution use the same call
-    if (user[[1]] != solution[[1]]) {
-      return(does_not_match(user, solution, .name))
-    }
-
-    # match unnamed arguments to names as R would, then 
-    # compare the named elements in the submission to 
-    # the named elements in the solution one at a time
-    user <- pryr::standardise_call(user)
-    solution <- pryr::standardise_call(solution)
-    named_args <- union(names(user), names(solution))
-    named_args <- named_args[named_args != ""]
-    first_name <- named_args[1] 
     
-    for (name in named_args) {
-      
-      # it would be distracting to name the
-      # first argument when giving feedback (e.g. .x)
-      if (name == first_name) {
-        message <- detect_mistakes(user[[name]], solution[[name]])
-      } else {
-        message <- detect_mistakes(user[[name]], solution[[name]], name)
-      }
-      if (!is.null(message)) return(message)
-    }
-
-    # Some arguments in the submission and solution may still be 
-    # unnamed. These arguments were not named by the author, nor 
-    # matched to a name by R. Get these arguments and then compare 
-    # them to each other one at a time by the order that they 
-    # appear in.
-    if (is.null(names(user))) {
-      user_unnamed <- user
-    } else {
-      user_unnamed <- user[names(user) == ""][-1]
-    }
-    if (is.null(names(solution))) {
-      solution_unnamed <- solution
-    } else {
-      solution_unnamed <- solution[names(solution) == ""][-1]
-    }
-
-    max_length <- max(length(user_unnamed), length(solution_unnamed))
-
-    for (i in seq_len(max_length)) {
-      message <- detect_mistakes(user_unnamed[[i]], solution_unnamed[[i]])
-      if (!is.null(message)) return(message)
-    }
-  }
-}
-
-expected <- function(this, .name = NULL) {
-  if (is.null(.name)) {
-    return(glue::glue(
-      "I expected your code to include {deparse(this)}. You may have ",
-      "referred to it in a different way, or left out an important argument name. ",
-      "Please try again."
-    ))
+    # iterate over the elements of a pipe 
+  } else if (is_pipe(user)) {
+    return(compare_pipes(user, solution, .name))
+    
+    # iterate over the elements of an infix operator 
+  } else if (is_infix(user)) {
+    return(compare_infixes(user, solution, .name))
+    
+    # iterate over the elements of a call 
+  } else if (is.call(user)) {
+    return(compare_calls(user, solution, .name))
+  
+    # directly compare entries that are atomics or names
+  } else if (is.atomic(user) || is.name(user)) {
+    return(compare_atomics_or_names(user, solution, .name))
+    
   } else {
-    return(glue::glue(
-      "I expected your code to include {.name} = {deparse(this)}. ",
-      "You may have referred to it in a different way, or left out an important ",
-      "argument name. Please try again."
-    ))
+    if (user != solution) return(does_not_match(user, solution, .name))
   }
+  
+  NULL
 }
 
-did_not_expect <- function(that, .name = NULL) {
-  if (is.null(.name)) {
-    return(glue::glue(
-      "I did not expect your code to include {deparse(that)}. ",
-      "You may have included an unnecessary value, or you may have left ",
-      "out an important argument name. Please try again."
-    ))
-  } else {
-    return(glue::glue(
-      "I did not expect your code to include {.name} = {deparse(that)}. ",
-      "You may have included an unnecessary value, or you may have used the wrong ",
-      "argument name. Please try again."
-    ))
-  }
-}
-
-does_not_match <- function(user, solution, .name = NULL) {
-  if (length(solution) > 1) solution <- solution[[1]]
-  if (length(user) > 1) user <- user[[1]]
-
-  if (is.null(.name)) {
-    return(glue::glue(
-      "I expected {deparse(solution)} where you wrote {deparse(user)}. ",
-      "Please try again."
-    ))
-  } else {
-    return(glue::glue(
-      "I expected {.name} = {deparse(solution)} where you wrote ",
-      "{.name} = {deparse(user)}. Please try again."
-    ))
-  }
-}
