@@ -61,7 +61,7 @@ missing_call <- function(that_call, this) {
 
 # surplus call
 surplus_call <- function(this_call, this) {
-  that_call <- prep(that_call)
+  this_call <- prep(this_call)
   this <- prep(this)
   
   glue::glue("I did not expect you to call {this_call} ",
@@ -79,7 +79,10 @@ wrong_call <- function(this_call, this, that_call) {
 }
 
 prep <- function(text) {
-  if (is.name(text) || is.call(text)) return(deparse(text))
+  if (is.name(text) || is.call(text)) {
+    text <- deparse(text)
+    return(gsub("\\(NULL\\)", "()", text))
+  }
   text
 }
 
