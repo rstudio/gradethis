@@ -36,6 +36,7 @@ is_dot <- function(name) {
 
 unpipe_all <- function(code) {
   if (length(code) == 1) return(code)
+  if (length(code) == 2 && is.null(code[[2]])) return(code)
   code <- as.call(purrr::map(as.list(code), unpipe_all))
   unpipe(code)
 }
