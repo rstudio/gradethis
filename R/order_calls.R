@@ -15,7 +15,8 @@ order_calls <- function(code) {
     code <- c(pre_pipe(code[[1]], name = names(code[1])), code[-1])
     code <- order_calls(code)
   }
-  code
+  code <- purrr::discard(code, is.null)
+  purrr::map(code, remove_null_from_call)
 }
 
 pre_pipe <- function(code, name = "") {
@@ -60,12 +61,27 @@ renest <- function(lst, .call = FALSE) {
 }
 
 # Modified from pryr::standardise_call
+# Returns a version of the call that has 
+# arguments in a standard order and 
+# argument names supplied for each argument after the first
 standardize_call <- function(call, env = parent.frame()) {
   stopifnot(is.call(call))
   f <- eval(call[[1]], env)
   if (!is.null(args(f))) {
-    match.call(args(f), call)
-  } else {
-    call
+    call <- match.call(args(f), call)
+  } 
+  
+  # because checking code should follow practise 
+  # of not naming the first argument
+  names(call)[[2]] <- ""
+  call
+}
+
+remove_null_from_call <- function(code){
+  if (is.call(code) && length(code) > 1) {
+    if (is.null(code[[2]]) && is.null(names(code[2]))) {
+      code[[2]] <- NULL
+    }
   }
+  code
 }
