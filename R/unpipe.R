@@ -10,8 +10,7 @@
 unpipe <- function(code) {
   
   # Ceci n'est pas une pipe
-  if (!is.call(code)) return(code)
-  if (as.character(code[[1]]) != "%>%") return(code)
+  if (!is_pipe(code)) return(code)
   
   # une pipe
   lhs <- code[[2]]
@@ -26,12 +25,17 @@ unpipe <- function(code) {
   if (any(dot)) {
     rhs[[which(dot)]] <- lhs
   } else {
-    rhs[3:(length(rhs) + 1)] <- rhs[2:length(rhs)]
-    rhs[[2]] <- lhs
+    rhs <- as.call(c(list(rhs[[1]], lhs), as.list(rhs[2:length(rhs)])))
   }
   rhs
 }
 
 is_dot <- function(name) {
   length(name) == 1 && as.character(name) == "."
+}
+
+unpipe_all <- function(code) {
+  if (length(code) == 1) return(code)
+  code <- as.call(purrr::map(as.list(code), unpipe_all))
+  unpipe(code)
 }
