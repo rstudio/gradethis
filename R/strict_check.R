@@ -74,32 +74,6 @@ strict_check <- function(success = NULL,
   }
 }
 
-detect_mistakes <- function(user,
-                            solution) {
-  
-  # code should be checked in the order 
-  # of evaluation, whether or not the 
-  # student (and/or teacher) used a pipe
-  user <- order_calls(unpipe_all(user))
-  solution <- order_calls(unpipe_all(solution))
-  
-  max_length <- max(length(user), length(solution))
-  
-  for (i in seq_len(max_length)) {
-    if (i > length(user)) return("you missed something!")
-    if (i > length(solution)) return("you wrote too much!")
-    
-    if (user[[i]] != solution[[i]]) {
-      return(classify_mismatch(user[[i]], solution[[i]]))
-    }
-  }
-  NULL
-}
-
-classify_mismatch <- function(user, solution) {
-  
-}
-
 # Praise messages
 .praise <- c("Absolutely fabulous!",
              "Amazing!", 
