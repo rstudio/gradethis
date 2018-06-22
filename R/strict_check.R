@@ -43,7 +43,7 @@
 #'
 #' @examples
 #' \dontrun{grading_demo()}
-strict_check <- function(success = "Correct!",
+strict_check <- function(success = NULL,
                          solution = NULL,
                          user = NULL) {
 
@@ -59,7 +59,7 @@ strict_check <- function(success = "Correct!",
 
     # Correct answers are all alike
   } else if (suppressWarnings(user == solution)) {
-    return(success)
+    return(paste(sample(.praise, 1), success))
 
     # But incorrect answers are each incorrect in their own way
     # (and we should let the student know how their answer is
@@ -67,7 +67,7 @@ strict_check <- function(success = "Correct!",
   } else {
     message <- detect_mistakes(user, solution)
     if (is.null(message)) {
-      return(success)
+      return(paste(sample(.praise, 1), success))
     } else {
       return(message)
     }
@@ -90,8 +90,52 @@ detect_mistakes <- function(user,
     if (i > length(solution)) return("you wrote too much!")
     
     if (user[[i]] != solution[[i]]) {
-      return(does_not_match(user[[i]], solution[[i]]))
+      return(classify_mismatch(user[[i]], solution[[i]]))
     }
   }
   NULL
 }
+
+classify_mismatch <- function(user, solution) {
+  
+}
+
+# Praise messages
+.praise <- c("Absolutely fabulous!",
+             "Amazing!", 
+             "Awesome!",
+             "Beautiful!", 
+             "Bravo!",
+             "Cool job!", 
+             "Delightful!", 
+             "Excellent!",
+             "Fantastic!", 
+             "Great work!", 
+             "I couldn't have done it better myself.",
+             "Impressive work!",
+             "Lovely job!", 
+             "Magnificent!", 
+             "Nice job!",
+             "Out of this world!", 
+             "Resplendent!", 
+             "Smashing!", 
+             "Someone knows what they're doing :)",
+             "Spectacular job!", 
+             "Splendid!",
+             "Success!",
+             "Super job!", 
+             "Superb work!",  
+             "Swell job!",
+             "Terrific!", 
+             "That's a first-class answer!", 
+             "That's glorious!", 
+             "That's marvelous!", 
+             "Very good!",
+             "Well done!",
+             "What first-rate work!", 
+             "Wicked smaht!", 
+             "Wonderful!", 
+             "You aced it!", 
+             "You rock!",
+             "You should be proud.",
+             ":)")
