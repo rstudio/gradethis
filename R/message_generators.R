@@ -8,7 +8,7 @@ missing_value <- function(that) {
   that <- prep(that)
   glue::glue("I expected your code to include {that}. You may have ",
              "referred to it in a different way, or left out an important ",
-            "argument name. {sample(.encourage, 1)}")
+            "argument name.")
 }
 
 # surplus value
@@ -16,7 +16,7 @@ surplus_value <- function(this) {
   this <- prep(this)
   glue::glue("I did not expect your code to include {this}. ",
              "You may have included an unnecessary value, or you may have left ",
-             "out an important argument name. {sample(.encourage, 1)}")
+             "out an important argument name.")
 }
 
 
@@ -24,7 +24,7 @@ surplus_value <- function(this) {
 wrong_value <- function(this, that) {
   this <- prep(this)
   that <- prep(that)
-  glue::glue("I expected {that} where you wrote {this}. {sample(.encourage, 1)}")
+  glue::glue("I expected {that} where you wrote {this}.")
 }
 
 # missing_argument
@@ -35,7 +35,7 @@ missing_argument <- function(this_call, that_name) {
   glue::glue("Your call to {this_call} should include ",
              "an argument named {that_name}. You may have ",
              "referred to it in a different way, or left ",
-             "out an important argument. {sample(.encourage, 1)}")
+             "out an important argument.")
 }
 
 # surplus argument
@@ -48,7 +48,7 @@ surplus_argument <- function(this_call, this_name, this) {
              "include the argument {this_name} = {this}. You ",
              "may have included an unnecessary argument, or you ",
              "may have left out or misspelled an important ",
-             "argument name. {sample(.encourage, 1)}")
+             "argument name.")
 }
 
 # missing call
@@ -56,7 +56,7 @@ missing_call <- function(that_call, this) {
   that_call <- prep(that_call)
   this <- prep(this)
   
-  glue::glue("I expected you to call {that_call} on {this}. {sample(.encourage, 1)}")
+  glue::glue("I expected you to call {that_call} on {this}.")
 }
 
 # surplus call
@@ -65,7 +65,7 @@ surplus_call <- function(this_call, this) {
   this <- prep(this)
   
   glue::glue("I did not expect you to call {this_call} ",
-             "(or anything else) on {this}. {sample(.encourage, 1)}")
+             "(or anything else) on {this}.")
 }
 
 # wrong call
@@ -75,7 +75,7 @@ wrong_call <- function(this_call, this, that_call) {
   that_call <- prep(that_call)
   
   glue::glue("I expected you to call {that_call} on {this} ",
-             "(instead of {this_call}). {sample(.encourage, 1)}")
+             "(instead of {this_call}).")
 }
 
 prep <- function(text) {
@@ -85,16 +85,3 @@ prep <- function(text) {
   }
   text
 }
-
-# Encouragement messages
-.encourage <- c("Please try again.",
-                "Give it another try.",
-                "Let's try it again.",
-                "Try it again; next time's the charm!",
-                "Don't give up now, try it one more time.",
-                "But no need to fret, try it again.",
-                "Try it again. I have a good feeling about this.",
-                "Try it again. You get better each time.",
-                "Try it again. Perseverence is the key to success.",
-                "That's okay: you learn more from mistakes than successes. Let's do it one more time.")
-                

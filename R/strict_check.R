@@ -59,7 +59,7 @@ strict_check <- function(success = NULL,
 
     # Correct answers are all alike
   } else if (suppressWarnings(user == solution)) {
-    return(paste(sample(.praise, 1), success))
+    return(success)
 
     # But incorrect answers are each incorrect in their own way
     # (and we should let the student know how their answer is
@@ -67,49 +67,9 @@ strict_check <- function(success = NULL,
   } else {
     message <- detect_mistakes(user, solution)
     if (is.null(message)) {
-      return(paste(sample(.praise, 1), success))
+      return(success)
     } else {
       return(message)
     }
   }
 }
-
-# Praise messages
-.praise <- c("Absolutely fabulous!",
-             "Amazing!", 
-             "Awesome!",
-             "Beautiful!", 
-             "Bravo!",
-             "Cool job!", 
-             "Delightful!", 
-             "Excellent!",
-             "Fantastic!", 
-             "Great work!", 
-             "I couldn't have done it better myself.",
-             "Impressive work!",
-             "Lovely job!", 
-             "Magnificent!", 
-             "Nice job!",
-             "Out of this world!", 
-             "Resplendent!", 
-             "Smashing!", 
-             "Someone knows what they're doing :)",
-             "Spectacular job!", 
-             "Splendid!",
-             "Success!",
-             "Super job!", 
-             "Superb work!",  
-             "Swell job!",
-             "Terrific!", 
-             "That's a first-class answer!", 
-             "That's glorious!", 
-             "That's marvelous!", 
-             "Very good!",
-             "Well done!",
-             "What first-rate work!", 
-             "Wicked smaht!", 
-             "Wonderful!", 
-             "You aced it!", 
-             "You rock!",
-             "You should be proud.",
-             ":)")
