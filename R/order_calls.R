@@ -69,11 +69,13 @@ standardize_call <- function(call, env = parent.frame()) {
   f <- eval(call[[1]], env)
   if (!is.null(args(f))) {
     call <- match.call(args(f), call)
+    
+    # because checking code should follow practice 
+    # of not naming the first argument
+    first_arg <- names(as.list(args(f)))[1]
+    names(call)[which(names(call) == first_arg)] <- ""
   } 
   
-  # because checking code should follow practise 
-  # of not naming the first argument
-  names(call)[[2]] <- ""
   call
 }
 

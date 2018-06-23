@@ -18,8 +18,6 @@ detect_mistakes <- function(user,
           length(solution[[i]]) == 1) {
             return(mismatched(user, solution, i))
       } else {
-        # TO DO: call order_calls on these! 
-        # And don't delete first argument name
         return(detect_mistakes(user[[i]], solution[[i]]))
       }
     }
