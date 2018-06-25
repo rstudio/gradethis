@@ -1,11 +1,12 @@
 detect_mistakes <- function(user,
                             solution) {
   
-  # code should be checked in the order 
-  # of evaluation, whether or not the 
-  # student (and/or teacher) used a pipe
-  user <- order_calls(unpipe_all(user))
-  solution <- order_calls(unpipe_all(solution))
+  # code should be checked in the opposite order 
+  # of evaluation (e.g. from the outside in for 
+  # nested notation), whether or not the student 
+  # (and/or teacher) used a pipe
+  user <- rev(order_calls(unpipe_all(user)))
+  solution <- rev(order_calls(unpipe_all(solution)))
   
   max_length <- max(length(user), length(solution))
   
@@ -13,14 +14,16 @@ detect_mistakes <- function(user,
     
     # Did the user miss something?
     if (i > length(user)) 
-      return(missed(solution, i))
+      return(missed(solution, i)) # I expected you to provide ___ as an argument to ___
+                                  # I expected you to provide ___ = ___ as a nargument to ___
     
     # Did the user write too much?
     if (i > length(solution)) 
-      return(exceeded(user, i))
+      return(exceeded(user, i)) # I did not expect you to provide ___ as an argument to ___
+                                # I did not expect you to provide an argument named ___ to ___
     
     # Does the user code not match the solution code?
-    if (user[[i]] != solution[[i]]) 
+    if (user[[i]] != solution[[i]]) {
       return(isolate_mismatch(user, solution, i))
   }
   NULL
@@ -46,7 +49,7 @@ isolate_mismatch <- function(user, solution, i) {
     
     # First check that the calls match. 
     if (user[[1]] != solution[[1]]) {
-      return(decipher_mismatch(user[[1]], solution[[1]], i))
+      return(wrong_value(user[[1]], solution[[1]], i))
       
       # Then inspect the arguments.
     } else {
@@ -72,48 +75,6 @@ isolate_mismatch <- function(user, solution, i) {
     }
   }
   stop("Mismatch detected, but not spotted.")
-}
-
-# classify mismatched elements
-decipher_mismatch <- function(user, solution, i) {
-  
-  # A mismatch can be the source of an error, or it can indicate 
-  # an error that occurs further up the call trace (e.g. two 
-  # arguments are likely to mismatch if they are intended for two 
-  # different functions). This code reviews the remainder of the 
-  # call trace to spot the ultimate source of the error.
-  
-  # Extract the call trace that led to the mismatch
-  user_len <- length(user)
-  solution_len <- length(solution)
-  
-  user_trace <- rev(user[i:user_len])
-  solution_trace <- rev(solution[i:solution_len])
-  
-  remove_arguments <- function(x) if(is.call(x)) as.call(as.list(x[[1]]))
-  user_trace <- purrr::map(user_trace, remove_arguments)
-  solution_trace <- purrr::map(solution_trace, remove_arguments)
-  
-  # Compare items on the trace one at a time to spot the error
-  max_length <- max(length(user), length(solution))
-  for (k in seq_len(max_length)) {
-    # Did the user miss a call?
-    if (k > length(user_trace)) {
-      if (user_len - k
-      return(wrong_value(user[user_len - k], solution[k]))
-    }
-    # Did the user insert an extra call?
-    # Did the user call the wrong call?
-  }
-  
-  # The mismatched element is a call *on something*
-} else if (i != 1 && is.call(user[[i]]) && is.call(solution[[i]])) {
-  wrong_call(this_call = user[i], 
-             this = renest(user[seq_len(i-1)]), 
-             that_call = solution[i])
-} else {
-  wrong_value(this = user[[i]], that = solution[[i]])
-}
 }
         
 
