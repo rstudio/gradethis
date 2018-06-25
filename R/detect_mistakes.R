@@ -10,28 +10,70 @@ detect_mistakes <- function(user,
   max_length <- max(length(user), length(solution))
   
   for (i in seq_len(max_length)) {
-    if (i > length(user)) return(missed(solution, i))
-    if (i > length(solution)) return(exceeded(user, i))
     
-    if (user[[i]] != solution[[i]]) {
-      if (length(user[[i]]) == 1 &&
-          length(solution[[i]]) == 1) {
-        
-        # surplus or missing arguments of the correct function 
-        # will surface as a mismatch in the first argument
-        if (i == 1) return(first_mismatched(user, solution))
-        else return(mismatched(user, solution, i))
-        
-      } else {
-        
-        # if the element contains multiple parts (or should)
-        # see which part caused the error
-        return(detect_mistakes(user[[i]], solution[[i]]))
-      }
-    }
+    # Did the user miss something?
+    if (i > length(user)) 
+      return(missed(solution, i))
+    
+    # Did the user write too much?
+    if (i > length(solution)) 
+      return(exceeded(user, i))
+    
+    # Does the user code not match the solution code?
+    if (user[[i]] != solution[[i]]) 
+      return(decipher_mismatch(user, solution, i))
   }
   NULL
 }
+    
+mismatched <- function(user, solution, i) {
+  
+  # We've honed in on the error when we can narrow 
+  # it down to a single incorrect user element 
+  # matched to a single correct solution element
+  if (length(user[[i]]) == 1 &&
+      length(solution[[i]]) == 1) {
+    return(decipher_mismatch(user, solution, i))
+    
+    # If we cannot do this, we are working with two 
+    # multipart calls and we need to identify which 
+    # elements of the calls do not align (here we 
+    # rely heavily on the fact that both calls have 
+    # been previously standardized)
+  } else {
+    user <- user[[i]]
+    solution <- solution[[i]]
+    
+    # First check that the calls match. 
+    if (user[[1]] != solution[[1]]) {
+      return(decipher_mismatch(user[[1]], solution[[1]], i))
+      
+      # Then inspect the arguments.
+    } else {
+      for (j in seq_along(user)) {
+        if (j == 1) next
+        
+        # Did the user leave out an argument?
+        if (j > length(user)) 
+          return(missed_argument(this_call = user[[1]],
+                                 that_name = names(solution[[j]])))
+        
+        # Did the user include an extra argument?
+        if (j > length(solution)) 
+          return(surplus_argument(this_call = user[[1]],
+                                  this = user[[j]],
+                                  this_name = names(user[[j]])))
+        
+        # Do two arguments conflict? They may themselves 
+        # contain an expression that we should drill into.
+        if (user[[j]] != solution[[j]]) 
+          return(detect_mistakes(user, solution))
+      }
+    }
+  }
+  stop("Mismatch detected, but not spotted.")
+}
+        
 
 # classify missed elements
 missed <- function(solution, i){
@@ -105,35 +147,30 @@ first_mismatched <- function(user, solution) {
     surplus_argument(this_call = call,
                      this_name = names(user[1]), 
                      this = user[[1]])
+    
+  # Screen for the involvement of an 
+  # infix operator in the user's error
+  # (case where user incorectly uses an infix)
+  } else if (length(user) == 2 && 
+             is_infix(user[[2]]) && 
+             is.call(solution[[1]])) {
+      incorrect <- paste(deparse(user[[2]][[1]]), deparse(user[[1]]))
+      wrong_value(this = incorrect,
+                  that = solution[1])
+      
+  # (case where user incorectly does not use an infix)    
+  }
+    
+  
+    
+    
   } else {
     mismatched(user, solution, 1)
   }
 }
 
 # classify mismatched elements
-mismatched <- function(user, solution, i) {
-  
-  # The mismatched element is the second argument of an infix operator
-  if (i == 1 && length(user) == 2 && is_infix(user[[2]])) {
-    
-    # ...and the solution also uses an infix operator
-    if (length(solution) == 2 && is_infix(solution[[2]])) {
-      
-      # ...the same infix operator
-      if (solution[[2]][[1]] == user[[2]][[1]]) {
-      wrong_value(user[[i]], solution[[i]])
-      
-      # ...or a different infix operator
-      } else {
-        incorrect <- paste(deparse(user[[2]]), deparse(user[[1]]))
-        correct <- paste(deparse(solution[[2]]), deparse(solution[[1]]))
-        wrong_value(incorrect, correct)
-      }
-      
-    # ...or the solution uses a call that is not an infix operator
-    } else if (is.call(solution[[1]])) {
-        wrong_call(user[[2]][[1]], user[[1]], solution[1])
-    }
+decipher_mismatch <- function(user, solution, i) {
   
   # The mismatched element is a call *on something*
   } else if (i != 1 && is.call(user[[i]]) && is.call(solution[[i]])) {
