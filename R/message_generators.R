@@ -45,16 +45,25 @@ surplus_value <- function(this) {
 }
 
 # surplus argument
-surplus_argument <- function(this_call, this_name, this) {
+surplus_argument <- function(this_call, this_name = NULL, this) {
   this_call <- prep(this_call)
-  this_name <- prep(this_name)
   this      <- prep(this)
   
-  glue::glue("I did not expect your call to {this_call} to ",
-             "include the argument {this_name} = {this}. You ",
-             "may have included an unnecessary argument, or you ",
-             "may have left out or misspelled an important ",
-             "argument name.")
+  if (is.null(this)) {
+    glue::glue("I did not expect your call to {this_call} to ",
+               "include {this} as an argument. You ",
+               "may have included an unnecessary argument, or you ",
+               "may have left out or misspelled an important ",
+               "argument name.")
+  } else {
+    this_name <- prep(this_name)
+    
+    glue::glue("I did not expect your call to {this_call} to ",
+               "include the argument {this_name} = {this}. You ",
+               "may have included an unnecessary argument, or you ",
+               "may have left out or misspelled an important ",
+               "argument name.")
+  }
 }
 
 # surplus call
