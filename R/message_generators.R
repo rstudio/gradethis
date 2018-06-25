@@ -15,7 +15,7 @@ missing_value <- function(that) {
 missing_argument <- function(this_call, that_name = NULL) {
   this_call <- prep(this_call)
   
-  if (is.null(that_name)) {
+  if (is.null(that_name) || that_name == "") {
     glue::glue("You should include an argument in your call to ",
                "{this_call}. I do not see one.")
   } else {
@@ -45,11 +45,11 @@ surplus_value <- function(this) {
 }
 
 # surplus argument
-surplus_argument <- function(this_call, this_name = NULL, this) {
+surplus_argument <- function(this_call, this, this_name = NULL) {
   this_call <- prep(this_call)
   this      <- prep(this)
   
-  if (is.null(this)) {
+  if (is.null(this_name) || this_name == "") {
     glue::glue("I did not expect your call to {this_call} to ",
                "include {this} as an argument. You ",
                "may have included an unnecessary argument, or you ",
