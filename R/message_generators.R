@@ -11,31 +11,37 @@ missing_value <- function(that) {
             "argument name.")
 }
 
+# missing_argument
+missing_argument <- function(this_call, that_name = NULL) {
+  this_call <- prep(this_call)
+  
+  if (is.null(that_name)) {
+    glue::glue("You should include an argument in your call to ",
+               "{this_call}. I do not see one.")
+  } else {
+    that_name <- prep(that_name)
+  
+    glue::glue("Your call to {this_call} should include ",
+               "an argument named {that_name}. You may have ",
+               "referred to it in a different way, or left ",
+               "out an important argument.")
+  }
+}
+
+# missing call
+missing_call <- function(that_call, this) {
+  that_call <- prep(that_call)
+  this <- prep(this)
+  
+  glue::glue("I expected you to call {that_call} on {this}.")
+}
+
 # surplus value
 surplus_value <- function(this) {
   this <- prep(this)
   glue::glue("I did not expect your code to include {this}. ",
              "You may have included an unnecessary value, or you may have left ",
              "out an important argument name.")
-}
-
-
-# wrong value
-wrong_value <- function(this, that) {
-  this <- prep(this)
-  that <- prep(that)
-  glue::glue("I expected {that} where you wrote {this}.")
-}
-
-# missing_argument
-missing_argument <- function(this_call, that_name) {
-  this_call <- prep(this_call)
-  that_name <- prep(that_name)
-  
-  glue::glue("Your call to {this_call} should include ",
-             "an argument named {that_name}. You may have ",
-             "referred to it in a different way, or left ",
-             "out an important argument.")
 }
 
 # surplus argument
@@ -51,14 +57,6 @@ surplus_argument <- function(this_call, this_name, this) {
              "argument name.")
 }
 
-# missing call
-missing_call <- function(that_call, this) {
-  that_call <- prep(that_call)
-  this <- prep(this)
-  
-  glue::glue("I expected you to call {that_call} on {this}.")
-}
-
 # surplus call
 surplus_call <- function(this_call, this) {
   this_call <- prep(this_call)
@@ -66,6 +64,13 @@ surplus_call <- function(this_call, this) {
   
   glue::glue("I did not expect you to call {this_call} ",
              "(or anything else) on {this}.")
+}
+
+# wrong value
+wrong_value <- function(this, that) {
+  this <- prep(this)
+  that <- prep(that)
+  glue::glue("I expected {that} where you wrote {this}.")
 }
 
 # wrong call
