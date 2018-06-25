@@ -16,12 +16,16 @@ detect_mistakes <- function(user,
     if (i > length(user)) 
       return(missing_argument(this = user[[i-1]], 
                               that = solution[[i]], 
-                              name = names(solution[i])))
+                              that_name = names(solution[i])))
     
     # Did the user write too much?
-    if (i > length(solution)) 
-      return(exceeded(user, i)) # I did not expect you to provide ___ as an argument to ___
-                                # I did not expect you to provide an argument named ___ to ___
+    if (i > length(solution)) {
+      return(surplus_argument(this_call = user[[i - 1]][1], 
+                              this_name = names(user[i]),
+                              this = ifelse(is.call(user[[i]]), 
+                                            renest(user[i:length(user)]), 
+                                            user[[i]])
+                              ))
     
     # Does the user code not match the solution code?
     if (user[[i]] != solution[[i]])
@@ -78,73 +82,5 @@ isolate_mismatch <- function(user, solution, i) {
   stop("Mismatch detected, but not spotted.")
 }
 
-# classify the extra element(s)
-exceeded <- function(user, i) {
-  extra <- user[[i]]
-  name <- names(user[i])
-  
-  if (!is.null(name) && 
-      name != "" && 
-      length(user) > i + 1 &&
-      is.call(user[[i + 1]])) {
-    surplus_argument(this_call = user[[i + 1]][i], 
-                     this_name = name, 
-                     this = extra)
-  } else if (is.call(extra)) {
-    keep <- renest(user[seq_len(i-1)])
-    surplus_call(extra, keep)
-  } else {
-    surplus_value(extra)
-  }
-}
 
-
-# classify mismatched first elements
-first_mismatched <- function(user, solution) {
-  
-  # Screen for missing argument
-  if (is.call(user[[1]]) && 
-      length(solution) > 1 &&
-      is.call(solution[[2]]) &&
-      user[[1]][[1]] == solution[[2]][[1]]) {
-    missing_argument(this_call = user[1],
-                     that_name = names(solution[1]))
-    
-  # Screen for surplus argument 
-  # (case where the solution contains no arguments)
-  } else if (is.call(solution[[1]]) && 
-             length(user) > 1 &&
-             is.call(user[[2]]) &&
-             solution[[1]][[1]] == user[[2]][[1]]) {
-    surplus_argument(this_call = solution[1],
-                     this_name = names(user[1]), 
-                     this = user[[1]])
-    
-  # Screen for surplus argument 
-  # (case where the solution contains other arguments)    
-  } else if (length(solution) > 1 &&
-             is.call(solution[[2]]) && 
-             length(user) > 1 &&
-             is.call(user[[2]]) &&
-             solution[[2]][[1]] == user[[2]][[1]]){
-    call <- paste0(user[[2]][[1]], "()")
-    surplus_argument(this_call = call,
-                     this_name = names(user[1]), 
-                     this = user[[1]])
-    
-  # Screen for the involvement of an 
-  # infix operator in the user's error
-  # (case where user incorectly uses an infix)
-  } else if (length(user) == 2 && 
-             is_infix(user[[2]]) && 
-             is.call(solution[[1]])) {
-      incorrect <- paste(deparse(user[[2]][[1]]), deparse(user[[1]]))
-      wrong_value(this = incorrect,
-                  that = solution[1])
-      
-  # (case where user incorectly does not use an infix)    
-  } else {
-    mismatched(user, solution, 1)
-  }
-}
 

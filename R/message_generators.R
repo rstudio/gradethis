@@ -4,15 +4,29 @@
 # incorrect/user code, which is always at hand). Cases:
 
 # missing argument
-missing_argument <- function(this, that, name = NULL) {
+missing_argument <- function(this, that, that_name = NULL) {
   this <- prep(this)
   that <- prep(that)
-  if (!is.null(name) && name != "") 
-    that <- paste(deparse(name), "=", that)
+  if (!is.null(that_name) && that_name != "") 
+    that <- paste(deparse(that_name), "=", that)
   
   glue::glue("Your call to {this} should include the argument {that} ",
              "(perhaps with some arguments of its own). You may have ",
              "referred to it in a different way, or left out an important ",
+             "argument name.")
+}
+
+# surplus argument
+surplus_argument <- function(this_call, this, this_name = NULL) {
+  this_call <- prep(this_call)
+  this      <- prep(this)
+  if (!is.null(this_name) && this_name != "") 
+    this <- paste(deparse(this_name), "=", this)
+  
+  glue::glue("I did not expect your call to {this_call} to ",
+             "include {this}. You ",
+             "may have included an unnecessary argument, or you ",
+             "may have left out or misspelled an important ",
              "argument name.")
 }
 
@@ -34,27 +48,7 @@ surplus_value <- function(this) {
              "out an important argument name.")
 }
 
-# surplus argument
-surplus_argument <- function(this_call, this, this_name = NULL) {
-  this_call <- prep(this_call)
-  this      <- prep(this)
-  
-  if (is.null(this_name) || this_name == "") {
-    glue::glue("I did not expect your call to {this_call} to ",
-               "include {this} as an argument. You ",
-               "may have included an unnecessary argument, or you ",
-               "may have left out or misspelled an important ",
-               "argument name.")
-  } else {
-    this_name <- prep(this_name)
-    
-    glue::glue("I did not expect your call to {this_call} to ",
-               "include the argument {this_name} = {this}. You ",
-               "may have included an unnecessary argument, or you ",
-               "may have left out or misspelled an important ",
-               "argument name.")
-  }
-}
+
 
 # surplus call
 surplus_call <- function(this_call, this) {
