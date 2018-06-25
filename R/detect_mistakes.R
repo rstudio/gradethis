@@ -21,12 +21,12 @@ detect_mistakes <- function(user,
     
     # Does the user code not match the solution code?
     if (user[[i]] != solution[[i]]) 
-      return(decipher_mismatch(user, solution, i))
+      return(isolate_mismatch(user, solution, i))
   }
   NULL
 }
     
-mismatched <- function(user, solution, i) {
+isolate_mismatch <- function(user, solution, i) {
   
   # We've honed in on the error when we can narrow 
   # it down to a single incorrect user element 
@@ -72,6 +72,48 @@ mismatched <- function(user, solution, i) {
     }
   }
   stop("Mismatch detected, but not spotted.")
+}
+
+# classify mismatched elements
+decipher_mismatch <- function(user, solution, i) {
+  
+  # A mismatch can be the source of an error, or it can indicate 
+  # an error that occurs further up the call trace (e.g. two 
+  # arguments are likely to mismatch if they are intended for two 
+  # different functions). This code reviews the remainder of the 
+  # call trace to spot the ultimate source of the error.
+  
+  # Extract the call trace that led to the mismatch
+  user_len <- length(user)
+  solution_len <- length(solution)
+  
+  user_trace <- rev(user[i:user_len])
+  solution_trace <- rev(solution[i:solution_len])
+  
+  remove_arguments <- function(x) if(is.call(x)) as.call(as.list(x[[1]]))
+  user_trace <- purrr::map(user_trace, remove_arguments)
+  solution_trace <- purrr::map(solution_trace, remove_arguments)
+  
+  # Compare items on the trace one at a time to spot the error
+  max_length <- max(length(user), length(solution))
+  for (k in seq_len(max_length)) {
+    # Did the user miss a call?
+    if (k > length(user_trace)) {
+      if (user_len - k
+      return(wrong_value(user[user_len - k], solution[k]))
+    }
+    # Did the user insert an extra call?
+    # Did the user call the wrong call?
+  }
+  
+  # The mismatched element is a call *on something*
+} else if (i != 1 && is.call(user[[i]]) && is.call(solution[[i]])) {
+  wrong_call(this_call = user[i], 
+             this = renest(user[seq_len(i-1)]), 
+             that_call = solution[i])
+} else {
+  wrong_value(this = user[[i]], that = solution[[i]])
+}
 }
         
 
@@ -159,26 +201,8 @@ first_mismatched <- function(user, solution) {
                   that = solution[1])
       
   # (case where user incorectly does not use an infix)    
-  }
-    
-  
-    
-    
   } else {
     mismatched(user, solution, 1)
-  }
-}
-
-# classify mismatched elements
-decipher_mismatch <- function(user, solution, i) {
-  
-  # The mismatched element is a call *on something*
-  } else if (i != 1 && is.call(user[[i]]) && is.call(solution[[i]])) {
-    wrong_call(this_call = user[i], 
-               this = renest(user[seq_len(i-1)]), 
-               that_call = solution[i])
-  } else {
-    wrong_value(this = user[[i]], that = solution[[i]])
   }
 }
 
