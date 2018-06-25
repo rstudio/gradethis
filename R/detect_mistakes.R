@@ -14,8 +14,9 @@ detect_mistakes <- function(user,
     
     # Did the user miss something?
     if (i > length(user)) 
-      return(missed(solution, i)) # I expected you to provide ___ as an argument to ___
-                                  # I expected you to provide ___ = ___ as a nargument to ___
+      return(missing_argument(this = user[[i-1]], 
+                              that = solution[[i]], 
+                              name = names(solution[i])))
     
     # Did the user write too much?
     if (i > length(solution)) 
@@ -23,7 +24,7 @@ detect_mistakes <- function(user,
                                 # I did not expect you to provide an argument named ___ to ___
     
     # Does the user code not match the solution code?
-    if (user[[i]] != solution[[i]]) {
+    if (user[[i]] != solution[[i]])
       return(isolate_mismatch(user, solution, i))
   }
   NULL
@@ -75,26 +76,6 @@ isolate_mismatch <- function(user, solution, i) {
     }
   }
   stop("Mismatch detected, but not spotted.")
-}
-        
-
-# classify missed elements
-missed <- function(solution, i){
-  name <- names(solution[i - 1])
-  
-  if (!is.null(name) && 
-      name != "" &&
-      is.call(user[[i - 1]]) &&
-      is.call(solution[[i]]) &&
-      solution[[i]][[1]] == user[[i - 1]][[1]]) {
-    missing_argument(this_call = user[[i - 1]][1], 
-                     that_name = name)
-  } else if (is.call(solution[[i]])) {
-    missing_call(that_call = solution[[i]][1],
-                 this = renest(user))
-  } else {
-    missing_value(solution[[i]])
-  }
 }
 
 # classify the extra element(s)

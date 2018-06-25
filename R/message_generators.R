@@ -3,30 +3,20 @@
 # because it is not at hand in the submission. "this" always refers to
 # incorrect/user code, which is always at hand). Cases:
 
-# missing value
-missing_value <- function(that) {
+# missing argument
+missing_argument <- function(this, that, name = NULL) {
+  this <- prep(this)
   that <- prep(that)
-  glue::glue("I expected your code to include {that}. You may have ",
+  if (!is.null(name) && name != "") 
+    that <- paste(deparse(name), "=", that)
+  
+  glue::glue("Your call to {this} should include the argument {that} ",
+             "(perhaps with some arguments of its own). You may have ",
              "referred to it in a different way, or left out an important ",
-            "argument name.")
+             "argument name.")
 }
 
-# missing_argument
-missing_argument <- function(this_call, that_name = NULL) {
-  this_call <- prep(this_call)
-  
-  if (is.null(that_name) || that_name == "") {
-    glue::glue("You should include an argument in your call to ",
-               "{this_call}. I do not see one.")
-  } else {
-    that_name <- prep(that_name)
-  
-    glue::glue("Your call to {this_call} should include ",
-               "an argument named {that_name}. You may have ",
-               "referred to it in a different way, or left ",
-               "out an important argument.")
-  }
-}
+####
 
 # missing call
 missing_call <- function(that_call, this) {
@@ -93,9 +83,7 @@ wrong_call <- function(this_call, this, that_call) {
 }
 
 prep <- function(text) {
-  if (is.name(text) || is.call(text)) {
-    text <- deparse(text)
-    return(gsub("\\(NULL\\)", "()", text))
-  }
+  if (is.call(text)) text <- text[1]
+  if (!is.character(text)) text <- deparse(text)
   text
 }
