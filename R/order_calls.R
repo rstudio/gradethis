@@ -48,8 +48,14 @@ renest <- function(lst, .call = FALSE) {
   
   nest <- function(a, b) {
     if (is.call(b)) {
-      # is b[[2]] not a NULL placeholder?
-      if (!is.null(b[[2]]) || length(b) != 2) b[3:(length(b) + 1)] <- b[2:length(b)]
+      if (length(b) > 1) {
+        
+        # double check that the function does 
+        # not contain a placeholder NULL argument
+        if (length(b) != 2 || !is.null(b[[2]])) { 
+          b[3:(length(b) + 1)] <- b[2:length(b)]
+        }
+      } 
       b[[2]] <- a
     }
     b
