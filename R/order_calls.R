@@ -47,18 +47,25 @@ repipe <- function(lst, .call = FALSE) {
 renest <- function(lst, .call = FALSE) {
   
   nest <- function(a, b) {
-    if (is.call(b)) {
-      if (length(b) > 1) {
+    if (is.call(a)) {
+      if (length(a) > 1) {
         
         # double check that the function does 
         # not contain a placeholder NULL argument
-        if (length(b) != 2 || !is.null(b[[2]])) { 
-          b[3:(length(b) + 1)] <- b[2:length(b)]
+        if (length(a) != 2 || !is.null(a[[2]])) { 
+          if (!is.null(names(a))) {
+            names_a <- names(a)
+            names_a <- c(names(a)[1], "", names(a)[2:length(a)])
+            a[3:(length(a) + 1)] <- a[2:length(a)]
+            names(a) <- names_a
+          } else {
+            a[3:(length(a) + 1)] <- a[2:length(a)]
+          }
         }
       } 
-      b[[2]] <- a
+      a[[2]] <- b
     }
-    b
+    a
   }
   
   code <- purrr::reduce(lst, nest)
