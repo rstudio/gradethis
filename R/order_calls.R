@@ -78,18 +78,22 @@ renest <- function(lst, .call = FALSE) {
 # Returns a version of the call that has 
 # arguments in a standard order and 
 # argument names supplied for each argument after the first
-standardize_call <- function(call, env = parent.frame()) {
-  stopifnot(is.call(call))
-  f <- eval(call[[1]], env)
+standardize_call <- function(code, env = parent.frame()) {
+  stopifnot(is.call(code))
+  f <- eval(code[[1]], env)
   if (!is.null(args(f))) {
-    call <- match.call(args(f), call)
+    call <- match.call(args(f), code)
     
     # because checking code should follow practice 
-    # of not naming the first argument
+    # of not naming the first argument (unless the 
+    # user deliberately does so)
     first_arg <- names(as.list(args(f)))[1]
-    names(call)[which(names(call) == first_arg)] <- ""
-  } 
-  
+    if (!any(names(code) == first_arg)) {
+      names(call)[which(names(call) == first_arg)] <- ""
+    }
+  } else {
+    call <- code
+  }
   call
 }
 
