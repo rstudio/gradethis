@@ -8,7 +8,7 @@ missing_argument <- function(this, that, that_name = NULL) {
   this <- prep(this)
   that <- prep(that)
   if (!is.null(that_name) && that_name != "") 
-    that <- paste(deparse(that_name), "=", that)
+    that <- paste(that_name, "=", that)
   
   glue::glue("Your call to {this} should include the argument {that} ",
              "(perhaps with some arguments of its own). You may have ",
@@ -21,7 +21,7 @@ surplus_argument <- function(this_call, this, this_name = NULL) {
   this_call <- prep(this_call)
   this      <- prep(this)
   if (!is.null(this_name) && this_name != "") 
-    this <- paste(deparse(this_name), "=", this)
+    this <- paste(this_name, "=", this)
   
   glue::glue("I did not expect your call to {this_call} to ",
              "include {this}. You ",
@@ -36,12 +36,23 @@ wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
   that <- prep(that)
   
   if (!is.null(that_name) && that_name != "") 
-    that <- paste(deparse(that_name), "=", that)
+    that <- paste(that_name, "=", that)
   if (!is.null(this_name) && this_name != "") 
-    this <- paste(deparse(this_name), "=", this)
+    this <- paste(this_name, "=", this)
   
   glue::glue("I expected {that} where you wrote {this}.")
 }
+
+prep <- function(text) {
+  if (is.call(text)) text <- text[1]
+  if (!is.character(text)) text <- deparse(text)
+  text
+}
+
+
+
+
+
 
 ####
 
@@ -84,8 +95,3 @@ wrong_call <- function(this_call, this, that_call) {
              "(instead of {this_call}).")
 }
 
-prep <- function(text) {
-  if (is.call(text)) text <- text[1]
-  if (!is.character(text)) text <- deparse(text)
-  text
-}
