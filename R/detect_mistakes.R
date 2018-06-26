@@ -47,7 +47,7 @@ isolate_mismatch <- function(user, solution, i) {
     
     # errors that involve an infix operator make more 
     # sense if the explanation refers to the operator
-    if (i == 2 && is_infix(user[[1]])) {
+    if (i == 2 && is_infix(user[[1]]) && length(user[[1]]) == 1) {
       wrong <- paste(deparse(user[[1]][[1]]), deparse(user[[2]]))
       
       # If the error is the name of a call, don't muddle
@@ -60,7 +60,7 @@ isolate_mismatch <- function(user, solution, i) {
       wrong <- user[[i]]
     }
     
-    if (i == 2 && is_infix(solution[[1]])) {
+    if (i == 2 && is_infix(solution[[1]]) && length(solution[[1]]) == 1) {
       right <- paste(deparse(solution[[1]][[1]]), deparse(solution[[2]]))
       
     } else if (is.call(solution[[i]])) {
