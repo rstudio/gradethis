@@ -89,10 +89,10 @@ isolate_mismatch <- function(user, solution, i) {
     if (user_call[[1]] != solution_call[[1]]) {
       wrong <- ifelse(is_infix(user_call[1]),
                       renest(user[i:length(user)]),
-                      user_call[[1]][1])
+                      user_call[1])
       right <- ifelse(is_infix(solution_call[1]),
                       renest(solution[i:length(solution)]),
-                      solution_call[[1]][1])
+                      solution_call[1])
       
       return(wrong_value(this = wrong, 
                          that = right,
