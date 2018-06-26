@@ -21,7 +21,7 @@ order_calls <- function(code) {
 
 pre_pipe <- function(code, name = "") {
   if (is.call(code)) {
-    new <- list(code[[2]], code[c(1, 3)])
+    new <- list(code[[2]], code[-2])
     
     name2 <- names(code)[[2]]
     if (is.null(name2) || name2 == "") arg_name <- ""
