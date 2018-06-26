@@ -30,7 +30,8 @@ detect_mistakes <- function(user,
     }
     
     # Does the user code not match the solution code?
-    if (user[[i]] != solution[[i]]) {
+    if (length(user[[i]]) != length(solution[[i]]) ||
+        user[[i]] != solution[[i]]) {
       return(isolate_mismatch(user, solution, i))
     }
   }
