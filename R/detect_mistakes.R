@@ -53,9 +53,7 @@ isolate_mismatch <- function(user, solution, i) {
       # If the error is the name of a call, don't muddle
       # things by referring to the call's arguments
     } else if (is.call(user[[i]])) {
-      wrong <- ifelse(i == 1, 
-                      user[[i]][1],
-                      renest(user[i:length(user)]))
+      wrong <- renest(user[i:length(user)])
     } else {
       wrong <- user[[i]]
     }
