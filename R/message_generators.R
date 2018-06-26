@@ -4,14 +4,18 @@
 # incorrect/user code, which is always at hand). Cases:
 
 # missing argument
-missing_argument <- function(this, that, that_name = NULL) {
-  this <- prep(this)
+missing_argument <- function(this_call, that, that_name = NULL) {
+  this_call <- prep(this_call)
   that <- prep(that)
+  
   if (!is.null(that_name) && that_name != "") 
     that <- paste(that_name, "=", that)
   
-  glue::glue("Your call to {this} should include the argument {that} ",
-             "(perhaps with some arguments of its own). You may have ",
+  if (grepl("\\(\\)", that)) 
+    that <- paste("a call to", that)
+  
+  glue::glue("Your call to {this_call} should include {that} ",
+             "as one of its arguments. You may have ",
              "referred to it in a different way, or left out an important ",
              "argument name.")
 }
@@ -40,6 +44,9 @@ wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
   if (!is.null(this_name) && this_name != "") 
     this <- paste(this_name, "=", this)
   
+  if (grepl("\\(\\)", that)) 
+    that <- paste("a call to", that)
+  
   glue::glue("I expected {that} where you wrote {this}.")
 }
 
@@ -48,50 +55,3 @@ prep <- function(text) {
   if (!is.character(text)) text <- deparse(text)
   text
 }
-
-
-
-
-
-
-####
-
-# missing call
-missing_call <- function(that_call, this) {
-  that_call <- prep(that_call)
-  this <- prep(this)
-  
-  glue::glue("I expected you to call {that_call} on {this}.")
-}
-
-# surplus value
-surplus_value <- function(this) {
-  this <- prep(this)
-  glue::glue("I did not expect your code to include {this}. ",
-             "You may have included an unnecessary value, or you may have left ",
-             "out an important argument name.")
-}
-
-
-
-# surplus call
-surplus_call <- function(this_call, this) {
-  this_call <- prep(this_call)
-  this <- prep(this)
-  
-  glue::glue("I did not expect you to call {this_call} ",
-             "(or anything else) on {this}.")
-}
-
-
-
-# wrong call
-wrong_call <- function(this_call, this, that_call) {
-  this_call <- prep(this_call)
-  this      <- prep(this)
-  that_call <- prep(that_call)
-  
-  glue::glue("I expected you to call {that_call} on {this} ",
-             "(instead of {this_call}).")
-}
-
