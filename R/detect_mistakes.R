@@ -44,23 +44,44 @@ isolate_mismatch <- function(user, solution, i) {
   # matched to a single correct solution element
   if (length(user[[i]]) == 1 &&
       length(solution[[i]]) == 1) {
-    return(decipher_mismatch(user, solution, i))
-    
+    if (is.call(user[[i]])) {
+      wrong <- ifelse(i == 1, 
+                      user[[i]][1],
+                      renest(user[i:length(user)]))
+    } else {
+      wrong <- user[[i]]
+    }
+    return(wrong_value(this = wrong, 
+                       that = ifelse(is.call(solution[[i]]), 
+                                     solution[[i]][1], 
+                                     solution[[i]]),
+                       this_name = names(user[i]),
+                       that_name = names(solution[i])))
+
     # If we cannot do this, we are working with two 
     # multipart calls and we need to identify which 
     # elements of the calls do not align (here we 
     # rely heavily on the fact that both calls have 
     # been previously standardized)
   } else {
-    user <- user[[i]]
-    solution <- solution[[i]]
+    this_name <- names(user[i])
+    that_name <- names(solution[i])
+    user_call <- user[[i]]
+    solution_call <- solution[[i]]
     
     # First check that the calls match. 
-    if (user[[1]] != solution[[1]]) {
-      return(wrong_value(this = user[[1]][1], 
-                         that = solution[[1]][1],
-                         this_name = names(user[1]),
-                         that_name = names(solution[1])))
+    if (user_call[[1]] != solution_call[[1]]) {
+      wrong <- ifelse(is_infix(user_call[1]),
+                      renest(user[i:length(user)]),
+                      user_call[[1]][1])
+      right <- ifelse(is_infix(solution_call[1]),
+                      renest(solution[i:length(solution)]),
+                      solution_call[[1]][1])
+      
+      return(wrong_value(this = wrong, 
+                         that = right,
+                         this_name = this_name,
+                         that_name = that_name))
       
       # Then inspect the arguments.
     } else {
