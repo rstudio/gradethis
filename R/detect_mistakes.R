@@ -13,10 +13,11 @@ detect_mistakes <- function(user,
   for (i in seq_len(max_length)) {
     
     # Did the user miss something?
-    if (i > length(user)) 
+    if (i > length(user)) {
       return(missing_argument(this = user[[i-1]], 
                               that = solution[[i]], 
                               that_name = names(solution[i])))
+    }
     
     # Did the user write too much?
     if (i > length(solution)) {
@@ -26,10 +27,12 @@ detect_mistakes <- function(user,
                                             renest(user[i:length(user)]), 
                                             user[[i]])
                               ))
+    }
     
     # Does the user code not match the solution code?
-    if (user[[i]] != solution[[i]])
+    if (user[[i]] != solution[[i]]) {
       return(isolate_mismatch(user, solution, i))
+    }
   }
   NULL
 }
@@ -54,7 +57,10 @@ isolate_mismatch <- function(user, solution, i) {
     
     # First check that the calls match. 
     if (user[[1]] != solution[[1]]) {
-      return(wrong_value(user[[1]], solution[[1]], i))
+      return(wrong_value(this = user[[1]][1], 
+                         that = solution[[1]][1],
+                         this_name = names(user[1]),
+                         that_name = names(solution[1])))
       
       # Then inspect the arguments.
     } else {
@@ -62,16 +68,19 @@ isolate_mismatch <- function(user, solution, i) {
         if (j == 1) next
         
         # Did the user leave out an argument?
-        if (j > length(user)) 
-          return(missed_argument(this_call = user[[1]],
-                                 that_name = names(solution[[j]])))
+        if (j > length(user)) {
+          return(missing_argument(this = user[[1]][1], 
+                                  that = solution[[j]], 
+                                  that_name = names(solution[j])))
+        }
         
         # Did the user include an extra argument?
-        if (j > length(solution)) 
-          return(surplus_argument(this_call = user[[1]],
-                                  this = user[[j]],
-                                  this_name = names(user[[j]])))
-        
+        if (j > length(solution)) {
+          return(surplus_argument(this_call = user[[1]][1], 
+                                  this_name = names(user[j]),
+                                  this = user[[j]]))
+        }
+          
         # Do two arguments conflict? They may themselves 
         # contain an expression that we should drill into.
         if (user[[j]] != solution[[j]]) 

@@ -30,6 +30,19 @@ surplus_argument <- function(this_call, this, this_name = NULL) {
              "argument name.")
 }
 
+# wrong value
+wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
+  this <- prep(this)
+  that <- prep(that)
+  
+  if (!is.null(that_name) && that_name != "") 
+    that <- paste(deparse(that_name), "=", that)
+  if (!is.null(this_name) && this_name != "") 
+    this <- paste(deparse(this_name), "=", this)
+  
+  glue::glue("I expected {that} where you wrote {this}.")
+}
+
 ####
 
 # missing call
@@ -59,12 +72,7 @@ surplus_call <- function(this_call, this) {
              "(or anything else) on {this}.")
 }
 
-# wrong value
-wrong_value <- function(this, that) {
-  this <- prep(this)
-  that <- prep(that)
-  glue::glue("I expected {that} where you wrote {this}.")
-}
+
 
 # wrong call
 wrong_call <- function(this_call, this, that_call) {
