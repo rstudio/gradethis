@@ -153,6 +153,14 @@ test_that("detect_mistakes detects mis-matched code", {
 
 test_that("detect_mistakes works with atomic solutions", {
   
+  user <-     quote(2)
+  solution <- quote(1)
+  expect_equal(
+    detect_mistakes(user, solution)
+    , 
+    wrong_value(this = "2", that = quote(1))
+  )
+  
   # function
   user <-     quote(a(1))
   solution <- quote(1)
@@ -603,6 +611,34 @@ test_that("detect_mistakes handles argument names correctly", {
                      this = "a(1)", 
                      this_name = "x")
   )
+  
+  user <-     quote(mean(1:10, cut = 1, na.rm = TRUE))
+  solution <- quote(mean(1:10, trim = 1, na.rm = TRUE))
+  expect_equal(
+    detect_mistakes(user, solution)
+    , 
+    wrong_value(this = quote(1), 
+                this_name = "cut",
+                that = quote(1),
+                that_name = "trim")
+  )
+  
+  user <-     quote(mean(1:10, cut = 1, na.rm = TRUE))
+  solution <- quote(mean(1:10, 1, na.rm = TRUE))
+  expect_null(
+    detect_mistakes(user, solution)
+  )
+  
+  user <-     quote(mean(1:10, cut = 1, na.rm = TRUE))
+  solution <- quote(mean(1:10, TRUE, cut = 1))
+  expect_equal(
+    detect_mistakes(user, solution)
+    , 
+    wrong_value(this = quote(1), 
+                this_name = "cut",
+                that = quote(TRUE))
+  )
+
 })
 
 test_that("detect_mistakes handles weird cases", {
@@ -612,8 +648,7 @@ test_that("detect_mistakes handles weird cases", {
   expect_equal(
     detect_mistakes(user, solution)
     , 
-    missing_argument(this_call =  quote(sum()), 
-                     that = quote(3))
+    wrong_value(this =  "sum(1, 2)", that = quote(1))
   )
   
   user <-     quote(sum(1, 2))
