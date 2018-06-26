@@ -45,8 +45,9 @@ repipe <- function(lst, .call = FALSE) {
 }
 
 renest <- function(lst, .call = FALSE) {
+  lst <- rev(lst)
   
-  nest <- function(a, b) {
+  nest <- function(b, a) {
     if (is.call(a)) {
       if (length(a) > 1) {
         
@@ -67,7 +68,7 @@ renest <- function(lst, .call = FALSE) {
     }
     a
   }
-  
+
   code <- purrr::reduce(lst, nest)
   if (.call) code
   else deparse(code)
