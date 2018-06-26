@@ -86,9 +86,12 @@ standardize_call <- function(code, env = parent.frame()) {
     
     # because checking code should follow practice 
     # of not naming the first argument (unless the 
-    # user deliberately does so)
+    # user deliberately does so) and not naming the 
+    # arguments of infix operators
     first_arg <- names(as.list(args(f)))[1]
-    if (!any(names(code) == first_arg)) {
+    if (is_infix(code)) {
+      names(call) <- NULL
+    } else if (!any(names(code) == first_arg)) {
       names(call)[which(names(call) == first_arg)] <- ""
     }
   } else {
