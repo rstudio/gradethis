@@ -29,6 +29,29 @@ detect_mistakes <- function(user,
                               ))
     }
     
+    # Do the argument names match? 
+    if (named(user[i])) {
+      if (named(solution[i]) && names(user[i]) != names(solution[i])) {
+        return(wrong_value(this = user[[i]],
+                           this_name = names(user[i]),
+                           that = solution[[i]],
+                           that_name = names(solution[i])))
+      } else if (!is.null(names(solution)) &&
+                 !named(solution[i]) && 
+                 names(user[i]) %in% names(solution)) {
+        return(wrong_value(this = user[[i]],
+                           this_name = names(user[i]),
+                           that = solution[[i]]))
+      }
+    } else if (!is.null(names(user)) &&
+               named(solution[i]) && 
+               names(solution[i]) %in% names(user)) {
+      return(wrong_value(this = user[[i]],
+                         this_name = names(user[i]),
+                         that = solution[[i]],
+                         that_name = names(solution[i])))
+    }
+    
     # Does the user code not match the solution code?
     if (length(user[[i]]) != length(solution[[i]]) ||
         user[[i]] != solution[[i]]) {
@@ -126,5 +149,8 @@ isolate_mismatch <- function(user, solution, i) {
   stop("Mismatch detected, but not spotted.")
 }
 
-
+# named expects a vector of length one
+named <- function(vec) {
+  !is.null(names(vec)) && names(vec) != ""
+}
 
