@@ -44,17 +44,33 @@ isolate_mismatch <- function(user, solution, i) {
   # matched to a single correct solution element
   if (length(user[[i]]) == 1 &&
       length(solution[[i]]) == 1) {
-    if (is.call(user[[i]])) {
+    
+    # errors that involve an infix operator make more 
+    # sense if the explanation refers to the operator
+    if (i == 2 && is_infix(user[[1]])) {
+      wrong <- paste(deparse(user[[1]][[1]]), deparse(user[[2]]))
+      
+      # If the error is the name of a call, don't muddle
+      # things by referring to the call's arguments
+    } else if (is.call(user[[i]])) {
       wrong <- ifelse(i == 1, 
                       user[[i]][1],
                       renest(user[i:length(user)]))
     } else {
       wrong <- user[[i]]
     }
+    
+    if (i == 2 && is_infix(solution[[1]])) {
+      right <- paste(deparse(solution[[1]][[1]]), deparse(solution[[2]]))
+      
+    } else if (is.call(solution[[i]])) {
+      right <- solution[[i]][1]
+    } else {
+      right <- solution[[i]]
+    }
+    
     return(wrong_value(this = wrong, 
-                       that = ifelse(is.call(solution[[i]]), 
-                                     solution[[i]][1], 
-                                     solution[[i]]),
+                       that = right,
                        this_name = names(user[i]),
                        that_name = names(solution[i])))
 
@@ -98,8 +114,8 @@ isolate_mismatch <- function(user, solution, i) {
         # Did the user include an extra argument?
         if (j > length(solution_call)) {
           return(surplus_argument(this_call = user_call[[1]][1], 
-                                  this_name = names(user_call[j]),
-                                  this = user_call[[j]]))
+                                  this = user_call[[j]]),
+                                  this_name = names(user_call[j]))
         }
           
         # Do two arguments conflict? They may themselves 
