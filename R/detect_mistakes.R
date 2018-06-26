@@ -101,28 +101,29 @@ isolate_mismatch <- function(user, solution, i) {
       
       # Then inspect the arguments.
     } else {
-      for (j in seq_along(user_call)) {
-        if (j == 1) next
-        
-        # Did the user leave out an argument?
-        if (j > length(user_call)) {
-          return(missing_argument(this = user_call[[1]][1], 
-                                  that = solution_call[[j]], 
-                                  that_name = names(solution_call[j])))
-        }
-        
-        # Did the user include an extra argument?
-        if (j > length(solution_call)) {
-          return(surplus_argument(this_call = user_call[[1]][1], 
-                                  this = user_call[[j]]),
-                                  this_name = names(user_call[j]))
-        }
-          
-        # Do two arguments conflict? They may themselves 
-        # contain an expression that we should drill into.
-        if (user_call[[j]] != solution_call[[j]]) 
-          return(detect_mistakes(user_call, solution_call))
-      }
+      return(detect_mistakes(user_call, solution_call))
+    #   for (j in seq_along(user_call)) {
+    #     if (j == 1) next
+    #     
+    #     # Did the user leave out an argument?
+    #     if (j > length(user_call)) {
+    #       return(missing_argument(this = user_call[[1]][1], 
+    #                               that = solution_call[[j]], 
+    #                               that_name = names(solution_call[j])))
+    #     }
+    #     
+    #     # Did the user include an extra argument?
+    #     if (j > length(solution_call)) {
+    #       return(surplus_argument(this_call = user_call[[1]][1], 
+    #                               this = user_call[[j]]),
+    #                               this_name = names(user_call[j]))
+    #     }
+    #       
+    #     # Do two arguments conflict? They may themselves 
+    #     # contain an expression that we should drill into.
+    #     if (user_call[[j]] != solution_call[[j]]) 
+    #       return(detect_mistakes(user_call, solution_call))
+    #   }
     }
   }
   stop("Mismatch detected, but not spotted.")
