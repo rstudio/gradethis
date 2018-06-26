@@ -69,27 +69,8 @@ isolate_mismatch <- function(user, solution, i) {
   if (length(user[[i]]) == 1 &&
       length(solution[[i]]) == 1) {
     
-    # errors that involve an infix operator make more 
-    # sense if the explanation refers to the operator
-    if (i == 2 && is_infix(user[[1]]) && length(user[[1]]) == 1) {
-      wrong <- paste(deparse(user[[1]][[1]]), deparse(user[[2]]))
-      
-      # If the error is the name of a call, don't muddle
-      # things by referring to the call's arguments
-    } else if (is.call(user[[i]])) {
-      wrong <- renest(user[i:length(user)])
-    } else {
-      wrong <- user[[i]]
-    }
-    
-    if (i == 2 && is_infix(solution[[1]]) && length(solution[[1]]) == 1) {
-      right <- paste(deparse(solution[[1]][[1]]), deparse(solution[[2]]))
-      
-    } else if (is.call(solution[[i]])) {
-      right <- solution[[i]][1]
-    } else {
-      right <- solution[[i]]
-    }
+    wrong <- prep_snippet(user, i)
+    right <- prep_snippet(solution, i, .solution = TRUE)
     
     return(wrong_value(this = wrong, 
                        that = right,
@@ -152,5 +133,22 @@ isolate_mismatch <- function(user, solution, i) {
 # named expects a vector of length one
 named <- function(vec) {
   !is.null(names(vec)) && names(vec) != ""
+}
+
+prep_snippet <- function(code, i, .solution = FALSE) {
+  
+  # errors that involve an infix operator make more 
+  # sense if the explanation refers to the operator
+  if (i == 2 && is_infix(code[[1]]) && length(code[[1]]) == 1) {
+    paste(deparse(code[[1]][[1]]), deparse(code[[2]]))
+    
+    # Return the internal arguments of user code, but 
+    # not solution code (that could give away too much)
+  } else if (is.call(code[[i]])) {
+    ifelse(.solution, code[[i]][1], renest(code[i:length(code)]))
+  } else {
+    code[[i]]
+  }
+  
 }
 
