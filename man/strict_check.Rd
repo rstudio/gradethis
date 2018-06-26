@@ -4,7 +4,7 @@
 \alias{strict_check}
 \title{strict_check}
 \usage{
-strict_check(success = "Correct!", solution = NULL, user = NULL)
+strict_check(success = NULL, solution = NULL, user = NULL)
 }
 \arguments{
 \item{success}{A character string to display if the student answer matches
