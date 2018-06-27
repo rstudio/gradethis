@@ -125,8 +125,8 @@ isolate_mismatch <- function(user, solution, i) {
       # Did the user include an extra argument?
       if (j > length(solution_call)) {
         return(surplus_argument(this_call = user_call[1],
-                                this = user_call[[j]]),
-                                this_name = names(user_call[j]))
+                                this = user_call[[j]],
+                                this_name = names(user_call[j])))
       }
       
       # Do the argument names match?
