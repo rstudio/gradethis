@@ -40,3 +40,12 @@ unpipe_all <- function(code) {
   code <- as.call(purrr::map(as.list(code), unpipe_all))
   unpipe(code)
 }
+
+find_pipe <- function(code) {
+  if (length(code) == 1) grepl("%>%", code)
+  else unlist(purrr::map(as.list(code), find_pipe))
+}
+
+uses_pipe <- function(code) {
+  any(find_pipe(code))
+}

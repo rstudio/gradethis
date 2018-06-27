@@ -69,7 +69,7 @@ strict_check <- function(success = NULL,
     if (is.null(message)) {
       return(success)
     } else {
-      if (grepl("%>%", user)) {
+      if (uses_pipe(user)) {
         message <- glue::glue("I see that you are using pipe operators (e.g. %>%), ",
           "so I want to let you know that this is how I am interpretting your code ",
           "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}")
