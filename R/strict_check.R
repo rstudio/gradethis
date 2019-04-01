@@ -40,7 +40,7 @@
 #'   argument.
 #'
 #' @export
-#'
+#' @importFrom rlang get_expr
 #' @examples
 #' \dontrun{grading_demo()}
 strict_check <- function(success = NULL,
@@ -58,7 +58,7 @@ strict_check <- function(success = NULL,
     stop("I didn't receive your code. Did you write any?")
 
     # Correct answers are all alike
-  } else if (suppressWarnings(user == solution)) {
+  } else if (suppressWarnings(get_expr(user) == get_expr(solution))) {
     return(success)
 
     # But incorrect answers are each incorrect in their own way
