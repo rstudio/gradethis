@@ -138,27 +138,36 @@ grade_learnr <- function(label = NULL,
 
   # Run checking code to get feedback
   grading_code <- pryr::standardise_call(parse(text = check_code)[[1]])
-  grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]])
-  grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]])
+  grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]], envir_result)
+  # TODO get a copy of the envir_result parent env; browser()
+  grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_result)
 
   feedback <- eval(grading_code)
 
-  # Check that the student submission was correct
-  if (feedback == grading_code$success) {
-    result <- list(
-      message = paste(sample(.praise, 1), feedback),
-      correct = TRUE,
-      type = "success",
-      location = "append"
-    )
-  } else {
-    result <- list(
-      message = paste(feedback, sample(.encourage, 1)),
-      correct = FALSE,
-      type = "error",
-      location = "append"
-    )
+  if (!is.list(feedback)) {
+    stop("`grade_learnr` does not know how to handle a non-list value produced in by `-check` chunk")
   }
+
+  if (feedback$correct) {
+    mess <- paste(sample(.praise, 1), feedback$message)
+  } else {
+    mess <- paste(feedback$message, sample(.encourage, 1))
+  }
+
+  result <- list(
+    message = mess,
+    correct = feedback$correct,
+    type = ifelse(feedback$correct, "success", "error"),
+    location = "append"
+  )
+
   result
 }
 
+
+
+
+
+# assert_tests <- function(tests, correct = NULL, incorrect = NULL, solution = NULL, user = NULL) {
+#
+# }
