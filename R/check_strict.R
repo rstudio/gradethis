@@ -1,5 +1,3 @@
-#' strict_check
-#'
 #' Strict exercise checking
 #'
 #' \code{strict_check()} compares user code to a solution (i.e. model code) and
@@ -33,48 +31,71 @@
 #' @param user (Optional) student code to check against the solution surrounded
 #'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
 #'
-#' @return (character) A message. If the student answer differs from the
+#' @return a \code{\link{grader_result} structure from \code{\link{result}}.
+#'   If the student answer differs from the
 #'   solution code, the message will describe the first way that the answer
 #'   differs, and it will ask the student to try again. If the answer matches
 #'   the solution code, the message will be the content of the \code{success}
 #'   argument.
 #'
 #' @export
-#' @importFrom rlang get_expr
 #' @examples
 #' \dontrun{grading_demo()}
-strict_check <- function(success = NULL,
+check_strict <- function(success = NULL,
                          solution = NULL,
                          user = NULL) {
+
+  is_same_info <- code_is_same(user, solution)
+
+  if (is_same_info$correct) {
+    return(
+      result(x = user, message = success, correct = TRUE)
+    )
+  }
+
+  message <- same_info$message
+  if (uses_pipe(user)) {
+    message <- glue::glue("I see that you are using pipe operators (e.g. %>%), ",
+      "so I want to let you know that this is how I am interpretting your code ",
+      "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}")
+  }
+  return(
+    result(x = user, message = message, correct = FALSE)
+  )
+
+}
+
+#' @importFrom rlang get_expr
+code_is_same <- function(user = NULL, solution = NULL) {
 
   # Sometimes no solution is provided, but that
   # means there is nothing to check against
   if (is.null(solution)) {
     stop("No solution is provided for this exercise.")
+  }
 
     # Sometimes no user code is provided,
-    # that means there is nothing to check
-  } else if (is.null(user)) {
+  # that means there is nothing to check
+  if (is.null(user)) {
     stop("I didn't receive your code. Did you write any?")
-
-    # Correct answers are all alike
-  } else if (suppressWarnings(get_expr(user) == get_expr(solution))) {
-    return(success)
-
-    # But incorrect answers are each incorrect in their own way
-    # (and we should let the student know how their answer is
-    # incorrect)
-  } else {
-    message <- detect_mistakes(user, solution)
-    if (is.null(message)) {
-      return(success)
-    } else {
-      if (uses_pipe(user)) {
-        message <- glue::glue("I see that you are using pipe operators (e.g. %>%), ",
-          "so I want to let you know that this is how I am interpretting your code ",
-          "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}")
-      }
-      return(message)
-    }
   }
+
+  # MUST call user first to avoid "poisoning" the envir with solution information
+  user_code <- get_expr(user)
+  solution_code <- get_expr(solution)
+
+  # Correct answers are all alike
+  if (suppressWarnings(user_code == solution_code)) {
+    return(result(x = user, message = NULL, correct = TRUE))
+  }
+
+  message <- detect_mistakes(user, solution)
+  if (is.null(message)) {
+    # found no errors
+    return(result(x = user, message = NULL, correct = TRUE))
+  }
+
+  return(
+    result(x = user, message = message, correct = FALSE)
+  )
 }
