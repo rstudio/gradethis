@@ -7,3 +7,14 @@ result <- function(x, message, correct = FALSE) {
     correct = correct
   ))
 }
+
+# TODO documentation
+#' @export
+results <- function(...) {
+  x = list(...)
+  lapply(x, chkm8_class, "grader_result")
+  structure(
+    class = "grader_results",
+    x
+  )
+}
