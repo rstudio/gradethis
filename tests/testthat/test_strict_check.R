@@ -171,18 +171,16 @@ test_that("Returns intelligent error when no user code", {
 test_that("Spot differences when pipes are involved", {
 
   select <- function(df, x) {
-    rlang::eval_tidy(rlang::quos(x), df)
+    df[[1]]
   }
   filter <- subset
   arrange <- function(df, ...) {
     df
   }
 
-  pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length))
-  func <- quote(select(iris %>% filter(Species == "Virginica"), Sepal.Length))
-  func1 <- quote(select(filter(iris, Species == "Virginica"), Sepal.Length))
-  pipe1 <- quote(iris %>% filter(Species == "Virginica") %>% select(Petal.Length))
-  pipe2 <- quote(iris %>% arrange(Species) %>% select(Sepal.Length))
+  pipe <- quote(1:10 %>% mean(na.rm = TRUE) %>% log(base = 10))
+  func <- quote(log(1:10 %>% mean(na.rm = TRUE), base = 10))
+  func1 <- quote(log(mean(1:10, na.rm = TRUE), base = 10))
   pipe3 <- quote(iris %>% lm(Sepal.Length ~ Sepal.Width, data = .))
   func3 <- quote(lm(Sepal.Length ~ Sepal.Width, data = iris))
 
