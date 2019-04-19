@@ -139,13 +139,20 @@ grade_learnr <- function(label = NULL,
     location = "append"
   )
 
-  result
+  ret
 }
 
 
 
-
-
-# assert_tests <- function(tests, correct = NULL, incorrect = NULL, solution = NULL, user = NULL) {
-#
-# }
+get_user_code <- function(user = NULL, env = rlang::caller_env()) {
+  get_code(user, "user", env = env)
+}
+get_solution_code <- function(solution = NULL, env = rlang::caller_env()) {
+  get_code(solution, "solution", env = env)
+}
+get_code <- function(x = NULL, name = "<name not provided>", env = rlang::caller_env()) {
+  if (is.null(x)) {
+    stop("'", name, "' not provided")
+  }
+  rlang::eval_tidy(x, env = env)
+}
