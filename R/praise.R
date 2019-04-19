@@ -50,13 +50,20 @@
                 "Try it again. Perseverence is the key to success.",
                 "That's okay: you learn more from mistakes than successes. Let's do it one more time.")
 
-# TODO documentation
+#' Random praise and encouragement
+#'
+#' Generate a random praise or encouragement phrase.  This can be used in conjunction with \code{glue::\link[glue]{glue}} to generate praise or encouragement within feedback to users.
+#'
+#' @examples
+#' replicate(5, glue::glue("Random praise: {random_praise()}"))
+#' replicate(5, glue::glue("Random encouragement: {random_encourage()}"))
 #' @export
+#' @rdname praise
 random_praise <- function() {
   sample(.praise, 1)
 }
-# TODO documentation
 #' @export
+#' @rdname praise
 random_encourage <- function() {
   sample(.encourage, 1)
 }

@@ -5,12 +5,12 @@
 #' For exercise checking, learnr tutorials require a function that learnr can
 #' use in the background to run the code in each "-check" chunk and to format
 #' the results into a format that learnr can display. The function must accept a
-#' specific set of inputs and return a specific type of output. Users are not
-#' intended to use the function themselves, but to pass it to the
+#' specific set of inputs and return a specific type of output (see \code{\link{result}}).
+#' Users are not intended to use the function themselves, but to pass it to the
 #' \code{exercise.checker} knitr chunk option within the setup chunk of the
 #' tutorial.
 #'
-#' The grader package provides \code{grade_learnr()} for this purpose. To enable
+#' The grader package provides \code{grade_learnr} for this purpose. To enable
 #' exercise checking in your learnr tutorial, set
 #' \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 #' of your tutorial.
@@ -20,9 +20,9 @@
 #'
 #' @param label Label for exercise chunk
 #' @param solution_code R code submitted by the user
-#' @param user_code 	Code provided within the “-solution” chunk for the exercise.
-#' @param check_code 	Code provided within the “-check” chunk for the exercise.
-#' @param envir_result 	The R environment after the execution of the chunk.
+#' @param user_code Code provided within the “-solution” chunk for the exercise.
+#' @param check_code Code provided within the “-check” chunk for the exercise.
+#' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the \code{evaluate::evaluate} function.
 #' @param ... Unused (include for compatibility with parameters to be added in the future)
 #'
@@ -137,15 +137,28 @@ grade_learnr <- function(label = NULL,
 
 
 
+#' Get Code
+#'
+#' Helper methods around \code{rlang::\link[rlang]{eval_tiday}} to extract user code and solution code.
+#' @seealso \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
+#' @export
+#' @rdname get_code
+#' @param user,solution,expr An expression or quosure to evaluate.
+#' @param name Name to print if a \code{NULL} expression is provided.
+#' @inheritParams rlang::env
 get_user_code <- function(user = NULL, env = rlang::caller_env()) {
   get_code(user, "user", env = env)
 }
+#' @export
+#' @rdname get_code
 get_solution_code <- function(solution = NULL, env = rlang::caller_env()) {
   get_code(solution, "solution", env = env)
 }
-get_code <- function(x = NULL, name = "<name not provided>", env = rlang::caller_env()) {
-  if (is.null(x)) {
+#' @export
+#' @rdname get_code
+get_code <- function(expr = NULL, name = "<name not provided>", env = rlang::caller_env()) {
+  if (is.null(expr)) {
     stop("'", name, "' not provided")
   }
-  rlang::eval_tidy(x, env = env)
+  rlang::eval_tidy(expr, env = env)
 }
