@@ -104,20 +104,38 @@ grade_learnr <- function(label = NULL,
     }
   }
 
-  if (!is.list(feedback)) {
+  had_error_checking <- FALSE
+  checked_result <- tryCatch(
+    {
+      eval(grading_code)
+    },
+    error = function(e) {
+      # prevent the error from being re-thrown
+      message("", e)
+      had_error_checking <<- TRUE
+      result(
+        e,
+        message = "Error occured while checking the submission",
+        correct = FALSE
+      )
+    })
+  if (!checkmate::test_class(checked_result, "grader_result")) {
     stop("`grade_learnr` does not know how to handle a non-list value produced in by `-check` chunk")
   }
 
-  if (feedback$correct) {
-    mess <- paste(sample(.praise, 1), feedback$message)
-  } else {
-    mess <- paste(feedback$message, sample(.encourage, 1))
-  }
+  message_type <-
+    if (had_error_checking) {
+      "warning"
+    } else if (checked_result$correct) {
+      "success"
+    } else {
+      "error"
+    }
 
-  result <- list(
-    message = mess,
-    correct = feedback$correct,
-    type = ifelse(feedback$correct, "success", "error"),
+  ret <- list(
+    message = checked_result$message,
+    correct = checked_result$correct,
+    type = message_type,
     location = "append"
   )
 
