@@ -4,13 +4,14 @@ Title: Tools for "grading" student exercises in learnr tutorials
 Version: 0.1.0
 Author: Garrett Grolemund
 Maintainer: Garrett Grolemund <garrett@rstudio.com>
-Description: Learn more about learnr tutorials at rstudio.github.io/learnr/
-License: MIT
+Description:
+  Pairing the 'learnr', 'grader' provides multiple methods to grade 'learnr' exercises.  Learn more about 'learnr' tutorials at <http://rstudio.github.io/learnr/>.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat
 RoxygenNote: 6.1.1
-Imports: 
+Imports:
     purrr,
     crayon,
     clisymbols,
@@ -20,6 +21,9 @@ Imports:
     glue,
     knitr,
     callr,
-    learnr,
+    learnr (>= 0.9.2.9000),
     stringr,
-    readr
+    readr,
+    checkmate
+Remotes:
+  rstudio/learnr
