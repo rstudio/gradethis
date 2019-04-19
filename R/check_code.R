@@ -31,7 +31,7 @@
 #' @param user (Optional) student code to check against the solution surrounded
 #'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
 #'
-#' @return a \code{\link{grader_result} structure from \code{\link{result}}.
+#' @return a \code{grader_result} structure from \code{\link{result}}.
 #'   If the student answer differs from the
 #'   solution code, the message will describe the first way that the answer
 #'   differs, and it will ask the student to try again. If the answer matches
@@ -41,31 +41,63 @@
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
-check_strict <- function(success = NULL,
-                         solution = NULL,
-                         user = NULL) {
+check_code <- function(
+  correct = "{random_praise()} Correct!",
+  incorrect = "{message} {random_encourage()}",
+  solution = NULL, user = NULL, # provided by `grade_learnr`
+  ... # ignored / extra params
+) {
+  chkm8_single_character(correct)
+  chkm8_single_character(incorrect)
 
   is_same_info <- code_is_same(user, solution)
 
   if (is_same_info$correct) {
     return(
-      result(x = user, message = success, correct = TRUE)
+      result(
+        x = user,
+        message = glue::glue_data(
+          list(
+            correct = TRUE,
+            message = NULL
+          ),
+          correct
+        ),
+        correct = TRUE
+      )
     )
   }
 
-  message <- same_info$message
-  if (uses_pipe(user)) {
-    message <- glue::glue("I see that you are using pipe operators (e.g. %>%), ",
-      "so I want to let you know that this is how I am interpretting your code ",
-      "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}")
-  }
-  return(
-    result(x = user, message = message, correct = FALSE)
+  message <- glue::glue_data(
+    list(
+      correct = FALSE,
+      message = is_same_info$message
+    ),
+    incorrect
   )
+  if (uses_pipe(user)) {
+    message <- glue::glue_data(
+      list(
+        user = user,
+        message = message
+      ),
+      "I see that you are using pipe operators (e.g. %>%), ",
+      "so I want to let you know that this is how I am interpretting your code ",
+      "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}"
+    )
+  }
 
+  return(
+    result(
+      x = user,
+      message = message,
+      correct = FALSE
+    )
+  )
 }
 
-#' @importFrom rlang get_expr
+
+
 code_is_same <- function(user = NULL, solution = NULL) {
 
   # Sometimes no solution is provided, but that
@@ -81,8 +113,8 @@ code_is_same <- function(user = NULL, solution = NULL) {
   }
 
   # MUST call user first to avoid "poisoning" the envir with solution information
-  user_code <- get_expr(user)
-  solution_code <- get_expr(solution)
+  user_code <- rlang::get_expr(user)
+  solution_code <- rlang::get_expr(solution)
 
   # Correct answers are all alike
   if (suppressWarnings(user_code == solution_code)) {
