@@ -89,7 +89,20 @@ grade_learnr <- function(label = NULL,
   # TODO get a copy of the envir_result parent env; browser()
   grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_result)
 
-  feedback <- eval(grading_code)
+  # copy over remaining args
+  grading_code$envir_result <- envir_result
+  grading_code$evaluate_result <- evaluate_result
+  extra_args <- list(...)
+  for (i in seq_along(extra_args)) {
+    extra_arg <- extra_args[[i]]
+    extra_arg_name <- names(extra_args)[i]
+    if (is.null(extra_arg_name) || identical(extra_arg_name, "")) {
+      # no name provided
+      grading_code[[i]] <- extra_arg
+    } else {
+      grading_code[[extra_arg_name]] <- extra_arg
+    }
+  }
 
   if (!is.list(feedback)) {
     stop("`grade_learnr` does not know how to handle a non-list value produced in by `-check` chunk")
