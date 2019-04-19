@@ -1,5 +1,4 @@
 context("Check code with calls")
-library(tidyverse)
 a <- function(x) x
 b <- function(x) x
 

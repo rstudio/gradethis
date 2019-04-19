@@ -1,4 +1,3 @@
-library(tidyverse)
 context("Strict check")
 
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
@@ -52,10 +51,10 @@ test_that("Spots differences in names", {
 })
 
 test_that("Spots differences in calls", {
-  a <- quote(map(lists, mean, na.rm = TRUE))
-  b <- quote(map(vecs, mean, na.rm = TRUE))
-  c <- quote(map(lists, mean))
-  d <- quote(map(vecs, mean))
+  a <- quote(vapply(lists, mean, numeric(1), na.rm = TRUE))
+  b <- quote(vapply(vecs, mean, numeric(1), na.rm = TRUE))
+  c <- quote(vapply(lists, mean, numeric(1)))
+  d <- quote(vapply(vecs, mean, numeric(1)))
 
   expect_correct(
     check_code(user = a, solution = a)
@@ -68,14 +67,14 @@ test_that("Spots differences in calls", {
 
   expect_message(
     check_code(user = a, solution = c),
-    surplus_argument(this_call = "map()",
+    surplus_argument(this_call = "vapply()",
                      this_name = "na.rm",
                      this = quote(TRUE))
   )
 
   expect_message(
     check_code(user = c, solution = a),
-    missing_argument(this_call = "map()",
+    missing_argument(this_call = "vapply()",
                      that_name = "na.rm",
                      that = quote(TRUE))
   )
@@ -170,6 +169,15 @@ test_that("Returns intelligent error when no user code", {
 })
 
 test_that("Spot differences when pipes are involved", {
+
+  select <- function(df, x) {
+    rlang::eval_tidy(rlang::quos(x), df)
+  }
+  filter <- subset
+  arrange <- function(df, ...) {
+    df
+  }
+
   pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length))
   func <- quote(select(iris %>% filter(Species == "Virginica"), Sepal.Length))
   func1 <- quote(select(filter(iris, Species == "Virginica"), Sepal.Length))
