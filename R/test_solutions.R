@@ -1,14 +1,20 @@
+yoink <- function(pkg, fn) {
+  do.call("getFromNamespace", list(pkg, fn))
+}
+
 # get all of the chunks with
 extract_chunks <- function(file) {
+  knitr__knit_code <- yoink("knitr", "knit_code")
+  knitr__split_file <- yoink("knitr", "split_file")
   knitr::pat_md()
   knitr::render_markdown()
   on.exit({
     knitr::knit_patterns$restore()
     knitr::knit_hooks$restore()
-    knitr:::knit_code$restore()
+    knitr__knit_code$restore()
   }, add = TRUE)
-  knitr:::split_file(readLines(file, encoding = "UTF-8"))
-  knitr:::knit_code$get()
+  knitr__split_file(readLines(file, encoding = "UTF-8"))
+  knitr__knit_code$get()
 }
 
 #' Test Solutions
@@ -27,10 +33,10 @@ extract_chunks <- function(file) {
 #'   \code{test_solutions} will test that .Rmd file.
 #' @param show.answers TRUE or FALSE. Should solution results be printed in the
 #'   output?
-#' @param .params A list of parameters to use when evauating code in a
-#'   parameterized R Markdown document. This should be identical to the list
-#'   that you would use to render the document.
-#'
+# ' @param .params A list of parameters to use when evauating code in a
+# '   parameterized R Markdown document. This should be identical to the list
+# '   that you would use to render the document.
+# '
 #' @return \code{test_solutions} does not return a value; it prints an
 #'   informative summary of the testing results. Each solution and setup block
 #'   is listed by name alongside a result status. Within the RStudio IDE, chunks
@@ -45,7 +51,7 @@ extract_chunks <- function(file) {
 test_solutions <- function(file = NULL,
                            show.answers = FALSE
                            ) {
-  
+
   if (is.null(file)) {
     files <- dir()
     rmds <- files[grepl("(.Rmd|.rmd)$", files)]
@@ -57,25 +63,25 @@ test_solutions <- function(file = NULL,
       file <- rmds
     }
   }
-  
+
   # the functions that test the solutions are defined here so they can find the
   # results of the global setup chunk through lexical scoping
   safe_eval <- purrr::safely(purrr::quietly(eval))
-  
+
   safe_test <- function(label, chunks) {
     safe_eval(parse(text = chunks[[label]]), envir = parent.frame(1))
   }
-  
+
   test_solution <- function(label, chunks, show.answer = FALSE) {
     exercise <- sub("-solution", "", label)
     if (grepl("-solution$", label) && !(exercise %in% names(chunks))) {
       stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
     }
-    
+
     # Does the chunk require a setup chunk?
     setup_option <- attr(chunks[[exercise]], "chunk_opts")$exercise.setup
     setup_suffix <- paste0(exercise, "-setup")
-    
+
     if (!is.null(setup_option)) {
       if (!is.character(setup_option)) {
         print_author_error(label, "exercise.setup chunk_opt is not a single string.")
@@ -88,44 +94,44 @@ test_solutions <- function(file = NULL,
         return()
       } else {
         setup <- safe_test(setup_option, chunks = chunks)
-        print_result(setup_option, 
-                     setup, 
+        print_result(setup_option,
+                     setup,
                      show.answers = show.answer)
       }
     } else if (setup_suffix %in% names(chunks)) {
       setup <- safe_test(setup_suffix, chunks = chunks)
-      print_result(setup_suffix, 
+      print_result(setup_suffix,
                    setup,
                    show.answers = show.answer)
     }
-    
+
     result <- safe_test(label, chunks = chunks)
-    print_result(label, 
+    print_result(label,
                  result,
                  show.answers = show.answer)
   }
-  
+
   chunks <- extract_chunks(file)
   labels <- names(chunks)
-  
+
   # Exercises have access to the computations
   # performed in the setup chunk
   if ("setup" %in% labels) {
     setup_result <- safe_test("setup", chunks = chunks)
-    print_result("setup", 
+    print_result("setup",
                  setup_result,
                  show.answers = show.answers)
   }
-  
+
   solutions <- grep("-solution$", labels, value = TRUE)
 
-  purrr::walk(solutions, 
-              test_solution, 
-              chunks = chunks, 
+  purrr::walk(solutions,
+              test_solution,
+              chunks = chunks,
               show.answer = show.answers)
 }
 
-print_result <- function(label, result, show.answers = FALSE) {    
+print_result <- function(label, result, show.answers = FALSE) {
   cat(label, crayon::silver(": "), sep = "")
   if (!is.null(result$error)) {
     cat(
@@ -152,5 +158,3 @@ print_author_error <- function(label, message){
     purple(message), "\n"
   )
 }
-
-

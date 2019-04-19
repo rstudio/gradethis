@@ -13,10 +13,6 @@ and only a single .Rmd file exists in the current directory,
 
 \item{show.answers}{TRUE or FALSE. Should solution results be printed in the
 output?}
-
-\item{.params}{A list of parameters to use when evauating code in a
-parameterized R Markdown document. This should be identical to the list
-that you would use to render the document.}
 }
 \value{
 \code{test_solutions} does not return a value; it prints an

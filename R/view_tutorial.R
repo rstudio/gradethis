@@ -11,6 +11,7 @@
 #' @param package A character string. The name of the package that contains a tutorial.
 #'
 #' @export
+#' @importFrom utils browseURL
 view_tutorial <- function(name, package) {
 
   # launch in separate R session
@@ -70,7 +71,7 @@ view_tutorial <- function(name, package) {
 #' \code{remove_tutorial} should be easy to adapt to a an RStudio-specific
 #' startup file should RStudio implement one.
 #'
-#' \code{add_tutorial()} inserts a call to \link[grader]{\code{view_tutorial()}}
+#' \code{add_tutorial()} inserts a call to \code{\link{view_tutorial}()}
 #' into the .Rprofile file contained in the current working directory. As a
 #' result, R will launch the tutorial in the RStudio IDE viewer pane whenever
 #' the current project is opened or re-opened.
@@ -84,7 +85,7 @@ view_tutorial <- function(name, package) {
 #' \code{view_tutorial()}, \code{add_tutorial} will override the call without a
 #' warning message.
 #'
-#' @seealso \link[grader]{\code{view_tutorial}}
+#' @seealso \code{\link{view_tutorial}}
 #'
 #' @param name A character string. The name of a tutorial saved in a package.
 #' @param package A character string. The name of the package that contains a

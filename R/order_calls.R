@@ -4,6 +4,7 @@
 #' a pipe if you placed a \code{\%>\%} between each element of the list. This
 #' let's checking code evaluate the elements in the same order that R would.
 #'
+#' @noRd
 order_calls <- function(code) {
   if (is.name(code) ||
       is.call(code) ||

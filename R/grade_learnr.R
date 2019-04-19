@@ -24,6 +24,7 @@
 #' @param check_code Code provided within the “-check” chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the \code{evaluate::evaluate} function.
+#' @param envir_prep A copy of the R environment before the execution of the chunk.
 #' @param ... Unused (include for compatibility with parameters to be added in the future)
 #'
 #' @return An R list which contains several fields indicating the result of the check.
@@ -37,6 +38,7 @@ grade_learnr <- function(label = NULL,
                          check_code = NULL,
                          envir_result = NULL,
                          evaluate_result = NULL,
+                         envir_prep = NULL,
                          ...) {
 
   # Sometimes no user code is provided, but
@@ -80,11 +82,12 @@ grade_learnr <- function(label = NULL,
   grading_code <- pryr::standardise_call(parse(text = check_code)[[1]], envir_result)
   grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]], envir_result)
   # TODO get a copy of the envir_result parent env; browser()
-  grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_result)
+  grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
 
   # copy over remaining args
   grading_code$envir_result <- envir_result
   grading_code$evaluate_result <- evaluate_result
+  grading_code$envir_prep <- envir_prep
   extra_args <- list(...)
   for (i in seq_along(extra_args)) {
     extra_arg <- extra_args[[i]]
@@ -139,13 +142,13 @@ grade_learnr <- function(label = NULL,
 
 #' Get Code
 #'
-#' Helper methods around \code{rlang::\link[rlang]{eval_tiday}} to extract user code and solution code.
+#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}} to extract user code and solution code.
 #' @seealso \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
 #' @export
 #' @rdname get_code
 #' @param user,solution,expr An expression or quosure to evaluate.
 #' @param name Name to print if a \code{NULL} expression is provided.
-#' @inheritParams rlang::env
+#' @inheritParams rlang::eval_tidy
 get_user_code <- function(user = NULL, env = rlang::caller_env()) {
   get_code(user, "user", env = env)
 }

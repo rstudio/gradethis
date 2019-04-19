@@ -1,31 +1,36 @@
-#' Strict exercise checking
+#' Check code structure
 #'
-#' \code{strict_check()} compares user code to a solution (i.e. model code) and
+#' \code{check_code()} compares user code to a solution (i.e. model code) and
 #' describes the first way that the user code differs. If the user code exactly
-#' matches the solution, \code{strict_check()} returns a customizable success
+#' matches the solution, \code{check_code()} returns a customizable success
 #' message.
 #'
-#' \code{strict_check()} provides a *strict* check in that the user code must
+#' \code{check_code()} provides a *strict* check in that the user code must
 #' exactly match the solution. It is not enough for the user code to be
 #' equivalent to the solution code (e.g. to return the same result as the
 #' solution).
 #'
-#' You can provide solution code for \code{strict_check()} to use in two ways:
+#' You can provide solution code for \code{check_code()} to use in two ways:
 #'
 #' 1. Pass code as a character string or a quoted expression to the solution
-#' argument of \code{strict_check()}
+#' argument of \code{check_code()}
 #'
 #' 2. Make a "-solution" code chunk for the exercise to be checked in a learnr
 #' document. There is no need to supply a solution argument for
-#' \code{strict_check()} if you call it from the "-check" chunk of the same
+#' \code{check_code()} if you call it from the "-check" chunk of the same
 #' exercise. Likewise, there is no need to supply a user argument when you call
-#' \code{strict_check()} from a learnr document (learnr will provide the code
-#' that the student submits when it runs \code{strict_check()}.
+#' \code{check_code()} from a learnr document (learnr will provide the code
+#' that the student submits when it runs \code{check_code()}.
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
-#' @param success A character string to display if the student answer matches
-#'   the solution code
+#' @param correct A character string to display if the student answer matches
+#'   the solution code.
+#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = NULL)}.
+#' @param incorrect A character string to display if the student answer matches
+#'   the solution code.
+#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.
+#' @param ... ignored
 #' @param solution (Optional) solution code surrounded by \code{quote()},
 #'   \code{rlang::quo()}, or provided as a character string.
 #' @param user (Optional) student code to check against the solution surrounded
@@ -44,8 +49,8 @@
 check_code <- function(
   correct = "{random_praise()} Correct!",
   incorrect = "{message} {random_encourage()}",
-  solution = NULL, user = NULL, # provided by `grade_learnr`
-  ... # ignored / extra params
+  ..., # ignored / extra params
+  solution = NULL, user = NULL # provided by `grade_learnr`
 ) {
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
