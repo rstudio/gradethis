@@ -41,10 +41,10 @@ Example code written below:
 `r ''````{r result-check}
 check_result(
   results(
-    result(1, "Custom message for value 1"),
-    result(2, "Custom message for value 2", correct = TRUE),
-    result(3, "Custom message for value 3"),
-    result(4, "Custom message for value 4", correct = TRUE)
+    result(1, "Custom message for value 1."),
+    result(2, "Custom message for value 2.", correct = TRUE),
+    result(3, "Custom message for value 3."),
+    result(4, "Custom message for value 4.", correct = TRUE)
   )
 )
 ```
@@ -69,10 +69,10 @@ check_result(
 ```{r result-check}
 check_result(
   results(
-    result(1, "Custom message for value 1"),
-    result(2, "Custom message for value 2", correct = TRUE),
-    result(3, "Custom message for value 3"),
-    result(4, "Custom message for value 4", correct = TRUE)
+    result(1, "Custom message for value 1."),
+    result(2, "Custom message for value 2.", correct = TRUE),
+    result(3, "Custom message for value 3."),
+    result(4, "Custom message for value 4.", correct = TRUE)
   )
 )
 ```

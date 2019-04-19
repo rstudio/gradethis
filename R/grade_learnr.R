@@ -64,14 +64,7 @@ grade_learnr <- function(label = NULL,
   # Sometimes no solution is provided, but that
   # means there is nothing to check against. Also,
   # you do not want to parse NULL
-  if (is.null(solution_code)) {
-    return(list(
-      message = "No solution is provided for this exercise.",
-      correct = TRUE,
-      type = "info",
-      location = "append"
-    ))
-  } else {
+  if (!is.null(solution_code)) {
     solution_code <- parse(text = solution_code)
     if (length(solution_code) == 0) {
       return(list(
