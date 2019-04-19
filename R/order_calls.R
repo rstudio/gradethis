@@ -5,16 +5,16 @@
 #' let's checking code evaluate the elements in the same order that R would.
 #'
 #' @noRd
-order_calls <- function(code) {
+order_calls <- function(code, env = parent.frame()) {
   if (is.name(code) ||
       is.call(code) ||
       is.atomic(code)) {
     code <- list(code)
   }
   if (is.call(code[[1]]) && length(code[[1]]) != 1) {
-    code[[1]] <- standardize_call(code[[1]])
+    code[[1]] <- standardize_call(code[[1]], env = env)
     code <- c(pre_pipe(code[[1]], name = names(code[1])), code[-1])
-    code <- order_calls(code)
+    code <- order_calls(code, env = env)
   }
   code <- purrr::discard(code, is.null)
   purrr::map(code, remove_null_from_call)

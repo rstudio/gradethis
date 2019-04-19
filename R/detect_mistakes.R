@@ -1,12 +1,13 @@
 detect_mistakes <- function(user,
-                            solution) {
+                            solution, env = parent.frame()) {
+  force(env)
 
   # code should be checked in the opposite order
   # of evaluation (e.g. from the outside in for
   # nested notation), whether or not the student
   # (and/or teacher) used a pipe
-  user <- rev(order_calls(unpipe_all(user)))
-  solution <- rev(order_calls(unpipe_all(solution)))
+  user <- rev(order_calls(unpipe_all(user), env = env))
+  solution <- rev(order_calls(unpipe_all(solution), env = env))
 
   max_length <- max(length(user), length(solution))
 
@@ -14,7 +15,7 @@ detect_mistakes <- function(user,
 
     # Did the user miss something?
     if (i > length(user)) {
-      return(missing_argument(this_call = user[[i-1]], 
+      return(missing_argument(this_call = user[[i-1]],
                               that = solution[[i]],
                               that_name = names(solution[i])))
     }
