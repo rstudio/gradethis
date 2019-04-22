@@ -81,7 +81,6 @@ grade_learnr <- function(label = NULL,
   # Run checking code to get feedback
   grading_code <- pryr::standardise_call(parse(text = check_code)[[1]], envir_result)
   grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]], envir_result)
-  # TODO get a copy of the envir_result parent env; browser()
   grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
 
   # copy over remaining args
