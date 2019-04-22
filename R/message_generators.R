@@ -26,12 +26,18 @@ surplus_argument <- function(this_call, this, this_name = NULL) {
   this      <- prep(this)
   if (!is.null(this_name) && this_name != "") 
     this <- paste(this_name, "=", this)
-  
-  glue::glue("I did not expect your call to {this_call} to ",
-             "include {this}. You ",
-             "may have included an unnecessary argument, or you ",
-             "may have left out or misspelled an important ",
-             "argument name.")
+
+  glue::glue_data(
+    list(
+      this = this,
+      this_call = this_call
+    ),
+    "I did not expect your call to {this_call} to ",
+    "include {this}. You ",
+    "may have included an unnecessary argument, or you ",
+    "may have left out or misspelled an important ",
+    "argument name."
+  )
 }
 
 # wrong value
@@ -46,8 +52,11 @@ wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
   
   if (grepl("\\(\\)", that)) 
     that <- paste("a call to", that)
-  
-  glue::glue("I expected {that} where you wrote {this}.")
+
+  glue::glue_data(
+    list(this = this, that = that),
+    "I expected {that} where you wrote {this}."
+  )
 }
 
 prep <- function(text) {
