@@ -78,31 +78,38 @@ grade_learnr <- function(label = NULL,
     }
   }
 
-  # Run checking code to get feedback
-  grading_code <- pryr::standardise_call(parse(text = check_code)[[1]], envir_result)
-  grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]], envir_result)
-  grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
-
-  # copy over remaining args
-  grading_code$envir_result <- envir_result
-  grading_code$evaluate_result <- evaluate_result
-  grading_code$envir_prep <- envir_prep
-  extra_args <- list(...)
-  for (i in seq_along(extra_args)) {
-    extra_arg <- extra_args[[i]]
-    extra_arg_name <- names(extra_args)[i]
-    if (is.null(extra_arg_name) || identical(extra_arg_name, "")) {
-      # no name provided
-      grading_code[[i]] <- extra_arg
-    } else {
-      grading_code[[extra_arg_name]] <- extra_arg
-    }
-  }
-
   had_error_checking <- FALSE
   checked_result <- tryCatch(
     {
-      eval(grading_code)
+      # Run checking code to get feedback
+      parsed_check_code <- parse(text = check_code)
+      if (length(parsed_check_code) > 1) {
+        # don't eval the last one to avoid bad check calls
+        for (i in 1:(length(parsed_check_code) - 1)) {
+          eval(parsed_check_code[[i]], envir_prep)
+        }
+      }
+      grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]], envir_prep)
+      grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]], envir_result)
+      grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
+
+      # copy over remaining args
+      grading_code$envir_result <- envir_result
+      grading_code$evaluate_result <- evaluate_result
+      grading_code$envir_prep <- envir_prep
+      extra_args <- list(...)
+      for (i in seq_along(extra_args)) {
+        extra_arg <- extra_args[[i]]
+        extra_arg_name <- names(extra_args)[i]
+        if (is.null(extra_arg_name) || identical(extra_arg_name, "")) {
+          # no name provided
+          grading_code[[i]] <- extra_arg
+        } else {
+          grading_code[[extra_arg_name]] <- extra_arg
+        }
+      }
+
+      eval(grading_code, envir_prep)
     },
     error = function(e) {
       # prevent the error from being re-thrown
