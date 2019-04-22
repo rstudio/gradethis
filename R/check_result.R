@@ -49,37 +49,29 @@ check_result <- function(
     return(result(user_answer, message = empty_msg, correct = FALSE))
   }
 
+  # init final answer as not found
+  final_result <- answer_not_found
   for (resu in results) {
     if (identical(resu$x, user_answer)) {
-      message <- glue::glue_data(
-        list(
-          correct = resu$correct,
-          message = resu$message
-        ),
-        {if (resu$correct) correct else incorrect}
-      )
-
-      # print("user_answer == ans$x")
-      return(result(
-        x = resu$x,
-        message = message,
-        correct = resu$correct
-      ))
+      final_result <- resu
+      break
     }
   }
-  # print("not found")
-  return(result(
-    x = structure("answer not found", class = c("exercise_answer_not_found", "character")),
-    message = glue::glue_data(
-      list(
-        message = NULL
-      ),
-      incorrect
+
+  message <- glue::glue_data(
+    list(
+      correct = final_result$correct,
+      message = final_result$message
     ),
-    correct = FALSE
+    {if (final_result$correct) correct else incorrect}
+  )
+
+  return(result(
+    x = final_result$x,
+    message = message,
+    correct = final_result$correct
   ))
 }
-
 
 #' Possible results
 #'

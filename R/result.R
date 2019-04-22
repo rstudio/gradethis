@@ -20,3 +20,9 @@ result <- function(x, message = NULL, correct = FALSE) {
     correct = correct
   ))
 }
+
+answer_not_found <- result(
+  x = structure("answer not found", class = c("exercise_answer_not_found", "character")),
+  message = NULL,
+  correct = FALSE
+)
