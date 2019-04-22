@@ -63,7 +63,7 @@ test_result <- function(
       error = function(e) {
         result(
           NULL,
-          message = e,
+          message = as.character(e),
           correct = FALSE
         )
       }
