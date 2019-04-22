@@ -1,5 +1,5 @@
 yoink <- function(pkg, fn) {
-  do.call("getFromNamespace", list(pkg, fn))
+  do.call("getFromNamespace", list(fn, pkg))
 }
 
 # get all of the chunks with
