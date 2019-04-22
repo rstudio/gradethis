@@ -241,4 +241,61 @@ sqrt(log(2))
 check_code("Good job. Don't worry, things will soon get harder.")
 ```
 
-<!-- TODO custom check function -->
+
+
+
+
+## Custom Checking Code
+
+`grader` can accept any checking method that returns a `grader::result` object.  The example below returns a correct/incorrect answer with 50/50 probability.
+
+
+````markdown
+`r ''````{r custom, exercise = TRUE}
+"Flip a coin"
+```
+
+`r ''````{r custom-check}
+fifty_fifty_checker <- function(
+  correct = "Correct!",
+  incorrect = "May the odds ever in your favor!",
+  ...,
+  user
+) {
+  is_correct <- (runif(1) < 0.5)
+  grader::result(
+    x = user,
+    correct = is_correct,
+    message = ifelse(is_correct, correct, incorrect)
+  )
+}
+fifty_fifty_checker()
+```
+````
+
+---------------------------
+
+Are you feeling lucky?
+
+If you are, click Submit Answer.
+
+```{r custom, exercise = TRUE}
+"Flip a coin"
+```
+
+```{r custom-check}
+fifty_fifty_checker <- function(
+  correct = "Correct!",
+  incorrect = "May the odds ever in your favor!",
+  ...,
+  user
+) {
+  is_correct <- (runif(1) < 0.5)
+  grader::result(
+    x = user,
+    correct = is_correct,
+    message = ifelse(is_correct, correct, incorrect)
+  )
+}
+fifty_fifty_checker()
+```
