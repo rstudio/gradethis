@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Garrett Grolemund
 Maintainer: Garrett Grolemund <garrett@rstudio.com>
 Description:
-  Pairing the 'learnr', 'grader' provides multiple methods to grade 'learnr' exercises.  Learn more about 'learnr' tutorials at <http://rstudio.github.io/learnr/>.
+  Pairing with the 'learnr' R package, 'grader' provides multiple methods to grade 'learnr' exercises.  To learn more about 'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
