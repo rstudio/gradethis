@@ -7,13 +7,13 @@
 missing_argument <- function(this_call, that, that_name = NULL) {
   this_call <- prep(this_call)
   that <- prep(that)
-  
-  if (!is.null(that_name) && that_name != "") 
+
+  if (!is.null(that_name) && that_name != "")
     that <- paste(that_name, "=", that)
-  
-  if (grepl("\\(\\)", that)) 
+
+  if (grepl("\\(\\)", that))
     that <- paste("a call to", that)
-  
+
   glue::glue("Your call to {this_call} should include {that} ",
              "as one of its arguments. You may have ",
              "referred to it in a different way, or left out an important ",
@@ -24,7 +24,7 @@ missing_argument <- function(this_call, that, that_name = NULL) {
 surplus_argument <- function(this_call, this, this_name = NULL) {
   this_call <- prep(this_call)
   this      <- prep(this)
-  if (!is.null(this_name) && this_name != "") 
+  if (!is.null(this_name) && this_name != "")
     this <- paste(this_name, "=", this)
 
   glue::glue_data(
@@ -44,13 +44,13 @@ surplus_argument <- function(this_call, this, this_name = NULL) {
 wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
   this <- prep(this)
   that <- prep(that)
-  
-  if (!is.null(that_name) && that_name != "") 
+
+  if (!is.null(that_name) && that_name != "")
     that <- paste(that_name, "=", that)
-  if (!is.null(this_name) && this_name != "") 
+  if (!is.null(this_name) && this_name != "")
     this <- paste(this_name, "=", this)
-  
-  if (grepl("\\(\\)", that)) 
+
+  if (grepl("\\(\\)", that))
     that <- paste("a call to", that)
 
   glue::glue_data(

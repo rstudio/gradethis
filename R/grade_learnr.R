@@ -25,7 +25,7 @@
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the \code{evaluate::evaluate} function.
 #' @param envir_prep A copy of the R environment before the execution of the chunk.
-#' @param ... Unused (include for compatibility with parameters to be added in the future)
+#' @param ... Unused (include for compatibility with parameters to be added in the future by learnr)
 #'
 #' @return An R list which contains several fields indicating the result of the check.
 #' @export

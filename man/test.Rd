@@ -39,4 +39,6 @@ tests(
     testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
   }
 )
+
+\dontrun{grading_demo()}
 }

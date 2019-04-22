@@ -10,6 +10,7 @@
 #' result(2, "Custom message for value 2.", correct = TRUE)
 #' result(3, "Custom message for value 3.")
 #' result(4, "Custom message for value 4.", correct = TRUE)
+#' \dontrun{grading_demo()}
 result <- function(x, message = NULL, correct = FALSE) {
   chkm8_single_character(message)
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)

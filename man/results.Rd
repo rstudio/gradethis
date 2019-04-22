@@ -22,6 +22,8 @@ results(
   result(3, "Custom message for value 3."),
   result(4, "Custom message for value 4.", correct = TRUE)
 )
+
+\dontrun{grading_demo()}
 }
 \seealso{
 \code{\link{result}}

@@ -24,14 +24,8 @@
 #' \dontrun{grading_demo()}
 check_result <- function(
   results,
-  correct = paste0(
-    "{random_praise()}",
-    "{paste0(if (!is.null(message)) paste0(\" \", message))}"
-  ),
-  incorrect = paste0(
-    "{paste0(if(!is.null(message)) paste0(message, \" \"))}",
-    "{random_encourage()}"
-  ),
+  correct = "{paste0(random_praise(), if (nchar(message) > 0) \" \", message)}",
+  incorrect = "{paste0(message, if(nchar(message) > 0) \" \", random_encourage())}",
   empty_msg = "I did not notice a result. Does your code return one?",
   ..., # ignored / extra params
   user = NULL # provided by `grade_learnr`
@@ -87,6 +81,8 @@ check_result <- function(
 #'   result(3, "Custom message for value 3."),
 #'   result(4, "Custom message for value 4.", correct = TRUE)
 #' )
+#'
+#' \dontrun{grading_demo()}
 results <- function(...) {
   x = list(...)
   lapply(x, chkm8_class, "grader_result")

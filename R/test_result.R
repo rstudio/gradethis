@@ -119,6 +119,8 @@ test_result <- function(
 #'     testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
 #'   }
 #' )
+#'
+#' \dontrun{grading_demo()}
 tests <- function(...) {
   fns <- list(...)
   lapply(fns, function(fn) {

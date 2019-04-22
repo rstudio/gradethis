@@ -4,10 +4,9 @@
 \alias{check_result}
 \title{Check result of exercise code}
 \usage{
-check_result(results, correct = paste0("{random_praise()}",
-  "{paste0(if (!is.null(message)) paste0(\\" \\", message))}"),
-  incorrect = paste0("{paste0(if(!is.null(message)) paste0(message, \\" \\"))}",
-  "{random_encourage()}"),
+check_result(results,
+  correct = "{paste0(random_praise(), if (nchar(message) > 0) \\" \\", message)}",
+  incorrect = "{paste0(message, if(nchar(message) > 0) \\" \\", random_encourage())}",
   empty_msg = "I did not notice a result. Does your code return one?",
   ..., user = NULL)
 }

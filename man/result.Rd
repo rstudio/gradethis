@@ -21,4 +21,5 @@ result(1, "Custom message for value 1.")
 result(2, "Custom message for value 2.", correct = TRUE)
 result(3, "Custom message for value 3.")
 result(4, "Custom message for value 4.", correct = TRUE)
+\dontrun{grading_demo()}
 }

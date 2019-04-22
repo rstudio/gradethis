@@ -23,7 +23,7 @@ grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
 
 \item{envir_prep}{A copy of the R environment before the execution of the chunk.}
 
-\item{...}{Unused (include for compatibility with parameters to be added in the future)}
+\item{...}{Unused (include for compatibility with parameters to be added in the future by learnr)}
 }
 \value{
 An R list which contains several fields indicating the result of the check.
