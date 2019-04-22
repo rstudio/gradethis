@@ -1,4 +1,4 @@
-context("Strict check")
+context("Check Code")
 
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
 expect_correct <- function(x) {
