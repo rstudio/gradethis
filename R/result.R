@@ -16,7 +16,7 @@ result <- function(x, message = NULL, correct = FALSE) {
 
   structure(class = "grader_result", list(
     x = x,
-    message = message,
+    message = rlang::`%||%`(message, ""),
     correct = correct
   ))
 }
