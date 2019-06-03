@@ -2,8 +2,12 @@ Package: grader
 Type: Package
 Title: Tools for "grading" student exercises in learnr tutorials
 Version: 0.1.0
-Author: Garrett Grolemund
-Maintainer: Garrett Grolemund <garrett@rstudio.com>
+Author@R: c(
+  person("Garrett", "Grolemund", role = c("aut", "cre"), email = "garrett@rstudio.com"),
+  person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
+  person(family = "RStudio, Inc.", role = c("cph", "fnd")),
+  person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library")
+  )
 Description:
   Pairing with the 'learnr' R package, 'grader' provides multiple methods to grade 'learnr' exercises.  To learn more about 'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
 License: GPL-3
