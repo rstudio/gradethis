@@ -25,7 +25,8 @@
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the \code{evaluate::evaluate} function.
 #' @param envir_prep A copy of the R environment before the execution of the chunk.
-#' @param ... Unused (include for compatibility with parameters to be added in the future by learnr)
+#' @param last_value The last value from evaluating the exercise.
+#' @param ... Extra arguments supplied by learnr
 #'
 #' @return An R list which contains several fields indicating the result of the check.
 #' @export
@@ -39,6 +40,7 @@ grade_learnr <- function(label = NULL,
                          envir_result = NULL,
                          evaluate_result = NULL,
                          envir_prep = NULL,
+                         last_value = NULL,
                          ...) {
 
   # Sometimes no user code is provided, but
@@ -90,48 +92,66 @@ grade_learnr <- function(label = NULL,
         }
       }
       grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]], envir_prep)
-      grading_code$user <- rlang::as_quosure(user_code[[length(user_code)]], envir_result)
-      grading_code$solution <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
 
-      # copy over remaining args
-      grading_code$envir_result <- envir_result
-      grading_code$evaluate_result <- evaluate_result
-      grading_code$envir_prep <- envir_prep
-      extra_args <- list(...)
-      for (i in seq_along(extra_args)) {
-        extra_arg <- extra_args[[i]]
-        extra_arg_name <- names(extra_args)[i]
-        if (is.null(extra_arg_name) || identical(extra_arg_name, "")) {
-          # no name provided
-          grading_code[[i]] <- extra_arg
-        } else {
-          grading_code[[extra_arg_name]] <- extra_arg
-        }
+      ## TODO - barret try to no force check fn to be last part of code
+
+      # # set args to . args for the environment
+      # envir_prep$.grader_args <- grader_args
+      # envir_prep$.learnr_args <- learnr_args
+
+      # get all grader_args
+      grader_args <- list(
+        user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
+      )
+
+      if (!is.null(solution_code)) {
+        grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
       }
 
+      # copy in all learnr arguments
+      learnr_args <- list(...)
+      learnr_args$label <- label
+      learnr_args$solution_code <- solution_code
+      learnr_args$user_code <- user_code
+      learnr_args$check_code <- check_code
+      learnr_args$envir_result <- envir_result
+      learnr_args$evaluate_result <- evaluate_result
+      learnr_args$envir_prep <- envir_prep
+      learnr_args$last_value <- last_value
+
+      # copy in all grader arguments
+      grading_code$grader_args <- grader_args
+      grading_code$learnr_args <- learnr_args
+
+      # set user answer for the environment to find
+      envir_prep$ans <- grader_args$user
+
+      # eval code in a copy of the chunk's prepped environment
       eval(grading_code, envir_prep)
     },
     error = function(e) {
       # prevent the error from being re-thrown
       message("", e)
       had_error_checking <<- TRUE
-      result(
-        e,
-        message = "Error occured while checking the submission",
-        correct = FALSE
+      graded(
+        correct = FALSE,
+        message = "Error occured while checking the submission"
       )
-    })
+    }
+  )
   if (!checkmate::test_class(checked_result, "grader_result")) {
-    stop("`grade_learnr` does not know how to handle a non-list value produced in by `-check` chunk")
+    stop("`grade_learnr` should receive a `graded` value from every `-check` chunk")
   }
 
   message_type <-
     if (had_error_checking) {
       "warning"
-    } else if (checked_result$correct) {
-      "success"
     } else {
-      "error"
+      if (checked_result$correct) {
+        "success"
+      } else {
+        "error"
+      }
     }
 
   ret <- list(

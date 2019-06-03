@@ -30,7 +30,6 @@
 #' @param incorrect A character string to display if the student answer matches
 #'   the solution code.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.
-#' @param ... ignored
 #' @param solution (Optional) solution code surrounded by \code{quote()},
 #'   \code{rlang::quo()}, or provided as a character string.
 #' @param user (Optional) student code to check against the solution surrounded
@@ -49,26 +48,28 @@
 check_code <- function(
   correct = "{random_praise()} Correct!",
   incorrect = "{message} {random_encourage()}",
-  ..., # ignored / extra params
-  solution = NULL, user = NULL # provided by `grade_learnr`
+  grader_args = list(), # provided by `grade_learnr`
+  learnr_args = list() # provided by `grade_learnr`
 ) {
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
+
+  user <- grader_args$user_quo
+  solution <- grader_args$solution_quo
 
   is_same_info <- code_is_same(user, solution)
 
   if (is_same_info$correct) {
     return(
-      result(
-        x = user,
+      graded(
+        correct = TRUE,
         message = glue::glue_data(
           list(
             correct = TRUE,
             message = NULL
           ),
           correct
-        ),
-        correct = TRUE
+        )
       )
     )
   }
@@ -93,10 +94,9 @@ check_code <- function(
   }
 
   return(
-    result(
-      x = user,
-      message = message,
-      correct = FALSE
+    graded(
+      correct = FALSE,
+      message = message
     )
   )
 }
@@ -123,16 +123,16 @@ code_is_same <- function(user = NULL, solution = NULL) {
 
   # Correct answers are all alike
   if (suppressWarnings(user_code == solution_code)) {
-    return(result(x = user, message = NULL, correct = TRUE))
+    return(graded(correct = TRUE, message = NULL))
   }
 
   message <- detect_mistakes(user, solution)
   if (is.null(message)) {
     # found no errors
-    return(result(x = user, message = NULL, correct = TRUE))
+    return(graded(correct = TRUE, message = NULL))
   }
 
   return(
-    result(x = user, message = message, correct = FALSE)
+    graded(correct = FALSE, message = message)
   )
 }

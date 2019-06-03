@@ -17,13 +17,23 @@ result <- function(x, message = NULL, correct = FALSE) {
 
   structure(class = "grader_result", list(
     x = x,
-    message = rlang::`%||%`(message, ""),
+    message = message %||% "",
     correct = correct
   ))
 }
 
-answer_not_found <- result(
-  x = structure("answer not found", class = c("exercise_answer_not_found", "character")),
-  message = NULL,
-  correct = FALSE
-)
+
+# TODO-document
+# Should be what EVERY check_* returns
+#' @export
+graded <- function(message, correct) {
+  chkm8_single_character(message)
+  checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
+
+  structure(class = "grader_graded",
+    list(
+      message = message %||% "",
+      correct = correct
+    )
+  )
+}

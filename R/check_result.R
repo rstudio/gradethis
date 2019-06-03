@@ -23,28 +23,27 @@
 #' @examples
 #' \dontrun{grading_demo()}
 check_result <- function(
-  results,
+  ...,
   correct = "{paste0(random_praise(), if (nchar(message) > 0) \" \", message)}",
   incorrect = "{paste0(message, if(nchar(message) > 0) \" \", random_encourage())}",
   empty_msg = "I did not notice a result. Does your code return one?",
-  ..., # ignored / extra params
-  user = NULL # provided by `grade_learnr`
+  grader_args = list(), # provided by `grade_learnr`
+  learnr_args = list() # provided by `grade_learnr`
 ) {
-  chkm8_class(results, "grader_results")
+  results <- list(...)
+  chkm8_item_class(results, "grader_result")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
+  chkm8_single_character(empty_msg)
 
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
     stop("At least one correct result must be provided")
   }
 
-  user_answer <- get_user_code(user)
-  if (is.null(user_answer)) {
-    return(result(user_answer, message = empty_msg, correct = FALSE))
-  }
+  user_answer <- learnr_args$last_value
 
   # init final answer as not found
-  final_result <- answer_not_found
+  final_result <- graded(correct = FALSE, "Answer not found")
   for (resu in results) {
     if (identical(resu$x, user_answer)) {
       final_result <- resu
@@ -60,34 +59,8 @@ check_result <- function(
     {if (final_result$correct) correct else incorrect}
   )
 
-  return(result(
-    x = final_result$x,
-    message = message,
-    correct = final_result$correct
+  return(graded(
+    correct = final_result$correct,
+    message = message
   ))
-}
-
-#' Possible results
-#'
-#' A list of possible results to check against.  Each argument supplied must contain output from \code{\link{result}}.
-#' @param ... a group of \code{\link{result}} output objects.
-#' @export
-#' @return A \code{list} with class \code{"grader_result"} containing \code{\link{result}} objects.
-#' @seealso \code{\link{result}}
-#' @examples
-#' results(
-#'   result(1, "Custom message for value 1."),
-#'   result(2, "Custom message for value 2.", correct = TRUE),
-#'   result(3, "Custom message for value 3."),
-#'   result(4, "Custom message for value 4.", correct = TRUE)
-#' )
-#'
-#' \dontrun{grading_demo()}
-results <- function(...) {
-  x = list(...)
-  lapply(x, chkm8_class, "grader_result")
-  structure(
-    class = "grader_results",
-    x
-  )
 }

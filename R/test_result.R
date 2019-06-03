@@ -29,7 +29,7 @@
 #' @examples
 #' \dontrun{grading_demo()}
 test_result <- function(
-  tests,
+  ...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
   incorrect = paste0(
     "{num_correct}/{num_total} correct. ",
@@ -37,34 +37,32 @@ test_result <- function(
     "{random_encourage()}"
   ),
   empty_msg = "I did not notice a result. Does your code return one?",
-  ..., # ignored / extra params
-  user = NULL # provided by `grade_learnr`
+  grader_args = list(), # provided by `grade_learnr`
+  learnr_args = list() # provided by `grade_learnr`
 ) {
-  chkm8_class(tests, "grader_tests")
+  chkm8_item_class(tests, "grader_test")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
   chkm8_single_character(empty_msg)
 
   user_answer <- get_user_code(user)
   if (is.null(user_answer)) {
-    return(result(user_answer, message = empty_msg, correct = FALSE))
+    return(graded(correct = FALSE, message = empty_msg))
   }
 
   results <- lapply(tests$fns, function(test_fn) {
     tryCatch(
       {
         test_fn(user_answer)
-        result(
-          NULL,
-          message = NULL,
-          correct = TRUE
+        graded(
+          correct = TRUE,
+          message = NULL
         )
       },
       error = function(e) {
-        result(
-          NULL,
-          message = as.character(e),
-          correct = FALSE
+        graded(
+          correct = FALSE,
+          message = as.character(e)
         )
       }
     )
@@ -85,14 +83,13 @@ test_result <- function(
     {if (is_correct) correct else incorrect}
   )
 
-  return(result(
-    x = user_answer,
-    message = message,
-    correct = is_correct
+  return(graded(
+    correct = is_correct,
+    message = message
   ))
 }
 
-
+# TODO do not use anymore in favor of `...` arg
 #' Tests to check
 #'
 #' Collect a set of test to execute against a user's result value
