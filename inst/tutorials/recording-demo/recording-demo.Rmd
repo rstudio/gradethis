@@ -43,7 +43,7 @@ sqrt(log(1))
 ```
 
 ```{r number-check}
-strict_check("Good job. Don't worry, things will soon get harder.")
+check_code("Good job. Don't worry, things will soon get harder.")
 ```
 
 

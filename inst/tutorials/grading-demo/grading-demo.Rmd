@@ -2,6 +2,8 @@
 title: "Grading demo"
 output: learnr::tutorial
 runtime: shiny_prerendered
+# editor_options:
+#   preview: viewer
 ---
 
 ```{r setup, include=FALSE}
@@ -13,32 +15,285 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Topic 1
+## Grading Types
 
-### Exercise 
+### Check Exercise Result
 
-Here is a number. You can do great things with it, like this:  
+`grader` can check for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
 
-* Take the square root of the log of the number. Then click Submit Answer.
+See `?check_result` for more information.
 
-```{r number, exercise = TRUE}
-1
+Example code written below:
+
+````markdown
+`r ''````{r result, exercise = TRUE}
+3
 ```
 
-```{r number-hint-1}
+`r ''````{r result-hint-1}
+"Is it an even number"
+```
+
+`r ''````{r result-hint-2}
+"Enter an even number below 5"
+```
+
+`r ''````{r result-check}
+check_result(
+  results(
+    result(1, "Custom message for value 1."),
+    result(2, "Custom message for value 2.", correct = TRUE),
+    result(3, "Custom message for value 3."),
+    result(4, "Custom message for value 4.", correct = TRUE)
+  )
+)
+```
+````
+
+-----------------------
+
+* Enter an small even number, then click Submit Answer.
+
+```{r result, exercise = TRUE}
+3
+```
+
+```{r result-hint-1}
+"Is it an even number"
+```
+
+```{r result-hint-2}
+"Enter an even number below 5"
+```
+
+```{r result-check}
+check_result(
+  result(1, "Custom message for value 1."),
+  result(2, "Custom message for value 2.", correct = TRUE),
+  result(3, "Custom message for value 3."),
+  result(4, "Custom message for value 4.", correct = TRUE)
+)
+```
+
+### Test Exercise Result
+
+`grader` can test against for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
+
+Writers can include as many testing functions as they would like.  The test functions should accept a single result value to test against.  If any test fails, it should throw an error.  This error message will be returned back to the user by default.  See `?test_result` for more information.
+
+Example code written below:
+
+````markdown
+`r ''````{r test_result, exercise = TRUE}
+function(x) {
+  sqrt(log(x))
+}
+```
+
+`r ''````{r test_result-hint-1}
+"function(x) {
+  sqrt(...)
+}"
+```
+
+`r ''````{r test_result-hint-2}
+"function(x) {
+  sqrt(log(...))
+}"
+```
+
+`r ''````{r test_result-check}
+test_result(
+  tests(
+    function(your_answer) {
+      checkmate::expect_function(your_answer, args = c("x"))
+    },
+    test(
+      # use a custom error message
+      "Make sure your function returns a number!",
+      function(your_answer) {
+        checkmate::expect_number(your_answer(1))
+      }
+    ),
+    function(your_answer) {
+      testthat::expect_equal(your_answer(0), NaN)
+    },
+    function(your_answer) {
+      testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
+    }
+  )
+)
+```
+````
+
+---------------------------
+
+
+Please make a function in the exercise space below.  It should:
+
+* Take a single `x` argument
+* Take the `log` of `x`
+* Take the `sqrt` of the logged value.
+
+Then click Submit Answer.
+
+```{r test_result, exercise = TRUE}
+function(x) {
+  sqrt(log(x))
+}
+```
+
+```{r test_result-hint-1}
+"function(x) {
+  sqrt(...)
+}"
+```
+
+```{r test_result-hint-2}
+"function(x) {
+  sqrt(log(...))
+}"
+```
+
+```{r test_result-check}
+test_result(
+  tests(
+    function(your_answer) {
+      checkmate::expect_function(your_answer, args = c("x"))
+    },
+    test(
+      # use a custom error message
+      "Make sure your function returns a number!",
+      function(your_answer) {
+        checkmate::expect_number(your_answer(1))
+      }
+    ),
+    function(your_answer) {
+      testthat::expect_equal(your_answer(0), NaN)
+    },
+    function(your_answer) {
+      testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
+    }
+  )
+)
+```
+
+
+### Check Exercise Code
+
+`grader` can test against an exact code match.  This grading approach does not inspect the computed result.
+
+This check method requires a `*-solution` code chunk containing the solution to compare.  Only the last solution expression and last user expression will be matched.
+
+See `?check_code` for more information.
+
+Example code written below:
+
+````markdown
+`r ''````{r strict, exercise = TRUE}
+2
+```
+
+`r ''````{r strict-hint-1}
 "You can take the log with `log()`"
 ```
 
-```{r number-hint-2}
+`r ''````{r strict-hint-2}
 "You can take the square root with `sqrt()`"
 ```
 
-```{r number-solution}
-sqrt(log(1))
+`r ''````{r strict-solution}
+sqrt(log(2))
 ```
 
-```{r number-check}
-strict_check("Good job. Don't worry, things will soon get harder.")
+`r ''````{r strict-check}
+check_code("Good job. Don't worry, things will soon get harder.")
+```
+````
+
+---------------------------
+
+Here is a number. You can do great things with it, like this:
+
+* Take the square root of the log of the number `2`.
+
+Then click Submit Answer.
+
+```{r strict, exercise = TRUE}
+2
+```
+
+```{r strict-hint-1}
+"You can take the log with `log()`"
+```
+
+```{r strict-hint-2}
+"You can take the square root with `sqrt()`"
+```
+
+```{r strict-solution}
+sqrt(log(2))
+```
+
+```{r strict-check}
+check_code("Good job. Don't worry, things will soon get harder.")
 ```
 
 
+
+
+
+## Custom Checking Code
+
+`grader` can accept any checking method that returns a `grader::result` object.  The example below returns a correct/incorrect answer with 50/50 probability.
+
+
+````markdown
+`r ''````{r custom, exercise = TRUE}
+"Flip a coin"
+```
+
+`r ''````{r custom-check}
+fifty_fifty_checker <- function(
+  correct = "Correct!",
+  incorrect = "May the odds ever in your favor!",
+  ...,
+  user
+) {
+  is_correct <- (runif(1) < 0.5)
+  grader::result(
+    x = user,
+    correct = is_correct,
+    message = ifelse(is_correct, correct, incorrect)
+  )
+}
+fifty_fifty_checker()
+```
+````
+
+---------------------------
+
+Are you feeling lucky?
+
+If you are, click Submit Answer.
+
+```{r custom, exercise = TRUE}
+"Flip a coin"
+```
+
+```{r custom-check}
+fifty_fifty_checker <- function(
+  correct = "Correct!",
+  incorrect = "May the odds ever in your favor!",
+  ...,
+  user
+) {
+  is_correct <- (runif(1) < 0.5)
+  grader::result(
+    x = user,
+    correct = is_correct,
+    message = ifelse(is_correct, correct, incorrect)
+  )
+}
+fifty_fifty_checker()
+```

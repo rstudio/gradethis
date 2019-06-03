@@ -2,15 +2,19 @@ Package: grader
 Type: Package
 Title: Tools for "grading" student exercises in learnr tutorials
 Version: 0.1.0
-Author: Garrett Grolemund
-Maintainer: Garrett Grolemund <garrett@rstudio.com>
-Description: Learn more about learnr tutorials at rstudio.github.io/learnr/
-License: MIT
+Author@R: c(
+  person("Garrett", "Grolemund", role = c("aut", "cre"), email = "garrett@rstudio.com"),
+  person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
+  person(family = "RStudio, Inc.", role = c("cph", "fnd")),
+  person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library")
+  )
+Description:
+  Pairing with the 'learnr' R package, 'grader' provides multiple methods to grade 'learnr' exercises.  To learn more about 'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
-RoxygenNote: 6.0.1
-Imports: 
+RoxygenNote: 6.1.1
+Imports:
     purrr,
     crayon,
     clisymbols,
@@ -20,6 +24,12 @@ Imports:
     glue,
     knitr,
     callr,
-    learnr,
+    learnr (>= 0.9.2.9001),
     stringr,
-    readr
+    readr,
+    checkmate,
+    testthat
+Remotes:
+  rstudio/learnr
+URL: https://rstudio-education.github.io/grader/, https://rstudio.github.io/learnr/, https://github.com/rstudio-education/grader
+BugReports: https://github.com/rstudio-education/grader/issues

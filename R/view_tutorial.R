@@ -11,6 +11,7 @@
 #' @param package A character string. The name of the package that contains a tutorial.
 #'
 #' @export
+#' @importFrom utils browseURL
 view_tutorial <- function(name, package) {
 
   # launch in separate R session
@@ -28,9 +29,9 @@ view_tutorial <- function(name, package) {
   supervise = TRUE,
   args = list(name = name, package = package)
   )
-  
-  # Failed attempt to bypass IDE console scrolling 
-  # error by using terminal instead of callr (does 
+
+  # Failed attempt to bypass IDE console scrolling
+  # error by using terminal instead of callr (does
   # not avoid the bug)
   # termID <- rstudioapi::terminalExecute(
   #   'R -e \'learnr::run_tutorial("solutions-demo", package = "grader", shiny_args = list(launch.browser = FALSE,  port = 8000, host = "127.0.0.1"))\'',
@@ -51,10 +52,14 @@ view_tutorial <- function(name, package) {
     }
   }
 
-  rstudioapi::viewer(
-    url = "http://localhost:8000",
-    height = "maximize"
-  )
+  if (rstudioapi::isAvailable()) {
+    rstudioapi::viewer(
+      url = "http://localhost:8000",
+      height = "maximize"
+    )
+  } else {
+    browseURL("http://localhost:8000")
+  }
 }
 
 
@@ -66,7 +71,7 @@ view_tutorial <- function(name, package) {
 #' \code{remove_tutorial} should be easy to adapt to a an RStudio-specific
 #' startup file should RStudio implement one.
 #'
-#' \code{add_tutorial()} inserts a call to \link[grader]{\code{view_tutorial()}}
+#' \code{add_tutorial()} inserts a call to \code{\link{view_tutorial}()}
 #' into the .Rprofile file contained in the current working directory. As a
 #' result, R will launch the tutorial in the RStudio IDE viewer pane whenever
 #' the current project is opened or re-opened.
@@ -80,7 +85,7 @@ view_tutorial <- function(name, package) {
 #' \code{view_tutorial()}, \code{add_tutorial} will override the call without a
 #' warning message.
 #'
-#' @seealso \link[grader]{\code{view_tutorial}}
+#' @seealso \code{\link{view_tutorial}}
 #'
 #' @param name A character string. The name of a tutorial saved in a package.
 #' @param package A character string. The name of the package that contains a
@@ -91,7 +96,7 @@ add_tutorial <- function(name, package) {
   rprofile <- paste0(getwd(), "/.Rprofile")
 
   # load packages
-  
+
   # Check that the .Rprofile does not already load a tutorial
   if (file.exists(rprofile)) {
     text <- readr::read_file(rprofile)
@@ -107,29 +112,29 @@ add_tutorial <- function(name, package) {
   }
   cat(paste0(
     'grader::view_tutorial(name = "',
-    name, '", package = "', package, 
-    '")  ## Learnr tutorial added on ', 
+    name, '", package = "', package,
+    '")  ## Learnr tutorial added on ',
     Sys.Date()
   ),
   file = rprofile,
   sep = "\n",
   append = TRUE
   )
-  
+
   # return message
 }
 
 remove_tutorial <- function(dir = NULL) {
   if (!is.null(dir)) dir <- getwd()
   rprofile <- paste0(dir, "/.Rprofile")
-  
+
   if (file.exists(rprofile)) {
     text <- readr::read_lines(rprofile)
   } else {
     stop("Directory does not have a .Rprofile ",
          "file to remove tutorial from.")
   }
-  
+
   tutorial_calls <- grepl("\\)  ## Learnr tutorial added on ", text)
   if (!any(tutorial_calls)) {
     message("No tutorials detected to remove.")
@@ -139,4 +144,3 @@ remove_tutorial <- function(dir = NULL) {
     message("Tutorial removed.")
   }
 }
-  

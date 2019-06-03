@@ -30,3 +30,5 @@ NEXT_STEPS.Rmd
 tmp
 */rsconnect/
 inst/tutorials/*/rsconnect/
+inst/tutorials/*/*.html
+docs/*

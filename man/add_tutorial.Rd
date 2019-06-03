@@ -20,7 +20,7 @@ is an incorrect assumption. However, \code{add_tutorial} and
 startup file should RStudio implement one.
 }
 \details{
-\code{add_tutorial()} inserts a call to \link[grader]{\code{view_tutorial()}}
+\code{add_tutorial()} inserts a call to \code{\link{view_tutorial}()}
 into the .Rprofile file contained in the current working directory. As a
 result, R will launch the tutorial in the RStudio IDE viewer pane whenever
 the current project is opened or re-opened.
@@ -35,5 +35,5 @@ home directory. If one of these files contains a call to
 warning message.
 }
 \seealso{
-\link[grader]{\code{view_tutorial}}
+\code{\link{view_tutorial}}
 }

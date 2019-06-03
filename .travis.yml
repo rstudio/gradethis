@@ -1,0 +1,51 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: r
+sudo: false
+cache: packages
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+jobs:
+  include:
+    - stage: "R CMD check"
+      name: "Old Release"
+      r: oldrel
+
+
+    - name: "Release"
+      r: release
+      after_success:
+        # code coverage
+        - Rscript -e 'if(!require("covr")) install.packages("covr")'
+        - Rscript -e 'covr::codecov()'
+
+
+    - name: "Devel"
+      r: devel
+
+
+    - stage: "Deploy"
+      name: "pkgdown"
+      r: release
+      if: |
+        branch IN (master, travis, grade_exercise_answer) AND \
+        type = push AND \
+        repo = rstudio-education/grader
+      before_deploy: # build site and copy over files
+        - Rscript -e 'if(!require("pkgdown")) install.packages("pkgdown")'
+        - Rscript -e 'pkgdown::build_site()'
+      deploy:
+        provider: pages # github pages
+        local-dir: docs # deploy from docs folder
+        skip-cleanup: true # keep pkgdown output
+        keep-history: false # overwrite all git history
+        on:
+          # deploy on any branch as condition is done above
+          all_branches: true
+        github-token:
+          secure:
+            "BuNSl2Tp1GGS2ikn0zTzqUXu9bC6KaQBOYV6G8y8msidJAj/1M1sjhLO8BmP4moQ7XsoxAG1Zd+pvuE+vWVIQ/A7oMZU/WXQiymLtUXajSM4lj6+RwK9OS4/BiXia0B1rEUUmUJbX4C+yRBKHU9prNcuyZhG7RO6DTJPwodspL2ABPf4yap1Dfptj3O0ZheziC4NqPqndSGdjZos6sgvIGjEUNfjXQmBv9irpSfpZmzMzWNQvnkF9aCnsgxNcjLwClY73EfJTq3z9FN9EGpk8gRw+M2mhIKwT3N2P6XB4BCHtlIgXCw2TwwJpmuj1qLm2JvUdWx3LfBidxcv5pd9PKQffoYkdaOsX00kImEZtxH4xMCAzsKALLa4B8JyMls7lwEZsEAyU6JYDBraWIXM7s1GOu2lTcqQBpRk6bFU46FGaFfNglPgYbynP3PwGo12W+UsXK6LvuvnbfQKsNzXE2t7WEuMDOQraBU3NoZSQUwX37bAL28Iq5Vyx6XpgwHcayY+vRkNTZXGd7HK/refdhecpAAWi5SRx8I2ExEZ+9qFpw0KijWA2yJ/ksCfSX85EcIZka8PfvSgYYZWzcnD1iuHB+sLb6074h5ePJ+YIQRjZJAeXrOiyHHvmXRfKXUvPymX99VkSiqbVEFMfIendeMw6AcYynP+6WI+pqRf6EQ="
