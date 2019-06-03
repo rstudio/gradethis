@@ -1,5 +1,8 @@
 .pipes <- c("%>%")
 
+#' @importFrom rlang %||%
+NULL
+
 is_pipe <- function(x) {
   if (is.character(x)) x <- parse(text = x)[[1]]
   ifelse(is.call(x), as.character(x[[1]]) %in% .pipes, FALSE)
