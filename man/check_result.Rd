@@ -4,14 +4,14 @@
 \alias{check_result}
 \title{Check result of exercise code}
 \usage{
-check_result(results,
+check_result(...,
   correct = "{paste0(random_praise(), if (nchar(message) > 0) \\" \\", message)}",
   incorrect = "{paste0(message, if(nchar(message) > 0) \\" \\", random_encourage())}",
   empty_msg = "I did not notice a result. Does your code return one?",
-  ..., user = NULL)
+  grader_args = list(), learnr_args = list())
 }
 \arguments{
-\item{results}{A \code{\link{results}} object that contains possible \code{\link{result}} values to compare against.}
+\item{...}{ignored}
 
 \item{correct}{A character string to display if the student answer matches
 a known answer.
@@ -23,7 +23,7 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
 
 \item{empty_msg}{A character string to display as a message if the user code is NULL.}
 
-\item{...}{ignored}
+\item{results}{A \code{\link{results}} object that contains possible \code{\link{result}} values to compare against.}
 
 \item{user}{(Optional) student code to check against the \code{results} surrounded
 by \code{quote()}, \code{rlang::quo()}, or provided as a character string.}

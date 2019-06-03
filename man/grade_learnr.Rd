@@ -6,7 +6,7 @@
 \usage{
 grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
   check_code = NULL, envir_result = NULL, evaluate_result = NULL,
-  envir_prep = NULL, ...)
+  envir_prep = NULL, last_value = NULL, ...)
 }
 \arguments{
 \item{label}{Label for exercise chunk}
@@ -23,7 +23,9 @@ grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
 
 \item{envir_prep}{A copy of the R environment before the execution of the chunk.}
 
-\item{...}{Unused (include for compatibility with parameters to be added in the future by learnr)}
+\item{last_value}{The last value from evaluating the exercise.}
+
+\item{...}{Extra arguments supplied by learnr}
 }
 \value{
 An R list which contains several fields indicating the result of the check.

@@ -5,8 +5,8 @@
 \title{Check code structure}
 \usage{
 check_code(correct = "{random_praise()} Correct!",
-  incorrect = "{message} {random_encourage()}", ..., solution = NULL,
-  user = NULL)
+  incorrect = "{message} {random_encourage()}", grader_args = list(),
+  learnr_args = list())
 }
 \arguments{
 \item{correct}{A character string to display if the student answer matches
@@ -16,8 +16,6 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
 \item{incorrect}{A character string to display if the student answer matches
 the solution code.
 This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.}
-
-\item{...}{ignored}
 
 \item{solution}{(Optional) solution code surrounded by \code{quote()},
 \code{rlang::quo()}, or provided as a character string.}

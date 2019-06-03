@@ -4,15 +4,15 @@
 \alias{test_result}
 \title{Test the result of exercise code}
 \usage{
-test_result(tests,
+test_result(...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
   incorrect = paste0("{num_correct}/{num_total} correct. ",
   "Fix this first: '{errors[1]}'. ", "{random_encourage()}"),
   empty_msg = "I did not notice a result. Does your code return one?",
-  ..., user = NULL)
+  grader_args = list(), learnr_args = list())
 }
 \arguments{
-\item{tests}{A \code{\link{tests}} object that contains all \code{\link{test}} functions to check the user's result.}
+\item{...}{ignored}
 
 \item{correct}{A character string to display if all tests pass.
   This character string will be run through \code{glue::\link[glue]{glue_data}} with
@@ -32,7 +32,7 @@ test_result(tests,
 
 \item{empty_msg}{A character string to display as a message if the user code is NULL.}
 
-\item{...}{ignored}
+\item{tests}{A \code{\link{tests}} object that contains all \code{\link{test}} functions to check the user's result.}
 
 \item{user}{(Optional) student code to check against the \code{results} surrounded
 by \code{quote()}, \code{rlang::quo()}, or provided as a character string.}
