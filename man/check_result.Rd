@@ -7,7 +7,6 @@
 check_result(...,
   correct = "{paste0(random_praise(), if (nchar(message) > 0) \\" \\", message)}",
   incorrect = "{paste0(message, if(nchar(message) > 0) \\" \\", random_encourage())}",
-  empty_msg = "I did not notice a result. Does your code return one?",
   grader_args = list(), learnr_args = list())
 }
 \arguments{
@@ -21,15 +20,15 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
 a known answer.
 This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<result message>")}. where message is the matched result message.}
 
-\item{empty_msg}{A character string to display as a message if the user code is NULL.}
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
+This can be student code to check against the \code{results} surrounded
+by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
+For example, \code{user_quo = quote(1)}}
 
-\item{results}{A \code{\link{results}} object that contains possible \code{\link{result}} values to compare against.}
-
-\item{user}{(Optional) student code to check against the \code{results} surrounded
-by \code{quote()}, \code{rlang::quo()}, or provided as a character string.}
+\item{learnr_args}{A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}}
 }
 \value{
-a \code{grader_result} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
+a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found, \code{matched}.
 }
 \description{
 \code{check_result()} compares the final result of the user code to known \code{results}.

@@ -30,15 +30,17 @@ test_result(...,
   \item \code{errors}: Vector of errors found
 }}
 
-\item{empty_msg}{A character string to display as a message if the user code is NULL.}
+\item{empty_msg}{A character string to display as a message if the user code is NULL. TODO depricated.}
 
-\item{tests}{A \code{\link{tests}} object that contains all \code{\link{test}} functions to check the user's result.}
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
+This can be student code to check against the \code{results} surrounded
+by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
+For example, \code{user_quo = quote(1)}}
 
-\item{user}{(Optional) student code to check against the \code{results} surrounded
-by \code{quote()}, \code{rlang::quo()}, or provided as a character string.}
+\item{learnr_args}{A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}}
 }
 \value{
-a \code{grader_result} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
+a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
 \code{test_result()} executes tests against the final result of the user code.
@@ -48,5 +50,5 @@ If a test throws an error, the test fails and the submitted answer will be marke
 \dontrun{grading_demo()}
 }
 \seealso{
-\code{tests}, \code{test}
+\code{test}
 }

@@ -23,8 +23,11 @@ result <- function(x, message = NULL, correct = FALSE) {
 }
 
 
-# TODO-document
-# Should be what EVERY check_* returns
+#' \code{grader_graded} object
+#' returned by every \code{check_*} function
+#'
+#' @param message A character string of the message to be displayed.
+#' @param correct A boolean value of whether or not the checked code is correct.
 #' @export
 graded <- function(message, correct) {
   chkm8_single_character(message)
