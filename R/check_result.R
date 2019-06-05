@@ -26,7 +26,6 @@ check_result <- function(
   ...,
   correct = "{paste0(random_praise(), if (nchar(message) > 0) \" \", message)}",
   incorrect = "{paste0(message, if(nchar(message) > 0) \" \", random_encourage())}",
-  empty_msg = "I did not notice a result. Does your code return one?",
   grader_args = list(), # provided by `grade_learnr`
   learnr_args = list() # provided by `grade_learnr`
 ) {
@@ -34,7 +33,6 @@ check_result <- function(
   chkm8_item_class(results, "grader_result")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
-  chkm8_single_character(empty_msg)
 
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
     stop("At least one correct result must be provided")
@@ -43,16 +41,19 @@ check_result <- function(
   user_answer <- learnr_args$last_value
 
   # init final answer as not found
-  final_result <- graded(correct = FALSE, "Answer not found")
+  final_result <- graded(correct = FALSE, NULL)
+  found_match <- FALSE
   for (resu in results) {
     if (identical(resu$x, user_answer)) {
       final_result <- resu
+      found_match <- TRUE
       break
     }
   }
 
   message <- glue::glue_data(
     list(
+      matched = found_match,
       correct = final_result$correct,
       message = final_result$message
     ),

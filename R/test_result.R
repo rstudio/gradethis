@@ -40,12 +40,13 @@ test_result <- function(
   grader_args = list(), # provided by `grade_learnr`
   learnr_args = list() # provided by `grade_learnr`
 ) {
-  chkm8_item_class(tests, "grader_test")
+  tests <- tests(...)
+  chkm8_class(tests, "grader_tests")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
   chkm8_single_character(empty_msg)
 
-  user_answer <- get_user_code(user)
+  user_answer <- get_user_code(grader_args$user_quo)
   if (is.null(user_answer)) {
     return(graded(correct = FALSE, message = empty_msg))
   }
@@ -94,7 +95,7 @@ test_result <- function(
 #'
 #' Collect a set of test to execute against a user's result value
 #' @param ... a set of functions that will accept the evaluated user solution. If the test fails, it should throw an error with the message to display.
-#' @export
+#' @noRd
 #' @rdname test
 #' @examples
 #'
@@ -133,6 +134,7 @@ tests <- function(...) {
     )
   )
 }
+#' TODO document with 'tests' documentation
 #' @export
 #' @rdname test
 #' @param message Message to report back if the test throws an error.
