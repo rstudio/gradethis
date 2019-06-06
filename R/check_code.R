@@ -30,11 +30,8 @@
 #' @param incorrect A character string to display if the student answer matches
 #'   the solution code.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.
-#' @param grader_args A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
-#'   This can be student code to check against the \code{results} surrounded
-#'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
-#'   For example, \code{user_quo = quote(1)}
-#' @param learnr_args A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}
+#' @template grader_args
+#' @template learnr_args
 #'
 #' @return a \code{grader_graded} structure from \code{\link{result}}.
 #'   If the student answer differs from the

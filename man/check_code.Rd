@@ -17,12 +17,12 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
 the solution code.
 This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
-This can be student code to check against the \code{results} surrounded
-by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
-For example, \code{user_quo = quote(1)}}
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
+ \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
+ \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+}}
 
-\item{learnr_args}{A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}}
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
 a \code{grader_graded} structure from \code{\link{result}}.

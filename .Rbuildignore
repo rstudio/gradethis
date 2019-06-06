@@ -6,3 +6,4 @@
 ^pkgdown$
 ^\.travis\.yml$
 ^codecov\.yml$
+^man-roxygen$

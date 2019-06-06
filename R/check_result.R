@@ -11,11 +11,8 @@
 #' @param incorrect A character string to display if the student answer matches
 #'   a known answer.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<result message>")}. where message is the matched result message.
-#' @param grader_args A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
-#'   This can be student code to check against the \code{results} surrounded
-#'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
-#'   For example, \code{user_quo = quote(1)}
-#' @param learnr_args A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}
+#' @template grader_args
+#' @template learnr_args
 #' @param ... ignored
 #'
 #' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found, \code{matched}.
