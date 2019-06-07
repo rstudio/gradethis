@@ -46,14 +46,15 @@ test_that("Spots differences in atomics", {
 test_that("Gives correct message", {
 
   # empty
-  expect_message(
-    test_result(
-      grader_args = list(user_quo = rlang::quo(NULL)),
-      empty_msg = "NOT FOUND",
-      checkmate::expect_numeric
-    ),
-    "NOT FOUND", FALSE
-  )
+  # no longer testing for empty user code
+  # expect_message(
+  #   test_result(
+  #     grader_args = list(user_quo = rlang::quo(NULL)),
+  #     empty_msg = "NOT FOUND",
+  #     checkmate::expect_numeric
+  #   ),
+  #   "NOT FOUND", FALSE
+  # )
 
 
   user <- quote(1)

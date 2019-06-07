@@ -17,12 +17,8 @@
 #'   \item \code{num_total}: Number of tests
 #'   \item \code{errors}: Vector of errors found
 #' }
-#' @param empty_msg A character string to display as a message if the user code is NULL. TODO depricated.
-#' @param grader_args A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
-#'   This can be student code to check against the \code{results} surrounded
-#'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
-#'   For example, \code{user_quo = quote(1)}
-#' @param learnr_args A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}
+#' @template grader_args
+#' @template learnr_args
 #' @param ... ignored
 #'
 #' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
@@ -38,20 +34,15 @@ test_result <- function(
     "Fix this first: '{errors[1]}'. ",
     "{random_encourage()}"
   ),
-  empty_msg = "I did not notice a result. Does your code return one?",
   grader_args = list(), # provided by `grade_learnr`
   learnr_args = list() # provided by `grade_learnr`
 ) {
-  tests <- tests(...)
+  tests <- grader_tests(...)
   chkm8_class(tests, "grader_tests")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
-  chkm8_single_character(empty_msg)
 
   user_answer <- get_user_code(grader_args$user_quo)
-  if (is.null(user_answer)) {
-    return(graded(correct = FALSE, message = empty_msg))
-  }
 
   results <- lapply(tests$fns, function(test_fn) {
     tryCatch(
@@ -121,7 +112,7 @@ test_result <- function(
 #' )
 #'
 #' \dontrun{grading_demo()}
-tests <- function(...) {
+grader_tests <- function(...) {
   fns <- list(...)
   lapply(fns, function(fn) {
     checkmate::assert_function(fn)

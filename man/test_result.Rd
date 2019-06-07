@@ -8,7 +8,6 @@ test_result(...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
   incorrect = paste0("{num_correct}/{num_total} correct. ",
   "Fix this first: '{errors[1]}'. ", "{random_encourage()}"),
-  empty_msg = "I did not notice a result. Does your code return one?",
   grader_args = list(), learnr_args = list())
 }
 \arguments{
@@ -30,14 +29,12 @@ test_result(...,
   \item \code{errors}: Vector of errors found
 }}
 
-\item{empty_msg}{A character string to display as a message if the user code is NULL. TODO depricated.}
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
+ \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
+ \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+}}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
-This can be student code to check against the \code{results} surrounded
-by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
-For example, \code{user_quo = quote(1)}}
-
-\item{learnr_args}{A list of parameters passed to \code{learnr} (provided by \code{grade_learnr}), for example, \code{last_value = 1}}
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
 a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.

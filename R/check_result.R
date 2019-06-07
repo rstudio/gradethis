@@ -5,6 +5,8 @@
 #' If the user result exactly matches a known \code{result}, \code{check_result}
 #' returns the matching message value.
 #'
+#' @template matched
+#'
 #' @param correct A character string to display if the student answer matches
 #'   a known answer.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = "<result message>")}. where message is the matched result message.
@@ -15,7 +17,7 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found, \code{matched}.
+#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
 #' @export
 #' @examples

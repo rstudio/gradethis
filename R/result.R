@@ -23,13 +23,16 @@ result <- function(x, message = NULL, correct = FALSE) {
 }
 
 
+#' Graded submission value
 #' \code{grader_graded} object
-#' returned by every \code{check_*} function
+#'
+#' returned by every \code{check_*} function.
+#' When implementing checking functions to be used by \code{\link{grade_learnr}}, the method should return a \code{graded} value
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A boolean value of whether or not the checked code is correct.
 #' @export
-graded <- function(message, correct) {
+graded <- function(correct, message = NULL) {
   chkm8_single_character(message)
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
 

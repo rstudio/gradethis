@@ -34,11 +34,13 @@
 #' @template learnr_args
 #'
 #' @return a \code{grader_graded} structure from \code{\link{result}}.
-#'   If the student answer differs from the
-#'   solution code, the message will describe the first way that the answer
-#'   differs, and it will ask the student to try again. If the answer matches
-#'   the solution code, the message will be the content of the \code{correct}
+#'   An incorrect message will describe the first way that the answer differs,
+#'   the message will be the content of the \code{correct}
 #'   argument.
+#'
+#'
+#'
+#'
 #'
 #' @export
 #' @examples

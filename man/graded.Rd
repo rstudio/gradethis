@@ -2,17 +2,17 @@
 % Please edit documentation in R/result.R
 \name{graded}
 \alias{graded}
-\title{\code{grader_graded} object
-returned by every \code{check_*} function}
+\title{Graded submission value
+\code{grader_graded} object}
 \usage{
-graded(message, correct)
+graded(correct, message = NULL)
 }
 \arguments{
-\item{message}{A character string of the message to be displayed.}
-
 \item{correct}{A boolean value of whether or not the checked code is correct.}
+
+\item{message}{A character string of the message to be displayed.}
 }
 \description{
-\code{grader_graded} object
-returned by every \code{check_*} function
+returned by every \code{check_*} function.
+When implementing checking functions to be used by \code{\link{grade_learnr}}, the method should return a \code{graded} value
 }
