@@ -20,6 +20,6 @@ grading_demo <- function() {
   if (rstudioapi::isAvailable()) {
     rstudioapi::navigateToFile(grading_demo_path)
   } else {
-    browseURL(paste0('file://', grading_demo_path))
+    browseURL(paste0("file://", grading_demo_path))
   }
 }

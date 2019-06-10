@@ -41,7 +41,7 @@ repipe <- function(lst, .call = FALSE) {
   text <- purrr::reduce(text, paste, sep = " %>% ")
   text <- gsub("\\(NULL\\)", "()", text)
 
-  if(.call) parse(text = text)[[1]]
+  if (.call) parse(text = text)[[1]]
   else text
 }
 

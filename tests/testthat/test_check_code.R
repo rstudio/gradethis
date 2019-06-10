@@ -15,7 +15,7 @@ test_that("Spots differences in atomics", {
 
   user <- quote(1)
   solution <- quote(1)
-  #browser()
+
   expect_correct(
     check_code(grader_args = list(user_quo = user, solution_quo = solution))
   )

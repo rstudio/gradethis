@@ -8,19 +8,19 @@
 #'
 #' @param code a quoted piece of code
 unpipe <- function(code) {
-  
+
   # Ceci n'est pas une pipe
   if (!is_pipe(code)) return(code)
-  
+
   # une pipe
   lhs <- code[[2]]
   rhs <- code[[3]]
-  
+
   if (length(rhs) == 1) {
     rhs[[2]] <- lhs
     return(rhs)
   }
-  
+
   dot <- purrr::map_lgl(as.list(rhs), is_dot)
   if (any(dot)) {
     rhs[[which(dot)]] <- lhs

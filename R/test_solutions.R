@@ -56,9 +56,11 @@ test_solutions <- function(file = NULL,
     files <- dir()
     rmds <- files[grepl("(.Rmd|.rmd)$", files)]
     if (length(rmds) == 0) {
-      stop("No .Rmd file found in the current directory. Please provide a file path.", call. = FALSE)
+      stop("No .Rmd file found in the current directory. Please provide a file path.",
+           call. = FALSE)
     } else if (length(rmds) > 1) {
-      stop("Multiple .Rmd files found in the current directory. Please provide a file path.", call. = FALSE)
+      stop("Multiple .Rmd files found in the current directory. Please provide a file path.",
+           call. = FALSE)
     } else {
       file <- rmds
     }
