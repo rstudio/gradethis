@@ -2,8 +2,7 @@
 % Please edit documentation in R/result.R
 \name{graded}
 \alias{graded}
-\title{Graded submission value
-\code{grader_graded} object}
+\title{Graded submission value}
 \usage{
 graded(correct, message = NULL)
 }
@@ -13,6 +12,5 @@ graded(correct, message = NULL)
 \item{message}{A character string of the message to be displayed.}
 }
 \description{
-returned by every \code{check_*} function.
-When implementing checking functions to be used by \code{\link{grade_learnr}}, the method should return a \code{graded} value
+The return value from \code{graded} should be returned by every \code{*-check} chunk when used with \code{link{grade_learnr}}.
 }

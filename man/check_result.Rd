@@ -14,7 +14,8 @@ check_result(...,
 
 \item{correct}{A character string to display if the student answer matches
 a known answer.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = "<result message>")}. where message is the matched result message.}
+This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = "<result message>")}. where message is the matched result message.
+\code{matched} is a boolean value about whether the submitted is found in a set of provided values.}
 
 \item{incorrect}{A character string to display if the student answer matches
 a known answer.
@@ -25,7 +26,7 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
  \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}. See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
 a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found.
