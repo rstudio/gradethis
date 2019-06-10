@@ -2,11 +2,11 @@ context("Check Code")
 
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
 expect_correct <- function(x) {
-  expect_s3_class(x, "grader_result")
+  expect_s3_class(x, "grader_graded")
   expect_true(x$correct)
 }
 expect_message <- function(x, message) {
-  expect_s3_class(x, "grader_result")
+  expect_s3_class(x, "grader_graded")
   expect_true(!x$correct)
   expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
 }
@@ -15,14 +15,15 @@ test_that("Spots differences in atomics", {
 
   user <- quote(1)
   solution <- quote(1)
+  #browser()
   expect_correct(
-    check_code(user = user, solution = solution)
+    check_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
 
   user <- quote(1)
   solution <- quote(2)
   expect_message(
-    check_code(user = user, solution = solution),
+    check_code(grader_args = list(user_quo = user, solution_quo = solution)),
     wrong_value(this = quote(1), that = quote(2))
   )
 })
@@ -32,20 +33,20 @@ test_that("Spots differences in names", {
   user <- quote(x)
   solution <- quote(y)
   expect_message(
-    check_code(user = user, solution = solution),
+    check_code(grader_args = list(user_quo = user, solution_quo = solution)),
     wrong_value(this = quote(x), that = quote(y))
   )
 
   user <- quote(x)
   solution <- quote(x)
   expect_correct(
-    check_code(user = user, solution = solution)
+    check_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
 
   user <- quote(5)
   solution <- quote(y)
   expect_message(
-    check_code(user = user, solution = solution),
+    check_code(grader_args = list(user_quo = user, solution_quo = solution)),
     wrong_value(this = quote(5), that = quote(y))
   )
 })
@@ -57,23 +58,23 @@ test_that("Spots differences in calls", {
   d <- quote(vapply(vecs, mean, numeric(1)))
 
   expect_correct(
-    check_code(user = a, solution = a)
+    check_code(grader_args = list(user_quo = a, solution_quo = a))
   )
 
   expect_message(
-    check_code(user = a, solution = b),
+    check_code(grader_args = list(user_quo = a, solution_quo = b)),
     wrong_value(this = quote(lists), that = quote(vecs))
   )
 
   expect_message(
-    check_code(user = a, solution = c),
+    check_code(grader_args = list(user_quo = a, solution_quo = c)),
     surplus_argument(this_call = "vapply()",
                      this_name = "na.rm",
                      this = quote(TRUE))
   )
 
   expect_message(
-    check_code(user = c, solution = a),
+    check_code(grader_args = list(user_quo = c, solution_quo = a)),
     missing_argument(this_call = "vapply()",
                      that_name = "na.rm",
                      that = quote(TRUE))
@@ -87,21 +88,21 @@ test_that("Mentions only first non-matching element", {
   z <- quote(sqrt(log(1)))
 
   expect_correct(
-    check_code(user = w, solution = w)
+    check_code(grader_args = list(user_quo = w, solution_quo = w))
   )
 
   expect_message(
-    check_code(user = w, solution = z),
+    check_code(grader_args = list(user_quo = w, solution_quo = z)),
     wrong_value(this = quote(1), that = quote(sqrt()))
   )
 
   expect_message(
-    check_code(user = x, solution = z),
+    check_code(grader_args = list(user_quo = x, solution_quo = z)),
     wrong_value(this = "log(1)", that = quote(sqrt()))
   )
 
   expect_message(
-    check_code(user = y, solution = z),
+    check_code(grader_args = list(user_quo = y, solution_quo = z)),
     wrong_value(this = "2", that = quote(1))
   )
 
@@ -113,15 +114,15 @@ test_that("Spots differences in argument names", {
   c <- quote(mean(1:10, cut = 1, na.rm = TRUE))
 
   expect_correct(
-    check_code(user = a, solution = a)
+    check_code(grader_args = list(user_quo = a, solution_quo = a))
   )
 
   expect_correct(
-    check_code(user = b, solution = a)
+    check_code(grader_args = list(user_quo = b, solution_quo = a))
   )
 
   expect_message(
-    check_code(user = c, solution = a),
+    check_code(grader_args = list(user_quo = c, solution_quo = a)),
     wrong_value(this = quote(1), this_name = "cut",
                 that = quote(1), that_name = "trim")
   )
@@ -135,19 +136,19 @@ test_that("Ignore differences in argument positions (for non ... arguments)", {
   d <- quote(round(digits = 2, x = pi))
 
   expect_correct(
-    check_code(user = b, solution = a)
+    check_code(grader_args = list(user_quo = b, solution_quo = a))
   )
 
   expect_correct(
-    check_code(user = c, solution = a)
+    check_code(grader_args = list(user_quo = c, solution_quo = a))
   )
 
   expect_correct(
-    check_code(user = d, solution = a)
+    check_code(grader_args = list(user_quo = d, solution_quo = a))
   )
 
   expect_correct(
-    check_code(user = a, solution = d)
+    check_code(grader_args = list(user_quo = a, solution_quo = d))
   )
 
 })
@@ -163,7 +164,7 @@ test_that("Returns intelligent error when no solution code", {
 
 test_that("Returns intelligent error when no user code", {
   expect_error(
-    check_code(solution = quote(5)),
+    check_code(grader_args = list(solution_quo = quote(5))),
     "I didn't receive your code. Did you write any?"
   )
 })
@@ -184,15 +185,15 @@ test_that("Spot differences when pipes are involved", {
   pipe3 <- quote(iris %>% lm(Sepal.Length ~ Sepal.Width, data = .))
   func3 <- quote(lm(Sepal.Length ~ Sepal.Width, data = iris))
 
-  expect_correct(check_code(user = func,  solution = pipe))
-  expect_correct(check_code(user = func1, solution = pipe))
-  expect_correct(check_code(user = pipe,  solution = func))
-  expect_correct(check_code(user = pipe,  solution = func1))
-  expect_correct(check_code(user = pipe,  solution = pipe))
-  expect_correct(check_code(user = func,  solution = func1))
-  expect_correct(check_code(user = func1, solution = func1))
-  expect_correct(check_code(user = func3, solution = pipe3))
-  expect_correct(check_code(user = pipe3, solution = func3))
-  expect_correct(check_code(user = pipe3, solution = pipe3))
+  expect_correct(check_code(grader_args = list(user_quo = func,  solution_quo = pipe)))
+  expect_correct(check_code(grader_args = list(user_quo = func1, solution_quo = pipe)))
+  expect_correct(check_code(grader_args = list(user_quo = pipe,  solution_quo = func)))
+  expect_correct(check_code(grader_args = list(user_quo = pipe,  solution_quo = func1)))
+  expect_correct(check_code(grader_args = list(user_quo = pipe,  solution_quo = pipe)))
+  expect_correct(check_code(grader_args = list(user_quo = func,  solution_quo = func1)))
+  expect_correct(check_code(grader_args = list(user_quo = func1, solution_quo = func1)))
+  expect_correct(check_code(grader_args = list(user_quo = func3, solution_quo = pipe3)))
+  expect_correct(check_code(grader_args = list(user_quo = pipe3, solution_quo = func3)))
+  expect_correct(check_code(grader_args = list(user_quo = pipe3, solution_quo = pipe3)))
 
 })

@@ -3,7 +3,6 @@
 #' \code{test_result()} executes tests against the final result of the user code.
 #' If a test throws an error, the test fails and the submitted answer will be marked incorrect.
 #'
-#' @param tests A \code{\link{tests}} object that contains all \code{\link{test}} functions to check the user's result.
 #' @param correct A character string to display if all tests pass.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
 #' \itemize{
@@ -18,13 +17,12 @@
 #'   \item \code{num_total}: Number of tests
 #'   \item \code{errors}: Vector of errors found
 #' }
-#' @param empty_msg A character string to display as a message if the user code is NULL.
+#' @template grader_args
+#' @template learnr_args
 #' @param ... ignored
-#' @param user (Optional) student code to check against the \code{results} surrounded
-#'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
 #'
-#' @return a \code{grader_result} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
-#' @seealso \code{tests}, \code{test}
+#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
+#' @seealso \code{test}
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
@@ -36,19 +34,15 @@ test_result <- function(
     "Fix this first: '{errors[1]}'. ",
     "{random_encourage()}"
   ),
-  empty_msg = "I did not notice a result. Does your code return one?",
   grader_args = list(), # provided by `grade_learnr`
   learnr_args = list() # provided by `grade_learnr`
 ) {
-  chkm8_item_class(tests, "grader_test")
+  tests <- grader_tests(...)
+  chkm8_class(tests, "grader_tests")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
-  chkm8_single_character(empty_msg)
 
-  user_answer <- get_user_code(user)
-  if (is.null(user_answer)) {
-    return(graded(correct = FALSE, message = empty_msg))
-  }
+  user_answer <- get_user_code(grader_args$user_quo)
 
   results <- lapply(tests$fns, function(test_fn) {
     tryCatch(
@@ -94,7 +88,7 @@ test_result <- function(
 #'
 #' Collect a set of test to execute against a user's result value
 #' @param ... a set of functions that will accept the evaluated user solution. If the test fails, it should throw an error with the message to display.
-#' @export
+#' @noRd
 #' @rdname test
 #' @examples
 #'
@@ -118,7 +112,7 @@ test_result <- function(
 #' )
 #'
 #' \dontrun{grading_demo()}
-tests <- function(...) {
+grader_tests <- function(...) {
   fns <- list(...)
   lapply(fns, function(fn) {
     checkmate::assert_function(fn)
@@ -133,6 +127,7 @@ tests <- function(...) {
     )
   )
 }
+#' TODO document with 'tests' documentation
 #' @export
 #' @rdname test
 #' @param message Message to report back if the test throws an error.

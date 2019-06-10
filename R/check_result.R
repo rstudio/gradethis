@@ -5,19 +5,15 @@
 #' If the user result exactly matches a known \code{result}, \code{check_result}
 #' returns the matching message value.
 #'
-#' @param results A \code{\link{results}} object that contains possible \code{\link{result}} values to compare against.
-#' @param correct A character string to display if the student answer matches
-#'   a known answer.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = "<result message>")}. where message is the matched result message.
+#' @template correct
 #' @param incorrect A character string to display if the student answer matches
 #'   a known answer.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<result message>")}. where message is the matched result message.
-#' @param empty_msg A character string to display as a message if the user code is NULL.
+#' @template grader_args
+#' @template learnr_args
 #' @param ... ignored
-#' @param user (Optional) student code to check against the \code{results} surrounded
-#'   by \code{quote()}, \code{rlang::quo()}, or provided as a character string.
 #'
-#' @return a \code{grader_result} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
+#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
 #' @export
 #' @examples
@@ -26,7 +22,6 @@ check_result <- function(
   ...,
   correct = "{paste0(random_praise(), if (nchar(message) > 0) \" \", message)}",
   incorrect = "{paste0(message, if(nchar(message) > 0) \" \", random_encourage())}",
-  empty_msg = "I did not notice a result. Does your code return one?",
   grader_args = list(), # provided by `grade_learnr`
   learnr_args = list() # provided by `grade_learnr`
 ) {
@@ -34,7 +29,6 @@ check_result <- function(
   chkm8_item_class(results, "grader_result")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
-  chkm8_single_character(empty_msg)
 
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
     stop("At least one correct result must be provided")
@@ -43,16 +37,19 @@ check_result <- function(
   user_answer <- learnr_args$last_value
 
   # init final answer as not found
-  final_result <- graded(correct = FALSE, "Answer not found")
+  final_result <- graded(correct = FALSE, NULL)
+  found_match <- FALSE
   for (resu in results) {
     if (identical(resu$x, user_answer)) {
       final_result <- resu
+      found_match <- TRUE
       break
     }
   }
 
   message <- glue::glue_data(
     list(
+      matched = found_match,
       correct = final_result$correct,
       message = final_result$message
     ),

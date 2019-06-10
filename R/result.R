@@ -23,10 +23,14 @@ result <- function(x, message = NULL, correct = FALSE) {
 }
 
 
-# TODO-document
-# Should be what EVERY check_* returns
+#' Graded submission value
+#'
+#'The return value from \code{graded} should be returned by every \code{*-check} chunk when used with \code{link{grade_learnr}}.
+#'
+#' @param message A character string of the message to be displayed.
+#' @param correct A boolean value of whether or not the checked code is correct.
 #' @export
-graded <- function(message, correct) {
+graded <- function(correct, message = NULL) {
   chkm8_single_character(message)
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
 

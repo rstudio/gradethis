@@ -139,7 +139,8 @@ grade_learnr <- function(label = NULL,
       )
     }
   )
-  if (!checkmate::test_class(checked_result, "grader_result")) {
+
+  if (!checkmate::test_class(checked_result, "grader_graded")) {
     stop("`grade_learnr` should receive a `graded` value from every `-check` chunk")
   }
 
