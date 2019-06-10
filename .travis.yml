@@ -52,7 +52,7 @@ jobs:
 
 r_github_packages:
   - jimhester/lintr
-  - jimhester/covr
+  - r-lib/covr
 
 after_success:
   - Rscript -e 'covr::codecov()'
