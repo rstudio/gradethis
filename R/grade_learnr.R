@@ -81,64 +81,65 @@ grade_learnr <- function(label = NULL,
   }
 
   had_error_checking <- FALSE
-  checked_result <- tryCatch({
-    # Run checking code to get feedback
-    parsed_check_code <- parse(text = check_code)
-    if (length(parsed_check_code) > 1) {
-      # don't eval the last one to avoid bad check calls
-      for (i in 1:(length(parsed_check_code) - 1)) {
-        eval(parsed_check_code[[i]], envir_prep)
+  checked_result <- tryCatch(
+    {
+      # Run checking code to get feedback
+      parsed_check_code <- parse(text = check_code)
+      if (length(parsed_check_code) > 1) {
+        # don't eval the last one to avoid bad check calls
+        for (i in 1:(length(parsed_check_code) - 1)) {
+          eval(parsed_check_code[[i]], envir_prep)
+        }
       }
+      grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]],
+                                             envir_prep)
+
+      ## TODO - barret try to no force check fn to be last part of code
+
+      # # set args to . args for the environment
+      # envir_prep$.grader_args <- grader_args
+      # envir_prep$.learnr_args <- learnr_args
+
+      # get all grader_args
+      grader_args <- list(
+        user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
+      )
+
+      if (!is.null(solution_code)) {
+        grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]],
+                                                      envir_prep)
+      }
+
+      # copy in all learnr arguments
+      learnr_args <- list(...)
+      learnr_args$label <- label
+      learnr_args$solution_code <- solution_code
+      learnr_args$user_code <- user_code
+      learnr_args$check_code <- check_code
+      learnr_args$envir_result <- envir_result
+      learnr_args$evaluate_result <- evaluate_result
+      learnr_args$envir_prep <- envir_prep
+      learnr_args$last_value <- last_value
+
+      # copy in all grader arguments
+      grading_code$grader_args <- grader_args
+      grading_code$learnr_args <- learnr_args
+
+      # set user answer for the environment to find
+      envir_prep$ans <- grader_args$user
+
+      # eval code in a copy of the chunk's prepped environment
+      eval(grading_code, envir_prep)
+    },
+    error = function(e) {
+      # prevent the error from being re-thrown
+      message("", e)
+      had_error_checking <<- TRUE
+      graded(
+        correct = FALSE,
+        message = "Error occured while checking the submission"
+      )
     }
-    grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]],
-                                           envir_prep)
-
-    ## TODO - barret try to no force check fn to be last part of code
-
-    # # set args to . args for the environment
-    # envir_prep$.grader_args <- grader_args
-    # envir_prep$.learnr_args <- learnr_args
-
-    # get all grader_args
-    grader_args <- list(
-      user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
-    )
-
-    if (!is.null(solution_code)) {
-      grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]],
-                                                    envir_prep)
-    }
-
-    # copy in all learnr arguments
-    learnr_args <- list(...)
-    learnr_args$label <- label
-    learnr_args$solution_code <- solution_code
-    learnr_args$user_code <- user_code
-    learnr_args$check_code <- check_code
-    learnr_args$envir_result <- envir_result
-    learnr_args$evaluate_result <- evaluate_result
-    learnr_args$envir_prep <- envir_prep
-    learnr_args$last_value <- last_value
-
-    # copy in all grader arguments
-    grading_code$grader_args <- grader_args
-    grading_code$learnr_args <- learnr_args
-
-    # set user answer for the environment to find
-    envir_prep$ans <- grader_args$user
-
-    # eval code in a copy of the chunk's prepped environment
-    eval(grading_code, envir_prep)
-  },
-  error = function(e) {
-    # prevent the error from being re-thrown
-    message("", e)
-    had_error_checking <<- TRUE
-    graded(
-      correct = FALSE,
-      message = "Error occured while checking the submission"
-    )
-  }
   )
 
   if (!checkmate::test_class(checked_result, "grader_graded")) {
