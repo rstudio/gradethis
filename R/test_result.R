@@ -21,7 +21,8 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
+#' @return a \code{grader_graded} structure from \code{\link{result}} containing
+#'   a formatted \code{correct} or \code{incorrect} message.
 #' @seealso \code{test}
 #' @export
 #' @examples
@@ -86,7 +87,8 @@ test_result <- function(
 #' Tests to check
 #'
 #' Collect a set of test to execute against a user's result value
-#' @param ... a set of functions that will accept the evaluated user solution. If the test fails, it should throw an error with the message to display.
+#' @param ... a set of functions that will accept the evaluated user solution.
+#'   If the test fails, it should throw an error with the message to display.
 #' @noRd
 #' @rdname test
 #' @examples

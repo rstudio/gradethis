@@ -25,7 +25,8 @@ result <- function(x, message = NULL, correct = FALSE) {
 
 #' Graded submission value
 #'
-#'The return value from \code{graded} should be returned by every \code{*-check} chunk when used with \code{link{grade_learnr}}.
+#'The return value from \code{graded} should be returned by every
+#'\code{*-check} chunk when used with \code{link{grade_learnr}}.
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A boolean value of whether or not the checked code is correct.

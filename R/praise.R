@@ -56,7 +56,9 @@
 
 #' Random praise and encouragement
 #'
-#' Generate a random praise or encouragement phrase.  This can be used in conjunction with \code{glue::\link[glue]{glue}} to generate praise or encouragement within feedback to users.
+#' Generate a random praise or encouragement phrase.
+#' This can be used in conjunction with
+#' \code{glue::\link[glue]{glue}} to generate praise or encouragement within feedback to users.
 #'
 #' @examples
 #' replicate(5, glue::glue("Random praise: {random_praise()}"))
