@@ -1,6 +1,8 @@
 #' Result
 #'
-#' The \code{result} method returns an object containing information about what has been graded or what could be graded against.
+#' The \code{result} method returns an object containing information about what has been graded
+#' or what could be graded against.
+#'
 #' @param x object graded or being compared against
 #' @param message possible message value to be displayed
 #' @param correct a boolean that determines if the result is a correct result

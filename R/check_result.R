@@ -8,12 +8,16 @@
 #' @template correct
 #' @param incorrect A character string to display if the student answer matches
 #'   a known answer.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<result message>")}. where message is the matched result message.
+#'   This character string will be run through
+#'   \code{glue::\link[glue]{glue_data}} with
+#'   \code{list(correct = FALSE, message = "<result message>")}.
+#'   where message is the matched result message.
 #' @template grader_args
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found.
+#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted
+#'   \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
 #' @export
 #' @examples

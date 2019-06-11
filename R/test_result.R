@@ -132,7 +132,8 @@ grader_tests <- function(...) {
 #' @export
 #' @rdname test
 #' @param message Message to report back if the test throws an error.
-#' @param fn function to execute against the user solution.  If the test fails, it should throw an error to display the \code{message} provided.
+#' @param fn function to execute against the user solution.
+#'   If the test fails, it should throw an error to display the \code{message} provided.
 test <- function(message, fn) {
   function(x) {
     tryCatch({
