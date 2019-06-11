@@ -170,7 +170,9 @@ grade_learnr <- function(label = NULL,
 
 #' Get Code
 #'
-#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}} to extract user code and solution code.
+#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}}
+#' to extract user code and solution code.
+#'
 #' @seealso \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
 #' @export
 #' @rdname get_code
