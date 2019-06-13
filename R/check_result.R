@@ -57,7 +57,7 @@ check_result <- function(
       correct = final_result$correct,
       message = final_result$message
     ),
-    {if (final_result$correct) correct else incorrect}
+    {if (final_result$correct) correct else incorrect} # nolint
   )
 
   return(graded(

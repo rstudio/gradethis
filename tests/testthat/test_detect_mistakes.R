@@ -30,7 +30,7 @@ test_that("detect_mistakes detects surplus code", {
                )
 
   # non-function
-  user <-     quote(1(a(1)))
+  user <-     quote(1(a(1))) # nolint
   solution <- quote(a(1))
   expect_equal(
                detect_mistakes(user, solution)
@@ -49,7 +49,7 @@ test_that("detect_mistakes detects surplus code", {
                )
 
   # internal non-function
-  user <-     quote(a(1(1)))
+  user <-     quote(a(1(1))) # nolint
   solution <- quote(a(1))
   expect_equal(
                detect_mistakes(user, solution)
@@ -71,7 +71,7 @@ test_that("detect_mistakes detects missing code", {
 
 
   # non-function
-  user <-     quote(1(1))
+  user <-     quote(1(1)) # nolint
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution)
@@ -113,7 +113,7 @@ test_that("detect_mistakes detects mis-matched code", {
   )
 
   # non-function
-  user <-     quote(1(1))
+  user <-     quote(1(1)) # nolint
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution)
@@ -140,7 +140,7 @@ test_that("detect_mistakes detects mis-matched code", {
   )
 
   # internal non-function
-  user <-     quote(a(1(1)))
+  user <-     quote(a(1(1))) # nolint
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution)
@@ -419,7 +419,7 @@ test_that("detect_mistakes works with infix operators", {
     wrong_value(this = "pi(1)", that = "1 + pi")
   )
 
-  user <-     quote(1(1))
+  user <-     quote(1(1)) # nolint
   solution <- quote(b(1) + 2)
   expect_equal(
     detect_mistakes(user, solution)

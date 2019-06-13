@@ -12,7 +12,7 @@ extract_chunks <- function(file) {
     knitr::knit_patterns$restore()
     knitr::knit_hooks$restore()
     knitr__knit_code$restore()
-  }, add = TRUE)
+  }, add = TRUE) # nolint
   knitr__split_file(readLines(file, encoding = "UTF-8"))
   knitr__knit_code$get()
 }

@@ -74,7 +74,7 @@ test_result <- function(
         if (!resu$correct) resu$message else NULL
       }))
     ),
-    {if (is_correct) correct else incorrect}
+    {if (is_correct) correct else incorrect} # nolint
   )
 
   return(graded(
