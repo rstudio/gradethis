@@ -12,5 +12,6 @@ graded(correct, message = NULL)
 \item{message}{A character string of the message to be displayed.}
 }
 \description{
-The return value from \code{graded} should be returned by every \code{*-check} chunk when used with \code{link{grade_learnr}}.
+The return value from \code{graded} should be returned by every
+\code{*-check} chunk when used with \code{link{grade_learnr}}.
 }

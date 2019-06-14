@@ -19,7 +19,10 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
 
 \item{incorrect}{A character string to display if the student answer matches
 a known answer.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<result message>")}. where message is the matched result message.}
+This character string will be run through
+\code{glue::\link[glue]{glue_data}} with
+\code{list(correct = FALSE, message = "<result message>")}.
+where message is the matched result message.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
  \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
@@ -29,7 +32,8 @@ This character string will be run through \code{glue::\link[glue]{glue_data}} wi
 \item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}. See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
-a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message and whether or not a match was found.
+a \code{grader_graded} structure from \code{\link{result}} containing a formatted
+  \code{correct} or \code{incorrect} message and whether or not a match was found.
 }
 \description{
 \code{check_result()} compares the final result of the user code to known \code{results}.

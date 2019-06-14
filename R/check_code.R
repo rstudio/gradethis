@@ -31,7 +31,8 @@
 #' @param incorrect A character string to display if the student answer matches
 #'   the solution code.
 #'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
-#'   \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.
+#'   \code{list(correct = FALSE, message = "<STRING>")}
+#'   where message is the error found while comparing the user solution to the known solution.
 #' @template grader_args
 #' @template learnr_args
 #'

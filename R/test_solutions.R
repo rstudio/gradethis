@@ -4,17 +4,17 @@ yoink <- function(pkg, fn) {
 
 # get all of the chunks with
 extract_chunks <- function(file) {
-  knitr__knit_code <- yoink("knitr", "knit_code")
-  knitr__split_file <- yoink("knitr", "split_file")
+  knitr_knit_code <- yoink("knitr", "knit_code")
+  knitr_split_file <- yoink("knitr", "split_file")
   knitr::pat_md()
   knitr::render_markdown()
   on.exit({
     knitr::knit_patterns$restore()
     knitr::knit_hooks$restore()
-    knitr__knit_code$restore()
+    knitr_knit_code$restore()
   }, add = TRUE) # nolint
-  knitr__split_file(readLines(file, encoding = "UTF-8"))
-  knitr__knit_code$get()
+  knitr_split_file(readLines(file, encoding = "UTF-8"))
+  knitr_knit_code$get()
 }
 
 #' Test Solutions
@@ -31,7 +31,7 @@ extract_chunks <- function(file) {
 #' @param file The filepath to a learnr tutorial. If a file path is not provided
 #'   and only a single .Rmd file exists in the current directory,
 #'   \code{test_solutions} will test that .Rmd file.
-#' @param show.answers TRUE or FALSE. Should solution results be printed in the
+#' @param show_answers TRUE or FALSE. Should solution results be printed in the
 #'   output?
 # ' @param .params A list of parameters to use when evauating code in a
 # '   parameterized R Markdown document. This should be identical to the list
@@ -49,7 +49,7 @@ extract_chunks <- function(file) {
 #'
 #' @export
 test_solutions <- function(file = NULL,
-                           show.answers = FALSE
+                           show_answers = FALSE
                            ) {
 
   if (is.null(file)) {
@@ -74,7 +74,7 @@ test_solutions <- function(file = NULL,
     safe_eval(parse(text = chunks[[label]]), envir = parent.frame(1))
   }
 
-  test_solution <- function(label, chunks, show.answer = FALSE) {
+  test_solution <- function(label, chunks, show_answer = FALSE) {
     exercise <- sub("-solution", "", label)
     if (grepl("-solution$", label) && !(exercise %in% names(chunks))) {
       stop(paste(label, "not associated with an exercise chunk."), call. = FALSE)
@@ -98,19 +98,19 @@ test_solutions <- function(file = NULL,
         setup <- safe_test(setup_option, chunks = chunks)
         print_result(setup_option,
                      setup,
-                     show.answers = show.answer)
+                     show_answers = show_answer)
       }
     } else if (setup_suffix %in% names(chunks)) {
       setup <- safe_test(setup_suffix, chunks = chunks)
       print_result(setup_suffix,
                    setup,
-                   show.answers = show.answer)
+                   show_answers = show_answer)
     }
 
     result <- safe_test(label, chunks = chunks)
     print_result(label,
                  result,
-                 show.answers = show.answer)
+                 show_answers = show_answer)
   }
 
   chunks <- extract_chunks(file)
@@ -122,7 +122,7 @@ test_solutions <- function(file = NULL,
     setup_result <- safe_test("setup", chunks = chunks)
     print_result("setup",
                  setup_result,
-                 show.answers = show.answers)
+                 show_answers = show_answers)
   }
 
   solutions <- grep("-solution$", labels, value = TRUE)
@@ -130,10 +130,10 @@ test_solutions <- function(file = NULL,
   purrr::walk(solutions,
               test_solution,
               chunks = chunks,
-              show.answer = show.answers)
+              show_answer = show_answers)
 }
 
-print_result <- function(label, result, show.answers = FALSE) {
+print_result <- function(label, result, show_answers = FALSE) {
   cat(label, crayon::silver(": "), sep = "")
   if (!is.null(result$error)) {
     cat(
@@ -145,10 +145,10 @@ print_result <- function(label, result, show.answers = FALSE) {
       crayon::yellow(clisymbols::symbol$tick),
       crayon::yellow(result$result$warnings), "\n"
     )
-    if (show.answers) print(result$result$result)
+    if (show_answers) print(result$result$result)
   } else {
     cat(crayon::green(clisymbols::symbol$tick), "\n")
-    if (show.answers) print(result$result$result)
+    if (show_answers) print(result$result$result)
   }
 }
 

@@ -9,7 +9,8 @@ test(message, fn)
 \arguments{
 \item{message}{Message to report back if the test throws an error.}
 
-\item{fn}{function to execute against the user solution.  If the test fails, it should throw an error to display the \code{message} provided.}
+\item{fn}{function to execute against the user solution.
+If the test fails, it should throw an error to display the \code{message} provided.}
 }
 \description{
 TODO document with 'tests' documentation
