@@ -21,7 +21,8 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted \code{correct} or \code{incorrect} message.
+#' @return a \code{grader_graded} structure from \code{\link{result}} containing
+#'   a formatted \code{correct} or \code{incorrect} message.
 #' @seealso \code{test}
 #' @export
 #' @examples
@@ -46,7 +47,7 @@ test_result <- function(
 
   results <- lapply(tests$fns, function(test_fn) {
     tryCatch(
-      {
+      { # nolint
         test_fn(user_answer)
         graded(
           correct = TRUE,
@@ -74,7 +75,7 @@ test_result <- function(
         if (!resu$correct) resu$message else NULL
       }))
     ),
-    {if (is_correct) correct else incorrect}
+    {if (is_correct) correct else incorrect} # nolint
   )
 
   return(graded(
@@ -87,7 +88,8 @@ test_result <- function(
 #' Tests to check
 #'
 #' Collect a set of test to execute against a user's result value
-#' @param ... a set of functions that will accept the evaluated user solution. If the test fails, it should throw an error with the message to display.
+#' @param ... a set of functions that will accept the evaluated user solution.
+#'   If the test fails, it should throw an error with the message to display.
 #' @noRd
 #' @rdname test
 #' @examples
@@ -131,11 +133,12 @@ grader_tests <- function(...) {
 #' @export
 #' @rdname test
 #' @param message Message to report back if the test throws an error.
-#' @param fn function to execute against the user solution.  If the test fails, it should throw an error to display the \code{message} provided.
+#' @param fn function to execute against the user solution.
+#'   If the test fails, it should throw an error to display the \code{message} provided.
 test <- function(message, fn) {
   function(x) {
     tryCatch(
-      {
+      { # nolint
         fn(x)
       },
       error = function(e) {

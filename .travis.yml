@@ -49,3 +49,11 @@ jobs:
         github-token:
           secure:
             "BuNSl2Tp1GGS2ikn0zTzqUXu9bC6KaQBOYV6G8y8msidJAj/1M1sjhLO8BmP4moQ7XsoxAG1Zd+pvuE+vWVIQ/A7oMZU/WXQiymLtUXajSM4lj6+RwK9OS4/BiXia0B1rEUUmUJbX4C+yRBKHU9prNcuyZhG7RO6DTJPwodspL2ABPf4yap1Dfptj3O0ZheziC4NqPqndSGdjZos6sgvIGjEUNfjXQmBv9irpSfpZmzMzWNQvnkF9aCnsgxNcjLwClY73EfJTq3z9FN9EGpk8gRw+M2mhIKwT3N2P6XB4BCHtlIgXCw2TwwJpmuj1qLm2JvUdWx3LfBidxcv5pd9PKQffoYkdaOsX00kImEZtxH4xMCAzsKALLa4B8JyMls7lwEZsEAyU6JYDBraWIXM7s1GOu2lTcqQBpRk6bFU46FGaFfNglPgYbynP3PwGo12W+UsXK6LvuvnbfQKsNzXE2t7WEuMDOQraBU3NoZSQUwX37bAL28Iq5Vyx6XpgwHcayY+vRkNTZXGd7HK/refdhecpAAWi5SRx8I2ExEZ+9qFpw0KijWA2yJ/ksCfSX85EcIZka8PfvSgYYZWzcnD1iuHB+sLb6074h5ePJ+YIQRjZJAeXrOiyHHvmXRfKXUvPymX99VkSiqbVEFMfIendeMw6AcYynP+6WI+pqRf6EQ="
+
+r_github_packages:
+  - jimhester/lintr
+  - r-lib/covr
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+  - Rscript -e 'lintr::lint_package()'

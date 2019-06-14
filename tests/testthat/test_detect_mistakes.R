@@ -30,7 +30,7 @@ test_that("detect_mistakes detects surplus code", {
                )
 
   # non-function
-  user <-     quote(1(a(1)))
+  user <-     quote(1(a(1))) # nolint
   solution <- quote(a(1))
   expect_equal(
                detect_mistakes(user, solution)
@@ -49,7 +49,7 @@ test_that("detect_mistakes detects surplus code", {
                )
 
   # internal non-function
-  user <-     quote(a(1(1)))
+  user <-     quote(a(1(1))) # nolint
   solution <- quote(a(1))
   expect_equal(
                detect_mistakes(user, solution)
@@ -71,7 +71,7 @@ test_that("detect_mistakes detects missing code", {
 
 
   # non-function
-  user <-     quote(1(1))
+  user <-     quote(1(1)) # nolint
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution)
@@ -113,7 +113,7 @@ test_that("detect_mistakes detects mis-matched code", {
   )
 
   # non-function
-  user <-     quote(1(1))
+  user <-     quote(1(1)) # nolint
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution)
@@ -140,7 +140,7 @@ test_that("detect_mistakes detects mis-matched code", {
   )
 
   # internal non-function
-  user <-     quote(a(1(1)))
+  user <-     quote(a(1(1))) # nolint
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution)
@@ -419,7 +419,7 @@ test_that("detect_mistakes works with infix operators", {
     wrong_value(this = "pi(1)", that = "1 + pi")
   )
 
-  user <-     quote(1(1))
+  user <-     quote(1(1)) # nolint
   solution <- quote(b(1) + 2)
   expect_equal(
     detect_mistakes(user, solution)
@@ -454,7 +454,7 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(sqrt(1))
-  solution <- quote(sqrt(1 %>% log() %>% abs()))
+  solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
   expect_equal(
     detect_mistakes(user, solution)
     ,
@@ -462,7 +462,7 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(sqrt(1 %>% log()))
-  solution <- quote(sqrt(1 %>% log() %>% abs()))
+  solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
   expect_equal(
     detect_mistakes(user, solution)
     ,
@@ -486,8 +486,8 @@ test_that("detect_mistakes works with pipes", {
     wrong_value(this = "abs(2)", that = "log()")
   )
 
-  user <-     quote(a(2 %>% abs() %>% sqrt()))
-  solution <- quote(a(2 %>% log() %>% sqrt()))
+  user <-     quote(a(2 %>% abs() %>% sqrt())) # nolint
+  solution <- quote(a(2 %>% log() %>% sqrt())) # nolint
   expect_equal(
     detect_mistakes(user, solution)
     ,
@@ -520,7 +520,7 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(1)
-  solution <- quote(1 %>% log() %>% abs())
+  solution <- quote(1 %>% log() %>% abs()) # nolint
   expect_equal(
     detect_mistakes(user, solution)
     ,
@@ -528,7 +528,7 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(1 %>% log())
-  solution <- quote(1 %>% log() %>% abs())
+  solution <- quote(1 %>% log() %>% abs()) # nolint
   expect_equal(
     detect_mistakes(user, solution)
     ,
@@ -552,8 +552,8 @@ test_that("detect_mistakes works with pipes", {
     wrong_value(this = "abs(2)", that = "log()")
   )
 
-  user <-     quote(2 %>% abs() %>% sqrt())
-  solution <- quote(2 %>% log() %>% sqrt())
+  user <-     quote(2 %>% abs() %>% sqrt()) # nolint
+  solution <- quote(2 %>% log() %>% sqrt()) # nolint
   expect_equal(
     detect_mistakes(user, solution)
     ,

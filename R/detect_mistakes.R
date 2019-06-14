@@ -15,7 +15,7 @@ detect_mistakes <- function(user,
 
     # Did the user miss something?
     if (i > length(user)) {
-      return(missing_argument(this_call = user[[i-1]],
+      return(missing_argument(this_call = user[[i - 1]],
                               that = solution[[i]],
                               that_name = names(solution[i])))
     }

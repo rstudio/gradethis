@@ -4,14 +4,14 @@
 \alias{test_solutions}
 \title{Test Solutions}
 \usage{
-test_solutions(file = NULL, show.answers = FALSE)
+test_solutions(file = NULL, show_answers = FALSE)
 }
 \arguments{
 \item{file}{The filepath to a learnr tutorial. If a file path is not provided
 and only a single .Rmd file exists in the current directory,
 \code{test_solutions} will test that .Rmd file.}
 
-\item{show.answers}{TRUE or FALSE. Should solution results be printed in the
+\item{show_answers}{TRUE or FALSE. Should solution results be printed in the
 output?}
 }
 \value{

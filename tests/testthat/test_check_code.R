@@ -15,7 +15,7 @@ test_that("Spots differences in atomics", {
 
   user <- quote(1)
   solution <- quote(1)
-  #browser()
+
   expect_correct(
     check_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
@@ -179,7 +179,7 @@ test_that("Spot differences when pipes are involved", {
     df
   }
 
-  pipe <- quote(1:10 %>% mean(na.rm = TRUE) %>% log(base = 10))
+  pipe <- quote(1:10 %>% mean(na.rm = TRUE) %>% log(base = 10)) # nolint
   func <- quote(log(1:10 %>% mean(na.rm = TRUE), base = 10))
   func1 <- quote(log(mean(1:10, na.rm = TRUE), base = 10))
   pipe3 <- quote(iris %>% lm(Sepal.Length ~ Sepal.Width, data = .))

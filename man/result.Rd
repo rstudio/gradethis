@@ -14,7 +14,8 @@ result(x, message = NULL, correct = FALSE)
 \item{correct}{a boolean that determines if the result is a correct result}
 }
 \description{
-The \code{result} method returns an object containing information about what has been graded or what could be graded against.
+The \code{result} method returns an object containing information about what has been graded
+or what could be graded against.
 }
 \examples{
 result(1, "Custom message for value 1.")

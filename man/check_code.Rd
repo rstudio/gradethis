@@ -11,11 +11,14 @@ check_code(correct = "{random_praise()} Correct!",
 \arguments{
 \item{correct}{A character string to display if the student answer matches
 the solution code.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = NULL)}.}
+This character string will be run through \code{glue::\link[glue]{glue_data}} with
+\code{list(correct = TRUE, message = NULL)}.}
 
 \item{incorrect}{A character string to display if the student answer matches
 the solution code.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = FALSE, message = "<STRING>")} where message is the error found while comparing the user solution to the known solution.}
+This character string will be run through \code{glue::\link[glue]{glue_data}} with
+\code{list(correct = FALSE, message = "<STRING>")}
+where message is the error found while comparing the user solution to the known solution.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
  \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }

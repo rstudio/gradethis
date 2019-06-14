@@ -23,14 +23,14 @@ test_that("Spots differences in atomics", {
 
   expect_correct(
     check_result(
-      learnr_args = list(last_value = 2/2),
+      learnr_args = list(last_value = 2 / 2),
       result(1, correct = TRUE)
     )
   )
 
   expect_message(
     check_result(
-      learnr_args = list(last_value = 3/2),
+      learnr_args = list(last_value = 3 / 2),
       result(1, correct = TRUE),
       incorrect = "check failed!"
     ),

@@ -82,7 +82,7 @@ grade_learnr <- function(label = NULL,
 
   had_error_checking <- FALSE
   checked_result <- tryCatch(
-    {
+    { # nolint
       # Run checking code to get feedback
       parsed_check_code <- parse(text = check_code)
       if (length(parsed_check_code) > 1) {
@@ -91,21 +91,17 @@ grade_learnr <- function(label = NULL,
           eval(parsed_check_code[[i]], envir_prep)
         }
       }
-      grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]], envir_prep)
+      grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]],
+                                             envir_prep)
 
-      ## TODO - barret try to no force check fn to be last part of code
-
-      # # set args to . args for the environment
-      # envir_prep$.grader_args <- grader_args
-      # envir_prep$.learnr_args <- learnr_args
-
-      # get all grader_args
+      # get all grader args
       grader_args <- list(
         user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
       )
 
       if (!is.null(solution_code)) {
-        grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]], envir_prep)
+        grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]],
+                                                      envir_prep)
       }
 
       # copy in all learnr arguments
@@ -169,7 +165,9 @@ grade_learnr <- function(label = NULL,
 
 #' Get Code
 #'
-#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}} to extract user code and solution code.
+#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}}
+#' to extract user code and solution code.
+#'
 #' @seealso \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
 #' @export
 #' @rdname get_code

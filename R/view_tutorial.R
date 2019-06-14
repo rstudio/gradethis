@@ -30,14 +30,6 @@ view_tutorial <- function(name, package) {
   args = list(name = name, package = package)
   )
 
-  # Failed attempt to bypass IDE console scrolling
-  # error by using terminal instead of callr (does
-  # not avoid the bug)
-  # termID <- rstudioapi::terminalExecute(
-  #   'R -e \'learnr::run_tutorial("solutions-demo", package = "grader", shiny_args = list(launch.browser = FALSE,  port = 8000, host = "127.0.0.1"))\'',
-  #   show = TRUE)
-  # rstudioapi::terminalKill(termID)
-
   # If you open the viewer before the app loads, it will
   # display a blank screen until you click refresh
   status <- r2$read_error()
@@ -93,7 +85,7 @@ view_tutorial <- function(name, package) {
 #'
 #' @export
 add_tutorial <- function(name, package) {
-  rprofile <- paste0(getwd(), "/.Rprofile")
+  rprofile <- paste0(getwd(), "/.Rprofile") # nolint
 
   # load packages
 
@@ -126,7 +118,7 @@ add_tutorial <- function(name, package) {
 
 remove_tutorial <- function(dir = NULL) {
   if (!is.null(dir)) dir <- getwd()
-  rprofile <- paste0(dir, "/.Rprofile")
+  rprofile <- paste0(dir, "/.Rprofile") # nolint
 
   if (file.exists(rprofile)) {
     text <- readr::read_lines(rprofile)
