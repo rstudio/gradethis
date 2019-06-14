@@ -46,19 +46,20 @@ test_result <- function(
   user_answer <- get_user_code(grader_args$user_quo)
 
   results <- lapply(tests$fns, function(test_fn) {
-    tryCatch({
-      test_fn(user_answer)
-      graded(
-        correct = TRUE,
-        message = NULL
-      )
-    },
-    error = function(e) {
-      graded(
-        correct = FALSE,
-        message = as.character(e)
-      )
-    }
+    tryCatch(
+      { # nolint
+        test_fn(user_answer)
+        graded(
+          correct = TRUE,
+          message = NULL
+        )
+      },
+      error = function(e) {
+        graded(
+          correct = FALSE,
+          message = as.character(e)
+        )
+      }
     )
   })
 
@@ -136,7 +137,8 @@ grader_tests <- function(...) {
 #'   If the test fails, it should throw an error to display the \code{message} provided.
 test <- function(message, fn) {
   function(x) {
-    tryCatch({
+    tryCatch(
+      { # nolint
         fn(x)
       },
       error = function(e) {
