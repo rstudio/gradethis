@@ -1,7 +1,7 @@
 context("Unpipe pipes")
 
 test_that("unpipe() strips off the top level of piping", {
-  pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length))
+  pipe <- quote(iris %>% filter(Species == "Virginica") %>% select(Sepal.Length)) # nolint
   func <- quote(select(iris %>% filter(Species == "Virginica"), Sepal.Length))
 
   expect_equal(unpipe(pipe), func)
