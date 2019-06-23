@@ -45,7 +45,8 @@ check_result <- function(
   found_match <- FALSE
   for (resu in results) {
     # if formula then eval with more infomration, needs to return TRUE
-    # if x is is a funciton execute with last user_answer (fxn needs to return TRUE/FALSE, e.g., an assert statement)
+    # if x is is a funciton execute with last user_answer (fxn needs to return TRUE/FALSE,
+    # e.g., an assert statement)
     # else do this below
     if (identical(resu$x, user_answer)) {
       final_result <- resu
