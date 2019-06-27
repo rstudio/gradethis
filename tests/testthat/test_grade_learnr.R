@@ -53,11 +53,20 @@ test_that("grade learnr", {
     'This works'
   )
   
-  expect_correct(
+  expect_error(
     test_grade_learnr(
       user_code = 'exp(log(2))',
-      check_code = "check_code(correct = 'This works')",
+      check_code = "check_code(incorrect = '{message}')",
       solution_code = 'exp(log(1))'
+    ),
+    'I expected 1 where you wrote 2.'
+  )
+  
+  expect_correct(
+    test_grade_learnr(
+      user_code = '4',
+      check_code = "check_result(result(4, correct = TRUE), correct = 'This works')",
+      solution_code = '4'
     ),
     'This works'
   )
