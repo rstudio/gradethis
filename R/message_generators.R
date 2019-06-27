@@ -4,6 +4,9 @@
 # incorrect/user code, which is always at hand). Cases:
 
 # missing argument
+#' Missing argument
+#' 
+#' @export
 missing_argument <- function(this_call, that, that_name = NULL) {
   this_call <- prep(this_call)
   that <- prep(that)
@@ -21,6 +24,9 @@ missing_argument <- function(this_call, that, that_name = NULL) {
 }
 
 # surplus argument
+#' Surplus argument
+#' 
+#' @export
 surplus_argument <- function(this_call, this, this_name = NULL) {
   this_call <- prep(this_call)
   this      <- prep(this)
@@ -41,6 +47,9 @@ surplus_argument <- function(this_call, this, this_name = NULL) {
 }
 
 # wrong value
+#' Wrong value
+#' 
+#' @export
 wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
   this <- prep(this)
   that <- prep(that)

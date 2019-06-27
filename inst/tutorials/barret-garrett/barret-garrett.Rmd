@@ -1,0 +1,146 @@
+---
+title: "Barret Garrett graders"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(grader)
+tutorial_options(exercise.timelimit = 60,
+                 exercise.checker = grade_learnr)
+```
+
+# Strict checking
+
+Strict checking checkes to make sure the code from the student matches exactly from the solution.
+
+## Using `grader`
+
+```{r}
+library(purrr)
+```
+
+
+`grader` provides the underlying functions to 'grade' the code.
+`strict_check` is the main function used.
+
+```{r}
+a <- quote(map(lists, mean, na.rm = TRUE))
+b <- quote(map(vecs, mean, na.rm = TRUE))
+c <- quote(map(lists, mean))
+d <- quote(map(vecs, mean))
+```
+
+1. First do basic checking, no solution code provided, no student code provided.
+2. Check to see if the solution is the same
+
+```{r}
+strict_check('The solutions are the same!, Yay!', user = a, solution = a)
+```
+
+3. if the solution is not the same, we then go compare the 2 calls.
+
+```{r}
+strict_check(user = a, solution = b)
+```
+
+```{r}
+strict_check(user = a, solution = c)
+```
+
+```{r}
+strict_check(user = c, solution = a)
+```
+
+The underlying function that is doing the checking is `detect_mistakes`
+
+```{r}
+detect_mistakes(user = a, solution = c)
+```
+
+1. First make sure the code is in some standarized form to do comparisons.
+    - Maybe this is where we can convert the call into a network graph.
+
+```{r}
+usr <- rev(grader:::order_calls(grader:::unpipe_all(a)))
+sol <- rev(grader:::order_calls(grader:::unpipe_all(c)))
+```
+
+Check for missing arguments
+
+```{r}
+# grader::missing_argument(usr[[1]], sol[[1]])
+```
+
+Check for excess arguments
+
+```{r}
+
+```
+
+Check if calls match, if not isolate mismatch using `isolate_mismatch`.
+This is where I can convert everything into an edgelist to find differences.
+
+```{r}
+
+```
+
+
+
+## Using `learnr`
+
+```{r}
+tutorial_options(exercise.checker = strict_check)
+```
+
+
+Return the square-root of the log of the number `1`.
+
+```{r number, exercise = TRUE}
+___(___(1))
+```
+
+```{r number-hint-1}
+"You can take the log with `log()`"
+```
+
+```{r number-hint-2}
+"You can take the square root with `sqrt()`"
+```
+
+```{r number-solution}
+sqrt(log(1))
+```
+
+```{r number-check}
+strict_check("Good job. Don't worry, things will soon get harder.")
+```
+
+# Check result
+
+```{r}
+tutorial_options(exercise.timelimit = 60,
+                 exercise.checker = grade_learnr)
+```
+
+
+`exp(log(1))`
+
+```{r result, exercise = TRUE}
+___(___(1))
+```
+
+```{r result-hint-1}
+"Is it an even number"
+```
+
+```{r result-hint-2}
+"Enter an even number below 5"
+```
+
+```{r result-check}
+check_result(
+  result(1, "Custom message for value 1.", correct = TRUE)
+)
+```
