@@ -34,10 +34,13 @@ condi <- function(x, message, correct) {
   ret
 }
 
-evaluate_condi <- function(condi_x, grader_args, learnr_args) {
-  checkmate::assert_class(condi_x, "grader_condition")
-  switch(condi_x$type,
-         "formula" = evaluate_condi_formula(condi_x, grader_args$solution_quo, learnr_args$envir_prep),
+#' Evaluates a condition
+#' @returns Boolean of the condition
+#' @export
+evaluate_condi <- function(condi, grader_args, learnr_args) {
+  checkmate::assert_class(condi, "grader_condition")
+  switch(condi$type,
+         "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep),
          "function" = evalutate_condi_function,
          "value" = evaluate_condi_value
          )
