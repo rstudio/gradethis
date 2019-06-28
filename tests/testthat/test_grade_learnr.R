@@ -1,7 +1,6 @@
 context("Check grade learnr")
 
 expect_grade_learnr <- function(x) {
-  str(x)
   checkmate::expect_names(names(x), identical.to = c("message", "correct", "type", "location"))
   checkmate::expect_string(x$message, null.ok = TRUE)
   checkmate::expect_logical(x$correct, null.ok = FALSE, len = 1)
