@@ -40,7 +40,7 @@ condi <- function(x, message, correct) {
 evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
   switch(condi$type,
-         "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep),
+         "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep), # nolint
          "function" = evalutate_condi_function,
          "value" = evaluate_condi_value
          )
@@ -53,39 +53,3 @@ evaluate_condi_formula <- function(formula, user_answer, env) {
     env = env
   )
 }
-
-
-
-# example: pass_if(~ .result == 5, message = "passing message")
-# need to capture ~ .result == 5 as a quosure
-# # 
-# pass_if_formula <- function(formula, user_answer, grader_args, learnr_args) {
-#   form_rhs_quo <- rlang::as_quosure(formula[[2]], env = learnr_args$envir_prep)
-#   return(rlang::eval_tidy(form_rhs_quo,
-#                           data = list(
-#                             .result = user_answer,
-#                             . = user_answer
-#                           )))
-# }
-
-
-
-# snippet code for a function
-# tryCatch( {
-#   ret <- fn(.last_value)
-#   if (!inherits(ret, "grader_graded")) {
-#     if (ret) {
-#       graded(TRUE, correct)
-#     } else {
-#       graded(FALSE< incorrect)
-#     }
-#   } else {
-#     ret
-#   }
-# }, error = function(e) {
-#   message <- ... error = as.character(e)
-#   graded(FALSE, message)
-# })
-
-
-# pass_if(checkmate::assert_numeric)
