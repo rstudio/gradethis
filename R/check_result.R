@@ -16,6 +16,7 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
+#' TODO eventuall will return a grader_condition object from condi
 #' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted
 #'   \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
@@ -30,7 +31,7 @@ check_result <- function(
   learnr_args = list() # provided by `grade_learnr`
 ) {
   results <- list(...)
-  chkm8_item_class(results, "grader_result")
+  #chkm8_item_class(results, "grader_result") ## TODO: make this "grader_condition" # nolint
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
 
@@ -44,14 +45,24 @@ check_result <- function(
   final_result <- graded(correct = FALSE, NULL)
   found_match <- FALSE
   for (resu in results) {
-    # if formula then eval with more infomration, needs to return TRUE
-    # if x is is a funciton execute with last user_answer (fxn needs to return TRUE/FALSE,
-    # e.g., an assert statement)
-    # else do this below
-    if (identical(resu$x, user_answer)) {
-      final_result <- resu
-      found_match <- TRUE
-      break
+    # don't break the result api... yet
+    if (class(resu) == "grader_result") {
+      if (identical(resu$x, user_answer)) {
+        final_result <- resu
+        found_match <- TRUE
+        break
+      }
+    } else if (class(resu) == "grader_condition") {
+      # if formula then eval with more infomration, needs to return TRUE
+      # if x is is a funciton execute with last user_answer (fxn needs to return TRUE/FALSE,
+      # e.g., an assert statement)
+      # else do this below
+      evaluated_condi <- evaluate_condi(resu, grader_args, learnr_args)
+      if (evaluated_condi) {
+        found_match <- TRUE
+        final_result <- list(correct = resu$correct,
+                             message = resu$message)
+      }
     }
   }
 
