@@ -33,4 +33,12 @@ test_that("Spots differences in atomics", {
         learnr_args = list(envir_prep = new.env())
     )
   )
+
+  expect_error(
+    check_result(
+        fail_if(~ .result == 5, "You were supposed to do this other thing!"),
+        grader_args = list(solution_quo = quote(5)),
+        learnr_args = list(envir_prep = new.env())
+    )
+  )
 })
