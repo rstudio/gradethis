@@ -41,8 +41,8 @@ evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
   switch(condi$type,
          "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep), # nolint
-         "function" = evalutate_condi_function,
-         "value" = evaluate_condi_value
+         "function" = evaluate_condi_function(condi$x, grader_args$solution_quo),
+         "value" = evaluate_condi_value(condi$x, grader_args$solution_quo)
          )
 }
 
@@ -52,4 +52,14 @@ evaluate_condi_formula <- function(formula, user_answer, env) {
     data = list(.result = user_answer, . = user_answer),
     env = env
   )
+}
+
+evaluate_condi_function <- function(fxn, user_answer) {
+  fxn_results <- fxn(user_answer)
+  checkmate::expect_logical(fxn_results, len = 1)
+  return(fxn_results)
+}
+
+evaluate_condi_value <- function(val, user_answer) {
+  identical(val, user_answer)
 }
