@@ -16,7 +16,8 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted
+#' @return a \code{grader_graded} structure from either
+#'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
 #'   \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
 #' @export

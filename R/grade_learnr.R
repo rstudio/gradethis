@@ -19,8 +19,8 @@
 #' that uses \code{grade_learnr()}.
 #'
 #' @param label Label for exercise chunk
-#' @param solution_code R code submitted by the user
-#' @param user_code Code provided within the “-solution” chunk for the exercise.
+#' @param solution_code Code provided within the “-solution” chunk for the exercise.
+#' @param user_code R code submitted by the user
 #' @param check_code Code provided within the “-check” chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the \code{evaluate::evaluate} function.

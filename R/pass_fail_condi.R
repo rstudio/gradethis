@@ -1,22 +1,35 @@
 #' Pass if condition matches
+#' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
+#' @param message chracter string for message returned
 #' @export
 pass_if <- function(x, message) {
-  condi(x, message, correct = TRUE)
+  condition(x, message, correct = TRUE)
 }
 
-# Fail if condition matches
+#' Fail if condition matches
+#' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
+#' @param message chracter string for message returned
 #' @export
 fail_if <- function(x, message) {
-  condi(x, message, correct = FALSE)
+  condition(x, message, correct = FALSE)
 }
 
 #' Condition object
-#' TODO rename to condition
-#' Captures what the user passes into \code{pass_if} or \code{fail_if},
+#' Captures what the user passes into \code{\link{pass_if}} or \code{\link{fail_if}},
 #' figures out what type of object was passed into \code{x},
-#' and returns an object that will be passed into \code{evaluate_condi}
+#' and returns a \code{grader_condition} object that will be passed into \code{evaluate_condi}
+#'
+#' @param x expression to be evaluated
+#' @param message character string for message returned
+#' @param correct logical whether the condition is the correct answer
+#'
+#' @return a \code{grader_condition} object that contains
+#'   the expression \code{x},
+#'   the message \code{message},
+#'   whether or not the expression is the correct answer or not, \code{correct},
+#'   the type of expression (formula, function, or value), \code{type}
 #' @export
-condi <- function(x, message, correct) {
+condition <- function(x, message, correct) {
   type <-
     if (rlang::is_formula(x)) {
       "formula"
@@ -37,7 +50,12 @@ condi <- function(x, message, correct) {
 }
 
 #' Evaluates a condition
-#' @returns a \code{graded} value or \code{NULL} if the condition is \code{FALSE}
+#' 
+#' @param condi a \code{grader} \code{\link{condition}} object
+#' @param grader_args at minimum, a list that just contains the value for \code{solution_quo}
+#' @param learnr_args at minimum, a list that just contains the value for \code{envir_prep}
+#' 
+#' @return a \code{graded} value if \code{condi$x} is \code{TRUE} or \code{NULL} if \code{condi$x} is \code{FALSE}
 #' @export
 evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")

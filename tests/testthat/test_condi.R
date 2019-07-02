@@ -20,8 +20,8 @@ expect_condi_error <- function(x, message = NULL) {
 
 grader_args <- list(solution_quo = quote(5))
 learnr_args <- list(envir_prep = new.env())
-condi_formula_t <- condi(~ .result == 5, message = "my correct message", correct = TRUE)
-condi_formula_f <- condi(~ .result == 1, message = "my error message", correct = FALSE)
+condi_formula_t <- condition(~ .result == 5, message = "my correct message", correct = TRUE)
+condi_formula_f <- condition(~ .result == 1, message = "my error message", correct = FALSE)
 
 context("Check condi")
 
