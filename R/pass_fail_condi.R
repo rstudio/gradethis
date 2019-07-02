@@ -50,12 +50,13 @@ condition <- function(x, message, correct) {
 }
 
 #' Evaluates a condition
-#' 
+#'
 #' @param condi a \code{grader} \code{\link{condition}} object
 #' @param grader_args at minimum, a list that just contains the value for \code{solution_quo}
 #' @param learnr_args at minimum, a list that just contains the value for \code{envir_prep}
-#' 
-#' @return a \code{graded} value if \code{condi$x} is \code{TRUE} or \code{NULL} if \code{condi$x} is \code{FALSE}
+#'
+#' @return a \code{graded} value if \code{condi$x} is \code{TRUE} or
+#'   \code{NULL} if \code{condi$x} is \code{FALSE}
 #' @export
 evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
