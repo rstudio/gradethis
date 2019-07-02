@@ -1,4 +1,3 @@
-
 chkm8_class <- checkmate::assert_class
 
 chkm8_item_class <- function(x, class, name = checkmate::vname(x)) {
