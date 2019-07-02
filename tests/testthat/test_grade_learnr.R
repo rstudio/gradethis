@@ -62,13 +62,4 @@ test_that("grade learnr", {
     ),
     "I expected 1 where you wrote 2."
   )
-
-  expect_correct(
-    test_grade_learnr(
-      user_code = "4",
-      check_code = "check_result(result(4, correct = TRUE), correct = 'This works')",
-      solution_code = "4"
-    ),
-    "This works"
-  )
 })
