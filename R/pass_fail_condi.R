@@ -12,9 +12,11 @@ fail_if <- function(x, message) {
 
 
 #' Condition object
+#' TODO rename to condition
 #' Captures what the user passes into \code{pass_if} or \code{fail_if},
 #' figures out what type of object was passed into \code{x},
 #' and returns an object that will be passed into \code{evaluate_condi}
+#' @export
 condi <- function(x, message, correct) {
   type <-
     if (rlang::is_formula(x)) {
@@ -36,15 +38,37 @@ condi <- function(x, message, correct) {
 }
 
 #' Evaluates a condition
-#' @returns Boolean of the condition
+#' @returns a \code{graded} value or \code{NULL} if the condition is \code{FALSE}
 #' @export
 evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
-  switch(condi$type,
-         "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep), # nolint
-         "function" = evaluate_condi_function(condi$x, grader_args$solution_quo),
-         "value" = evaluate_condi_value(condi$x, grader_args$solution_quo)
+  res <- tryCatch({
+    switch(condi$type,
+           "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep), # nolint
+           "function" = evaluate_condi_function(condi$x, grader_args$solution_quo),
+           "value" = evaluate_condi_value(condi$x, grader_args$solution_quo)
          )
+  }, error = function(e) {
+        res <- graded(correct = FALSE, message = NULL)
+  })
+
+  if (is.null(res)) return(NULL) ## when would this ever be null in this example? res is either T/F or graded obj
+  if (is.logical(res)) {
+    if (res) {
+      # condi$x returned TRUE, meaning a match was found
+      return(graded(correct = condi$correct, message = condi$message))
+    } else {
+      # if a match was not found (condi$x is FALSE)
+      return(NULL)
+    }
+  }
+
+  if (! inherits(res, 'grader_graded')) {
+    stop(glue::glue(
+      "I expected a grader_graded object, a logical, or a NULL value. ",
+      "Received {paste0(class(res), collapse = ', ')}"))
+  }
+  return(res) # return the error from tryCatch
 }
 
 evaluate_condi_formula <- function(formula, user_answer, env) {
