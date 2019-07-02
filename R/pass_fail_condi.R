@@ -1,14 +1,15 @@
+#' Pass if condition matches
+#' @export
+pass_if <- function(x, message) {
+  condi(x, message, correct = TRUE)
+}
+
 # Fail if condition matches
 #' @export
 fail_if <- function(x, message) {
   condi(x, message, correct = FALSE)
 }
 
-#' Pass if condition matches
-#' @export
-pass_if <- function(x, message) {
-  condi(x, message, correct = TRUE)
-}
 
 #' Condition object
 #' Captures what the user passes into \code{pass_if} or \code{fail_if},
