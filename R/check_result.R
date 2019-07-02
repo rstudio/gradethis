@@ -34,18 +34,17 @@ check_result <- function(
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
 
-  #if (!any(vapply(results, `[[`, logical(1), "correct"))) {
-  #  stop("At least one correct result must be provided")
-  #}
-
-  user_answer <- learnr_args$last_value
+  if (!any(vapply(results, `[[`, logical(1), "correct"))) {
+   stop("At least one correct result must be provided")
+  }
 
   # init final answer as not found
   final_result <- graded(correct = FALSE, NULL)
   found_match <- FALSE
+
   for (resu in results) {
     evaluated_condi <- evaluate_condi(resu, grader_args, learnr_args)
-    if (evaluated_condi) {
+    if (! is.null(evaluated_condi)) {
       found_match <- TRUE
       final_result <- list(correct = resu$correct,
                            message = resu$message)

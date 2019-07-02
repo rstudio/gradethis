@@ -5,7 +5,7 @@ expect_correct <- function(x) {
   expect_true(x$correct)
 }
 
-expect_error <- function(x) {
+expect_wrong <- function(x) {
   expect_s3_class(x, "grader_graded")
   expect_false(x$correct)
 }
@@ -15,6 +15,32 @@ expect_message <- function(x, message, correct = FALSE) {
   expect_equal(x$correct, correct)
   expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
 }
+
+test_that("Provide a passing solution. Give the students a fighting chance!", {
+  testthat::expect_error(
+    check_result(
+      grader_args = list(solution_quo = quote(5)),
+      learnr_args = list(envir_prep = new.env())
+    )
+  )
+
+  testthat::expect_error(
+    check_result(
+      fail_if(~ .result == 5, "You were supposed to do this other thing!"),
+      grader_args = list(solution_quo = quote(5)),
+      learnr_args = list(envir_prep = new.env())
+    )
+  )
+
+  testthat::expect_error(
+    check_result(
+      fail_if(~ .result == 5, "You were supposed to do this other thing!"),
+      fail_if(~ .result == 10, "You were supposed to do this other thing!"),
+      grader_args = list(solution_quo = quote(5)),
+      learnr_args = list(envir_prep = new.env())
+    )
+  )
+})
 
 test_that("Spots differences in atomics -- formuula", {
 
@@ -26,7 +52,7 @@ test_that("Spots differences in atomics -- formuula", {
     )
   )
 
-  expect_error(
+  expect_wrong(
     check_result(
         pass_if(~ .result == 5, "This is a wrong answer!"),
         grader_args = list(solution_quo = quote(100000)),
@@ -34,9 +60,10 @@ test_that("Spots differences in atomics -- formuula", {
     )
   )
 
-  expect_error(
+  expect_wrong(
     check_result(
         fail_if(~ .result == 5, "You were supposed to do this other thing!"),
+        pass_if(~ TRUE, "should never reach here"),
         grader_args = list(solution_quo = quote(5)),
         learnr_args = list(envir_prep = new.env())
     )
@@ -52,16 +79,17 @@ test_that("Spots differences in atomics -- function", {
     )
   )
 
-  expect_error(
+  expect_wrong(
     check_result(
         pass_if(function(x) x == 5, "This is a wrong answer!"),
         grader_args = list(solution_quo = quote(100000))
     )
   )
 
-  expect_error(
+  expect_wrong(
     check_result(
         fail_if(function(x) x == 5, "You were supposed to do this other thing!"),
+        pass_if(~ TRUE, "should never reach here"),
         grader_args = list(solution_quo = quote(5))
     )
   )
@@ -76,16 +104,17 @@ test_that("Spots differences in atomics -- value", {
     )
   )
 
-  expect_error(
+  expect_wrong(
     check_result(
         pass_if(5, "This is a wrong answer!"),
         grader_args = list(solution_quo = quote(100000))
     )
   )
 
-  expect_error(
+  expect_wrong(
     check_result(
         fail_if(5, "You were supposed to do this other thing!"),
+        pass_if(~ TRUE, "should never reach here"),
         grader_args = list(solution_quo = quote(5))
     )
   )

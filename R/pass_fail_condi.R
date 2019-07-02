@@ -10,7 +10,6 @@ fail_if <- function(x, message) {
   condi(x, message, correct = FALSE)
 }
 
-
 #' Condition object
 #' TODO rename to condition
 #' Captures what the user passes into \code{pass_if} or \code{fail_if},
@@ -42,49 +41,40 @@ condi <- function(x, message, correct) {
 #' @export
 evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
-  res <- tryCatch({
-    switch(condi$type,
+  res <- switch(condi$type,
            "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep), # nolint
            "function" = evaluate_condi_function(condi$x, grader_args$solution_quo),
            "value" = evaluate_condi_value(condi$x, grader_args$solution_quo)
          )
-  }, error = function(e) {
-        res <- graded(correct = FALSE, message = NULL)
-  })
 
-  if (is.null(res)) return(NULL) ## when would this ever be null in this example? res is either T/F or graded obj
-  if (is.logical(res)) {
-    if (res) {
-      # condi$x returned TRUE, meaning a match was found
-      return(graded(correct = condi$correct, message = condi$message))
-    } else {
-      # if a match was not found (condi$x is FALSE)
-      return(NULL)
-    }
-  }
+  # implement when we add a `exec`/`expect` api to check_result
+  # will account for function returns
+  # if (inherits(res, 'grader_graded')) {return(res)} # nolint
+  if (is.null(res)) return(NULL)
 
-  if (! inherits(res, 'grader_graded')) {
-    stop(glue::glue(
-      "I expected a grader_graded object, a logical, or a NULL value. ",
-      "Received {paste0(class(res), collapse = ', ')}"))
+  checkmate::assert_logical(res, len = 1, null.ok = FALSE)
+  if (res) {
+    return(graded(correct = condi$correct, message = condi$message))
+  } else {
+    return(NULL)
   }
-  return(res) # return the error from tryCatch
 }
 
 evaluate_condi_formula <- function(formula, user_answer, env) {
-  rlang::eval_tidy(
+  form_result <- rlang::eval_tidy(
     formula[[2]],
     data = list(.result = user_answer, . = user_answer),
     env = env
   )
+  return(form_result)
 }
 
 evaluate_condi_function <- function(fxn, user_answer) {
-  fxn_results <- fxn(user_answer)
-  checkmate::expect_logical(fxn_results, len = 1)
-  return(fxn_results)
+  fxn_result <- fxn(user_answer)
+  return(fxn_result)
 }
 
 evaluate_condi_value <- function(val, user_answer) {
-  identical(val, user_answer)
+  val_result <- identical(val, user_answer)
+  return(val_result)
 }

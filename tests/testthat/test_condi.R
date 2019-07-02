@@ -41,9 +41,8 @@ test_that("Condi switch statement formula", {
         graded(correct = TRUE, message = "my correct message")
     )
 
-    expect_equal(
-        evaluate_condi(condi_formula_f, grader_args, learnr_args),
-        graded(correct = FALSE, message = "my error message")
+    expect_null(
+        evaluate_condi(condi_formula_f, grader_args, learnr_args)
     )
 })
 
