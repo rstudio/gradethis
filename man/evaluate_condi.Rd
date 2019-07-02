@@ -14,7 +14,8 @@ evaluate_condi(condi, grader_args, learnr_args)
 \item{learnr_args}{at minimum, a list that just contains the value for \code{envir_prep}}
 }
 \value{
-a \code{graded} value if \code{condi$x} is \code{TRUE} or \code{NULL} if \code{condi$x} is \code{FALSE}
+a \code{graded} value if \code{condi$x} is \code{TRUE} or
+  \code{NULL} if \code{condi$x} is \code{FALSE}
 }
 \description{
 Evaluates a condition
