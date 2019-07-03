@@ -64,6 +64,6 @@ check_result <- function(
 
   return(graded(
     correct = final_result$correct,
-    message = message
+    message = final_result$message
   ))
 }
