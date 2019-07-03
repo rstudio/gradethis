@@ -44,7 +44,20 @@ test_grade_learnr <- function(user_code,
                last_value = last_value)
 }
 
-test_that("grade learnr", {
+test_that("Grade learnr check_result", {
+  expect_correct(
+    test_grade_learnr(
+      user_code = "4",
+      check_code = "check_result(
+          pass_if(~ .result == 4, 'yes. you did it')
+        )"
+    ),
+    "yes. you did it"
+  )
+})
+
+
+test_that("Grade learnr check_code", {
   expect_correct(
     test_grade_learnr(
       user_code = "4",

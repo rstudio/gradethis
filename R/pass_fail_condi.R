@@ -60,10 +60,11 @@ condition <- function(x, message, correct) {
 #' @export
 evaluate_condi <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
+
   res <- switch(condi$type,
-           "formula" = evaluate_condi_formula(condi$x, grader_args$solution_quo, learnr_args$envir_prep), # nolint
-           "function" = evaluate_condi_function(condi$x, grader_args$solution_quo),
-           "value" = evaluate_condi_value(condi$x, grader_args$solution_quo)
+           "formula" = evaluate_condi_formula(condi$x, learnr_args$last_value, learnr_args$envir_prep), # nolint
+           "function" = evaluate_condi_function(condi$x, learnr_args$last_value),
+           "value" = evaluate_condi_value(condi$x, learnr_args$last_value)
          )
 
   # implement when we add a `exec`/`expect` api to check_result

@@ -18,8 +18,8 @@ expect_condi_error <- function(x, message = NULL) {
     expect_false(x$correct)
 }
 
-grader_args <- list(solution_quo = quote(5))
-learnr_args <- list(envir_prep = new.env())
+grader_args <- list()
+learnr_args <- list(last_value = quote(5), envir_prep = new.env())
 condi_formula_t <- condition(~ .result == 5, message = "my correct message", correct = TRUE)
 condi_formula_f <- condition(~ .result == 1, message = "my error message", correct = FALSE)
 
@@ -54,7 +54,7 @@ test_that("Condi formula", {
     )
 
     expect_true(
-        evaluate_condi_formula(~ .result == 5, user_answer = grader_args$solution_quo, env = learnr_args$envir_prep) # nolint
+        evaluate_condi_formula(~ .result == 5, user_answer = learnr_args$last_value, env = learnr_args$envir_prep) # nolint
     )
 
     expect_true(
