@@ -16,7 +16,7 @@ expect_correct <- function(x, message = NULL) {
   expect_equal(x$message, message)
 }
 
-expect_error <- function(x, message = NULL) {
+expect_wrong <- function(x, message = NULL) {
   expect_grade_learnr(x)
   expect_false(x$correct)
   expect_equal(x$type, "error")
@@ -54,7 +54,7 @@ test_that("grade learnr", {
     "This works"
   )
 
-    expect_error(
+  expect_wrong(
     test_grade_learnr(
       user_code = "exp(log(2))",
       check_code = "check_code(incorrect = '{message}')",
