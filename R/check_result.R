@@ -36,7 +36,7 @@ check_result <- function(
   chkm8_single_character(incorrect)
 
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
-   stop("At least one correct result must be provided")
+    stop("At least one correct result must be provided")
   }
 
   # init final answer as not found
@@ -64,6 +64,6 @@ check_result <- function(
 
   return(graded(
     correct = final_result$correct,
-    message = final_result$message
+    message = message
   ))
 }

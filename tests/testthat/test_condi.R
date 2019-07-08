@@ -1,3 +1,5 @@
+context("Check condi")
+
 expect_condi <- function(x) {
     checkmate::expect_names(names(x), identical.to = c("x", "message", "correct", "type"))
     checkmate::expect_character(x$message, null.ok = TRUE)
@@ -22,8 +24,6 @@ grader_args <- list()
 learnr_args <- list(last_value = quote(5), envir_prep = new.env())
 condi_formula_t <- condition(~ .result == 5, message = "my correct message", correct = TRUE)
 condi_formula_f <- condition(~ .result == 1, message = "my error message", correct = FALSE)
-
-context("Check condi")
 
 test_that("Check condi", {
     expect_condi(condi_formula_t)

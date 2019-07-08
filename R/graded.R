@@ -10,10 +10,10 @@ graded <- function(correct, message = NULL) {
   chkm8_single_character(message)
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
 
-  structure(class = "grader_graded",
-    list(
-      message = message %||% "",
-      correct = correct
-    )
+  ret <- list(
+    message = message %||% "",
+    correct = correct
   )
+  class(ret) <- "grader_graded"
+  ret
 }

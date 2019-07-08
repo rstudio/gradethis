@@ -42,7 +42,7 @@ test_that("Provide a passing solution. Give the students a fighting chance!", {
   )
 })
 
-test_that("Spots differences in atomics -- formuula", {
+test_that("Spots differences in atomics -- formula", {
 
   expect_correct(
     check_result(
