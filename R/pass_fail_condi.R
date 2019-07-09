@@ -58,7 +58,7 @@ condition <- function(x, message, correct) {
 #' @return a \code{graded} value if \code{condi$x} is \code{TRUE} or
 #'   \code{NULL} if \code{condi$x} is \code{FALSE}
 #' @export
-evaluate_condi <- function(condi, grader_args, learnr_args) {
+evaluate_condition <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
 
   res <- switch(condi$type,

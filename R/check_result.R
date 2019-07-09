@@ -44,7 +44,7 @@ check_result <- function(
   found_match <- FALSE
 
   for (resu in results) {
-    evaluated_condi <- evaluate_condi(resu, grader_args, learnr_args)
+    evaluated_condi <- evaluate_condition(resu, grader_args, learnr_args)
     if (! is.null(evaluated_condi)) {
       return(
         graded(correct = evaluated_condi$correct,

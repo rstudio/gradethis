@@ -33,16 +33,16 @@ test_that("Check condi", {
     expect_condi_error(condi_formula_f, "my error message")
 })
 
-context("Check evaluate_condi")
+context("Check evaluate_condition")
 
 test_that("Condi switch statement formula", {
     expect_equal(
-        evaluate_condi(condi_formula_t, grader_args, learnr_args),
+        evaluate_condition(condi_formula_t, grader_args, learnr_args),
         graded(correct = TRUE, message = "my correct message")
     )
 
     expect_null(
-        evaluate_condi(condi_formula_f, grader_args, learnr_args)
+        evaluate_condition(condi_formula_f, grader_args, learnr_args)
     )
 })
 
