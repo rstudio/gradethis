@@ -48,6 +48,7 @@ check_result <- function(
     if (! is.null(evaluated_condi)) {
       final_result <- evaluated_condi
       found_match <- TRUE
+      break
     }
   }
 
