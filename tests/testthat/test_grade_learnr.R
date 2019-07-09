@@ -50,10 +50,10 @@ test_that("Grade learnr check_result", {
       user_code = "4",
       check_code = "check_result(
           pass_if(~ .result == 4, 'yes. you did it'),
-          correct = 'this other correct message'
+          correct = 'this other correct message. {message}'
         )"
     ),
-    "yes. you did it"
+    "this other correct message. yes. you did it"
   )
 })
 
