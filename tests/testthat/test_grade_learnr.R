@@ -53,7 +53,7 @@ test_that("Grade learnr check_result", {
           correct = 'this other correct message'
         )"
     ),
-    "this other correct message"
+    "yes. you did it"
   )
 })
 
