@@ -1,5 +1,5 @@
-
 chkm8_class <- checkmate::assert_class
+
 chkm8_item_class <- function(x, class, name = checkmate::vname(x)) {
   lapply(seq_along(x), function(i) {
     chkm8_class(x[[i]], class, .var.name = paste0(name, "[[", i, "]]"))

@@ -16,7 +16,7 @@ expect_correct <- function(x, message = NULL) {
   expect_equal(x$message, message)
 }
 
-expect_error <- function(x, message = NULL) {
+expect_wrong <- function(x, message = NULL) {
   expect_grade_learnr(x)
   expect_false(x$correct)
   expect_equal(x$type, "error")
@@ -44,7 +44,21 @@ test_grade_learnr <- function(user_code,
                last_value = last_value)
 }
 
-test_that("grade learnr", {
+test_that("Grade learnr check_result", {
+  expect_correct(
+    test_grade_learnr(
+      user_code = "4",
+      check_code = "check_result(
+          pass_if(~ .result == 4, 'yes. you did it'),
+          correct = 'this other correct message. {message}'
+        )"
+    ),
+    "this other correct message. yes. you did it"
+  )
+})
+
+
+test_that("Grade learnr check_code", {
   expect_correct(
     test_grade_learnr(
       user_code = "4",
@@ -54,21 +68,12 @@ test_that("grade learnr", {
     "This works"
   )
 
-    expect_error(
+  expect_wrong(
     test_grade_learnr(
       user_code = "exp(log(2))",
       check_code = "check_code(incorrect = '{message}')",
       solution_code = "exp(log(1))"
     ),
     "I expected 1 where you wrote 2."
-  )
-
-  expect_correct(
-    test_grade_learnr(
-      user_code = "4",
-      check_code = "check_result(result(4, correct = TRUE), correct = 'This works')",
-      solution_code = "4"
-    ),
-    "This works"
   )
 })

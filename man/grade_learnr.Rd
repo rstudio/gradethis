@@ -11,9 +11,9 @@ grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
 \arguments{
 \item{label}{Label for exercise chunk}
 
-\item{solution_code}{R code submitted by the user}
+\item{solution_code}{Code provided within the “-solution” chunk for the exercise.}
 
-\item{user_code}{Code provided within the “-solution” chunk for the exercise.}
+\item{user_code}{R code submitted by the user}
 
 \item{check_code}{Code provided within the “-check” chunk for the exercise.}
 

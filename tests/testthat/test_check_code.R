@@ -155,7 +155,7 @@ test_that("Ignore differences in argument positions (for non ... arguments)", {
 
 test_that("Returns intelligent error when no solution code", {
 
-  expect_error(
+  testthat::expect_error(
     check_code(),
     "No solution is provided for this exercise."
   )
@@ -163,7 +163,7 @@ test_that("Returns intelligent error when no solution code", {
 })
 
 test_that("Returns intelligent error when no user code", {
-  expect_error(
+  testthat::expect_error(
     check_code(grader_args = list(solution_quo = quote(5))),
     "I didn't receive your code. Did you write any?"
   )

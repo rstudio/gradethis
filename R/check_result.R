@@ -16,7 +16,8 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing a formatted
+#' @return a \code{grader_graded} structure from either
+#'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
 #'   \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
 #' @export
@@ -30,7 +31,7 @@ check_result <- function(
   learnr_args = list() # provided by `grade_learnr`
 ) {
   results <- list(...)
-  chkm8_item_class(results, "grader_result")
+  chkm8_item_class(results, "grader_condition")
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
 
@@ -38,14 +39,14 @@ check_result <- function(
     stop("At least one correct result must be provided")
   }
 
-  user_answer <- learnr_args$last_value
-
   # init final answer as not found
   final_result <- graded(correct = FALSE, NULL)
   found_match <- FALSE
+
   for (resu in results) {
-    if (identical(resu$x, user_answer)) {
-      final_result <- resu
+    evaluated_condi <- evaluate_condition(resu, grader_args, learnr_args)
+    if (! is.null(evaluated_condi)) {
+      final_result <- evaluated_condi
       found_match <- TRUE
       break
     }
