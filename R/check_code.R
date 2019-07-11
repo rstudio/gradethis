@@ -125,7 +125,7 @@ code_is_same <- function(user = NULL, solution = NULL) {
   solution_code <- rlang::get_expr(solution)
 
   # Correct answers are all alike
-  if (suppressWarnings(user_code == solution_code)) {
+  if (identical(user_code, solution_code)) {
     return(graded(correct = TRUE, message = NULL))
   }
 
