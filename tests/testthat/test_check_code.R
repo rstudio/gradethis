@@ -208,16 +208,15 @@ test_that("Spots differences in long calls", {
   # original discussion here:
   # https://github.com/rstudio-education/grader/issues/28
 
-  user <- quote(c(x123456789012345678901234567890123456789012345678901234567890, 1)) # nolint
-  solution <- quote(c(x123456789012345678901234567890123456789012345678901234567890, 2)) # nolint
+  user <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
+  solution <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)") # nolint
   expect_wrong(
     check_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
 
-  user <- quote(c(x123456789012345678901234567890123456789012345678901234567890, 1)) # nolint
-  solution <- quote(c(x123456789012345678901234567890123456789012345678901234567890, 1)) #nolint
+  user <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
+  solution <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
    expect_correct(
     check_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
-
 })
