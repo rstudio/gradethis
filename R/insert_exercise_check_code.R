@@ -50,8 +50,8 @@ insert_exercise_check_result <- function() {
 
 ```{r <<random_chunk_label>>-check}
 grader::check_result(
-  grader::pass_if(),
-  grader::fail_if()
+  grader::pass_if(~ .result == 1),
+  grader::fail_if(~ .result == 2)
 )
 ```
 " , .open = "<<", .close = ">>"))
