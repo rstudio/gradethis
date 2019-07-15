@@ -1,0 +1,9 @@
+Name: Insert exercise: check code
+Description: Inserts code chunks to do code checking at the cursor position.
+Binding: insert_exercise_check_code
+Interactive: false
+
+Name: Insert exercise: check result
+Description: Inserts code chunks to do result checking at the cursor position.
+Binding: insert_exercise_check_result
+Interactive: false
