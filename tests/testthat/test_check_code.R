@@ -5,6 +5,12 @@ expect_correct <- function(x) {
   expect_s3_class(x, "grader_graded")
   expect_true(x$correct)
 }
+
+expect_wrong <- function(x) {
+  expect_s3_class(x, "grader_graded")
+  expect_false(x$correct)
+}
+
 expect_message <- function(x, message) {
   expect_s3_class(x, "grader_graded")
   expect_true(!x$correct)
@@ -196,4 +202,21 @@ test_that("Spot differences when pipes are involved", {
   expect_correct(check_code(grader_args = list(user_quo = pipe3, solution_quo = func3)))
   expect_correct(check_code(grader_args = list(user_quo = pipe3, solution_quo = pipe3)))
 
+})
+
+test_that("Spots differences in long calls", {
+  # original discussion here:
+  # https://github.com/rstudio-education/grader/issues/28
+
+  user <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
+  solution <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)") # nolint
+  expect_wrong(
+    check_code(grader_args = list(user_quo = user, solution_quo = solution))
+  )
+
+  user <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
+  solution <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
+   expect_correct(
+    check_code(grader_args = list(user_quo = user, solution_quo = solution))
+  )
 })
