@@ -9,12 +9,12 @@ insert_exercise_check_code <- function() {
 
 ```{r <<random_chunk_label>>-hint-1}
 # hint text
-
+\"\"
 ```
 
 ```{r <<random_chunk_label>>-hint-2}
 # hint text
-
+\"\"
 ```
 
 ```{r <<random_chunk_label>>-solution}
@@ -40,18 +40,18 @@ insert_exercise_check_result <- function() {
 
 ```{r <<random_chunk_label>>-hint-1}
 # hint text
-
+\"\"
 ```
 
 ```{r <<random_chunk_label>>-hint-2}
 # hint text
-
+\"\"
 ```
 
 ```{r <<random_chunk_label>>-check}
 grader::check_result(
-  grader::pass_if(~ .result == 1),
-  grader::fail_if(~ .result == 2)
+  grader::pass_if(~ .result == 1, \"YAY!\"),
+  grader::fail_if(~ .result == 2, \"Try Again.\")
 )
 ```
 " , .open = "<<", .close = ">>"))
