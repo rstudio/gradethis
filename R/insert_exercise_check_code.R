@@ -1,6 +1,7 @@
 insert_exercise_check_code <- function() {
   random_chunk_label <- generate_random_chunk_label()
 
+  # nolint start
   rstudioapi::insertText(glue::glue("
 ```{r <<random_chunk_label>>, exercise = TRUE}
 # student code
@@ -27,11 +28,13 @@ insert_exercise_check_code <- function() {
 grader::check_code()
 ```
 " , .open = "<<", .close = ">>"))
+  # nolint end
 }
 
 insert_exercise_check_result <- function() {
   random_chunk_label <- generate_random_chunk_label()
 
+  # nolint start
   rstudioapi::insertText(glue::glue("
 ```{r <<random_chunk_label>>, exercise = TRUE}
 # student code
@@ -55,6 +58,7 @@ grader::check_result(
 )
 ```
 " , .open = "<<", .close = ">>"))
+# nolint end
 }
 
 generate_random_chunk_label <- function() {
