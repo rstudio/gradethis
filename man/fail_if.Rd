@@ -4,7 +4,7 @@
 \alias{fail_if}
 \title{Fail if condition matches}
 \usage{
-fail_if(x, message)
+fail_if(x, message = NULL)
 }
 \arguments{
 \item{x}{a formula, function, or value, that returns \code{TRUE} or \code{FALSE}}
