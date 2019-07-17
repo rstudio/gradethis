@@ -175,6 +175,17 @@ test_that("Returns intelligent error when no user code", {
   )
 })
 
+test_that("Empty user solution messages", {
+  grader_args <- list()
+  learnr_args <- list()
+
+  user <- grader_args$user_quo
+  solution <- grader_args$solution_quo
+
+  testthat::expect_error(check_code(grader_args = grader_args, learnr_args = learnr_args),
+                         "No solution is provided for this exercise.")
+})
+
 test_that("Spot differences when pipes are involved", {
 
   select <- function(df, x) {
