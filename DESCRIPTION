@@ -3,7 +3,7 @@ Type: Package
 Title: Tools for "grading" student exercises in learnr tutorials
 Version: 0.1.0.9001
 Authors@R: c(
-  person("Daniel", "Chen", role = c("aut"), email = "daniel.chen@rstudio.com "),
+  person("Daniel", "Chen", role = c("aut"), email = "daniel.chen@rstudio.com"),
   person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
   person("Garrett", "Grolemund", role = c("ccp", "aut", "cre"), email = "garrett@rstudio.com"),
   person(family = "RStudio, Inc.", role = c("cph", "fnd")),
