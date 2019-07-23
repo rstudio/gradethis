@@ -179,9 +179,6 @@ test_that("Empty user solution messages", {
   grader_args <- list()
   learnr_args <- list()
 
-  user <- grader_args$user_quo
-  solution <- grader_args$solution_quo
-
   testthat::expect_error(check_code(grader_args = grader_args, learnr_args = learnr_args),
                          "No solution is provided for this exercise.")
 })
