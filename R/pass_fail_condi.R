@@ -67,6 +67,14 @@ evaluate_condition <- function(condi, grader_args, learnr_args) {
            "value" = evaluate_condi_value(condi$x, learnr_args$last_value)
          )
 
+  # if we compare something like a vector or dataframes to one another
+  # we need to collapse the result down to a single boolean value
+  if (length(res) > 1) {
+    ## this isn't the best way to handle NA values
+    ## https://github.com/rstudio-education/grader/issues/46 # nolint
+    res <- all(res, na.rm = TRUE)
+  }
+
   # implement when we add a `exec`/`expect` api to check_result
   # will account for function returns
   # if (inherits(res, 'grader_graded')) {return(res)} # nolint
