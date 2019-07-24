@@ -70,8 +70,10 @@ evaluate_condition <- function(condi, grader_args, learnr_args) {
   # if we compare something like a vector or dataframes to one another
   # we need to collapse the result down to a single boolean value
   if (length(res) > 1) {
-    ## this isn't the best way to handle NA values
+    ## this isn't the best way to handle NA values so we raise a warning.
     ## https://github.com/rstudio-education/grader/issues/46 # nolint
+    warning(glue::glue("I got a length of {length(res)}, instead of 1 during the conditional check.
+      Did you use == ? If so, consider using idential()")) # nolint
     res <- all(res, na.rm = TRUE)
   }
 
