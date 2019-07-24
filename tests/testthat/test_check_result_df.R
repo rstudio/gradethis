@@ -1,15 +1,5 @@
 context("Check Result Condi")
 
-expect_correct <- function(x) {
-  expect_s3_class(x, "grader_graded")
-  expect_true(x$correct)
-}
-
-expect_wrong <- function(x) {
-  expect_s3_class(x, "grader_graded")
-  expect_false(x$correct)
-}
-
 # nolint start
 # taken from dput(head(billboard))
 # where billboard is taken from:

@@ -1,15 +1,5 @@
 context("Check Result Condi")
 
-expect_correct <- function(x) {
-  expect_s3_class(x, "grader_graded")
-  expect_true(x$correct)
-}
-
-expect_wrong <- function(x) {
-  expect_s3_class(x, "grader_graded")
-  expect_false(x$correct)
-}
-
 test_that("Provide a passing solution. Give the students a fighting chance!", {
   testthat::expect_error(
     check_result(
