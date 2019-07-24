@@ -12,6 +12,8 @@ expect_wrong <- function(x) {
 
 # nolint start
 # taken from dput(head(billboard))
+# where billboard is taken from:
+# https://github.com/hadley/tidy-data/blob/master/data/billboard.csv
 billboard <- structure(list(year = c(2000, 2000, 2000, 2000, 2000, 2000), 
     artist.inverted = c("Destiny's Child", "Santana", "Savage Garden", 
     "Madonna", "Aguilera, Christina", "Janet"), track = c("Independent Women Part I", 
@@ -85,21 +87,32 @@ billboard <- structure(list(year = c(2000, 2000, 2000, 2000, 2000, 2000),
 -6L))
 # nolint end
 
-user <- reshape2::melt(
-  head(billboard),
-  id.vars = c("year", "artist.inverted", "track", "time",
-              "genre", "date.entered", "date.peaked"),
-  variable.name = "week",
-  value.name = "rank",
-  factorAsStrings = TRUE
-)
-user$week <- as.character(user$week)
-solution <- tidyr::gather(head(billboard), "week", "rank", x1st.week:x76th.week)
+create_user_df_melt <- function() {
+  user <- reshape2::melt(
+    head(billboard),
+    id.vars = c("year", "artist.inverted", "track", "time",
+                "genre", "date.entered", "date.peaked"),
+    variable.name = "week",
+    value.name = "rank",
+    factorAsStrings = TRUE
+  )
+  user$week <- as.character(user$week)
+  return(user)
+}
 
-user <- tibble::as_tibble(user)
-solution <- tibble::as_tibble(solution)
+create_solution_df_tidy <- function() {
+  solution <- tidyr::gather(head(billboard), "week", "rank", x1st.week:x76th.week)
+  return(solution)
+}
 
 test_that("Comparing dataframes, testing for null env", {
+  skip_if_not_installed("reshape2")
+  skip_if_not_installed("tidyr")
+  skip_if_not_installed("tibble")
+
+  user <- tibble::as_tibble(create_user_df_melt())
+  solution <- tibble::as_tibble(create_solution_df_tidy())
+
   # check that the results are the same
   testthat::expect_equal(user, solution)
 
