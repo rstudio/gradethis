@@ -4,7 +4,7 @@
 \alias{pass_if}
 \title{Pass if condition matches}
 \usage{
-pass_if(x, message)
+pass_if(x, message = NULL)
 }
 \arguments{
 \item{x}{a formula, function, or value, that returns \code{TRUE} or \code{FALSE}}

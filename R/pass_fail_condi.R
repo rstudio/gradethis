@@ -2,7 +2,7 @@
 #' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
 #' @param message chracter string for message returned
 #' @export
-pass_if <- function(x, message) {
+pass_if <- function(x, message = NULL) {
   condition(x, message, correct = TRUE)
 }
 
@@ -10,7 +10,7 @@ pass_if <- function(x, message) {
 #' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
 #' @param message chracter string for message returned
 #' @export
-fail_if <- function(x, message) {
+fail_if <- function(x, message = NULL) {
   condition(x, message, correct = FALSE)
 }
 

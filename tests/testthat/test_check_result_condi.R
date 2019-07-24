@@ -10,12 +10,6 @@ expect_wrong <- function(x) {
   expect_false(x$correct)
 }
 
-expect_message <- function(x, message, correct = FALSE) {
-  expect_s3_class(x, "grader_graded")
-  expect_equal(x$correct, correct)
-  expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
-}
-
 test_that("Provide a passing solution. Give the students a fighting chance!", {
   testthat::expect_error(
     check_result(
