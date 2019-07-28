@@ -51,8 +51,8 @@
 check_code <- function(
   correct = "{random_praise()} Correct!",
   incorrect = "{message} {random_encourage()}",
-  grader_args = list(), # provided by `grade_learnr`
-  learnr_args = list() # provided by `grade_learnr`
+  grader_args = list(),
+  learnr_args = list()
 ) {
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
