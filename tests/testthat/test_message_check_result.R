@@ -56,100 +56,97 @@ test_that("Correct messages without random praise", {
     )
 })
 
-# nolint start
-# test_that("Incorrect messages no match pass_if", {
-#     set.seed(525600)
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env())
-#         ),
-#         message = "Try it again. Perseverence is the key to success.", # random praise only
-#         correct = FALSE
-#     )
+test_that("Incorrect messages no match pass_if", {
+    glue_incorrect_no_praise <- "{ .message } { .incorrect }"
 
-#     set.seed(42)
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42, message = "random+pass_if"),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env())
-#         ),
-#         message = "Please try again.",
-#         correct = FALSE
-#     )
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env()),
+            glue_incorrect = glue_incorrect_no_praise
+        ),
+        message = "",
+        correct = FALSE
+    )
 
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42, message = "This does nothing."),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env()),
-#             incorrect = "hello"
-#         ),
-#         message = "hello",
-#         correct = FALSE
-#     )
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42, message = "This does nothing (expected)."),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env())
+        ),
+        message = "",
+        correct = FALSE
+    )
 
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env()),
-#             incorrect = "correct with no pass_if message"
-#         ),
-#         message = "correct with no pass_if message",
-#         correct = FALSE
-#     )
-# })
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42, message = "This does nothing (expected)."),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env()),
+            incorrect = "hello"
+        ),
+        message = "hello",
+        correct = FALSE
+    )
 
-# test_that("Incorrect messages match fail_if", {
-#     set.seed(525600)
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42),
-#             fail_if(~ .result == 5),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env())
-#         ),
-#         message = "Try it again. Perseverence is the key to success.", # random praise only
-#         correct = FALSE
-#     )
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env()),
+            incorrect = "incorrect with no pass_if message"
+        ),
+        message = "incorrect with no pass_if message",
+        correct = FALSE
+    )
+})
 
-#     set.seed(42)
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42, message = "random+pass_if"),
-#             fail_if(~ .result == 5, message = "random+fail_if"),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env())
-#         ),
-#         message = "Please try again.",
-#         correct = FALSE
-#     )
+test_that("Incorrect messages match fail_if", {
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42),
+            fail_if(~ .result == 5),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env())
+        ),
+        message = "",
+        correct = FALSE
+    )
 
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42, message = "This does nothing."),
-#             fail_if(~ .result == 5, message = "This does nothing."),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env()),
-#             incorrect = "hello"
-#         ),
-#         message = "hello",
-#         correct = FALSE
-#     )
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42, message = "No match here."),
+            fail_if(~ .result == 5, message = "Found an incorrect match."),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env())
+        ),
+        message = "Found an incorrect match.",
+        correct = FALSE
+    )
 
-#     expect_message(
-#         check_result(
-#             pass_if(~ .result == 42),
-#             fail_if(~ .result == 5),
-#             grader_args = list(),
-#             learnr_args = list(last_value = 5, envir_prep = new.env()),
-#             incorrect = "incorrect with no fail_if message"
-#         ),
-#         message = "incorrect with no fail_if message",
-#         correct = FALSE
-#     )
-# })
-# nolint end
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42, message = "No match here."),
+            fail_if(~ .result == 5, message = "Found an incorrect match."),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env()),
+            incorrect = "hello"
+        ),
+        message = "Found an incorrect match. hello",
+        correct = FALSE
+    )
+
+    expect_message(
+        check_result(
+            pass_if(~ .result == 42),
+            fail_if(~ .result == 5),
+            grader_args = list(),
+            learnr_args = list(last_value = 5, envir_prep = new.env()),
+            incorrect = "incorrect with no fail_if message."
+        ),
+        message = "incorrect with no fail_if message.",
+        correct = FALSE
+    )
+})
