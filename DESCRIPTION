@@ -30,10 +30,6 @@ Imports:
     readr,
     checkmate,
     testthat
-Suggests:
-    reshape2,
-    tibble,
-    tidyr
 Remotes:
   rstudio/learnr
 URL: https://rstudio-education.github.io/grader/, https://rstudio.github.io/learnr/, https://github.com/rstudio-education/grader
