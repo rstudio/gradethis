@@ -64,8 +64,8 @@ check_result <- function(
 
   message <- glue::glue_data(
     list(
-      matched = found_match,
-      correct = final_result$correct,
+      .is_match = found_match,
+      .is_correct = final_result$correct,
       .message = final_result$message,
       .correct = correct,
       .incorrect = incorrect
