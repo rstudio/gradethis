@@ -1,5 +1,5 @@
 #' Pass if condition matches
-#' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
+#' @template pass_fail_x_condition
 #' @param message chracter string for message returned
 #' @export
 pass_if <- function(x, message = NULL) {
@@ -7,7 +7,7 @@ pass_if <- function(x, message = NULL) {
 }
 
 #' Fail if condition matches
-#' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
+#' @template pass_fail_x_condition
 #' @param message chracter string for message returned
 #' @export
 fail_if <- function(x, message = NULL) {
