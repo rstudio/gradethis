@@ -14,6 +14,10 @@
 #'   where message is the matched result message.
 #' @template grader_args
 #' @template learnr_args
+#' @param glue_correct A glue string that returns the final correct message displayed.
+#'    Defaults to getOption("gradethis_glue_correct").
+#' @param glue_incorrect A glue string that returns the final incorrect message displayed.
+#'    Defaults to getOption("gradethis_glue_incorrect").
 #' @param ... ignored
 #'
 #' @return a \code{grader_graded} structure from either
@@ -25,11 +29,17 @@
 #' \dontrun{grading_demo()}
 check_result <- function(
   ...,
-  correct = "{paste0(random_praise(), if (nchar(message) > 0) \" \", message)}",
-  incorrect = "{paste0(message, if(nchar(message) > 0) \" \", random_encourage())}",
-  grader_args = list(), # provided by `grade_learnr`
-  learnr_args = list() # provided by `grade_learnr`
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct"),
+  glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
+  # convert NULL correct/incorrect strings to "" to work with glue
+  if (is.null(correct)) {correct <- ""}      # nolint
+  if (is.null(incorrect)) {incorrect <- ""}  # nolint
+
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
   chkm8_single_character(correct)
@@ -40,7 +50,7 @@ check_result <- function(
   }
 
   # init final answer as not found
-  final_result <- graded(correct = FALSE, NULL)
+  final_result <- graded(correct = FALSE, message = NULL)
   found_match <- FALSE
 
   for (resu in results) {
@@ -54,11 +64,13 @@ check_result <- function(
 
   message <- glue::glue_data(
     list(
-      matched = found_match,
-      correct = final_result$correct,
-      message = final_result$message
+      .is_match = found_match,
+      .is_correct = final_result$correct,
+      .message = final_result$message,
+      .correct = correct,
+      .incorrect = incorrect
     ),
-    {if (final_result$correct) correct else incorrect} # nolint
+    {if (final_result$correct) glue_correct else glue_incorrect} # nolint
   )
 
   return(graded(

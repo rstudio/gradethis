@@ -4,10 +4,10 @@
 \alias{check_result}
 \title{Check result of exercise code}
 \usage{
-check_result(...,
-  correct = "{paste0(random_praise(), if (nchar(message) > 0) \\" \\", message)}",
-  incorrect = "{paste0(message, if(nchar(message) > 0) \\" \\", random_encourage())}",
-  grader_args = list(), learnr_args = list())
+check_result(..., correct = NULL, incorrect = NULL,
+  grader_args = list(), learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct"),
+  glue_incorrect = getOption("gradethis_glue_incorrect"))
 }
 \arguments{
 \item{...}{ignored}
@@ -30,6 +30,12 @@ where message is the matched result message.}
 }}
 
 \item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}. See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+
+\item{glue_correct}{A glue string that returns the final correct message displayed.
+Defaults to getOption("gradethis_glue_correct").}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message displayed.
+Defaults to getOption("gradethis_glue_incorrect").}
 }
 \value{
 a \code{grader_graded} structure from either
