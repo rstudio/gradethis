@@ -92,7 +92,7 @@ add_tutorial <- function(name, package) {
   # Check that the .Rprofile does not already load a tutorial
   if (file.exists(rprofile)) {
     text <- readr::read_file(rprofile)
-    if (stringr::str_detect(text, "view_tutorial\\(")) {
+    if (grepl("view_tutorial(", text, fixed = TRUE)) {
       stop(
         "This project already loads a tutorial upon opening.\n",
         "Please remove the tutorial by manually opening the ",

@@ -30,11 +30,7 @@
 test_result <- function(
   ...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
-  incorrect = paste0(
-    "{num_correct}/{num_total} correct. ",
-    "Fix this first: '{errors[1]}'. ",
-    "{random_encourage()}"
-  ),
+  incorrect = "",
   grader_args = list(), # provided by `grade_learnr`
   learnr_args = list() # provided by `grade_learnr`
 ) {

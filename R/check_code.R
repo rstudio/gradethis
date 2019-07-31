@@ -49,10 +49,12 @@
 #' @examples
 #' \dontrun{grading_demo()}
 check_code <- function(
-  correct = "{random_praise()} Correct!",
-  incorrect = "{message} {random_encourage()}",
+  correct = NULL,
+  incorrect = NULL,
   grader_args = list(),
-  learnr_args = list()
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct"),
+  glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
