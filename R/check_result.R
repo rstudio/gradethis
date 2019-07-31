@@ -37,13 +37,13 @@ check_result <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
   # convert NULL correct/incorrect strings to "" to work with glue
-  if (is.null(correct)) {correct <- ""}      # nolint
-  if (is.null(incorrect)) {incorrect <- ""}  # nolint
+  # if (is.null(correct)) {correct <- ""}      # nolint
+  # if (is.null(incorrect)) {incorrect <- ""}  # nolint
 
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
-  chkm8_single_character(correct)
-  chkm8_single_character(incorrect)
+  # chkm8_single_character(correct)
+  # chkm8_single_character(incorrect)
 
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
     stop("At least one correct result must be provided")
@@ -62,15 +62,13 @@ check_result <- function(
     }
   }
 
-  message <- glue::glue_data(
-    list(
-      .is_match = found_match,
-      .is_correct = final_result$correct,
-      .message = final_result$message,
-      .correct = correct,
-      .incorrect = incorrect
-    ),
-    {if (final_result$correct) glue_correct else glue_incorrect} # nolint
+  message <- glue_message(
+    {if (final_result$correct) glue_correct else glue_incorrect},
+    .is_match = found_match,
+    .is_correct = final_result$correct,
+    .message = final_result$message,
+    .correct = correct,
+    .incorrect = incorrect
   )
 
   return(graded(
