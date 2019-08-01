@@ -1,4 +1,4 @@
 library(testthat)
-library(grader)
+library(gradethis)
 
-test_check("grader")
+test_check("gradethis")
