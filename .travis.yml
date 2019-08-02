@@ -34,7 +34,7 @@ jobs:
       if: |
         branch IN (master, travis, grade_exercise_answer) AND \
         type = push AND \
-        repo = rstudio-education/grader
+        repo = rstudio-education/gradethis
       before_deploy: # build site and copy over files
         - Rscript -e 'if(!require("pkgdown")) install.packages("pkgdown")'
         - Rscript -e 'pkgdown::build_site()'
