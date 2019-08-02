@@ -103,7 +103,7 @@ add_tutorial <- function(name, package) {
     }
   }
   cat(paste0(
-    'grader::view_tutorial(name = "',
+    'gradethis::view_tutorial(name = "',
     name, '", package = "', package,
     '")  ## Learnr tutorial added on ',
     Sys.Date()
