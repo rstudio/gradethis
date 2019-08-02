@@ -1,10 +1,7 @@
 context("Test Result")
 
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
-expect_correct <- function(x) {
-  expect_s3_class(x, "grader_graded")
-  expect_true(x$correct)
-}
+
 expect_message <- function(x, message, correct = FALSE) {
   expect_s3_class(x, "grader_graded")
   expect_equal(x$correct, correct)
