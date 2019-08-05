@@ -36,7 +36,6 @@ check_result <- function(
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
-
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
 

@@ -1,5 +1,5 @@
 #' Pass if condition matches
-#' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
+#' @template pass_fail_x_condition
 #' @param message chracter string for message returned
 #' @export
 pass_if <- function(x, message = NULL) {
@@ -7,7 +7,7 @@ pass_if <- function(x, message = NULL) {
 }
 
 #' Fail if condition matches
-#' @param x a formula, function, or value, that returns \code{TRUE} or \code{FALSE}
+#' @template pass_fail_x_condition
 #' @param message chracter string for message returned
 #' @export
 fail_if <- function(x, message = NULL) {
@@ -66,6 +66,15 @@ evaluate_condition <- function(condi, grader_args, learnr_args) {
            "function" = evaluate_condi_function(condi$x, learnr_args$last_value),
            "value" = evaluate_condi_value(condi$x, learnr_args$last_value)
          )
+
+  # if we compare something like a vector or dataframes to one another
+  # we need to collapse the result down to a single boolean value
+  if (length(res) > 1) {
+    ## this isn't the best way to handle NA values so we raise a warning.
+    ## https://github.com/rstudio-education/grader/issues/46 # nolint
+    warning(glue::glue("I got a length of {length(res)}, instead of 1 during the conditional check.\n Did you use == ? If so, consider using idential()")) # nolint
+    res <- !all(is.na(res)) && all(res, na.rm = TRUE)
+  }
 
   # implement when we add a `exec`/`expect` api to check_result
   # will account for function returns
