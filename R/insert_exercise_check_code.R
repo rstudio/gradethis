@@ -25,7 +25,7 @@ insert_exercise_check_code <- function() {
 
 ```{r <<random_chunk_label>>-check}
 # check code
-grader::check_code()
+gradethis::check_code()
 ```
 " , .open = "<<", .close = ">>"))
   # nolint end

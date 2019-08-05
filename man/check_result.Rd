@@ -12,10 +12,7 @@ check_result(..., correct = NULL, incorrect = NULL,
 \arguments{
 \item{...}{ignored}
 
-\item{correct}{A character string to display if the student answer matches
-a known answer.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with \code{list(correct = TRUE, message = "<result message>")}. where message is the matched result message.
-\code{matched} is a boolean value about whether the submitted is found in a set of provided values.}
+\item{correct}{A character string to display if the student answer matches a known answer.}
 
 \item{incorrect}{A character string to display if the student answer matches
 a known answer.
@@ -24,12 +21,14 @@ This character string will be run through
 \code{list(correct = FALSE, message = "<result message>")}.
 where message is the matched result message.}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
+This contains: \describe{
  \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
  \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}. See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
+See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 
 \item{glue_correct}{A glue string that returns the final correct message displayed.
 Defaults to getOption("gradethis_glue_correct").}

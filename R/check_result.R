@@ -14,10 +14,8 @@
 #'   where message is the matched result message.
 #' @template grader_args
 #' @template learnr_args
-#' @param glue_correct A glue string that returns the final correct message displayed.
-#'    Defaults to getOption("gradethis_glue_correct").
-#' @param glue_incorrect A glue string that returns the final incorrect message displayed.
-#'    Defaults to getOption("gradethis_glue_incorrect").
+#' @template glue_correct
+#' @template glue_incorrect
 #' @param ... ignored
 #'
 #' @return a \code{grader_graded} structure from either

@@ -42,7 +42,7 @@ Users are not intended to use the function themselves, but to pass it to the
 \code{exercise.checker} knitr chunk option within the setup chunk of the
 tutorial.
 
-The grader package provides \code{grade_learnr} for this purpose. To enable
+The gradethis package provides \code{grade_learnr} for this purpose. To enable
 exercise checking in your learnr tutorial, set
 \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 of your tutorial.

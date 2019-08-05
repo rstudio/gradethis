@@ -3,7 +3,7 @@
 #' Checks and validates arguments passed into \code{glue}.
 #'
 #' @param glue_expression A glue character expression string.
-#' @parm ... Values to be inserted into glue expression.
+#' @param ... Values to be inserted into glue expression.
 #' @noRd
 glue_message <- function(
   glue_expression,

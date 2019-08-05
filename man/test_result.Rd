@@ -6,9 +6,7 @@
 \usage{
 test_result(...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
-  incorrect = paste0("{num_correct}/{num_total} correct. ",
-  "Fix this first: '{errors[1]}'. ", "{random_encourage()}"),
-  grader_args = list(), learnr_args = list())
+  incorrect = "", grader_args = list(), learnr_args = list())
 }
 \arguments{
 \item{...}{ignored}
@@ -29,12 +27,14 @@ test_result(...,
   \item \code{errors}: Vector of errors found
 }}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
+This contains: \describe{
  \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
  \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}. See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
+See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
 a \code{grader_graded} structure from \code{\link{result}} containing
