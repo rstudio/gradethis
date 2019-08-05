@@ -6,7 +6,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-library(grader)
+library(gradethis)
 library(googlesheets)
 
 # Specify a googlesheet to record to

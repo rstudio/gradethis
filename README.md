@@ -18,7 +18,7 @@ Pairing with the `learnr` R package, `grader` provides multiple methods to grade
 You can install the released version of grader from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("grader")
+install.packages("gradethis")
 ```
 
 ## Grading Demo <img src="man/figures/missing_sqrt.png" style="border: 1px solid black; box-shadow: 5px 5px 5px #eee; float: right;" width="50%">
@@ -26,6 +26,6 @@ install.packages("grader")
 To view the latest grading demo of the different checking methods:
 
 ``` r
-library(grader)
-grader::grading_demo()
+library(gradethis)
+gradethis::grading_demo()
 ```
