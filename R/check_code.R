@@ -54,7 +54,8 @@ check_code <- function(
   grader_args = list(),
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect")
+  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  glue_pipe = getOption("gradethis_glue_pipe")
 ) {
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
@@ -68,33 +69,28 @@ check_code <- function(
     return(
       graded(
         correct = TRUE,
-        message = glue::glue_data(
-          list(
-            correct = TRUE,
-            message = NULL
-          ),
-          correct
+        message = glue_message(
+          glue_correct,
+          .is_correct = TRUE,
+          .message = NULL,
+          .correct = correct
         )
       )
     )
   }
 
-  message <- glue::glue_data(
-    list(
-      correct = FALSE,
-      message = is_same_info$message
-    ),
-    incorrect
+  message <- glue_message(
+    glue_incorrect,
+    .is_correct = FALSE,
+    .message = is_same_info$message,
+    .incorrect = incorrect
   )
   if (uses_pipe(user)) {
-    message <- glue::glue_data(
-      list(
-        user = user,
-        message = message
-      ),
-      "I see that you are using pipe operators (e.g. %>%), ",
-      "so I want to let you know that this is how I am interpretting your code ",
-      "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}"
+    message <- glue_message(
+      glue_pipe,
+      .user = user,
+      .message = message,
+      .incorrect = incorrect
     )
   }
 

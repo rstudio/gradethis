@@ -62,7 +62,7 @@ test_that("Grade learnr check_code", {
   expect_correct(
     test_grade_learnr(
       user_code = "4",
-      check_code = "check_code(correct = 'This works')",
+      check_code = "check_code(correct = 'This works', glue_correct = '{.correct}')",
       solution_code = "4"
     ),
     "This works"
@@ -71,7 +71,7 @@ test_that("Grade learnr check_code", {
   expect_wrong(
     test_grade_learnr(
       user_code = "exp(log(2))",
-      check_code = "check_code(incorrect = '{message}')",
+      check_code = "check_code(glue_incorrect = '{.message}')",
       solution_code = "exp(log(1))"
     ),
     "I expected 1 where you wrote 2."
