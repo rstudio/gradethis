@@ -8,7 +8,7 @@ runtime: shiny_prerendered
 
 ```{r setup, include=FALSE}
 library(learnr)
-library(grader)
+library(gradethis)
 
 tutorial_options(exercise.timelimit = 60, exercise.checker = grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ### Check Exercise Result
 
-`grader` can check for the final returned value.
+`gradethis` can check for the final returned value.
 This grading approach does not inspect the code. It only inspects the final result.
 
 See `?check_result` for more information.
@@ -78,7 +78,7 @@ check_result(
 
 ### Test Exercise Result
 
-`grader` can test against for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
+`gradethis` can test against for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
 
 Writers can include as many testing functions as they would like.  The test functions should accept a single result value to test against.  If any test fails, it should throw an error.  This error message will be returned back to the user by default.  See `?test_result` for more information.
 
@@ -182,7 +182,7 @@ test_result(
 
 ### Check Exercise Code
 
-`grader` can test against an exact code match.  This grading approach does not inspect the computed result.
+`gradethis` can test against an exact code match.  This grading approach does not inspect the computed result.
 
 This check method requires a `*-solution` code chunk containing the solution to compare.  Only the last solution expression and last user expression will be matched.
 
@@ -246,7 +246,7 @@ check_code("Good job. Don't worry, things will soon get harder.")
 
 ## Custom Checking Code
 
-`grader` can accept any checking method that returns a `grader::result` object.  The example below returns a correct/incorrect answer with 50/50 probability.
+`gradethis` can accept any checking method that returns a `gradethis::result` object.  The example below returns a correct/incorrect answer with 50/50 probability.
 
 
 ````markdown
@@ -262,7 +262,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  grader::result(
+  gradethis::result(
     x = user,
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
@@ -290,7 +290,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  grader::result(
+  gradethis::result(
     x = user,
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)

@@ -18,8 +18,8 @@ The best way to reproduce the effects described in this tutorial is to run this 
 ```{r eval = FALSE}
 foo <- "Remember me." # this will be significant
 
-devtools::install_github("rstudio-education/grader")
-learnr::run_tutorial("scoping-rules", package = "grader")
+devtools::install_github("rstudio-education/gradethis")
+learnr::run_tutorial("scoping-rules", package = "gradethis")
 ```
 
 ### Knitr chunks
@@ -53,7 +53,7 @@ As a result, the objects in _your_ global environment will not be available when
 To try this, close the tutorial and then run this code and click the Run Document button.
 
 ```{r eval = FALSE}
-rstudioapi::navigateToFile(system.file("tutorials", "scoping-rules/scoping-rules.Rmd", package = "grader"))
+rstudioapi::navigateToFile(system.file("tutorials", "scoping-rules/scoping-rules.Rmd", package = "gradethis"))
 ```
 
 ### The third case

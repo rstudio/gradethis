@@ -5,7 +5,7 @@ insert_exercise_check_code <- function() {
   rstudioapi::insertText(glue::glue("
 ```{r <<random_chunk_label>>, exercise = TRUE}
 # student code
-
+____
 ```
 
 ```{r <<random_chunk_label>>-hint-1}
@@ -38,7 +38,7 @@ insert_exercise_check_result <- function() {
   rstudioapi::insertText(glue::glue("
 ```{r <<random_chunk_label>>, exercise = TRUE}
 # student code
-
+____
 ```
 
 ```{r <<random_chunk_label>>-hint-1}
@@ -52,9 +52,9 @@ insert_exercise_check_result <- function() {
 ```
 
 ```{r <<random_chunk_label>>-check}
-grader::check_result(
-  grader::pass_if(~ .result == 1, \"YAY!\"),
-  grader::fail_if(~ .result == 2, \"Try Again.\")
+gradethis::check_result(
+  gradethis::pass_if(~ identical(.result, 1), \"YAY!\"),
+  gradethis::fail_if(~ identical(.result, 2), \"Try Again.\")
 )
 ```
 " , .open = "<<", .close = ">>"))
