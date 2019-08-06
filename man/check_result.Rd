@@ -12,14 +12,9 @@ check_result(..., correct = NULL, incorrect = NULL,
 \arguments{
 \item{...}{ignored}
 
-\item{correct}{A character string to display if the student answer matches a known answer.}
+\item{correct}{A character string to display if the student answer matches a known correct answer.}
 
-\item{incorrect}{A character string to display if the student answer matches
-a known answer.
-This character string will be run through
-\code{glue::\link[glue]{glue_data}} with
-\code{list(correct = FALSE, message = "<result message>")}.
-where message is the matched result message.}
+\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
 This contains: \describe{

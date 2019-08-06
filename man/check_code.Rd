@@ -11,13 +11,9 @@ check_code(correct = NULL, incorrect = NULL, grader_args = list(),
   glue_pipe = getOption("gradethis_glue_pipe"))
 }
 \arguments{
-\item{correct}{A character string to display if the student answer matches a known answer.}
+\item{correct}{A character string to display if the student answer matches a known correct answer.}
 
-\item{incorrect}{A character string to display if the student answer matches
-the solution code.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with
-\code{list(correct = FALSE, message = "<STRING>")}
-where message is the error found while comparing the user solution to the known solution.}
+\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
 This contains: \describe{
@@ -34,8 +30,8 @@ Defaults to getOption("gradethis_glue_correct").}
 \item{glue_incorrect}{A glue string that returns the final incorrect message displayed.
 Defaults to getOption("gradethis_glue_incorrect").}
 
-\item{glue_pipe}{A glue string that returns the final message displayed when a user uses a pipe, \code{$>$}
-Defaults to getOption("gradethis_glue_pipe").}
+\item{glue_pipe}{A glue string that returns the final message displayed when a user uses a pipe,
+\code{$>$}. Defaults to getOption("gradethis_glue_pipe").}
 }
 \value{
 a \code{grader_graded} structure from \code{\link{result}}.

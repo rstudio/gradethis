@@ -6,12 +6,7 @@
 #' returns the matching message value.
 #'
 #' @template correct
-#' @param incorrect A character string to display if the student answer matches
-#'   a known answer.
-#'   This character string will be run through
-#'   \code{glue::\link[glue]{glue_data}} with
-#'   \code{list(correct = FALSE, message = "<result message>")}.
-#'   where message is the matched result message.
+#' @template incorrect
 #' @template grader_args
 #' @template learnr_args
 #' @template glue_correct

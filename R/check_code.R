@@ -25,17 +25,14 @@
 #' For best results, name all arguments provided in the solution code.
 #'
 #' @template correct
-#' @param incorrect A character string to display if the student answer matches
-#'   the solution code.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
-#'   \code{list(correct = FALSE, message = "<STRING>")}
-#'   where message is the error found while comparing the user solution to the known solution.
+#' @template incorrect
 #' @template grader_args
 #' @template learnr_args
 #' @template glue_correct
 #' @template glue_incorrect
-#' @param glue_pipe A glue string that returns the final message displayed when a user uses a pipe, \code{$>$}
-#'    Defaults to getOption("gradethis_glue_pipe").
+#' @param glue_pipe A glue string that returns the final message displayed when a user uses a pipe,
+#'    \code{$>$}. Defaults to getOption("gradethis_glue_pipe").
+#'
 #' @return a \code{grader_graded} structure from \code{\link{result}}.
 #'   An incorrect message will describe the first way that the answer differs,
 #'   the message will be the content of the \code{correct}
