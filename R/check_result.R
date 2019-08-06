@@ -5,13 +5,13 @@
 #' If the user result exactly matches a known \code{result}, \code{check_result}
 #' returns the matching message value.
 #'
+#' @param ... \code{pass_if} or \code{fail_if} conditions to check
 #' @template correct
 #' @template incorrect
 #' @template grader_args
 #' @template learnr_args
 #' @template glue_correct
 #' @template glue_incorrect
-#' @param ... ignored
 #'
 #' @return a \code{grader_graded} structure from either
 #'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
@@ -29,6 +29,10 @@ check_result <- function(
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
+  # convert NULL correct/incorrect strings to "" to work with glue
+  if (is.null(correct)) {correct <- ""}      # nolint
+  if (is.null(incorrect)) {incorrect <- ""}  # nolint
+
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
 
