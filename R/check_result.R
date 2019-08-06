@@ -5,7 +5,7 @@
 #' If the user result exactly matches a known \code{result}, \code{check_result}
 #' returns the matching message value.
 #'
-#' @param ... \code{pass_if} or \code{fail_if} conditions to check
+#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} conditions to check
 #' @template correct
 #' @template incorrect
 #' @template grader_args
