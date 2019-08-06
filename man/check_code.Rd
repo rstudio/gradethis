@@ -4,28 +4,34 @@
 \alias{check_code}
 \title{Check code structure}
 \usage{
-check_code(correct = "{random_praise()} Correct!",
-  incorrect = "{message} {random_encourage()}", grader_args = list(),
-  learnr_args = list())
+check_code(correct = NULL, incorrect = NULL, grader_args = list(),
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct"),
+  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  glue_pipe = getOption("gradethis_glue_pipe"))
 }
 \arguments{
-\item{correct}{A character string to display if the student answer matches
-the solution code.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with
-\code{list(correct = TRUE, message = NULL)}.}
+\item{correct}{A character string to display if the student answer matches a known correct answer.}
 
-\item{incorrect}{A character string to display if the student answer matches
-the solution code.
-This character string will be run through \code{glue::\link[glue]{glue_data}} with
-\code{list(correct = FALSE, message = "<STRING>")}
-where message is the error found while comparing the user solution to the known solution.}
+\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).  This contains: \describe{
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{grade_learnr}).
+This contains: \describe{
  \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
  \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}. See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
+See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+
+\item{glue_correct}{A glue string that returns the final correct message displayed.
+Defaults to getOption("gradethis_glue_correct").}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message displayed.
+Defaults to getOption("gradethis_glue_incorrect").}
+
+\item{glue_pipe}{A glue string that returns the final message displayed when a user uses a pipe,
+\code{$>$}. Defaults to getOption("gradethis_glue_pipe").}
 }
 \value{
 a \code{grader_graded} structure from \code{\link{result}}.

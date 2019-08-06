@@ -38,7 +38,7 @@ cat(
   "billboard_solution <-", paste0(readLines(temp2),
                                   collapse = "\n"),
   "\n",
-  "# nolint end",
+  "# nolint end\n",
   file = billboard_file, append = TRUE)
 
 close(billboard_file)

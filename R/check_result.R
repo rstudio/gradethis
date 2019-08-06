@@ -5,20 +5,13 @@
 #' If the user result exactly matches a known \code{result}, \code{check_result}
 #' returns the matching message value.
 #'
+#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} conditions to check
 #' @template correct
-#' @param incorrect A character string to display if the student answer matches
-#'   a known answer.
-#'   This character string will be run through
-#'   \code{glue::\link[glue]{glue_data}} with
-#'   \code{list(correct = FALSE, message = "<result message>")}.
-#'   where message is the matched result message.
+#' @template incorrect
 #' @template grader_args
 #' @template learnr_args
-#' @param glue_correct A glue string that returns the final correct message displayed.
-#'    Defaults to getOption("gradethis_glue_correct").
-#' @param glue_incorrect A glue string that returns the final incorrect message displayed.
-#'    Defaults to getOption("gradethis_glue_incorrect").
-#' @param ... ignored
+#' @template glue_correct
+#' @template glue_incorrect
 #'
 #' @return a \code{grader_graded} structure from either
 #'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
@@ -42,8 +35,6 @@ check_result <- function(
 
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
-  chkm8_single_character(correct)
-  chkm8_single_character(incorrect)
 
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
     stop("At least one correct result must be provided")
@@ -62,15 +53,13 @@ check_result <- function(
     }
   }
 
-  message <- glue::glue_data(
-    list(
-      .is_match = found_match,
-      .is_correct = final_result$correct,
-      .message = final_result$message,
-      .correct = correct,
-      .incorrect = incorrect
-    ),
-    {if (final_result$correct) glue_correct else glue_incorrect} # nolint
+  message <- glue_message(
+    {if (final_result$correct) glue_correct else glue_incorrect}, # nolint
+    .is_match = found_match,
+    .is_correct = final_result$correct,
+    .message = final_result$message,
+    .correct = correct,
+    .incorrect = incorrect
   )
 
   return(graded(

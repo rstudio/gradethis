@@ -30,13 +30,9 @@
 test_result <- function(
   ...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
-  incorrect = paste0(
-    "{num_correct}/{num_total} correct. ",
-    "Fix this first: '{errors[1]}'. ",
-    "{random_encourage()}"
-  ),
-  grader_args = list(), # provided by `grade_learnr`
-  learnr_args = list() # provided by `grade_learnr`
+  incorrect = "",
+  grader_args = list(),
+  learnr_args = list()
 ) {
   tests <- grader_tests(...)
   chkm8_class(tests, "grader_tests")
