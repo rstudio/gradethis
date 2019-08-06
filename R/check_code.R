@@ -31,7 +31,7 @@
 #' @template glue_correct
 #' @template glue_incorrect
 #' @param glue_pipe A glue string that returns the final message displayed when a user uses a pipe,
-#'    \code{$>$}. Defaults to getOption("gradethis_glue_pipe").
+#'    \code{$>$}. Defaults to \code{getOption("gradethis_glue_pipe")}.
 #'
 #' @return a \code{grader_graded} structure from \code{\link{result}}.
 #'   An incorrect message will describe the first way that the answer differs,

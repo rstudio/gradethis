@@ -29,9 +29,6 @@ check_result <- function(
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
-  # convert NULL correct/incorrect strings to "" to work with glue
-  if (is.null(correct)) {correct <- ""}      # nolint
-  if (is.null(incorrect)) {incorrect <- ""}  # nolint
 
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
