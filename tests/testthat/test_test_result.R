@@ -1,82 +1,39 @@
 context("Test Result")
 
-# these tests are largely redundant exercises that have been tested against detect_mistakes()
-
 expect_message <- function(x, message, correct = FALSE) {
   expect_s3_class(x, "grader_graded")
   expect_equal(x$correct, correct)
   expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
 }
 
-test_that("Spots differences in atomics", {
+test_that("Test formula type", {
+  example_function <- function(x){
+    return(x + 1)
+  }
 
-  user <- quote(1)
-
-  expect_message(
+  expect_correct(
     test_result(
-      grader_args = list(user_quo = user),
-      checkmate::expect_numeric
-    ),
-    "1/1", TRUE
+        pass_if(~ .result(3) == 4),
+        pass_if(~ .result(10) == 11),
+        grader_args = list(),
+        learnr_args = list(last_value = example_function, envir_prep = new.env())
+    )
   )
 
-  # nolint start
-  # expect_message(
-  #   test_result(
-  #     grader_args = list(user_quo = user),
-  #     checkmate::expect_numeric,
-  #     checkmate::expect_character
-  #   ),
-  #   "1/2", FALSE
-  # )
-
-  # expect_message(
-  #   test_result(
-  #     grader_args = list(user_quo = user),
-  #     checkmate::expect_numeric,
-  #     test("test: is character", checkmate::expect_character)
-  #   ),
-  #   "test: is character", FALSE
-  # )
-  # nolint end
-})
-
-
-test_that("Gives correct message", {
-
-  # empty
-  # no longer testing for empty user code
-  # expect_message(
-  #   test_result(
-  #     grader_args = list(user_quo = rlang::quo(NULL)),
-  #     empty_msg = "NOT FOUND",
-  #     checkmate::expect_numeric
-  #   ),
-  #   "NOT FOUND", FALSE
-  # )
-
-
-  user <- quote(1)
-
-  # correct
-  expect_message(
+  expect_wrong(
     test_result(
-      grader_args = list(user_quo = user),
-      correct = "{num_correct}-{num_total}",
-      checkmate::expect_numeric
-    ),
-    "1-1", TRUE
+        pass_if(~ .result(3) == 4),
+        fail_if(~ .result(10) == 11),
+        grader_args = list(),
+        learnr_args = list(last_value = example_function, envir_prep = new.env())
+    )
   )
 
-  # incorrect
-  expect_message(
+  expect_wrong(
     test_result(
-      grader_args = list(user_quo = user),
-      incorrect = "{num_correct}-{num_total}",
-      checkmate::expect_numeric,
-      checkmate::expect_character
-    ),
-    "1-2", FALSE
+        pass_if(~ .result(100) == 1),
+        grader_args = list(),
+        learnr_args = list(last_value = example_function, envir_prep = new.env())
+    )
   )
-
 })

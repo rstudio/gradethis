@@ -1,4 +1,4 @@
-#' Evaluates a condition
+#' Evaluates a conditio
 #'
 #' Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
 #'
@@ -20,11 +20,20 @@
 evaluate_condition <- function(condition, grader_args, learnr_args) {
   checkmate::assert_class(condition, "grader_condition")
 
-  res <- switch(condition$type,
+  err_msg <- NULL
+  res <- tryCatch({
+    switch(condition$type,
            "formula" = evaluate_condi_formula(condition$x, learnr_args$last_value, learnr_args$envir_prep), # nolint
            "function" = evaluate_condi_function(condition$x, learnr_args$last_value),
            "value" = evaluate_condi_value(condition$x, learnr_args$last_value)
          )
+  }, error = function(e) {
+    err_msg <<- e$message
+  })
+
+  if (!is.null(err_msg)) {
+    return(graded(correct = FALSE, message = err_msg))
+  }
 
   # if we compare something like a vector or dataframes to one another
   # we need to collapse the result down to a single boolean value

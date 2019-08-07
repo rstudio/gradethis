@@ -4,28 +4,17 @@
 \alias{test_result}
 \title{Test the result of exercise code}
 \usage{
-test_result(...,
-  correct = "{num_correct}/{num_total} correct! {random_praise()}",
-  incorrect = "", grader_args = list(), learnr_args = list())
+test_result(..., correct = NULL, incorrect = NULL,
+  grader_args = list(), learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct_test"),
+  glue_incorrect = getOption("gradethis_glue_incorrect_test"))
 }
 \arguments{
-\item{...}{ignored}
+\item{...}{\code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check}
 
-\item{correct}{A character string to display if all tests pass.
-  This character string will be run through \code{glue::\link[glue]{glue_data}} with
-\itemize{
-  \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
-  \item \code{num_total}: Number of tests
-  \item \code{errors}: Vector of errors found. (\code{NULL})
-}}
+\item{correct}{A character string to display if the student answer matches a known correct answer.}
 
-\item{incorrect}{A character string to display if at least one test fails.
-  This character string will be run through \code{glue::\link[glue]{glue_data}} with
-\itemize{
-  \item \code{num_correct}: Number of correct tests
-  \item \code{num_total}: Number of tests
-  \item \code{errors}: Vector of errors found
-}}
+\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
 This contains: \describe{
@@ -35,18 +24,50 @@ This contains: \describe{
 
 \item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
 See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+
+\item{glue_correct}{A glue string that returns the final correct message displayed.
+Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
+2/2 correct! Absolutely fabulous!.}
+
+\item{glue_incorrect}{A glue string that returns the final correct message displayed.
+Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
+1/2 correct! Try it again; next time's the charm!.}
 }
 \value{
-a \code{grader_graded} structure from \code{\link{graded}} containing
-  a formatted \code{correct} or \code{incorrect} message.
+a \code{\link{graded}} object whether or not all test cases passed.
+  If \code{\link{pass_if}} case is \code{TRUE} it is considered as passed.
+  If \code{\link{fail_if}} case is \code{FALSE} it is also considered as passed.
+  The message, by default, will report the number of passed conditions
+  over the total number of conditions
 }
 \description{
-\code{test_result()} executes tests against the final result of the user code.
-If a test throws an error, the test fails and the submitted answer will be marked incorrect.
+\code{test_result()} executes tests against the final result of the user code,
+this is usually a function definition.
+This is similar to the instructor providing passing and failing unit tests of student
+written functions.
+If a test throws an error, the test fails and the submitted answer will be marked incorrect
+(i.e., a \code{\link{graded}} object with \code{correct = FALSE}).
 }
 \examples{
 \dontrun{grading_demo()}
+
+example_function <- function(x){
+  return(x + 1)
+}
+test_result(
+  pass_if(~ .result(3) == 4),
+  pass_if(~ .result(10) == 11),
+  grader_args = list(),
+  learnr_args = list(last_value = example_function, envir_prep = new.env())
+)
+
+test_result(
+  pass_if(~ .result(3) == 4),
+  fail_if(~ .result(10) == 11),
+  grader_args = list(),
+  learnr_args = list(last_value = example_function, envir_prep = new.env())
+)
 }
 \seealso{
-\code{test}
+\code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
 }

@@ -1,127 +1,143 @@
 #' Test the result of exercise code
 #'
-#' \code{test_result()} executes tests against the final result of the user code.
-#' If a test throws an error, the test fails and the submitted answer will be marked incorrect.
+#' \code{test_result()} executes tests against the final result of the user code,
+#' this is usually a function definition.
+#' This is similar to the instructor providing passing and failing unit tests of student
+#' written functions.
+#' If a test throws an error, the test fails and the submitted answer will be marked incorrect
+#' (i.e., a \code{\link{graded}} object with \code{correct = FALSE}).
 #'
-#' @param correct A character string to display if all tests pass.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
-#' \itemize{
-#'   \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
-#'   \item \code{num_total}: Number of tests
-#'   \item \code{errors}: Vector of errors found. (\code{NULL})
-#' }
-#' @param incorrect A character string to display if at least one test fails.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
-#' \itemize{
-#'   \item \code{num_correct}: Number of correct tests
-#'   \item \code{num_total}: Number of tests
-#'   \item \code{errors}: Vector of errors found
-#' }
+#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check
+#' @template correct
+#' @template incorrect
 #' @template grader_args
 #' @template learnr_args
-#' @param ... ignored
+#' @param glue_correct A glue string that returns the final correct message displayed.
+#'    Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
+#'    2/2 correct! Absolutely fabulous!.
+#' @param glue_incorrect A glue string that returns the final correct message displayed.
+#'    Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
+#'    1/2 correct! Try it again; next time's the charm!.
 #'
-#' @return a \code{grader_graded} structure from \code{\link{graded}} containing
-#'   a formatted \code{correct} or \code{incorrect} message.
-#' @seealso \code{test}
+#' @return a \code{\link{graded}} object whether or not all test cases passed.
+#'   If \code{\link{pass_if}} case is \code{TRUE} it is considered as passed.
+#'   If \code{\link{fail_if}} case is \code{FALSE} it is also considered as passed.
+#'   The message, by default, will report the number of passed conditions
+#'   over the total number of conditions
+#'
+#' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
-test_result <- function(
-  ...,
-  correct = "{num_correct}/{num_total} correct! {random_praise()}",
-  incorrect = "",
-  grader_args = list(),
-  learnr_args = list()
-) {
-  tests <- grader_tests(...)
-  chkm8_class(tests, "grader_tests")
-  chkm8_single_character(correct)
-  chkm8_single_character(incorrect)
-
-  user_answer <- get_user_code(grader_args$user_quo)
-
-  results <- lapply(tests$fns, function(test_fn) {
-    tryCatch(
-      { # nolint
-        test_fn(user_answer)
-        graded(
-          correct = TRUE,
-          message = NULL
-        )
-      },
-      error = function(e) {
-        graded(
-          correct = FALSE,
-          message = as.character(e)
-        )
-      }
-    )
-  })
-
-  is_corrects <- vapply(results, `[[`, logical(1), "correct")
-  is_correct <- all(is_corrects)
-
-  message <- glue::glue_data(
-    list(
-      is_correct = is_correct,
-      num_correct = sum(is_corrects),
-      num_total = length(results),
-      errors = unlist(lapply(results, function(resu) {
-        if (!resu$correct) resu$message else NULL
-      }))
-    ),
-    {if (is_correct) correct else incorrect} # nolint
-  )
-
-  return(graded(
-    correct = is_correct,
-    message = message
-  ))
-}
-
-# TODO do not use anymore in favor of `...` arg
-#' Tests to check
 #'
-#' Collect a set of test to execute against a user's result value
-#' @param ... a set of functions that will accept the evaluated user solution.
-#'   If the test fails, it should throw an error with the message to display.
-#' @noRd
-#' @rdname test
-#' @examples
-#'
-#' tests(
-#'   function(your_answer) {
-#'     checkmate::expect_function(your_answer, args = c("x"))
-#'   },
-#'   test(
-#'     # use a custom error message
-#'     "Make sure your function returns a number!",
-#'     function(your_answer) {
-#'       checkmate::expect_number(your_answer(1))
-#'     }
-#'   ),
-#'   function(your_answer) {
-#'     testthat::expect_equal(your_answer(0), NaN)
-#'   },
-#'   function(your_answer) {
-#'     testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
-#'   }
+#' example_function <- function(x){
+#'   return(x + 1)
+#' }
+#' test_result(
+#'   pass_if(~ .result(3) == 4),
+#'   pass_if(~ .result(10) == 11),
+#'   grader_args = list(),
+#'   learnr_args = list(last_value = example_function, envir_prep = new.env())
 #' )
 #'
-#' \dontrun{grading_demo()}
-grader_tests <- function(...) {
-  fns <- list(...)
-  lapply(fns, function(fn) {
-    checkmate::assert_function(fn)
-    if (length(formals(fn)) == 0) {
-      stop("The function must be able to accept the user submission")
-    }
-  })
-  structure(
-    class = "grader_tests",
-    list(
-      fns = list(...)
-    )
+#' test_result(
+#'   pass_if(~ .result(3) == 4),
+#'   fail_if(~ .result(10) == 11),
+#'   grader_args = list(),
+#'   learnr_args = list(last_value = example_function, envir_prep = new.env())
+#' )
+test_result <- function(
+  ...,
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct_test"),
+  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+) {
+
+  conditions <- list(...)
+  chkm8_item_class(conditions, "grader_condition")
+
+  test_results <- purrr::map(conditions, pass_fail_condition_modify,
+                             grader_args = grader_args,
+                             learnr_args = learnr_args)
+
+  condi_correct_status <- sapply(test_results, function(x) x$correct)
+  num_correct <- sum(condi_correct_status)
+
+  if (num_correct == length(conditions)) {
+    final_result <- graded(correct = TRUE, message = NULL)
+  } else {
+    final_result <- graded(correct = FALSE, message = NULL)
+  }
+
+  message <- glue_message(
+    {if (final_result$correct) glue_correct else glue_incorrect}, # nolint
+    .is_correct = final_result$correct,
+    .message = final_result$message,
+    .correct = correct,
+    .incorrect = incorrect,
+    .num_correct = as.character(num_correct),
+    .num_total = as.character(length(conditions))
   )
+
+  ret <- graded(
+    correct = final_result$correct,
+    message = message
+  )
+
+  return(ret)
+}
+
+#' helper function used in test_result
+#'
+#' test_result is very similar to check_result.
+#' in check_result, we just go through all the cases and once one of the
+#' conditions match, we are done.
+#' However, in test_result, we need to go though all the conditions
+#' and store their values to tally up the total number of "good" passing cases.
+#' It's behaviour is similar to running a unit testing suite,
+#' all the cases need to be run and tallied up in the end.
+#'
+#' Since the API for test_result uses pass_if and fail_if,
+#' we are presented with another problem,
+#' When a pass_if condition is found (i.e., matched and returns TRUE),
+#' that means the test is "passing".
+#' However, when a fail_if condition is found,
+#' that means the test is actually "failing",
+#' So we need to flip the `correct` condition in the graded object.
+#'
+#' This function just flips that boolean condition given depending on
+#' whether a pass_if or fail_if condition is passing or failing.
+#'
+#' This way we can store all the graded$correct values into a boolean vector.
+#' In order to calculate the number of passing conditions,
+#' we can then sum the boolean vector.
+#' @noRd
+pass_fail_condition_modify <- function(condi, grader_args, learnr_args){
+  evaluated_condi <- evaluate_condition(condi, grader_args, learnr_args)
+
+  # need to account for the case when fail_if does not match (this means the test passed)
+  # so we would need to flip the graded class correct status
+  if (condi$correct) { # evaluating a pass_if condition # nolint
+    # if a pass_if returns a NULL, it means the condition evaluated FALSE, which is a bad thing
+    # if it is NULL, we give it an "incorrect" graded class value
+    # if it is "correct", we keep the "correct" graded class value
+    evaluated_condi <- evaluated_condi %||% graded(correct = FALSE, message = NULL)
+    return(evaluated_condi)
+
+  } else { # evaluating a fail_if condition # nolint
+    if (is.null(evaluated_condi)) {
+      # if a fail_if returns NULL, it means the condition evaluated FALSE, which is a good thing
+      # if it is NULL, we give it a "correct" graded class value
+      evaluated_condi <- graded(correct = TRUE, message = NULL)
+      return(evaluated_condi)
+
+    } else {
+      # a passing fail_if is bad thing, so we flip the correct value to FALSE
+      evaluated_condi <- graded(correct = FALSE, message = NULL)
+      return(evaluated_condi)
+    }
+  }
 }

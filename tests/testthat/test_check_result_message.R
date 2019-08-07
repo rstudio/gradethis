@@ -1,4 +1,4 @@
-context("Check test_result messages")
+context("Check check_result messages")
 
 expect_message <- function(x, message, correct) {
   expect_s3_class(x, "grader_graded")

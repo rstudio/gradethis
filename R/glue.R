@@ -19,12 +19,21 @@ glue_message <- function(
     params[bool_names] <- lapply(params[bool_names], function(x){x %||% NA}) # nolint
   }
 
-  params[char_names] <- lapply(char_names, function(char_name) {
-    x <- params[[char_name]] %||% "" # convert NULL strings to "" to work with glue
-    chkm8_single_character(x, char_name)
-    x
-  })
+  params[char_names] <- lapply(char_names, clean_char_names, params = params)
 
   ret <- glue::glue_data(params, glue_expression)
   return(ret)
+}
+
+clean_char_names <- function(char_name, params) {
+  x <- params[[char_name]] %||% "" # convert NULL strings to "" to work with glue
+
+  tryCatch({
+    chkm8_single_character(x, char_name)
+  }, error = function(e) { # nolint
+    x <- as.character(x)
+    chkm8_single_character(x, char_name)
+  })
+
+  return(x)
 }

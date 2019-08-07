@@ -12,7 +12,10 @@
 #'
 #' TODO need to export when feature is implement in RStudio IDE
 #' @noRd
+<<<<<<< HEAD:archive/view_tutorial.R
 #' @keywords internal
+=======
+>>>>>>> small doc changes for pkgdown:R/view_tutorial.R
 #' @importFrom utils browseURL
 view_tutorial <- function(name, package) {
   # launch in separate R session
