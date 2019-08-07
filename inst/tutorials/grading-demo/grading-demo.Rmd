@@ -19,7 +19,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ### Check Exercise Result
 
-`gradethis` can check for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
+`gradethis` can check for the final returned value.
+This grading approach does not inspect the code. It only inspects the final result.
 
 See `?check_result` for more information.
 

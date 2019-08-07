@@ -9,3 +9,4 @@
 ^man-roxygen$
 ^\.lintr$
 ^\.vscode$
+^scripts/

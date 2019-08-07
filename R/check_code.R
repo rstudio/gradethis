@@ -24,35 +24,31 @@
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
-#' @param correct A character string to display if the student answer matches
-#'   the solution code.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
-#'   \code{list(correct = TRUE, message = NULL)}.
-#' @param incorrect A character string to display if the student answer matches
-#'   the solution code.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
-#'   \code{list(correct = FALSE, message = "<STRING>")}
-#'   where message is the error found while comparing the user solution to the known solution.
+#' @template correct
+#' @template incorrect
 #' @template grader_args
 #' @template learnr_args
+#' @template glue_correct
+#' @template glue_incorrect
+#' @param glue_pipe A glue string that returns the final message displayed when a user uses a pipe,
+#'    \code{$>$}. Defaults to \code{getOption("gradethis_glue_pipe")}.
 #'
 #' @return a \code{grader_graded} structure from \code{\link{result}}.
 #'   An incorrect message will describe the first way that the answer differs,
 #'   the message will be the content of the \code{correct}
 #'   argument.
 #'
-#'
-#'
-#'
-#'
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
 check_code <- function(
-  correct = "{random_praise()} Correct!",
-  incorrect = "{message} {random_encourage()}",
-  grader_args = list(), # provided by `grade_learnr`
-  learnr_args = list() # provided by `grade_learnr`
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct"),
+  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  glue_pipe = getOption("gradethis_glue_pipe")
 ) {
   chkm8_single_character(correct)
   chkm8_single_character(incorrect)
@@ -66,33 +62,28 @@ check_code <- function(
     return(
       graded(
         correct = TRUE,
-        message = glue::glue_data(
-          list(
-            correct = TRUE,
-            message = NULL
-          ),
-          correct
+        message = glue_message(
+          glue_correct,
+          .is_correct = TRUE,
+          .message = NULL,
+          .correct = correct
         )
       )
     )
   }
 
-  message <- glue::glue_data(
-    list(
-      correct = FALSE,
-      message = is_same_info$message
-    ),
-    incorrect
+  message <- glue_message(
+    glue_incorrect,
+    .is_correct = FALSE,
+    .message = is_same_info$message,
+    .incorrect = incorrect
   )
   if (uses_pipe(user)) {
-    message <- glue::glue_data(
-      list(
-        user = user,
-        message = message
-      ),
-      "I see that you are using pipe operators (e.g. %>%), ",
-      "so I want to let you know that this is how I am interpretting your code ",
-      "before I check it:\n\n{deparse(unpipe_all(user))}\n\n{message}"
+    message <- glue_message(
+      glue_pipe,
+      .user = user,
+      .message = message,
+      .incorrect = incorrect
     )
   }
 

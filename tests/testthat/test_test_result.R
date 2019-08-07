@@ -1,10 +1,7 @@
 context("Test Result")
 
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
-expect_correct <- function(x) {
-  expect_s3_class(x, "grader_graded")
-  expect_true(x$correct)
-}
+
 expect_message <- function(x, message, correct = FALSE) {
   expect_s3_class(x, "grader_graded")
   expect_equal(x$correct, correct)
@@ -23,23 +20,25 @@ test_that("Spots differences in atomics", {
     "1/1", TRUE
   )
 
-  expect_message(
-    test_result(
-      grader_args = list(user_quo = user),
-      checkmate::expect_numeric,
-      checkmate::expect_character
-    ),
-    "1/2", FALSE
-  )
+  # nolint start
+  # expect_message(
+  #   test_result(
+  #     grader_args = list(user_quo = user),
+  #     checkmate::expect_numeric,
+  #     checkmate::expect_character
+  #   ),
+  #   "1/2", FALSE
+  # )
 
-  expect_message(
-    test_result(
-      grader_args = list(user_quo = user),
-      checkmate::expect_numeric,
-      test("test: is character", checkmate::expect_character)
-    ),
-    "test: is character", FALSE
-  )
+  # expect_message(
+  #   test_result(
+  #     grader_args = list(user_quo = user),
+  #     checkmate::expect_numeric,
+  #     test("test: is character", checkmate::expect_character)
+  #   ),
+  #   "test: is character", FALSE
+  # )
+  # nolint end
 })
 
 
