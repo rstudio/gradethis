@@ -34,10 +34,9 @@ Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 \code{$>$}. Defaults to \code{getOption("gradethis_glue_pipe")}.}
 }
 \value{
-a \code{grader_graded} structure from \code{\link{result}}.
+a \code{\link{graded}} object.
   An incorrect message will describe the first way that the answer differs,
-  the message will be the content of the \code{correct}
-  argument.
+  the message will be the content of the \code{glue_pipe} argument.
 }
 \description{
 \code{check_code()} compares user code to a solution (i.e. model code) and

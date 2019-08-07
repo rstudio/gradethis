@@ -150,9 +150,9 @@ isolate_mismatch <- function(user, solution, i) {
 }
 
 # named expects a vector of length one
-named <- function(vec) {
-  !is.null(names(vec)) && names(vec) != ""
-}
+# named <- function(vec) {
+#   !is.null(names(vec)) && names(vec) != ""
+# }
 
 real_name <- function(name) {
  !is.null(name) && name != ""
