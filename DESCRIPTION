@@ -17,15 +17,9 @@ LazyData: true
 RoxygenNote: 6.1.1
 Imports:
     purrr,
-    crayon,
-    clisymbols,
-    pryr,
     rlang,
     rstudioapi,
     glue,
-    knitr,
-    callr,
-    readr,
     checkmate,
     testthat
 Remotes:

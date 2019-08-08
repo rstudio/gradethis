@@ -91,7 +91,7 @@ grade_learnr <- function(label = NULL,
           eval(parsed_check_code[[i]], envir_prep)
         }
       }
-      grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]],
+      grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
                                              envir_prep)
 
       # get all grader args
