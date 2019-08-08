@@ -16,14 +16,14 @@ view_tutorial <- function(name, package) {
 
   # launch in separate R session
   r2 <- callr::r_bg(function(name, package) {
-    learnr::run_tutorial(
-      name = name,
-      package = package,
-      shiny_args = list(
-        launch.browser = FALSE,
-        port = 8000,
-        host = "127.0.0.1"
-      )
+    eval(call(":::", "learnr", "run_tutorial",
+          name = name,
+          package = package,
+          shiny_args = list(
+            launch.browser = FALSE,
+            port = 8000,
+            host = "127.0.0.1")
+         )
     )
   },
   supervise = TRUE,
