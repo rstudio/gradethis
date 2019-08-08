@@ -1,4 +1,4 @@
-#' Check code structure
+#' Check the code expression or the code result against a solution.
 #'
 #' \code{check_code()} compares user code to a solution (i.e. model code) and
 #' describes the first way that the user code differs. If the user code exactly
@@ -37,6 +37,7 @@
 #'   An incorrect message will describe the first way that the answer differs,
 #'   the message will be the content of the \code{glue_pipe} argument.
 #'
+#' @rdname check_code_result
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}

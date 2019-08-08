@@ -1,4 +1,5 @@
 #' Condition object
+#'
 #' Captures what the user passes into \code{\link{pass_if}} or \code{\link{fail_if}},
 #' figures out what type of object was passed into \code{x},
 #' and returns a \code{grader_condition} object that will be passed into \code{evaluate_condi}

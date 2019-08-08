@@ -2,10 +2,7 @@
 % Please edit documentation in R/condition.R
 \name{condition}
 \alias{condition}
-\title{Condition object
-Captures what the user passes into \code{\link{pass_if}} or \code{\link{fail_if}},
-figures out what type of object was passed into \code{x},
-and returns a \code{grader_condition} object that will be passed into \code{evaluate_condi}}
+\title{Condition object}
 \usage{
 condition(x, message, correct)
 }
@@ -24,7 +21,6 @@ a \code{grader_condition} object that contains
   the type of expression (formula, function, or value), \code{type}
 }
 \description{
-Condition object
 Captures what the user passes into \code{\link{pass_if}} or \code{\link{fail_if}},
 figures out what type of object was passed into \code{x},
 and returns a \code{grader_condition} object that will be passed into \code{evaluate_condi}

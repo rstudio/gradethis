@@ -12,11 +12,15 @@
 get_user_code <- function(user = NULL, env = rlang::caller_env()) {
   get_code(user, "user", env = env)
 }
+
+
 #' @export
 #' @rdname get_code
 get_solution_code <- function(solution = NULL, env = rlang::caller_env()) {
   get_code(solution, "solution", env = env)
 }
+
+
 #' @export
 #' @rdname get_code
 get_code <- function(expr = NULL, name = "<name not provided>", env = rlang::caller_env()) {

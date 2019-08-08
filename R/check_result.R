@@ -6,17 +6,12 @@
 #' returns the matching message value.
 #'
 #' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} conditions to check
-#' @template correct
-#' @template incorrect
-#' @template grader_args
-#' @template learnr_args
-#' @template glue_correct
-#' @template glue_incorrect
 #'
 #' @return a \code{grader_graded} structure from either
 #'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
 #'   \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
+#' @rdname check_code_result
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
