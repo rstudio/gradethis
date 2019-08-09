@@ -37,7 +37,7 @@ This contains: \describe{
 See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
-a \code{grader_graded} structure from \code{\link{result}} containing
+a \code{grader_graded} structure from \code{\link{graded}} containing
   a formatted \code{correct} or \code{incorrect} message.
 }
 \description{

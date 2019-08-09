@@ -37,7 +37,7 @@ A checker function to use with learnr
 For exercise checking, learnr tutorials require a function that learnr can
 use in the background to run the code in each "-check" chunk and to format
 the results into a format that learnr can display. The function must accept a
-specific set of inputs and return a specific type of output (see \code{\link{result}}).
+specific set of inputs and return a specific type of output (see \code{\link{graded}}).
 Users are not intended to use the function themselves, but to pass it to the
 \code{exercise.checker} knitr chunk option within the setup chunk of the
 tutorial.

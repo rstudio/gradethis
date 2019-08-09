@@ -8,7 +8,7 @@ test_that("Comparing dataframes, testing for null env", {
 
   expect_correct(
     check_result(
-        pass_if(~ .result == billboard_solution, "This is a correct message"),
+        pass_if(~ identical(.result, billboard_solution), "This is a correct message"),
         learnr_args = list(last_value = billboard_user, envir_prep = new.env())
     )
   )

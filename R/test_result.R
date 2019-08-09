@@ -21,7 +21,7 @@
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}} containing
+#' @return a \code{grader_graded} structure from \code{\link{graded}} containing
 #'   a formatted \code{correct} or \code{incorrect} message.
 #' @seealso \code{test}
 #' @export
@@ -124,22 +124,4 @@ grader_tests <- function(...) {
       fns = list(...)
     )
   )
-}
-#' TODO document with 'tests' documentation
-#' @export
-#' @rdname test
-#' @param message Message to report back if the test throws an error.
-#' @param fn function to execute against the user solution.
-#'   If the test fails, it should throw an error to display the \code{message} provided.
-test <- function(message, fn) {
-  function(x) {
-    tryCatch(
-      { # nolint
-        fn(x)
-      },
-      error = function(e) {
-        stop(message, call. = FALSE)
-      }
-    )
-  }
 }

@@ -5,7 +5,7 @@
 #' For exercise checking, learnr tutorials require a function that learnr can
 #' use in the background to run the code in each "-check" chunk and to format
 #' the results into a format that learnr can display. The function must accept a
-#' specific set of inputs and return a specific type of output (see \code{\link{result}}).
+#' specific set of inputs and return a specific type of output (see \code{\link{graded}}).
 #' Users are not intended to use the function themselves, but to pass it to the
 #' \code{exercise.checker} knitr chunk option within the setup chunk of the
 #' tutorial.
@@ -91,7 +91,7 @@ grade_learnr <- function(label = NULL,
           eval(parsed_check_code[[i]], envir_prep)
         }
       }
-      grading_code <- pryr::standardise_call(parsed_check_code[[length(parsed_check_code)]],
+      grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
                                              envir_prep)
 
       # get all grader args
@@ -159,34 +159,4 @@ grade_learnr <- function(label = NULL,
   )
 
   ret
-}
-
-
-
-#' Get Code
-#'
-#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}}
-#' to extract user code and solution code.
-#'
-#' @seealso \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
-#' @export
-#' @rdname get_code
-#' @param user,solution,expr An expression or quosure to evaluate.
-#' @param name Name to print if a \code{NULL} expression is provided.
-#' @inheritParams rlang::eval_tidy
-get_user_code <- function(user = NULL, env = rlang::caller_env()) {
-  get_code(user, "user", env = env)
-}
-#' @export
-#' @rdname get_code
-get_solution_code <- function(solution = NULL, env = rlang::caller_env()) {
-  get_code(solution, "solution", env = env)
-}
-#' @export
-#' @rdname get_code
-get_code <- function(expr = NULL, name = "<name not provided>", env = rlang::caller_env()) {
-  if (is.null(expr)) {
-    stop("'", name, "' not provided")
-  }
-  rlang::eval_tidy(expr, env = env)
 }

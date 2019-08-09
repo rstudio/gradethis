@@ -33,10 +33,9 @@
 #' @param glue_pipe A glue string that returns the final message displayed when a user uses a pipe,
 #'    \code{$>$}. Defaults to \code{getOption("gradethis_glue_pipe")}.
 #'
-#' @return a \code{grader_graded} structure from \code{\link{result}}.
+#' @return a \code{\link{graded}} object.
 #'   An incorrect message will describe the first way that the answer differs,
-#'   the message will be the content of the \code{correct}
-#'   argument.
+#'   the message will be the content of the \code{glue_pipe} argument.
 #'
 #' @export
 #' @examples

@@ -10,3 +10,4 @@
 ^\.lintr$
 ^\.vscode$
 ^scripts/
+^archive/
