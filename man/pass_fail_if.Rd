@@ -19,7 +19,7 @@ It is advised that the user use \code{identical()} instead of \code{==} in this 
 \item{message}{chracter string for message returned}
 }
 \description{
-Wrapper around \code{\link{condition()}} that sets the proper \code{correct} argument.
+Wrapper around \code{\link{condition}} that sets the proper \code{correct} argument.
 This allows the instructor to specify just the comparison code, \code{x},
 and \code{message}.
 }
@@ -30,3 +30,28 @@ and \code{message}.
 \item \code{fail_if}: a condition that if matched means the student provided result is incorrect
 }}
 
+\examples{
+\dontrun{grading_demo()}
+
+check_result(
+  pass_if(~ identical(.result, 5), "This is a correct message"),
+          grader_args = list(),
+          learnr_args = list(last_value = 5, envir_prep = new.env())
+)
+
+check_result(
+  pass_if(function(x) identical(x, 5), "This is a correct message"),
+  learnr_args = list(last_value = 5)
+)
+
+check_result(
+  pass_if(5, "This is a correct message"),
+          learnr_args = list(last_value = 5)
+)
+
+check_result(
+  fail_if(5, "You were supposed to do this other thing!"),
+          pass_if(~ TRUE, "should never reach here"),
+          learnr_args = list(last_value = 5)
+)
+}

@@ -68,8 +68,9 @@
 random_praise <- function() {
   sample(.praise, 1)
 }
+
 #' @export
-#' @describeIn parise Returns a random encouragement message
+#' @describeIn praise Returns a random encouragement message
 random_encourage <- function() {
   sample(.encourage, 1)
 }

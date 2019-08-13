@@ -11,12 +11,12 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#'   condi_formula_t <- condition(~ .result == 5, message = "my correct message", correct = TRUE)
-#'   grader_args <- list()
-#'   learnr_args <- list(last_value = quote(5), envir_prep = new.env())
-#'   evaluate_condition(condi_formula_t, grader_args, learnr_args)
-#' }
+#'  condi_formula_t <- condition(~ identical(.result, 5),
+#'                               message = "my correct message",
+#'                               correct = TRUE)
+#'  grader_args <- list()
+#'  learnr_args <- list(last_value = quote(5), envir_prep = new.env())
+#'  evaluate_condition(condi_formula_t, grader_args, learnr_args)
 evaluate_condition <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
 

@@ -3,7 +3,7 @@
 #' Captures what the student passes into \code{\link{pass_if}} or \code{\link{fail_if}},
 #' figures out what type of object was passed into \code{x},
 #' and returns a \code{grader_condition} object that will be passed into
-#' \code{\link{evaluate_condition()}}.
+#' \code{\link{evaluate_condition}}.
 #'
 #' @param x expression to be evaluated
 #' @param message character string for message returned (usually passed in from

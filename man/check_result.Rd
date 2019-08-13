@@ -10,7 +10,26 @@ check_result(..., correct = NULL, incorrect = NULL,
   glue_incorrect = getOption("gradethis_glue_incorrect"))
 }
 \arguments{
-\item{...}{\code{\link{pass_if()}} or \code{\link{fail_if()}} \code{\link{condition}}s to check}
+\item{...}{\code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check}
+
+\item{correct}{A character string to display if the student answer matches a known correct answer.}
+
+\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
+
+\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
+This contains: \describe{
+ \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
+ \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+}}
+
+\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
+See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+
+\item{glue_correct}{A glue string that returns the final correct message displayed.
+Defaults to \code{getOption("gradethis_glue_correct")}.}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message displayed.
+Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 }
 \value{
 a \code{\link{graded}} object from either
@@ -19,7 +38,7 @@ a \code{\link{graded}} object from either
 }
 \description{
 \code{check_result()} compares the final result of the student code to known
-\code{\link{pass_if()}} and \code{\link{fail_if()}} \code{\link{condition}}s.
+\code{\link{pass_if}} and \code{\link{fail_if}} \code{\link{condition}}s.
 If the student result exactly matches a known case, \code{check_result}
 returns the matching message value.
 }
@@ -27,13 +46,13 @@ returns the matching message value.
 \dontrun{grading_demo()}
 
 check_result(
-  pass_if(~ .result == 5, "This is a correct message"),
+  pass_if(~ identical(.result, 5), "This is a correct message"),
           grader_args = list(),
           learnr_args = list(last_value = 5, envir_prep = new.env())
 )
 
 check_result(
-  pass_if(function(x) x == 5, "This is a correct message"),
+  pass_if(function(x) identical(x, 5), "This is a correct message"),
   learnr_args = list(last_value = 5)
 )
 

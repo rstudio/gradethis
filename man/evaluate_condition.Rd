@@ -21,10 +21,10 @@ a \code{\link{graded}} value if \code{condi$x} is \code{TRUE} or
 Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
 }
 \examples{
-\dontrun{
-  condi_formula_t <- condition(~ .result == 5, message = "my correct message", correct = TRUE)
-  grader_args <- list()
-  learnr_args <- list(last_value = quote(5), envir_prep = new.env())
-  evaluate_condition(condi_formula_t, grader_args, learnr_args)
-}
+ condi_formula_t <- condition(~ identical(.result, 5),
+                              message = "my correct message",
+                              correct = TRUE)
+ grader_args <- list()
+ learnr_args <- list(last_value = quote(5), envir_prep = new.env())
+ evaluate_condition(condi_formula_t, grader_args, learnr_args)
 }
