@@ -1,12 +1,15 @@
-#' Check the code expression or the code result against a solution.
+#' Check code against a solution
 #'
-#' \code{check_code()} compares user code to a solution (i.e. model code) and
-#' describes the first way that the user code differs. If the user code exactly
+#' Checks the code expression or the code result against a solution.
+#'
+#' \code{check_code()} compares student code to a solution (i.e. model code) and
+#' describes the first way that the student code differs. If the student code exactly
 #' matches the solution, \code{check_code()} returns a customizable success
-#' message.
+#' message (\code{correct}). If the student code does not match the soluction, a
+#' customizable incorrect message (\code{incorrect}) can also be provided.
 #'
-#' \code{check_code()} provides a *strict* check in that the user code must
-#' exactly match the solution. It is not enough for the user code to be
+#' \code{check_code()} provides a *strict* check in that the student code must
+#' exactly match the solution. It is not enough for the student code to be
 #' equivalent to the solution code (e.g. to return the same result as the
 #' solution).
 #'
@@ -18,7 +21,8 @@
 #' 2. Make a "-solution" code chunk for the exercise to be checked in a learnr
 #' document. There is no need to supply a solution argument for
 #' \code{check_code()} if you call it from the "-check" chunk of the same
-#' exercise. Likewise, there is no need to supply a user argument when you call
+#' exercise. Likewise, there is no need to supply a student submitted code
+#' argument when you call
 #' \code{check_code()} from a learnr document (learnr will provide the code
 #' that the student submits when it runs \code{check_code()}.
 #'
@@ -30,17 +34,22 @@
 #' @template learnr_args
 #' @template glue_correct
 #' @template glue_incorrect
-#' @param glue_pipe A glue string that returns the final message displayed when a user uses a pipe,
+#' @param glue_pipe A glue string that returns the final message displayed when
+#'    the studentuses a pipe,
 #'    \code{$>$}. Defaults to \code{getOption("gradethis_glue_pipe")}.
 #'
 #' @return a \code{\link{graded}} object.
 #'   An incorrect message will describe the first way that the answer differs,
 #'   the message will be the content of the \code{glue_pipe} argument.
 #'
-#' @rdname check_code_result
+#' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
+#'
+#' y <- quote(sqrt(log(2)))
+#' z <- quote(sqrt(log(1)))
+#' check_code(grader_args = list(user_quo = y, solution_quo = z))
 check_code <- function(
   correct = NULL,
   incorrect = NULL,

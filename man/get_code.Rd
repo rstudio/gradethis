@@ -26,6 +26,15 @@ their own environments.}
 Helper methods around \code{rlang::\link[rlang]{eval_tidy}}
 to extract user code and solution code.
 }
+\section{Functions}{
+\itemize{
+\item \code{get_user_code}: get student code
+
+\item \code{get_solution_code}: get solution code provided by instructor
+
+\item \code{get_code}: generic get code function
+}}
+
 \seealso{
 \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
 }

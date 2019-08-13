@@ -2,7 +2,7 @@
 % Please edit documentation in R/grade_learnr.R
 \name{grade_learnr}
 \alias{grade_learnr}
-\title{grade_learnr}
+\title{A checker function to use with \code{learnr}.}
 \usage{
 grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
   check_code = NULL, envir_result = NULL, evaluate_result = NULL,
@@ -31,18 +31,16 @@ grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
 An R list which contains several fields indicating the result of the check.
 }
 \description{
-A checker function to use with learnr
+For exercise checking, \code{learnr} tutorials require a function that \code{learnr} can
+use in the background to run the code in each "-check" chunk and to format
+the results into a format that \code{learnr} can display. The function must accept a
+specific set of inputs and return a specific type of output (see \code{\link{graded}}).
+Instructors are not intended to use the function themselves, but to pass it to the
+\code{exercise.checker} knitr chunk option within the setup chunk of the
+\code{learnr} tutorial.
 }
 \details{
-For exercise checking, learnr tutorials require a function that learnr can
-use in the background to run the code in each "-check" chunk and to format
-the results into a format that learnr can display. The function must accept a
-specific set of inputs and return a specific type of output (see \code{\link{graded}}).
-Users are not intended to use the function themselves, but to pass it to the
-\code{exercise.checker} knitr chunk option within the setup chunk of the
-tutorial.
-
-The grader package provides \code{grade_learnr} for this purpose. To enable
+The \code{gradethis} package provides \code{\link{grade_learnr}} for this purpose. To enable
 exercise checking in your learnr tutorial, set
 \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 of your tutorial.

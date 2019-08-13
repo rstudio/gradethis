@@ -1,12 +1,22 @@
-#' Evaluates a condition
+#' Evaluates a conditio
 #'
-#' @param condi a \code{grader} \code{\link{condition}} object
+#' Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
+#'
+#' @param condi a \code{\link{condition}} object
 #' @param grader_args at minimum, a list that just contains the value for \code{solution_quo}
 #' @param learnr_args at minimum, a list that just contains the value for \code{envir_prep}
 #'
-#' @return a \code{graded} value if \code{condi$x} is \code{TRUE} or
+#' @return a \code{\link{graded}} value if \code{condi$x} is \code{TRUE} or
 #'   \code{NULL} if \code{condi$x} is \code{FALSE}
 #' @export
+#'
+#' @examples
+#' \dontrun{
+#'   condi_formula_t <- condition(~ .result == 5, message = "my correct message", correct = TRUE)
+#'   grader_args <- list()
+#'   learnr_args <- list(last_value = quote(5), envir_prep = new.env())
+#'   evaluate_condition(condi_formula_t, grader_args, learnr_args)
+#' }
 evaluate_condition <- function(condi, grader_args, learnr_args) {
   checkmate::assert_class(condi, "grader_condition")
 

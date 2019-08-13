@@ -64,12 +64,12 @@
 #' replicate(5, glue::glue("Random praise: {random_praise()}"))
 #' replicate(5, glue::glue("Random encouragement: {random_encourage()}"))
 #' @export
-#' @rdname praise
+#' @describeIn praise Returns a random praise message
 random_praise <- function() {
   sample(.praise, 1)
 }
 #' @export
-#' @rdname praise
+#' @describeIn parise Returns a random encouragement message
 random_encourage <- function() {
   sample(.encourage, 1)
 }

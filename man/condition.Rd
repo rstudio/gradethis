@@ -9,7 +9,8 @@ condition(x, message, correct)
 \arguments{
 \item{x}{expression to be evaluated}
 
-\item{message}{character string for message returned}
+\item{message}{character string for message returned (usually passed in from
+\code{\link{pass_if}} or \code{\link{fail_if}}}
 
 \item{correct}{logical whether the condition is the correct answer}
 }
@@ -21,7 +22,13 @@ a \code{grader_condition} object that contains
   the type of expression (formula, function, or value), \code{type}
 }
 \description{
-Captures what the user passes into \code{\link{pass_if}} or \code{\link{fail_if}},
+Captures what the student passes into \code{\link{pass_if}} or \code{\link{fail_if}},
 figures out what type of object was passed into \code{x},
-and returns a \code{grader_condition} object that will be passed into \code{evaluate_condi}
+and returns a \code{grader_condition} object that will be passed into
+\code{\link{evaluate_condition()}}.
+}
+\examples{
+\dontrun{
+  condition(~ identical(x = .result, 5), message = "Correct", correct = TRUE)
+}
 }

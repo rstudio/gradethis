@@ -3,7 +3,7 @@
 \name{pass_if}
 \alias{pass_if}
 \alias{fail_if}
-\title{Pass if condition matches}
+\title{Condition definition}
 \usage{
 pass_if(x, message = NULL)
 
@@ -19,7 +19,14 @@ It is advised that the user use \code{identical()} instead of \code{==} in this 
 \item{message}{chracter string for message returned}
 }
 \description{
-Pass if condition matches
-
-Fail if condition matches
+Wrapper around \code{\link{condition()}} that sets the proper \code{correct} argument.
+This allows the instructor to specify just the comparison code, \code{x},
+and \code{message}.
 }
+\section{Functions}{
+\itemize{
+\item \code{pass_if}: a condition that if matched means the student provided result is correct
+
+\item \code{fail_if}: a condition that if matched means the student provided result is incorrect
+}}
+

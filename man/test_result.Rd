@@ -42,11 +42,13 @@ a \code{grader_graded} structure from \code{\link{graded}} containing
 }
 \description{
 \code{test_result()} executes tests against the final result of the user code.
+This is similar to the instructor providing passing and failing unit tests of student
+written functions.
 If a test throws an error, the test fails and the submitted answer will be marked incorrect.
 }
 \examples{
 \dontrun{grading_demo()}
 }
 \seealso{
-\code{test}
+\code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
 }
