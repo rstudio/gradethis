@@ -11,7 +11,8 @@ grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
 \arguments{
 \item{label}{Label for exercise chunk}
 
-\item{solution_code}{Code provided within the “-solution” chunk for the exercise.}
+\item{solution_code}{Code provided within the “-solution” chunk for the
+exercise.}
 
 \item{user_code}{R code submitted by the user}
 
@@ -19,34 +20,37 @@ grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
 
 \item{envir_result}{The R environment after the execution of the chunk.}
 
-\item{evaluate_result}{The return value from the \code{evaluate::evaluate} function.}
+\item{evaluate_result}{The return value from the \code{evaluate::evaluate}
+function.}
 
-\item{envir_prep}{A copy of the R environment before the execution of the chunk.}
+\item{envir_prep}{A copy of the R environment before the execution of the
+chunk.}
 
 \item{last_value}{The last value from evaluating the exercise.}
 
 \item{...}{Extra arguments supplied by learnr}
 }
 \value{
-An R list which contains several fields indicating the result of the check.
+An R list which contains several fields indicating the result of the
+  check.
 }
 \description{
-For exercise checking, \code{learnr} tutorials require a function that \code{learnr} can
-use in the background to run the code in each "-check" chunk and to format
-the results into a format that \code{learnr} can display. The function must accept a
-specific set of inputs and return a specific type of output (see \code{\link{graded}}).
-Instructors are not intended to use the \code{grade_learnr} function directly,
-but to pass it to the
+For exercise checking, \code{learnr} tutorials require a function that
+\code{learnr} can use in the background to run the code in each "-check"
+chunk and to format the results into a format that \code{learnr} can display.
+The function must accept a specific set of inputs and return a specific type
+of output (see \code{\link{graded}}). Instructors are not intended to use the
+\code{grade_learnr} function directly, but to pass it to the
 \code{exercise.checker} knitr chunk option within the setup chunk of the
 \code{learnr} tutorial.
 }
 \details{
-To enable exercise checking in your learnr tutorial,
-set \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
+To enable exercise checking in your learnr tutorial, set
+\code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 of your tutorial.
 
-Run \code{grading_demo()} to see an example learnr document
-that uses \code{grade_learnr()}.
+Run \code{grading_demo()} to see an example learnr document that uses
+\code{grade_learnr()}.
 }
 \examples{
 \dontrun{grading_demo()}

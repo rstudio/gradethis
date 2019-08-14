@@ -1,32 +1,36 @@
 #' A checker function to use with \code{learnr}.
 #'
-#' For exercise checking, \code{learnr} tutorials require a function that \code{learnr} can
-#' use in the background to run the code in each "-check" chunk and to format
-#' the results into a format that \code{learnr} can display. The function must accept a
-#' specific set of inputs and return a specific type of output (see \code{\link{graded}}).
-#' Instructors are not intended to use the \code{grade_learnr} function directly,
-#' but to pass it to the
+#' For exercise checking, \code{learnr} tutorials require a function that
+#' \code{learnr} can use in the background to run the code in each "-check"
+#' chunk and to format the results into a format that \code{learnr} can display.
+#' The function must accept a specific set of inputs and return a specific type
+#' of output (see \code{\link{graded}}). Instructors are not intended to use the
+#' \code{grade_learnr} function directly, but to pass it to the
 #' \code{exercise.checker} knitr chunk option within the setup chunk of the
 #' \code{learnr} tutorial.
 #'
-#' To enable exercise checking in your learnr tutorial,
-#' set \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
+#' To enable exercise checking in your learnr tutorial, set
+#' \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 #' of your tutorial.
 #'
-#' Run \code{grading_demo()} to see an example learnr document
-#' that uses \code{grade_learnr()}.
+#' Run \code{grading_demo()} to see an example learnr document that uses
+#' \code{grade_learnr()}.
 #'
 #' @param label Label for exercise chunk
-#' @param solution_code Code provided within the “-solution” chunk for the exercise.
+#' @param solution_code Code provided within the “-solution” chunk for the
+#'   exercise.
 #' @param user_code R code submitted by the user
 #' @param check_code Code provided within the “-check” chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
-#' @param evaluate_result The return value from the \code{evaluate::evaluate} function.
-#' @param envir_prep A copy of the R environment before the execution of the chunk.
+#' @param evaluate_result The return value from the \code{evaluate::evaluate}
+#'   function.
+#' @param envir_prep A copy of the R environment before the execution of the
+#'   chunk.
 #' @param last_value The last value from evaluating the exercise.
 #' @param ... Extra arguments supplied by learnr
 #'
-#' @return An R list which contains several fields indicating the result of the check.
+#' @return An R list which contains several fields indicating the result of the
+#'   check.
 #' @export
 #'
 #' @examples

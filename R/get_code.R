@@ -10,21 +10,21 @@
 #' @describeIn get_code Get student code
 #' @inheritParams rlang::eval_tidy
 #'
-#' @export
+#' @noRd
 get_user_code <- function(user = NULL, env = rlang::caller_env()) {
   get_code(user, "user", env = env)
 }
 
 #' @describeIn get_code Get solution code provided by instructor
 #""
-#' @export
+#' @noRd
 get_solution_code <- function(solution = NULL, env = rlang::caller_env()) {
   get_code(solution, "solution", env = env)
 }
 
 #' @describeIn get_code Generic get code function
 #'
-#' @export
+#' @noRd
 get_code <- function(expr = NULL, name = "<name not provided>", env = rlang::caller_env()) {
   if (is.null(expr)) {
     stop("'", name, "' not provided")
