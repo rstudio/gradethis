@@ -1,0 +1,47 @@
+---
+title: "An Introduction to gradethis"
+output: rmarkdown::html_vignette
+vignette: |-
+  >
+  %\VignetteIndexEntry{An Introduction to gradethis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+**gradethis** is a package to to grade code and provide meaningful feedback in
+[learnr][learnr] interactive tutorials or
+as a standalone code grader.
+It gives instructors the ability to capture code submitted by a student and
+check it in one of 3 ways:
+
+1. `check_result`:
+    **Checks the result** to see if the student returns a  matching result,
+    regardless the code.
+2.  `check_code`:
+    **Compares the code** to see if the student code exactly matches the solution code provided
+    by the instructor.
+3. `test_result`:
+    **Runs tests** to see if a student's function passes all test cases,
+    analogous to running unittests.
+
+# Using `gradethis` in `learnr` documents
+
+## A convenient addin
+
+`gradethis` comes with an [RStudio addin][addin]
+that easily add the chunks needed for each type of check.
+This will conviently generate a random chunk label with the corresponding chunk suffixes
+depending on which grading method the instructor plans to use.
+
+You can even bind these functions to a [keyboard shortcut][addin-keyboard_shortcut]!
+
+## Check result
+
+## Check code
+
+## Test result
+
+
+[learnr]: https://rstudio.github.io/learnr
+[addin]: https://rstudio.github.io/rstudioaddins/
+[addin-keyboard_shortcut]: https://rstudio.github.io/rstudioaddins/#keyboard-shorcuts

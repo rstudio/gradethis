@@ -1,0 +1,12 @@
+---
+title: "Using == to compare .result"
+output: rmarkdown::html_vignette
+vignette: |-
+  >
+  %\VignetteIndexEntry{Using == to compare .result}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+It is highly encouraged to make comparisons within `gradethis` to not use `==`,
+and insead make comparisons using the `identical()` function.
