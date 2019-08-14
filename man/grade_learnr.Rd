@@ -2,7 +2,7 @@
 % Please edit documentation in R/grade_learnr.R
 \name{grade_learnr}
 \alias{grade_learnr}
-\title{A checker function to use with \code{learnr}.}
+\title{A checker function to use with \code{learnr}}
 \usage{
 grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
   check_code = NULL, envir_result = NULL, evaluate_result = NULL,

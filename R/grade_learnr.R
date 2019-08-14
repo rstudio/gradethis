@@ -1,4 +1,4 @@
-#' A checker function to use with \code{learnr}.
+#' A checker function to use with \code{learnr}
 #'
 #' For exercise checking, \code{learnr} tutorials require a function that
 #' \code{learnr} can use in the background to run the code in each "-check"
