@@ -1,11 +1,12 @@
 
 #' Check result of exercise code
 #'
-#' \code{check_result()} compares the final result of the user code to known \code{results}.
-#' If the user result exactly matches a known \code{result}, \code{check_result}
+#' \code{check_result()} compares the final result of the student code to known
+#' \code{\link{pass_if}} and \code{\link{fail_if}} \code{\link{condition}}s.
+#' If the student result exactly matches a known case, \code{check_result}
 #' returns the matching message value.
 #'
-#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} conditions to check
+#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check
 #' @template correct
 #' @template incorrect
 #' @template grader_args
@@ -13,13 +14,16 @@
 #' @template glue_correct
 #' @template glue_incorrect
 #'
-#' @return a \code{grader_graded} structure from either
+#' @return a \code{\link{graded}} object from either
 #'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
 #'   \code{correct} or \code{incorrect} message and whether or not a match was found.
 #'
+#' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
+#'
+#' @template check_result_examples
 check_result <- function(
   ...,
   correct = NULL,

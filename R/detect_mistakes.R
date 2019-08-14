@@ -149,7 +149,6 @@ isolate_mismatch <- function(user, solution, i) {
   NULL
 }
 
-
 real_name <- function(name) {
  !is.null(name) && name != ""
 }

@@ -4,19 +4,27 @@
 \alias{evaluate_condition}
 \title{Evaluates a condition}
 \usage{
-evaluate_condition(condi, grader_args, learnr_args)
+evaluate_condition(condition, grader_args, learnr_args)
 }
 \arguments{
-\item{condi}{a \code{grader} \code{\link{condition}} object}
+\item{condition}{a \code{\link{condition}} object}
 
 \item{grader_args}{at minimum, a list that just contains the value for \code{solution_quo}}
 
 \item{learnr_args}{at minimum, a list that just contains the value for \code{envir_prep}}
 }
 \value{
-a \code{graded} value if \code{condi$x} is \code{TRUE} or
+a \code{\link{graded}} value if \code{condi$x} is \code{TRUE} or
   \code{NULL} if \code{condi$x} is \code{FALSE}
 }
 \description{
-Evaluates a condition
+Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
+}
+\examples{
+ condi_formula_t <- condition(~ identical(.result, 5),
+                              message = "my correct message",
+                              correct = TRUE)
+ grader_args <- list()
+ learnr_args <- list(last_value = quote(5), envir_prep = new.env())
+ evaluate_condition(condi_formula_t, grader_args, learnr_args)
 }

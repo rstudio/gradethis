@@ -14,6 +14,13 @@ Generate a random praise or encouragement phrase.
 This can be used in conjunction with
 \code{glue::\link[glue]{glue}} to generate praise or encouragement within feedback to users.
 }
+\section{Functions}{
+\itemize{
+\item \code{random_praise}: Returns a random praise message
+
+\item \code{random_encourage}: Returns a random encouragement message
+}}
+
 \examples{
 replicate(5, glue::glue("Random praise: {random_praise()}"))
 replicate(5, glue::glue("Random encouragement: {random_encourage()}"))

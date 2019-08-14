@@ -15,8 +15,6 @@
 #' @keywords internal
 #' @importFrom utils browseURL
 view_tutorial <- function(name, package) {
-  
-  
   # launch in separate R session
   r2 <- callr::r_bg(function(name, package) {
     learnr_run_tutorial <- eval(call(":::", "learnr", "run_tutorial")) # removes learnr depedency
@@ -32,7 +30,7 @@ view_tutorial <- function(name, package) {
   supervise = TRUE,
   args = list(name = name, package = package)
   )
-  
+
   # If you open the viewer before the app loads, it will
   # display a blank screen until you click refresh
   status <- r2$read_error()
@@ -46,7 +44,7 @@ view_tutorial <- function(name, package) {
       break
     }
   }
-  
+
   if (rstudioapi::isAvailable()) {
     rstudioapi::viewer(
       url = "http://localhost:8000",
@@ -91,9 +89,9 @@ view_tutorial <- function(name, package) {
 #' @keywords internal
 add_tutorial <- function(name, package) {
   rprofile <- paste0(getwd(), "/.Rprofile") # nolint
-  
+
   # load packages
-  
+
   # Check that the .Rprofile does not already load a tutorial
   if (file.exists(rprofile)) {
     text <- readr::read_file(rprofile)
@@ -117,21 +115,21 @@ add_tutorial <- function(name, package) {
   sep = "\n",
   append = TRUE
   )
-  
+
   # return message
 }
 
 remove_tutorial <- function(dir = NULL) {
   if (!is.null(dir)) dir <- getwd()
   rprofile <- paste0(dir, "/.Rprofile") # nolint
-  
+
   if (file.exists(rprofile)) {
     text <- readr::read_lines(rprofile)
   } else {
     stop("Directory does not have a .Rprofile ",
          "file to remove tutorial from.")
   }
-  
+
   tutorial_calls <- grepl("\\)  ## Learnr tutorial added on ", text)
   if (!any(tutorial_calls)) {
     message("No tutorials detected to remove.")
