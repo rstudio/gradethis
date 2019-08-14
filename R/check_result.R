@@ -20,6 +20,9 @@
 #'
 #' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
 #' @export
+#' @examples
+#' \dontrun{grading_demo()}
+#'
 #' @template check_result_examples
 check_result <- function(
   ...,

@@ -1,6 +1,4 @@
 #' @examples
-#' \dontrun{grading_demo()}
-#' 
 #' check_result(
 #'   pass_if(~ identical(.result, 5), "This is a correct message"),
 #'           grader_args = list(),
