@@ -7,7 +7,7 @@
 #' @param user,solution,expr An expression or quosure to evaluate.
 #' @param name Name to print if a \code{NULL} expression is provided.
 #'
-#' @describeIn get_code get student code
+#' @describeIn get_code Get student code
 #' @inheritParams rlang::eval_tidy
 #'
 #' @export
@@ -15,14 +15,14 @@ get_user_code <- function(user = NULL, env = rlang::caller_env()) {
   get_code(user, "user", env = env)
 }
 
-#' @describeIn get_code get solution code provided by instructor
+#' @describeIn get_code Get solution code provided by instructor
 #""
 #' @export
 get_solution_code <- function(solution = NULL, env = rlang::caller_env()) {
   get_code(solution, "solution", env = env)
 }
 
-#' @describeIn get_code generic get code function
+#' @describeIn get_code Generic get code function
 #'
 #' @export
 get_code <- function(expr = NULL, name = "<name not provided>", env = rlang::caller_env()) {

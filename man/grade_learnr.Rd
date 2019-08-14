@@ -35,14 +35,14 @@ For exercise checking, \code{learnr} tutorials require a function that \code{lea
 use in the background to run the code in each "-check" chunk and to format
 the results into a format that \code{learnr} can display. The function must accept a
 specific set of inputs and return a specific type of output (see \code{\link{graded}}).
-Instructors are not intended to use the function themselves, but to pass it to the
+Instructors are not intended to use the \code{grade_learnr} function directly,
+but to pass it to the
 \code{exercise.checker} knitr chunk option within the setup chunk of the
 \code{learnr} tutorial.
 }
 \details{
-The \code{gradethis} package provides \code{\link{grade_learnr}} for this purpose. To enable
-exercise checking in your learnr tutorial, set
-\code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
+To enable exercise checking in your learnr tutorial,
+set \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 of your tutorial.
 
 Run \code{grading_demo()} to see an example learnr document

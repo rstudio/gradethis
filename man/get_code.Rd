@@ -28,11 +28,11 @@ to extract user code and solution code.
 }
 \section{Functions}{
 \itemize{
-\item \code{get_user_code}: get student code
+\item \code{get_user_code}: Get student code
 
-\item \code{get_solution_code}: get solution code provided by instructor
+\item \code{get_solution_code}: Get solution code provided by instructor
 
-\item \code{get_code}: generic get code function
+\item \code{get_code}: Generic get code function
 }}
 
 \seealso{

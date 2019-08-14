@@ -1,8 +1,8 @@
-#' Evaluates a conditio
+#' Evaluates a condition
 #'
 #' Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
 #'
-#' @param condi a \code{\link{condition}} object
+#' @param condition a \code{\link{condition}} object
 #' @param grader_args at minimum, a list that just contains the value for \code{solution_quo}
 #' @param learnr_args at minimum, a list that just contains the value for \code{envir_prep}
 #'
@@ -17,13 +17,13 @@
 #'  grader_args <- list()
 #'  learnr_args <- list(last_value = quote(5), envir_prep = new.env())
 #'  evaluate_condition(condi_formula_t, grader_args, learnr_args)
-evaluate_condition <- function(condi, grader_args, learnr_args) {
-  checkmate::assert_class(condi, "grader_condition")
+evaluate_condition <- function(condition, grader_args, learnr_args) {
+  checkmate::assert_class(condition, "grader_condition")
 
-  res <- switch(condi$type,
-           "formula" = evaluate_condi_formula(condi$x, learnr_args$last_value, learnr_args$envir_prep), # nolint
-           "function" = evaluate_condi_function(condi$x, learnr_args$last_value),
-           "value" = evaluate_condi_value(condi$x, learnr_args$last_value)
+  res <- switch(condition$type,
+           "formula" = evaluate_condi_formula(condition$x, learnr_args$last_value, learnr_args$envir_prep), # nolint
+           "function" = evaluate_condi_function(condition$x, learnr_args$last_value),
+           "value" = evaluate_condi_value(condition$x, learnr_args$last_value)
          )
 
   # if we compare something like a vector or dataframes to one another
@@ -42,7 +42,7 @@ evaluate_condition <- function(condi, grader_args, learnr_args) {
 
   checkmate::assert_logical(res, len = 1, null.ok = FALSE)
   if (res) {
-    return(graded(correct = condi$correct, message = condi$message))
+    return(graded(correct = condition$correct, message = condition$message))
   } else {
     return(NULL)
   }

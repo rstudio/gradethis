@@ -28,7 +28,5 @@ and returns a \code{grader_condition} object that will be passed into
 \code{\link{evaluate_condition}}.
 }
 \examples{
-\dontrun{
-  condition(~ identical(x = .result, 5), message = "Correct", correct = TRUE)
-}
+condition(~ identical(x = .result, 5), message = "Correct", correct = TRUE)
 }

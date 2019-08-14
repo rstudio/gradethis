@@ -18,9 +18,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#'   condition(~ identical(x = .result, 5), message = "Correct", correct = TRUE)
-#' }
+#' condition(~ identical(x = .result, 5), message = "Correct", correct = TRUE)
 condition <- function(x, message, correct) {
   type <-
     if (rlang::is_formula(x)) {

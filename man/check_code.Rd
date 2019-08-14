@@ -31,7 +31,7 @@ Defaults to \code{getOption("gradethis_glue_correct")}.}
 Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 
 \item{glue_pipe}{A glue string that returns the final message displayed when
-the studentuses a pipe,
+the student uses a pipe,
 \code{$>$}. Defaults to \code{getOption("gradethis_glue_pipe")}.}
 }
 \value{
@@ -46,7 +46,7 @@ Checks the code expression or the code result against a solution.
 \code{check_code()} compares student code to a solution (i.e. model code) and
 describes the first way that the student code differs. If the student code exactly
 matches the solution, \code{check_code()} returns a customizable success
-message (\code{correct}). If the student code does not match the soluction, a
+message (\code{correct}). If the student code does not match the solution, a
 customizable incorrect message (\code{incorrect}) can also be provided.
 
 \code{check_code()} provides a *strict* check in that the student code must
@@ -72,6 +72,7 @@ For best results, name all arguments provided in the solution code.
 \examples{
 \dontrun{grading_demo()}
 
+# This is a manual example, see grading demo for learnr tutorial usage
 y <- quote(sqrt(log(2)))
 z <- quote(sqrt(log(1)))
 check_code(grader_args = list(user_quo = y, solution_quo = z))
