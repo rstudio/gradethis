@@ -29,12 +29,25 @@
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
-#' @template correct
-#' @template incorrect
-#' @template grader_args
-#' @template learnr_args
-#' @template glue_correct
-#' @template glue_incorrect
+#' @param correct A character string to display if the student answer matches a known correct answer.
+#' 
+#' @param incorrect A character string to display if the student answer matches a known incorrect answer.
+#' 
+#' @param grader_args A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
+#'   This contains: \describe{
+#'    \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
+#'    \item{\code{solution_quo}}{(Optional) Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+#'   }
+#'   
+#' @param learnr_args A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
+#'    See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.
+#'    
+#' @param glue_correct A glue string that returns the final correct message displayed.
+#'    Defaults to \code{getOption("gradethis_glue_correct")}.
+#'    
+#' @param glue_incorrect A glue string that returns the final incorrect message displayed.
+#'    Defaults to \code{getOption("gradethis_glue_incorrect")}.
+#'    
 #' @param glue_pipe A glue string that returns the final message displayed when
 #'   the student uses a pipe, `$>$`. Defaults to
 #'   `getOption("gradethis_glue_pipe")`.

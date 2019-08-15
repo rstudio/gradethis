@@ -2,6 +2,8 @@
 #'
 #' `test_result()` executes tests against the final result of the user code.
 #' If a test throws an error, the test fails and the submitted answer will be marked incorrect.
+#' 
+#' @inheritParams check_code
 #'
 #' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check
 #' @param correct A character string to display if all tests pass.
@@ -18,6 +20,7 @@
 #'   \item `num_total`: Number of tests
 #'   \item `errors`: Vector of errors found
 #' }
+<<<<<<< HEAD
 #' @template grader_args
 #' @template learnr_args
 #' @param glue_correct A glue string that returns the final correct message displayed.
@@ -26,6 +29,10 @@
 #' @param glue_incorrect A glue string that returns the final correct message displayed.
 #'    Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
 #'    1/2 correct! Try it again; next time's the charm!.
+=======
+#' @param ... ignored
+#' 
+>>>>>>> Use @inheritParams instead of @template, for cleaner documentation and less duplication
 #'
 #' @return a \code{\link{graded}} object whether or not all test cases passed.
 #'   If \code{\link{pass_if}} case is \code{TRUE} it is considered as passed.
