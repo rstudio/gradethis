@@ -6,13 +6,9 @@
 #' If the student result exactly matches a known case, `check_result`
 #' returns the matching message value.
 #'
+#' @inheritParams check_code
+#' 
 #' @param ... [pass_if()] or [fail_if()] [condition()]s to check
-#' @template correct
-#' @template incorrect
-#' @template grader_args
-#' @template learnr_args
-#' @template glue_correct
-#' @template glue_incorrect
 #'
 #' @return a [graded()] object from either
 #'   [pass_if()] or [fail_if()] containing a formatted
