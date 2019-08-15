@@ -2,7 +2,7 @@
 % Please edit documentation in R/test_result.R
 \name{test_result}
 \alias{test_result}
-\title{Test the result of exercise code}
+\title{Test the result of exercise code.}
 \usage{
 test_result(..., correct = NULL, incorrect = NULL,
   grader_args = list(), learnr_args = list(),
@@ -53,6 +53,11 @@ a \code{grader_graded} structure from \code{\link[=graded]{graded()}} containing
 \code{correct} or \code{incorrect} message.
 }
 \description{
+Executes tests against the final result of the user code. If
+a test throws an error, the test fails and the submitted answer will be
+marked incorrect.
+}
+\details{
 Executes tests against the final result of the user code. If
 a test throws an error, the test fails and the submitted answer will be
 marked incorrect.

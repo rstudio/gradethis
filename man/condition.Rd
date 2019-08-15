@@ -4,7 +4,7 @@
 \alias{condition}
 \alias{pass_if}
 \alias{fail_if}
-\title{Condition object}
+\title{Condition object.}
 \usage{
 condition(x, message, correct)
 

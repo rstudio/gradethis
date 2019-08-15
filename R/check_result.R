@@ -6,8 +6,6 @@
 #'
 #' @inheritParams check_code
 #'
-#' @inheritParams check_code
-#' 
 #' @param ... [pass_if()] or [fail_if()] [condition()]s to check
 #'
 #' @return a [graded()] object from either [pass_if()] or [fail_if()] containing

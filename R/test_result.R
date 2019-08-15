@@ -1,4 +1,8 @@
-#' Test the result of exercise code
+#' Test the result of exercise code.
+#'
+#' Executes tests against the final result of the user code. If
+#' a test throws an error, the test fails and the submitted answer will be
+#' marked incorrect.
 #'
 #' Executes tests against the final result of the user code. If
 #' a test throws an error, the test fails and the submitted answer will be
@@ -25,7 +29,6 @@
 #'   * `errors`: Vector of errors found
 #'
 #' @param ... ignored
-#' 
 #'
 #'
 #' @return a `grader_graded` structure from [graded()] containing a formatted

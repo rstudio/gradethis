@@ -1,4 +1,4 @@
-#' Condition object
+#' Condition object.
 #'
 #' Captures what the student passes into [pass_if()] or [fail_if()],
 #' figures out what type of object was passed into `x`,
