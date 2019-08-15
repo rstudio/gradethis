@@ -25,6 +25,7 @@
 #'   * `errors`: Vector of errors found
 #'
 #' @param ... ignored
+#' 
 #'
 #'
 #' @return a `grader_graded` structure from [graded()] containing a formatted
