@@ -2,9 +2,9 @@
 #'
 #' Unpipe one layer of piped code.
 #'
-#' `unpipe()` removes one call to \code{\link[magrittr]{\%>\%}} from an expression,
+#' `unpipe()` removes one call to \%>\% from an expression,
 #' reformatting the result as a nested function call. If the code does not
-#' contain a top-level call to \code{\link[magrittr]{\%>\%}}, `unpipe()` returns it as is.
+#' contain a top-level call to \%>\%, `unpipe()` returns it as is.
 #'
 #' @param code a quoted piece of code
 unpipe <- function(code) {

@@ -4,9 +4,10 @@
 #'
 #' `check_code()` compares student code to a solution (i.e. model code) and
 #' describes the first way that the student code differs. If the student code
-#' exactly matches the solution, `check_code()` returns a customizable success
-#' message (`correct`). If the student code does not match the solution, a
-#' customizable incorrect message (`incorrect`) can also be provided.
+#' exactly matches the solution, `check_code()` returns a customizable
+#' success message (`correct`). If the student code does not match the
+#' solution, a customizable incorrect message (`incorrect`) can also be
+#' provided.
 #'
 #' `check_code()` provides a *strict* check in that the student code must
 #' exactly match the solution. It is not enough for the student code to be
@@ -19,11 +20,12 @@
 #' argument of `check_code()`
 #'
 #' 2. Make a "-solution" code chunk for the exercise to be checked in a learnr
-#' document. There is no need to supply a solution argument for `check_code()`
-#' if you call it from the "-check" chunk of the same exercise. Likewise, there
-#' is no need to supply a student submitted code argument when you call
-#' `check_code()` from a learnr document (learnr will provide the code that the
-#' student submits when it runs `check_code()`.
+#' document. There is no need to supply a solution argument for
+#' `check_code()` if you call it from the "-check" chunk of the same
+#' exercise. Likewise, there is no need to supply a student submitted code
+#' argument when you call `check_code()` from a learnr document (learnr
+#' will provide the code that the student submits when it runs
+#' `check_code()`.
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
@@ -57,11 +59,12 @@
 #'   the student uses a pipe, `$>$`. Defaults to
 #'   `getOption("gradethis_glue_pipe")`.
 #'
-#' @return a [graded()] object. An incorrect message will describe the first way
-#'   that the answer differs, the message will be the content of the `glue_pipe`
-#'   argument.
+#' @return a [graded()] object. An incorrect message will describe the
+#'   first way that the answer differs, the message will be the content of the
+#'   `glue_pipe` argument.
 #'
-#' @seealso [check_code()], [check_result()], and [test_result()]
+#' @seealso [check_code()], [check_result()], and
+#'   [test_result()]
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}

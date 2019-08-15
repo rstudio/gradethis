@@ -42,9 +42,9 @@ the student uses a pipe, \code{$>$}. Defaults to
 \code{getOption("gradethis_glue_pipe")}.}
 }
 \value{
-a \code{\link[=graded]{graded()}} object. An incorrect message will describe the first way
-that the answer differs, the message will be the content of the \code{glue_pipe}
-argument.
+a \code{\link[=graded]{graded()}} object. An incorrect message will describe the
+first way that the answer differs, the message will be the content of the
+\code{glue_pipe} argument.
 }
 \description{
 Checks the code expression or the code result against a solution.
@@ -52,9 +52,10 @@ Checks the code expression or the code result against a solution.
 \details{
 \code{check_code()} compares student code to a solution (i.e. model code) and
 describes the first way that the student code differs. If the student code
-exactly matches the solution, \code{check_code()} returns a customizable success
-message (\code{correct}). If the student code does not match the solution, a
-customizable incorrect message (\code{incorrect}) can also be provided.
+exactly matches the solution, \code{check_code()} returns a customizable
+success message (\code{correct}). If the student code does not match the
+solution, a customizable incorrect message (\code{incorrect}) can also be
+provided.
 
 \code{check_code()} provides a \emph{strict} check in that the student code must
 exactly match the solution. It is not enough for the student code to be
@@ -66,11 +67,12 @@ You can provide solution code for \code{check_code()} to use in two ways:
 \item Pass code as a character string or a quoted expression to the solution
 argument of \code{check_code()}
 \item Make a "-solution" code chunk for the exercise to be checked in a learnr
-document. There is no need to supply a solution argument for \code{check_code()}
-if you call it from the "-check" chunk of the same exercise. Likewise, there
-is no need to supply a student submitted code argument when you call
-\code{check_code()} from a learnr document (learnr will provide the code that the
-student submits when it runs \code{check_code()}.
+document. There is no need to supply a solution argument for
+\code{check_code()} if you call it from the "-check" chunk of the same
+exercise. Likewise, there is no need to supply a student submitted code
+argument when you call \code{check_code()} from a learnr document (learnr
+will provide the code that the student submits when it runs
+\code{check_code()}.
 }
 
 For best results, name all arguments provided in the solution code.
@@ -84,5 +86,6 @@ z <- quote(sqrt(log(1)))
 check_code(grader_args = list(user_quo = y, solution_quo = z))
 }
 \seealso{
-\code{\link[=check_code]{check_code()}}, \code{\link[=check_result]{check_result()}}, and \code{\link[=test_result]{test_result()}}
+\code{\link[=check_code]{check_code()}}, \code{\link[=check_result]{check_result()}}, and
+\code{\link[=test_result]{test_result()}}
 }
