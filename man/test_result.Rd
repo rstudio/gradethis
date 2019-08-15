@@ -2,7 +2,7 @@
 % Please edit documentation in R/test_result.R
 \name{test_result}
 \alias{test_result}
-\title{Test the result of exercise code}
+\title{Test the result of exercise code.}
 \usage{
 test_result(...,
   correct = "{num_correct}/{num_total} correct! {random_praise()}",
@@ -11,8 +11,8 @@ test_result(...,
 \arguments{
 \item{...}{ignored}
 
-\item{correct}{A character string to display if all tests pass.
-This character string will be run through \code{glue::[glue_data][glue::glue_data]} with
+\item{correct}{A character string to display if all tests pass. This
+character string will be run through \code{[glue::glue_data]} with:
 \itemize{
 \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
 \item \code{num_total}: Number of tests
@@ -20,29 +20,35 @@ This character string will be run through \code{glue::[glue_data][glue::glue_dat
 }}
 
 \item{incorrect}{A character string to display if at least one test fails.
-This character string will be run through \code{glue::[glue_data][glue::glue_data]} with
+This character string will be run through \code{][glue::glue_data]} with:
 \itemize{
 \item \code{num_correct}: Number of correct tests
 \item \code{num_total}: Number of tests
 \item \code{errors}: Vector of errors found
 }}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
-This contains: \describe{
-\item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
-\item{\code{solution_quo}}{(Optional) Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+\item{grader_args}{A list of parameters passed to \code{grader} functions
+(provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
+\itemize{
+\item \code{user_quo}: Quoted R code submitted by the user. For example
+\code{[rlang::quo](1)}
+\item \code{solution_quo}: (Optional) Quoted solution R code provided by the
+\code{*-solution} chunk for an exercise.
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
-See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
+\code{learnr}. See
+\url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
+more details.}
 }
 \value{
-a \code{grader_graded} structure from \code{\link[=graded]{graded()}} containing
-a formatted \code{correct} or \code{incorrect} message.
+a \code{grader_graded} structure from \code{\link[=graded]{graded()}} containing a formatted
+\code{correct} or \code{incorrect} message.
 }
 \description{
-\code{test_result()} executes tests against the final result of the user code.
-If a test throws an error, the test fails and the submitted answer will be marked incorrect.
+Executes tests against the final result of the user code. If
+a test throws an error, the test fails and the submitted answer will be
+marked incorrect.
 }
 \examples{
 \dontrun{grading_demo()}

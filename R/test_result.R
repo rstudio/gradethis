@@ -1,29 +1,34 @@
-#' Test the result of exercise code
+#' Test the result of exercise code.
 #'
-#' `test_result()` executes tests against the final result of the user code.
-#' If a test throws an error, the test fails and the submitted answer will be marked incorrect.
-#' 
+#' Executes tests against the final result of the user code. If
+#' a test throws an error, the test fails and the submitted answer will be
+#' marked incorrect.
+#'
 #' @inheritParams check_code
 #'
-#' @param correct A character string to display if all tests pass.
-#'   This character string will be run through `glue::[glue_data][glue::glue_data]` with
-#' \itemize{
-#'   \item `num_correct`: Number of correct tests. (Equals `num_total`)
-#'   \item `num_total`: Number of tests
-#'   \item `errors`: Vector of errors found. (`NULL`)
-#' }
-#' @param incorrect A character string to display if at least one test fails.
-#'   This character string will be run through `glue::[glue_data][glue::glue_data]` with
-#' \itemize{
-#'   \item `num_correct`: Number of correct tests
-#'   \item `num_total`: Number of tests
-#'   \item `errors`: Vector of errors found
-#' }
-#' @param ... ignored
-#' 
+#' @param correct A character string to display if all tests pass. This
+#'   character string will be run through `[glue::glue_data]` with:
 #'
-#' @return a `grader_graded` structure from [graded()] containing
-#'   a formatted `correct` or `incorrect` message.
+#'   * `num_correct`: Number of correct tests. (Equals `num_total`)
+#'
+#'   * `num_total`: Number of tests
+#'
+#'   * `errors`: Vector of errors found. (`NULL`)
+#'
+#' @param incorrect A character string to display if at least one test fails.
+#'   This character string will be run through `][glue::glue_data]` with:
+#'
+#'   * `num_correct`: Number of correct tests
+#'
+#'   * `num_total`: Number of tests
+#'
+#'   * `errors`: Vector of errors found
+#'
+#' @param ... ignored
+#'
+#'
+#' @return a `grader_graded` structure from [graded()] containing a formatted
+#'   `correct` or `incorrect` message.
 #' @seealso `test`
 #' @export
 #' @examples
