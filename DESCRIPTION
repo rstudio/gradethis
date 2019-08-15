@@ -42,3 +42,4 @@ URL: https://rstudio-education.github.io/gradethis/,
     https://github.com/rstudio-education/gradethis
 BugReports: 
     https://github.com/rstudio-education/gradethis/issues
+Roxygen: list(markdown = TRUE)

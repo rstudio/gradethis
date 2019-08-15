@@ -1,6 +1,6 @@
 #' Generate Glue string from expression
 #'
-#' Checks and validates arguments passed into \code{glue} to generate messages to the student.
+#' Checks and validates arguments passed into `glue` to generate messages to the student.
 #'
 #' @param glue_expression A glue character expression string.
 #' @param ... Values to be inserted into glue expression.

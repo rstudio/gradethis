@@ -2,30 +2,30 @@
 #'
 #' Checks the code expression or the code result against a solution.
 #'
-#' \code{check_code()} compares student code to a solution (i.e. model code) and
+#' `check_code()` compares student code to a solution (i.e. model code) and
 #' describes the first way that the student code differs. If the student code
-#' exactly matches the solution, \code{check_code()} returns a customizable
-#' success message (\code{correct}). If the student code does not match the
-#' solution, a customizable incorrect message (\code{incorrect}) can also be
+#' exactly matches the solution, `check_code()` returns a customizable
+#' success message (`correct`). If the student code does not match the
+#' solution, a customizable incorrect message (`incorrect`) can also be
 #' provided.
 #'
-#' \code{check_code()} provides a *strict* check in that the student code must
+#' `check_code()` provides a *strict* check in that the student code must
 #' exactly match the solution. It is not enough for the student code to be
 #' equivalent to the solution code (e.g. to return the same result as the
 #' solution).
 #'
-#' You can provide solution code for \code{check_code()} to use in two ways:
+#' You can provide solution code for `check_code()` to use in two ways:
 #'
 #' 1. Pass code as a character string or a quoted expression to the solution
-#' argument of \code{check_code()}
+#' argument of `check_code()`
 #'
 #' 2. Make a "-solution" code chunk for the exercise to be checked in a learnr
 #' document. There is no need to supply a solution argument for
-#' \code{check_code()} if you call it from the "-check" chunk of the same
+#' `check_code()` if you call it from the "-check" chunk of the same
 #' exercise. Likewise, there is no need to supply a student submitted code
-#' argument when you call \code{check_code()} from a learnr document (learnr
+#' argument when you call `check_code()` from a learnr document (learnr
 #' will provide the code that the student submits when it runs
-#' \code{check_code()}.
+#' `check_code()`.
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
@@ -36,15 +36,15 @@
 #' @template glue_correct
 #' @template glue_incorrect
 #' @param glue_pipe A glue string that returns the final message displayed when
-#'   the student uses a pipe, \code{$>$}. Defaults to
-#'   \code{getOption("gradethis_glue_pipe")}.
+#'   the student uses a pipe, `$>$`. Defaults to
+#'   `getOption("gradethis_glue_pipe")`.
 #'
-#' @return a \code{\link{graded}} object. An incorrect message will describe the
+#' @return a [graded()] object. An incorrect message will describe the
 #'   first way that the answer differs, the message will be the content of the
-#'   \code{glue_pipe} argument.
+#'   `glue_pipe` argument.
 #'
-#' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and
-#'   \code{\link{test_result}}
+#' @seealso [check_code()], [check_result()], and
+#'   [test_result()]
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}

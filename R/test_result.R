@@ -1,29 +1,29 @@
 #' Test the result of exercise code
 #'
-#' \code{test_result()} executes tests against the final result of the user code.
+#' `test_result()` executes tests against the final result of the user code.
 #' If a test throws an error, the test fails and the submitted answer will be marked incorrect.
 #'
 #' @param correct A character string to display if all tests pass.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
+#'   This character string will be run through `glue::[glue_data][glue::glue_data]` with
 #' \itemize{
-#'   \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
-#'   \item \code{num_total}: Number of tests
-#'   \item \code{errors}: Vector of errors found. (\code{NULL})
+#'   \item `num_correct`: Number of correct tests. (Equals `num_total`)
+#'   \item `num_total`: Number of tests
+#'   \item `errors`: Vector of errors found. (`NULL`)
 #' }
 #' @param incorrect A character string to display if at least one test fails.
-#'   This character string will be run through \code{glue::\link[glue]{glue_data}} with
+#'   This character string will be run through `glue::[glue_data][glue::glue_data]` with
 #' \itemize{
-#'   \item \code{num_correct}: Number of correct tests
-#'   \item \code{num_total}: Number of tests
-#'   \item \code{errors}: Vector of errors found
+#'   \item `num_correct`: Number of correct tests
+#'   \item `num_total`: Number of tests
+#'   \item `errors`: Vector of errors found
 #' }
 #' @template grader_args
 #' @template learnr_args
 #' @param ... ignored
 #'
-#' @return a \code{grader_graded} structure from \code{\link{graded}} containing
-#'   a formatted \code{correct} or \code{incorrect} message.
-#' @seealso \code{test}
+#' @return a `grader_graded` structure from [graded()] containing
+#'   a formatted `correct` or `incorrect` message.
+#' @seealso `test`
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}

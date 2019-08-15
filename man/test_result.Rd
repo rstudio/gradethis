@@ -12,33 +12,33 @@ test_result(...,
 \item{...}{ignored}
 
 \item{correct}{A character string to display if all tests pass.
-  This character string will be run through \code{glue::\link[glue]{glue_data}} with
+This character string will be run through \code{glue::[glue_data][glue::glue_data]} with
 \itemize{
-  \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
-  \item \code{num_total}: Number of tests
-  \item \code{errors}: Vector of errors found. (\code{NULL})
+\item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
+\item \code{num_total}: Number of tests
+\item \code{errors}: Vector of errors found. (\code{NULL})
 }}
 
 \item{incorrect}{A character string to display if at least one test fails.
-  This character string will be run through \code{glue::\link[glue]{glue_data}} with
+This character string will be run through \code{glue::[glue_data][glue::glue_data]} with
 \itemize{
-  \item \code{num_correct}: Number of correct tests
-  \item \code{num_total}: Number of tests
-  \item \code{errors}: Vector of errors found
+\item \code{num_correct}: Number of correct tests
+\item \code{num_total}: Number of tests
+\item \code{errors}: Vector of errors found
 }}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
 This contains: \describe{
- \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
- \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+\item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
+\item{\code{solution_quo}}{\link{Optional} Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
 }}
 
 \item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
 See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
 }
 \value{
-a \code{grader_graded} structure from \code{\link{graded}} containing
-  a formatted \code{correct} or \code{incorrect} message.
+a \code{grader_graded} structure from \code{\link[=graded]{graded()}} containing
+a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
 \code{test_result()} executes tests against the final result of the user code.

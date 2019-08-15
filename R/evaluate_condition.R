@@ -1,13 +1,13 @@
 #' Evaluates a condition
 #'
-#' Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
+#' Evaluates the [condition()] object to return a [graded()] value.
 #'
-#' @param condition a \code{\link{condition}} object
-#' @param grader_args at minimum, a list that just contains the value for \code{solution_quo}
-#' @param learnr_args at minimum, a list that just contains the value for \code{envir_prep}
+#' @param condition a [condition()] object
+#' @param grader_args at minimum, a list that just contains the value for `solution_quo`
+#' @param learnr_args at minimum, a list that just contains the value for `envir_prep`
 #'
-#' @return a \code{\link{graded}} value if \code{condi$x} is \code{TRUE} or
-#'   \code{NULL} if \code{condi$x} is \code{FALSE}
+#' @return a [graded()] value if `condi$x` is `TRUE` or
+#'   `NULL` if `condi$x` is `FALSE`
 #' @export
 #'
 #' @examples
