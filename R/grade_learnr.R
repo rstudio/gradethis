@@ -1,20 +1,20 @@
-#' A checker function to use with \code{learnr}
+#' A checker function to use with `learnr`
 #'
-#' For exercise checking, \code{learnr} tutorials require a function that
-#' \code{learnr} can use in the background to run the code in each "-check"
-#' chunk and to format the results into a format that \code{learnr} can display.
+#' For exercise checking, `learnr` tutorials require a function that
+#' `learnr` can use in the background to run the code in each "-check"
+#' chunk and to format the results into a format that `learnr` can display.
 #' The function must accept a specific set of inputs and return a specific type
-#' of output (see \code{\link{graded}}). Instructors are not intended to use the
-#' \code{grade_learnr} function directly, but to pass it to the
-#' \code{exercise.checker} knitr chunk option within the setup chunk of the
-#' \code{learnr} tutorial.
+#' of output (see [graded()]). Instructors are not intended to use the
+#' `grade_learnr` function directly, but to pass it to the
+#' `exercise.checker` knitr chunk option within the setup chunk of the
+#' `learnr` tutorial.
 #'
 #' To enable exercise checking in your learnr tutorial, set
-#' \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
+#' `tutorial_options(exercise.checker = grade_learnr)` in the setup chunk
 #' of your tutorial.
 #'
-#' Run \code{grading_demo()} to see an example learnr document that uses
-#' \code{grade_learnr()}.
+#' Run `grading_demo()` to see an example learnr document that uses
+#' `grade_learnr()`.
 #'
 #' @param label Label for exercise chunk
 #' @param solution_code Code provided within the “-solution” chunk for the
@@ -22,7 +22,7 @@
 #' @param user_code R code submitted by the user
 #' @param check_code Code provided within the “-check” chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
-#' @param evaluate_result The return value from the \code{evaluate::evaluate}
+#' @param evaluate_result The return value from the `evaluate::evaluate`
 #'   function.
 #' @param envir_prep A copy of the R environment before the execution of the
 #'   chunk.

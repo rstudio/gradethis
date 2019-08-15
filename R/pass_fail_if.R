@@ -1,9 +1,9 @@
 #' Condition definition
 #'
-#' \code{pass_if} and \code{fail_if} are wrappers around \code{\link{condition}}
-#' that sets the proper \code{correct} argument.
-#' This allows the instructor to specify just the comparison code, \code{x},
-#' and \code{message}.
+#' `pass_if` and `fail_if` are wrappers around [condition()]
+#' that sets the proper `correct` argument.
+#' This allows the instructor to specify just the comparison code, `x`,
+#' and `message`.
 #'
 #' @describeIn condition
 #'    a condition that if matched means the student provided result is correct

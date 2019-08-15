@@ -20,24 +20,24 @@ A boolean vector will be returned if the user uses \code{==}, not a single boole
 It is advised that the user use \code{identical()} instead of \code{==} in this case.}
 
 \item{message}{character string for message returned (usually passed in from
-\code{\link{pass_if}} or \code{\link{fail_if}}}
+\code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}}}
 
 \item{correct}{logical whether the condition is the correct answer}
 }
 \value{
 a \code{grader_condition} object that contains
-  the expression \code{x},
-  the message \code{message},
-  whether or not the expression is the correct answer or not, \code{correct},
-  the type of expression (formula, function, or value), \code{type}
+the expression \code{x},
+the message \code{message},
+whether or not the expression is the correct answer or not, \code{correct},
+the type of expression (formula, function, or value), \code{type}
 }
 \description{
-Captures what the student passes into \code{\link{pass_if}} or \code{\link{fail_if}},
+Captures what the student passes into \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}},
 figures out what type of object was passed into \code{x},
 and returns a \code{grader_condition} object that will be passed into
-\code{\link{evaluate_condition}}.
+\code{\link[=evaluate_condition]{evaluate_condition()}}.
 
-\code{pass_if} and \code{fail_if} are wrappers around \code{\link{condition}}
+\code{pass_if} and \code{fail_if} are wrappers around \code{\link[=condition]{condition()}}
 that sets the proper \code{correct} argument.
 This allows the instructor to specify just the comparison code, \code{x},
 and \code{message}.
@@ -79,5 +79,5 @@ check_result(
 )
 }
 \seealso{
-\code{\link{pass_if}}, \code{\link{fail_if}}, and \code{\link{condition}}
+\code{\link[=pass_if]{pass_if()}}, \code{\link[=fail_if]{fail_if()}}, and \code{\link[=condition]{condition()}}
 }

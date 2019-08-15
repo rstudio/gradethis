@@ -17,8 +17,8 @@ check_code(correct = NULL, incorrect = NULL, grader_args = list(),
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
 This contains: \describe{
- \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
- \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+\item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
+\item{\code{solution_quo}}{\link{Optional} Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
 }}
 
 \item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
@@ -35,9 +35,9 @@ the student uses a pipe, \code{$>$}. Defaults to
 \code{getOption("gradethis_glue_pipe")}.}
 }
 \value{
-a \code{\link{graded}} object. An incorrect message will describe the
-  first way that the answer differs, the message will be the content of the
-  \code{glue_pipe} argument.
+a \code{\link[=graded]{graded()}} object. An incorrect message will describe the
+first way that the answer differs, the message will be the content of the
+\code{glue_pipe} argument.
 }
 \description{
 Checks the code expression or the code result against a solution.
@@ -50,23 +50,23 @@ success message (\code{correct}). If the student code does not match the
 solution, a customizable incorrect message (\code{incorrect}) can also be
 provided.
 
-\code{check_code()} provides a *strict* check in that the student code must
+\code{check_code()} provides a \emph{strict} check in that the student code must
 exactly match the solution. It is not enough for the student code to be
 equivalent to the solution code (e.g. to return the same result as the
 solution).
 
 You can provide solution code for \code{check_code()} to use in two ways:
-
-1. Pass code as a character string or a quoted expression to the solution
+\enumerate{
+\item Pass code as a character string or a quoted expression to the solution
 argument of \code{check_code()}
-
-2. Make a "-solution" code chunk for the exercise to be checked in a learnr
+\item Make a "-solution" code chunk for the exercise to be checked in a learnr
 document. There is no need to supply a solution argument for
 \code{check_code()} if you call it from the "-check" chunk of the same
 exercise. Likewise, there is no need to supply a student submitted code
 argument when you call \code{check_code()} from a learnr document (learnr
 will provide the code that the student submits when it runs
 \code{check_code()}.
+}
 
 For best results, name all arguments provided in the solution code.
 }
@@ -79,6 +79,6 @@ z <- quote(sqrt(log(1)))
 check_code(grader_args = list(user_quo = y, solution_quo = z))
 }
 \seealso{
-\code{\link{check_code}}, \code{\link{check_result}}, and
-  \code{\link{test_result}}
+\code{\link[=check_code]{check_code()}}, \code{\link[=check_result]{check_result()}}, and
+\code{\link[=test_result]{test_result()}}
 }

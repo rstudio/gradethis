@@ -1,12 +1,12 @@
 
 #' Check result of exercise code
 #'
-#' \code{check_result()} compares the final result of the student code to known
-#' \code{\link{pass_if}} and \code{\link{fail_if}} \code{\link{condition}}s.
-#' If the student result exactly matches a known case, \code{check_result}
+#' `check_result()` compares the final result of the student code to known
+#' [pass_if()] and [fail_if()] [condition()]s.
+#' If the student result exactly matches a known case, `check_result`
 #' returns the matching message value.
 #'
-#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check
+#' @param ... [pass_if()] or [fail_if()] [condition()]s to check
 #' @template correct
 #' @template incorrect
 #' @template grader_args
@@ -14,11 +14,11 @@
 #' @template glue_correct
 #' @template glue_incorrect
 #'
-#' @return a \code{\link{graded}} object from either
-#'   \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
-#'   \code{correct} or \code{incorrect} message and whether or not a match was found.
+#' @return a [graded()] object from either
+#'   [pass_if()] or [fail_if()] containing a formatted
+#'   `correct` or `incorrect` message and whether or not a match was found.
 #'
-#' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
+#' @seealso [check_code()], [check_result()], and [test_result()]
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
