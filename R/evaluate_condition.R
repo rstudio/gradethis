@@ -1,4 +1,4 @@
-#' Evaluates a conditio
+#' Evaluates a condition
 #'
 #' Evaluates the \code{\link{condition}} object to return a \code{\link{graded}} value.
 #'
@@ -27,7 +27,7 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
            "function" = evaluate_condi_function(condition$x, learnr_args$last_value),
            "value" = evaluate_condi_value(condition$x, learnr_args$last_value)
          )
-  }, error = function(e) {
+  }, error = function(e) { # nolint
     err_msg <<- e$message
   })
 

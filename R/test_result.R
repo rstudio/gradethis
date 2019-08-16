@@ -106,7 +106,8 @@ test_result <- function(
 #' that means the test is "passing".
 #' However, when a fail_if condition is found,
 #' that means the test is actually "failing",
-#' So we need to flip the `correct` condition in the graded object.
+#' We do not need to flip the `correct` condition in the graded object,
+#' because fail_if returns correct = FALSE
 #'
 #' This function just flips that boolean condition given depending on
 #' whether a pass_if or fail_if condition is passing or failing.
@@ -128,16 +129,10 @@ pass_fail_condition_modify <- function(condi, grader_args, learnr_args){
     return(evaluated_condi)
 
   } else { # evaluating a fail_if condition # nolint
-    if (is.null(evaluated_condi)) {
-      # if a fail_if returns NULL, it means the condition evaluated FALSE, which is a good thing
-      # if it is NULL, we give it a "correct" graded class value
-      evaluated_condi <- graded(correct = TRUE, message = NULL)
-      return(evaluated_condi)
-
-    } else {
-      # a passing fail_if is bad thing, so we flip the correct value to FALSE
-      evaluated_condi <- graded(correct = FALSE, message = NULL)
-      return(evaluated_condi)
-    }
+    # if a fail_if returns NULL, it means the condition evaluated FALSE, which is a good thing
+    # if it is NULL, we give it a "correct" graded class value
+    # a passing fail_if is bad thing, we don't need to flip becuase it reutnrs correct = FALSE
+    evaluated_condi <- evaluated_condi %||% graded(correct = TRUE, message = NULL)
+    return(evaluated_condi)
   }
 }
