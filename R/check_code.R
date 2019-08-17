@@ -1,4 +1,4 @@
-#' Check code against a solution.
+#' Check code against a solution
 #'
 #' Checks the code expression or the code result against a solution.
 #'

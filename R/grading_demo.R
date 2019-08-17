@@ -5,14 +5,14 @@
 #'
 #' The tutorial sets the learnr `exercise.checker` option to
 #' `grade_learnr()` in the document's setup chunk.
-#' 
+#'
 #' It then uses three different exercise checking methods:
 #' [check_result()], [test_result()], and [check_code()].
-#' 
+#'
 #' To use a checking method, follow the exercise chunk with a chunk whose label
 #' matches the label of the exercise chunk (ex: `myexercise`) but includes the suffix
 #' `-check` (ex: `myexercise-check`). Call any checking method in that chunk.
-#' 
+#'
 #' To ensure that checking method can provide informative feedback,
 #' you may provide custom `correct` and `incorrect` messages.
 #'
