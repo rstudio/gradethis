@@ -2,15 +2,28 @@ Package: gradethis
 Type: Package
 Title: Tools for "grading" student exercises in learnr tutorials
 Version: 0.1.0.9002
-Authors@R: c(
-  person("Daniel", "Chen", role = c("aut"), email = "daniel.chen@rstudio.com"),
-  person("Barret", "Schloerke", role = c("aut"), email = "barret@rstudio.com"),
-  person("Garrett", "Grolemund", role = c("ccp", "aut", "cre"), email = "garrett@rstudio.com"),
-  person(family = "RStudio, Inc.", role = c("cph", "fnd")),
-  person(family = "Ajax.org B.V.", role=c("ctb", "cph"), comment= "Ace library")
-  )
-Description:
-  Pairing with the 'learnr' R package, 'gradethis' provides multiple methods to grade 'learnr' exercises.  To learn more about 'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
+Authors@R: 
+    c(person(given = "Daniel",
+             family = "Chen",
+             role = "aut",
+             email = "daniel.chen@rstudio.com"),
+      person(given = "Barret",
+             family = "Schloerke",
+             role = "aut",
+             email = "barret@rstudio.com"),
+      person(given = "Garrett",
+             family = "Grolemund",
+             role = c("ccp", "aut", "cre"),
+             email = "garrett@rstudio.com"),
+      person(family = "RStudio, Inc.",
+             role = c("cph", "fnd")),
+      person(family = "Ajax.org B.V.",
+             role = c("ctb", "cph"),
+             comment = "Ace library"))
+Description: Pairing with the 'learnr' R package,
+    'gradethis' provides multiple methods to grade 'learnr' exercises.  To
+    learn more about 'learnr' tutorials, please visit
+    <http://rstudio.github.io/learnr/>.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -23,6 +36,10 @@ Imports:
     checkmate,
     testthat
 Remotes:
-  rstudio/learnr
-URL: https://rstudio-education.github.io/gradethis/, https://rstudio.github.io/learnr/, https://github.com/rstudio-education/gradethis
-BugReports: https://github.com/rstudio-education/gradethis/issues
+    rstudio/learnr
+URL: https://rstudio-education.github.io/gradethis/,
+    https://rstudio.github.io/learnr/,
+    https://github.com/rstudio-education/gradethis
+BugReports: 
+    https://github.com/rstudio-education/gradethis/issues
+Roxygen: list(markdown = TRUE)

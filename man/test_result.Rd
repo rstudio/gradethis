@@ -10,43 +10,52 @@ test_result(..., correct = NULL, incorrect = NULL,
   glue_incorrect = getOption("gradethis_glue_incorrect_test"))
 }
 \arguments{
-\item{...}{\code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check}
+\item{...}{ignored}
 
-\item{correct}{A character string to display if the student answer matches a known correct answer.}
-
-\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
-
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
-This contains: \describe{
- \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
- \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+\item{correct}{A character string to display if all tests pass. This
+character string will be run through \link[glue:glue_data]{glue::glue_data} with:
+\itemize{
+\item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
+\item \code{num_total}: Number of tests
+\item \code{errors}: Vector of errors found. (\code{NULL})
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
-See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{incorrect}{A character string to display if at least one test fails.
+This character string will be run through \code{\link[glue:glue_data]{glue::glue_data()}} with:
+\itemize{
+\item \code{num_correct}: Number of correct tests
+\item \code{num_total}: Number of tests
+\item \code{errors}: Vector of errors found
+}}
 
-\item{glue_correct}{A glue string that returns the final correct message displayed.
-Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
-2/2 correct! Absolutely fabulous!.}
+\item{grader_args}{A list of parameters passed to \code{grader} functions
+(provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
+\itemize{
+\item \code{user_quo}: Quoted R code submitted by the user. For example
+\code{\link[rlang:quo]{rlang::quo(1)}}
+\item \code{solution_quo}: (Optional) Quoted solution R code provided by the
+\code{*-solution} chunk for an exercise.
+}}
 
-\item{glue_incorrect}{A glue string that returns the final correct message displayed.
-Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
-1/2 correct! Try it again; next time's the charm!.}
+\item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
+\code{learnr}. See
+\url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
+more details.}
+
+\item{glue_correct}{A glue string that returns the final correct message
+displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message
+displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 }
 \value{
-a \code{\link{graded}} object whether or not all test cases passed.
-  If \code{\link{pass_if}} case is \code{TRUE} it is considered as passed.
-  If \code{\link{fail_if}} case is \code{FALSE} it is also considered as passed.
-  The message, by default, will report the number of passed conditions
-  over the total number of conditions
+a \code{grader_graded} structure from \code{\link[=graded]{graded()}} containing a formatted
+\code{correct} or \code{incorrect} message.
 }
 \description{
-\code{test_result()} executes tests against the final result of the user code,
-this is usually a function definition.
-This is similar to the instructor providing passing and failing unit tests of student
-written functions.
-If a test throws an error, the test fails and the submitted answer will be marked incorrect
-(i.e., a \code{\link{graded}} object with \code{correct = FALSE}).
+Executes tests against the final result of the user code. If
+a test throws an error, the test fails and the submitted answer will be
+marked incorrect.
 }
 \examples{
 \dontrun{grading_demo()}
@@ -69,5 +78,5 @@ test_result(
 )
 }
 \seealso{
-\code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
+\code{test}
 }

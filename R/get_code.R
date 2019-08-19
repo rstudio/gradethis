@@ -1,11 +1,11 @@
 #' Get Code
 #'
-#' Helper methods around \code{rlang::\link[rlang]{eval_tidy}}
+#' Helper methods around [rlang::eval_tidy()]
 #' to extract user code and solution code.
 #'
-#' @seealso \code{\link{check_result}}, \code{\link{test_result}}, and \code{\link{check_code}}
+#' @seealso [check_result()], [test_result()], and [check_code()]
 #' @param user,solution,expr An expression or quosure to evaluate.
-#' @param name Name to print if a \code{NULL} expression is provided.
+#' @param name Name to print if a `NULL` expression is provided.
 #'
 #' @describeIn get_code Get student code
 #' @inheritParams rlang::eval_tidy

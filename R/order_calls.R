@@ -1,7 +1,7 @@
 #' Order calls
 #'
 #' Turns a quoted object into a list of symbols that would represent the call as
-#' a pipe if you placed a \code{\%>\%} between each element of the list. This
+#' a pipe if you placed a \code{\link[magrittr]{\%>\%}} between each element of the list. This
 #' let's checking code evaluate the elements in the same order that R would.
 #'
 #' @noRd

@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_result.R
 \name{check_result}
 \alias{check_result}
-\title{Check result of exercise code}
+\title{Check result of exercise code.}
 \usage{
 check_result(..., correct = NULL, incorrect = NULL,
   grader_args = list(), learnr_args = list(),
@@ -10,37 +10,43 @@ check_result(..., correct = NULL, incorrect = NULL,
   glue_incorrect = getOption("gradethis_glue_incorrect"))
 }
 \arguments{
-\item{...}{\code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check}
+\item{...}{\code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s to check}
 
-\item{correct}{A character string to display if the student answer matches a known correct answer.}
+\item{correct}{A character string to display if the student answer matches a
+known correct answer.}
 
-\item{incorrect}{A character string to display if the student answer matches a known incorrect answer.}
+\item{incorrect}{A character string to display if the student answer matches
+a known incorrect answer.}
 
-\item{grader_args}{A list of parameters passed to \code{grader} functions (provided by \code{\link{grade_learnr}}).
-This contains: \describe{
- \item{\code{user_quo}}{Quoted R code submitted by the user.  Ex: \code{rlang::\link[rlang]{quo}(1)} }
- \item{\code{solution_quo}}{[Optional] Quoted solution R code provided by the \code{*-solution} chunk for an exercise.}
+\item{grader_args}{A list of parameters passed to \code{grader} functions
+(provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
+\itemize{
+\item \code{user_quo}: Quoted R code submitted by the user. For example
+\code{\link[rlang:quo]{rlang::quo(1)}}
+\item \code{solution_quo}: (Optional) Quoted solution R code provided by the
+\code{*-solution} chunk for an exercise.
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link{grade_learnr}} by \code{learnr}.
-See \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for more details.}
+\item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
+\code{learnr}. See
+\url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
+more details.}
 
-\item{glue_correct}{A glue string that returns the final correct message displayed.
-Defaults to \code{getOption("gradethis_glue_correct")}.}
+\item{glue_correct}{A glue string that returns the final correct message
+displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
 
-\item{glue_incorrect}{A glue string that returns the final incorrect message displayed.
-Defaults to \code{getOption("gradethis_glue_incorrect")}.}
+\item{glue_incorrect}{A glue string that returns the final incorrect message
+displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 }
 \value{
-a \code{\link{graded}} object from either
-  \code{\link{pass_if}} or \code{\link{fail_if}} containing a formatted
-  \code{correct} or \code{incorrect} message and whether or not a match was found.
+a \code{\link[=graded]{graded()}} object from either \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} containing
+a formatted \code{correct} or \code{incorrect} message and whether or not a match was
+found.
 }
 \description{
-\code{check_result()} compares the final result of the student code to known
-\code{\link{pass_if}} and \code{\link{fail_if}} \code{\link{condition}}s.
-If the student result exactly matches a known case, \code{check_result}
-returns the matching message value.
+Compares the final result of the student code to known \code{\link[=pass_if]{pass_if()}} and
+\code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s. If the student result exactly matches a known
+case, returns the matching message value.
 }
 \examples{
 \dontrun{grading_demo()}
@@ -68,5 +74,5 @@ check_result(
 )
 }
 \seealso{
-\code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
+\code{\link[=check_code]{check_code()}}, \code{\link[=check_result]{check_result()}}, and \code{\link[=test_result]{test_result()}}
 }

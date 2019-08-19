@@ -1,31 +1,35 @@
 #' Test the result of exercise code
 #'
-#' \code{test_result()} executes tests against the final result of the user code,
-#' this is usually a function definition.
-#' This is similar to the instructor providing passing and failing unit tests of student
-#' written functions.
-#' If a test throws an error, the test fails and the submitted answer will be marked incorrect
-#' (i.e., a \code{\link{graded}} object with \code{correct = FALSE}).
+#' Executes tests against the final result of the user code. If
+#' a test throws an error, the test fails and the submitted answer will be
+#' marked incorrect.
 #'
-#' @param ... \code{\link{pass_if}} or \code{\link{fail_if}} \code{\link{condition}}s to check
-#' @template correct
-#' @template incorrect
-#' @template grader_args
-#' @template learnr_args
-#' @param glue_correct A glue string that returns the final correct message displayed.
-#'    Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
-#'    2/2 correct! Absolutely fabulous!.
-#' @param glue_incorrect A glue string that returns the final correct message displayed.
-#'    Defaults to \code{getOption("gradethis_glue_correct_test")}, e.g.,
-#'    1/2 correct! Try it again; next time's the charm!.
+#' @inheritParams check_code
 #'
-#' @return a \code{\link{graded}} object whether or not all test cases passed.
-#'   If \code{\link{pass_if}} case is \code{TRUE} it is considered as passed.
-#'   If \code{\link{fail_if}} case is \code{FALSE} it is also considered as passed.
-#'   The message, by default, will report the number of passed conditions
-#'   over the total number of conditions
+#' @param correct A character string to display if all tests pass. This
+#'   character string will be run through [glue::glue_data] with:
 #'
-#' @seealso \code{\link{check_code}}, \code{\link{check_result}}, and \code{\link{test_result}}
+#'   * `num_correct`: Number of correct tests. (Equals `num_total`)
+#'
+#'   * `num_total`: Number of tests
+#'
+#'   * `errors`: Vector of errors found. (`NULL`)
+#'
+#' @param incorrect A character string to display if at least one test fails.
+#'   This character string will be run through [glue::glue_data()] with:
+#'
+#'   * `num_correct`: Number of correct tests
+#'
+#'   * `num_total`: Number of tests
+#'
+#'   * `errors`: Vector of errors found
+#'
+#' @param ... ignored
+#'
+#'
+#' @return a `grader_graded` structure from [graded()] containing a formatted
+#'   `correct` or `incorrect` message.
+#' @seealso `test`
 #' @export
 #' @examples
 #' \dontrun{grading_demo()}
