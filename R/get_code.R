@@ -1,6 +1,6 @@
 #' Get Code
 #'
-#' Helper methods around `rlang::[eval_tidy][rlang::eval_tidy()]
+#' Helper methods around [rlang::eval_tidy()]
 #' to extract user code and solution code.
 #'
 #' @seealso [check_result()], [test_result()], and [check_code()]
