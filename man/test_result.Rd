@@ -20,7 +20,7 @@ test_result(..., correct = NULL, incorrect = NULL,
 \item{...}{ignored}
 
 \item{correct}{A character string to display if all tests pass. This
-character string will be run through \code{[glue::glue_data]} with:
+character string will be run through \link[glue:glue_data]{glue::glue_data} with:
 \itemize{
 \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
 \item \code{num_total}: Number of tests
@@ -28,7 +28,7 @@ character string will be run through \code{[glue::glue_data]} with:
 }}
 
 \item{incorrect}{A character string to display if at least one test fails.
-This character string will be run through \code{][glue::glue_data()]} with:
+This character string will be run through \code{\link[glue:glue_data]{glue::glue_data()}} with:
 \itemize{
 \item \code{num_correct}: Number of correct tests
 \item \code{num_total}: Number of tests
