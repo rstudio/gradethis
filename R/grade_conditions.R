@@ -8,7 +8,7 @@
 #' a test throws an error, the test fails and the submitted answer will be
 #' marked incorrect.
 #'
-#' @inheritParams check_code
+#' @inheritParams grade_code
 #'
 #' @param correct A character string to display if all tests pass. This
 #'   character string will be run through [glue::glue_data] with:

@@ -4,16 +4,10 @@
 \alias{grade_conditions}
 \title{Grade all specified conditions}
 \usage{
-<<<<<<< HEAD:man/test_result.Rd
-test_result(..., correct = NULL, incorrect = NULL,
+grade_conditions(..., correct = NULL, incorrect = NULL,
   grader_args = list(), learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct_test"),
   glue_incorrect = getOption("gradethis_glue_incorrect_test"))
-=======
-grade_conditions(...,
-  correct = "{num_correct}/{num_total} correct! {random_praise()}",
-  incorrect = "", grader_args = list(), learnr_args = list())
->>>>>>> rename functions per #65 update docs and tests:man/grade_conditions.Rd
 }
 \arguments{
 \item{...}{ignored}
@@ -69,28 +63,7 @@ a test throws an error, the test fails and the submitted answer will be
 marked incorrect.
 }
 \examples{
-<<<<<<< HEAD:man/test_result.Rd
-\dontrun{grading_demo()}
-
-example_function <- function(x){
-  return(x + 1)
-}
-test_result(
-  pass_if(~ .result(3) == 4),
-  pass_if(~ .result(10) == 11),
-  grader_args = list(),
-  learnr_args = list(last_value = example_function, envir_prep = new.env())
-)
-
-test_result(
-  pass_if(~ .result(3) == 4),
-  fail_if(~ .result(10) == 11),
-  grader_args = list(),
-  learnr_args = list(last_value = example_function, envir_prep = new.env())
-)
-=======
 \dontrun{gradethis_demo()}
->>>>>>> rename functions per #65 update docs and tests:man/grade_conditions.Rd
 }
 \seealso{
 \code{test}
