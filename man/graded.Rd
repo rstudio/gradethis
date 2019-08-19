@@ -2,7 +2,7 @@
 % Please edit documentation in R/graded.R
 \name{graded}
 \alias{graded}
-\title{Graded submission value}
+\title{Graded object for submission value}
 \usage{
 graded(correct, message = NULL)
 }

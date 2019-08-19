@@ -62,9 +62,6 @@ check_code <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe")
 ) {
-  chkm8_single_character(correct)
-  chkm8_single_character(incorrect)
-
   user <- grader_args$user_quo
   solution <- grader_args$solution_quo
 

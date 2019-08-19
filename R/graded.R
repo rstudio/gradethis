@@ -1,4 +1,4 @@
-#' Graded submission value
+#' Graded object for submission value
 #'
 #'The return value from \code{graded} should be returned by every
 #'\code{*-check} chunk when used with \code{link{grade_learnr}}.
