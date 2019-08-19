@@ -9,7 +9,7 @@
 #'    a condition that if matched means the student provided result is correct
 #'
 #' @export
-#' @template check_result_examples
+#' @template grade_result_examples
 pass_if <- function(x, message = NULL) {
   condition(x, message, correct = TRUE)
 }

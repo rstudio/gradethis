@@ -31,7 +31,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{grading_demo()}
+#' \dontrun{gradethis_demo()}
 #'
 #' condition(~ identical(x = .result, 5), message = "Correct", correct = TRUE)
 condition <- function(x, message, correct) {

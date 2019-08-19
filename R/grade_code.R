@@ -1,29 +1,29 @@
-#' Check code against a solution.
+#' Grade code against a solution
 #'
 #' Checks the code expression or the code result against a solution.
 #'
-#' `check_code()` compares student code to a solution (i.e. model code) and
+#' `grade_code()` compares student code to a solution (i.e. model code) and
 #' describes the first way that the student code differs. If the student code
-#' exactly matches the solution, `check_code()` returns a customizable success
+#' exactly matches the solution, `grade_code()` returns a customizable success
 #' message (`correct`). If the student code does not match the solution, a
 #' customizable incorrect message (`incorrect`) can also be provided.
 #'
-#' `check_code()` provides a *strict* check in that the student code must
+#' `grade_code()` provides a *strict* check in that the student code must
 #' exactly match the solution. It is not enough for the student code to be
 #' equivalent to the solution code (e.g. to return the same result as the
 #' solution).
 #'
-#' You can provide solution code for `check_code()` to use in two ways:
+#' You can provide solution code for `grade_code()` to use in two ways:
 #'
 #' 1. Pass code as a character string or a quoted expression to the solution
-#' argument of `check_code()`
+#' argument of `grade_code()`
 #'
 #' 2. Make a "-solution" code chunk for the exercise to be checked in a learnr
-#' document. There is no need to supply a solution argument for `check_code()`
+#' document. There is no need to supply a solution argument for `grade_code()`
 #' if you call it from the "-check" chunk of the same exercise. Likewise, there
 #' is no need to supply a student submitted code argument when you call
-#' `check_code()` from a learnr document (learnr will provide the code that the
-#' student submits when it runs `check_code()`.
+#' `grade_code()` from a learnr document (learnr will provide the code that the
+#' student submits when it runs `grade_code()`.
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
@@ -61,16 +61,16 @@
 #'   that the answer differs, the message will be the content of the `glue_pipe`
 #'   argument.
 #'
-#' @seealso [check_code()], [check_result()], and [test_result()]
+#' @seealso [grade_code()], [grade_result()], and [grade_conditions()]
 #' @export
 #' @examples
-#' \dontrun{grading_demo()}
+#' \dontrun{gradethis_demo()}
 #'
 #' # This is a manual example, see grading demo for `learnr` tutorial usage
 #' y <- quote(sqrt(log(2)))
 #' z <- quote(sqrt(log(1)))
-#' check_code(grader_args = list(user_quo = y, solution_quo = z))
-check_code <- function(
+#' grade_code(grader_args = list(user_quo = y, solution_quo = z))
+grade_code <- function(
   correct = NULL,
   incorrect = NULL,
   grader_args = list(),

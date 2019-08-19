@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = FALSE)
 `gradethis` can check for the final returned value.
 This grading approach does not inspect the code. It only inspects the final result.
 
-See `?check_result` for more information.
+See `?grade_result` for more information.
 
 Example code written below:
 
@@ -40,7 +40,7 @@ Example code written below:
 ```
 
 `r ''````{r result-check}
-check_result(
+grade_result(
   results(
     result(1, "Custom message for value 1."),
     result(2, "Custom message for value 2.", correct = TRUE),
@@ -68,7 +68,7 @@ check_result(
 ```
 
 ```{r result-check}
-check_result(
+grade_result(
   result(1, "Custom message for value 1."),
   result(2, "Custom message for value 2.", correct = TRUE),
   result(3, "Custom message for value 3."),
@@ -80,31 +80,31 @@ check_result(
 
 `gradethis` can test against for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
 
-Writers can include as many testing functions as they would like.  The test functions should accept a single result value to test against.  If any test fails, it should throw an error.  This error message will be returned back to the user by default.  See `?test_result` for more information.
+Writers can include as many testing functions as they would like.  The test functions should accept a single result value to test against.  If any test fails, it should throw an error.  This error message will be returned back to the user by default.  See `?grade_conditions` for more information.
 
 Example code written below:
 
 ````markdown
-`r ''````{r test_result, exercise = TRUE}
+`r ''````{r grade_conditions, exercise = TRUE}
 function(x) {
   sqrt(log(x))
 }
 ```
 
-`r ''````{r test_result-hint-1}
+`r ''````{r grade_conditions-hint-1}
 "function(x) {
   sqrt(...)
 }"
 ```
 
-`r ''````{r test_result-hint-2}
+`r ''````{r grade_conditions-hint-2}
 "function(x) {
   sqrt(log(...))
 }"
 ```
 
-`r ''````{r test_result-check}
-test_result(
+`r ''````{r grade_conditions-check}
+grade_conditions(
   tests(
     function(your_answer) {
       checkmate::expect_function(your_answer, args = c("x"))
@@ -138,26 +138,26 @@ Please make a function in the exercise space below.  It should:
 
 Then click Submit Answer.
 
-```{r test_result, exercise = TRUE}
+```{r grade_conditions, exercise = TRUE}
 function(x) {
   sqrt(log(x))
 }
 ```
 
-```{r test_result-hint-1}
+```{r grade_conditions-hint-1}
 "function(x) {
   sqrt(...)
 }"
 ```
 
-```{r test_result-hint-2}
+```{r grade_conditions-hint-2}
 "function(x) {
   sqrt(log(...))
 }"
 ```
 
-```{r test_result-check}
-test_result(
+```{r grade_conditions-check}
+grade_conditions(
   tests(
     function(your_answer) {
       checkmate::expect_function(your_answer, args = c("x"))
@@ -186,7 +186,7 @@ test_result(
 
 This check method requires a `*-solution` code chunk containing the solution to compare.  Only the last solution expression and last user expression will be matched.
 
-See `?check_code` for more information.
+See `?grade_code` for more information.
 
 Example code written below:
 
@@ -208,7 +208,7 @@ sqrt(log(2))
 ```
 
 `r ''````{r strict-check}
-check_code("Good job. Don't worry, things will soon get harder.")
+grade_code("Good job. Don't worry, things will soon get harder.")
 ```
 ````
 
@@ -237,7 +237,7 @@ sqrt(log(2))
 ```
 
 ```{r strict-check}
-check_code("Good job. Don't worry, things will soon get harder.")
+grade_code("Good job. Don't worry, things will soon get harder.")
 ```
 
 

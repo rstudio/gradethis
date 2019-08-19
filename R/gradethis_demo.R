@@ -1,13 +1,13 @@
 #' Grading Demo
 #'
-#' If you are using the RStudio IDE, `grading_demo()` opens an example learnr
+#' If you are using the RStudio IDE, `gradethis_demo()` opens an example learnr
 #' file that demonstrates how to use the grader package to check student code.
 #'
 #' The tutorial sets the learnr `exercise.checker` option to
 #' `grade_learnr()` in the document's setup chunk.
 #'
 #' It then uses three different exercise checking methods:
-#' [check_result()], [test_result()], and [check_code()].
+#' [grade_result()], [grade_conditions()], and [grade_code()].
 #'
 #' To use a checking method, follow the exercise chunk with a chunk whose label
 #' matches the label of the exercise chunk (ex: `myexercise`) but includes the suffix
@@ -21,11 +21,12 @@
 #'
 #' @export
 #' @importFrom utils browseURL
-grading_demo <- function() {
-  grading_demo_path <- system.file("tutorials", "grading-demo/grading-demo.Rmd", package = "grader")
+gradethis_demo <- function() {
+  gradethis_demo_path <- system.file("tutorials", "grading-demo/grading-demo.Rmd",
+                                     package = "grader")
   if (rstudioapi::isAvailable()) {
-    rstudioapi::navigateToFile(grading_demo_path)
+    rstudioapi::navigateToFile(gradethis_demo_path)
   } else {
-    browseURL(paste0("file://", grading_demo_path))
+    browseURL(paste0("file://", gradethis_demo_path))
   }
 }

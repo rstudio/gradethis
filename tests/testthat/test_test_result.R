@@ -11,29 +11,70 @@ test_that("Test formula type", {
     return(x + 1)
   }
 
-  expect_correct(
-    test_result(
-        pass_if(~ .result(3) == 4),
-        pass_if(~ .result(10) == 11),
-        grader_args = list(),
-        learnr_args = list(last_value = example_function, envir_prep = new.env())
-    )
+  expect_message(
+    grade_conditions(
+      grader_args = list(user_quo = user),
+      checkmate::expect_numeric
+    ),
+    "1/1", TRUE
   )
 
-  expect_wrong(
-    test_result(
-        pass_if(~ .result(3) == 4),
-        fail_if(~ .result(10) == 11),
-        grader_args = list(),
-        learnr_args = list(last_value = example_function, envir_prep = new.env())
-    )
+  # nolint start
+  # expect_message(
+  #   grade_conditions(
+  #     grader_args = list(user_quo = user),
+  #     checkmate::expect_numeric,
+  #     checkmate::expect_character
+  #   ),
+  #   "1/2", FALSE
+  # )
+
+  # expect_message(
+  #   grade_conditions(
+  #     grader_args = list(user_quo = user),
+  #     checkmate::expect_numeric,
+  #     test("test: is character", checkmate::expect_character)
+  #   ),
+  #   "test: is character", FALSE
+  # )
+  # nolint end
+})
+
+
+test_that("Gives correct message", {
+
+  # empty
+  # no longer testing for empty user code
+  # expect_message(
+  #   grade_conditions(
+  #     grader_args = list(user_quo = rlang::quo(NULL)),
+  #     empty_msg = "NOT FOUND",
+  #     checkmate::expect_numeric
+  #   ),
+  #   "NOT FOUND", FALSE
+  # )
+
+
+  user <- quote(1)
+
+  # correct
+  expect_message(
+    grade_conditions(
+      grader_args = list(user_quo = user),
+      correct = "{num_correct}-{num_total}",
+      checkmate::expect_numeric
+    ),
+    "1-1", TRUE
   )
 
-  expect_wrong(
-    test_result(
-        pass_if(~ .result(100) == 1),
-        grader_args = list(),
-        learnr_args = list(last_value = example_function, envir_prep = new.env())
-    )
+  # incorrect
+  expect_message(
+    grade_conditions(
+      grader_args = list(user_quo = user),
+      incorrect = "{num_correct}-{num_total}",
+      checkmate::expect_numeric,
+      checkmate::expect_character
+    ),
+    "1-2", FALSE
   )
 })

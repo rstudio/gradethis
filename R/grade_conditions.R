@@ -1,4 +1,4 @@
-#' Test the result of exercise code.
+#' Grade all specified conditions
 #'
 #' Executes tests against the final result of the user code. If
 #' a test throws an error, the test fails and the submitted answer will be
@@ -36,25 +36,8 @@
 #' @seealso `test`
 #' @export
 #' @examples
-#' \dontrun{grading_demo()}
-#'
-#' example_function <- function(x){
-#'   return(x + 1)
-#' }
-#' test_result(
-#'   pass_if(~ .result(3) == 4),
-#'   pass_if(~ .result(10) == 11),
-#'   grader_args = list(),
-#'   learnr_args = list(last_value = example_function, envir_prep = new.env())
-#' )
-#'
-#' test_result(
-#'   pass_if(~ .result(3) == 4),
-#'   fail_if(~ .result(10) == 11),
-#'   grader_args = list(),
-#'   learnr_args = list(last_value = example_function, envir_prep = new.env())
-#' )
-test_result <- function(
+#' \dontrun{gradethis_demo()}
+grade_conditions <- function(
   ...,
   correct = NULL,
   incorrect = NULL,
@@ -124,6 +107,7 @@ test_result <- function(
 #' In order to calculate the number of passing conditions,
 #' we can then sum the boolean vector.
 #' @noRd
+<<<<<<< HEAD:R/test_result.R
 pass_fail_condition_modify <- function(condi, grader_args, learnr_args){
   evaluated_condi <- evaluate_condition(condi, grader_args, learnr_args)
 
@@ -143,4 +127,43 @@ pass_fail_condition_modify <- function(condi, grader_args, learnr_args){
     evaluated_condi <- evaluated_condi %||% graded(correct = TRUE, message = NULL)
     return(evaluated_condi)
   }
+=======
+#' @rdname test
+#' @examples
+#'
+#' tests(
+#'   function(your_answer) {
+#'     checkmate::expect_function(your_answer, args = c("x"))
+#'   },
+#'   test(
+#'     # use a custom error message
+#'     "Make sure your function returns a number!",
+#'     function(your_answer) {
+#'       checkmate::expect_number(your_answer(1))
+#'     }
+#'   ),
+#'   function(your_answer) {
+#'     testthat::expect_equal(your_answer(0), NaN)
+#'   },
+#'   function(your_answer) {
+#'     testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
+#'   }
+#' )
+#'
+#' \dontrun{gradethis_demo()}
+grader_tests <- function(...) {
+  fns <- list(...)
+  lapply(fns, function(fn) {
+    checkmate::assert_function(fn)
+    if (length(formals(fn)) == 0) {
+      stop("The function must be able to accept the user submission")
+    }
+  })
+  structure(
+    class = "grader_tests",
+    list(
+      fns = list(...)
+    )
+  )
+>>>>>>> rename functions per #65 update docs and tests:R/grade_conditions.R
 }

@@ -13,7 +13,7 @@
 #' `tutorial_options(exercise.checker = grade_learnr)` in the setup chunk
 #' of your tutorial.
 #'
-#' Run `grading_demo()` to see an example learnr document that uses
+#' Run `gradethis_demo()` to see an example learnr document that uses
 #' `grade_learnr()`.
 #'
 #' @param label Label for exercise chunk
@@ -34,7 +34,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{grading_demo()}
+#' \dontrun{gradethis_demo()}
 grade_learnr <- function(label = NULL,
                          solution_code = NULL,
                          user_code = NULL,
