@@ -49,7 +49,7 @@
 #'   a formatted `correct` or `incorrect` message.
 =======
 #' @param correct A character string to display if all tests pass. This
-#'   character string will be run through `[glue::glue_data]` with:
+#'   character string will be run through [glue::glue_data] with:
 #'
 #'   * `num_correct`: Number of correct tests. (Equals `num_total`)
 #'
@@ -58,7 +58,7 @@
 #'   * `errors`: Vector of errors found. (`NULL`)
 #'
 #' @param incorrect A character string to display if at least one test fails.
-#'   This character string will be run through `][glue::glue_data()]` with:
+#'   This character string will be run through [glue::glue_data()] with:
 #'
 #'   * `num_correct`: Number of correct tests
 #'
