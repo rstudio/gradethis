@@ -107,7 +107,6 @@ grade_conditions <- function(
 #' In order to calculate the number of passing conditions,
 #' we can then sum the boolean vector.
 #' @noRd
-<<<<<<< HEAD:R/test_result.R
 pass_fail_condition_modify <- function(condi, grader_args, learnr_args){
   evaluated_condi <- evaluate_condition(condi, grader_args, learnr_args)
 
@@ -127,43 +126,4 @@ pass_fail_condition_modify <- function(condi, grader_args, learnr_args){
     evaluated_condi <- evaluated_condi %||% graded(correct = TRUE, message = NULL)
     return(evaluated_condi)
   }
-=======
-#' @rdname test
-#' @examples
-#'
-#' tests(
-#'   function(your_answer) {
-#'     checkmate::expect_function(your_answer, args = c("x"))
-#'   },
-#'   test(
-#'     # use a custom error message
-#'     "Make sure your function returns a number!",
-#'     function(your_answer) {
-#'       checkmate::expect_number(your_answer(1))
-#'     }
-#'   ),
-#'   function(your_answer) {
-#'     testthat::expect_equal(your_answer(0), NaN)
-#'   },
-#'   function(your_answer) {
-#'     testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
-#'   }
-#' )
-#'
-#' \dontrun{gradethis_demo()}
-grader_tests <- function(...) {
-  fns <- list(...)
-  lapply(fns, function(fn) {
-    checkmate::assert_function(fn)
-    if (length(formals(fn)) == 0) {
-      stop("The function must be able to accept the user submission")
-    }
-  })
-  structure(
-    class = "grader_tests",
-    list(
-      fns = list(...)
-    )
-  )
->>>>>>> rename functions per #65 update docs and tests:R/grade_conditions.R
 }
