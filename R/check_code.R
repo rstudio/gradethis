@@ -37,7 +37,7 @@
 #'   (provided by [grade_learnr()]). This contains:
 #'
 #'   * `user_quo`: Quoted R code submitted by the user. For example
-#'   `[rlang::quo](1)`
+#'   \code{\link[rlang:quo]{rlang::quo(1)}}
 #'
 #'   * `solution_quo`: (Optional) Quoted solution R code provided by the
 #'   `*-solution` chunk for an exercise.

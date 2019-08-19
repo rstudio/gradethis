@@ -22,7 +22,7 @@ a known incorrect answer.}
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
 \itemize{
 \item \code{user_quo}: Quoted R code submitted by the user. For example
-\code{[rlang::quo](1)}
+\code{\link[rlang:quo]{rlang::quo(1)}}
 \item \code{solution_quo}: (Optional) Quoted solution R code provided by the
 \code{*-solution} chunk for an exercise.
 }}

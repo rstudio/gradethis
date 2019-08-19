@@ -2,7 +2,7 @@
 % Please edit documentation in R/check_code.R
 \name{check_code}
 \alias{check_code}
-\title{Check code against a solution.}
+\title{Check code against a solution}
 \usage{
 check_code(correct = NULL, incorrect = NULL, grader_args = list(),
   learnr_args = list(),
@@ -21,7 +21,7 @@ a known incorrect answer.}
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
 \itemize{
 \item \code{user_quo}: Quoted R code submitted by the user. For example
-\code{[rlang::quo](1)}
+\code{\link[rlang:quo]{rlang::quo(1)}}
 \item \code{solution_quo}: (Optional) Quoted solution R code provided by the
 \code{*-solution} chunk for an exercise.
 }}
