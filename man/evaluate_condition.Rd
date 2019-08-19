@@ -2,7 +2,7 @@
 % Please edit documentation in R/evaluate_condition.R
 \name{evaluate_condition}
 \alias{evaluate_condition}
-\title{Evaluates a conditio}
+\title{Evaluates a condition}
 \usage{
 evaluate_condition(condition, grader_args, learnr_args)
 }
