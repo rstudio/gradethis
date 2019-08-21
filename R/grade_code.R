@@ -82,7 +82,9 @@ grade_code <- function(
   user <- grader_args$user_quo
   solution <- grader_args$solution_quo
 
-  is_same_info <- code_is_same(user, solution)
+
+
+  is_same_info <- is_code_same(user, solution)
 
   if (is_same_info$correct) {
     return(
@@ -123,7 +125,7 @@ grade_code <- function(
 
 
 
-code_is_same <- function(user = NULL, solution = NULL) {
+is_code_same <- function(user = NULL, solution = NULL) {
 
   # Sometimes no solution is provided, but that
   # means there is nothing to check against
