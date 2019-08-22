@@ -153,19 +153,8 @@ is_code_identical <- function(user = NULL, solution = NULL) {
 
   # Correct answers are all alike
   if (identical(user, solution)) {
-    # return(graded(correct = TRUE, message = NULL))
     return(TRUE)
   } else {
     return(FALSE)
   }
-
-  # message <- detect_mistakes(user, solution)
-  # if (is.null(message)) {
-  #   # found no errors
-  #   return(graded(correct = TRUE, message = NULL))
-  # }
-
-  # return(
-  #   graded(correct = FALSE, message = message)
-  # )
 }

@@ -66,6 +66,24 @@ renest <- function(lst, .call = FALSE) {
   else deparse(code)
 }
 
+
+call_standardise_formals <- function(code, env = rlang::caller_env()) {
+  fxn <- rlang::call_fn(code, env = env)
+  forms <- rlang::fn_fmls(fxn)
+  default_params <- forms[!vapply(forms, is.symbol, logical(1), USE.NAMES = FALSE)]
+
+  code_std <- rlang::call_standardise(code, env = env) # order and label existing params
+
+  code_params <- rlang::call_args(code_std) # get arguments passed from user
+  code_missing_default_args <- default_params[!names(default_params) %in% names(code_params)]
+
+  full_code_params <- c(code_params, code_missing_default_args)
+
+  return(
+    rlang::call_standardise(rlang::call_modify(code_std, !!!full_code_params), env = env)
+  )
+}
+
 # Modified from pryr::standardise_call
 # Returns a version of the call that has
 # arguments in a standard order and

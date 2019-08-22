@@ -1,3 +1,5 @@
+# given a user and solution expression,
+# recursively detect differences
 detect_mistakes <- function(user,
                             solution, env = parent.frame()) {
   force(env)
