@@ -44,7 +44,7 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
     res <- !all(is.na(res)) && all(res, na.rm = TRUE)
   }
 
-  # implement when we add a `exec`/`expect` api to check_result
+  # implement when we add a `exec`/`expect` api to grade_result
   # will account for function returns
   # if (inherits(res, 'grader_graded')) {return(res)} # nolint
   if (is.null(res)) return(NULL)

@@ -49,9 +49,9 @@ To enable exercise checking in your learnr tutorial, set
 \code{tutorial_options(exercise.checker = grade_learnr)} in the setup chunk
 of your tutorial.
 
-Run \code{grading_demo()} to see an example learnr document that uses
+Run \code{gradethis_demo()} to see an example learnr document that uses
 \code{grade_learnr()}.
 }
 \examples{
-\dontrun{grading_demo()}
+\dontrun{gradethis_demo()}
 }

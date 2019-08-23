@@ -1,10 +1,14 @@
-#' Test the result of exercise code
+#' Grade all specified conditions
 #'
 #' Executes tests against the final result of the user code. If
 #' a test throws an error, the test fails and the submitted answer will be
 #' marked incorrect.
 #'
-#' @inheritParams check_code
+#' Executes tests against the final result of the user code. If
+#' a test throws an error, the test fails and the submitted answer will be
+#' marked incorrect.
+#'
+#' @inheritParams grade_code
 #'
 #' @param correct A character string to display if all tests pass. This
 #'   character string will be run through [glue::glue_data] with:
@@ -32,25 +36,26 @@
 #' @seealso `test`
 #' @export
 #' @examples
-#' \dontrun{grading_demo()}
+#' \dontrun{gradethis_demo()}
 #'
 #' example_function <- function(x){
 #'   return(x + 1)
 #' }
-#' test_result(
+#' grade_conditions(
 #'   pass_if(~ .result(3) == 4),
 #'   pass_if(~ .result(10) == 11),
 #'   grader_args = list(),
 #'   learnr_args = list(last_value = example_function, envir_prep = new.env())
 #' )
 #'
-#' test_result(
+#' grade_conditions(
 #'   pass_if(~ .result(3) == 4),
 #'   fail_if(~ .result(10) == 11),
 #'   grader_args = list(),
 #'   learnr_args = list(last_value = example_function, envir_prep = new.env())
 #' )
-test_result <- function(
+#'
+grade_conditions <- function(
   ...,
   correct = NULL,
   incorrect = NULL,

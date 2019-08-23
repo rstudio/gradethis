@@ -1,10 +1,10 @@
-#' Check result of exercise code.
+#' Grade result of exercise code
 #'
 #' Compares the final result of the student code to known [pass_if()] and
 #' [fail_if()] [condition()]s. If the student result exactly matches a known
 #' case, returns the matching message value.
 #'
-#' @inheritParams check_code
+#' @inheritParams grade_code
 #'
 #' @param ... [pass_if()] or [fail_if()] [condition()]s to check
 #'
@@ -12,13 +12,13 @@
 #'   a formatted `correct` or `incorrect` message and whether or not a match was
 #'   found.
 #'
-#' @seealso [check_code()], [check_result()], and [test_result()]
+#' @seealso [grade_code()], [grade_result()], and [grade_conditions()]
 #' @export
 #' @examples
-#' \dontrun{grading_demo()}
+#' \dontrun{gradethis_demo()}
 #'
-#' @template check_result_examples
-check_result <- function(
+#' @template grade_result_examples
+grade_result <- function(
   ...,
   correct = NULL,
   incorrect = NULL,

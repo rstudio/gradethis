@@ -3,7 +3,7 @@
 #' Helper methods around [rlang::eval_tidy()]
 #' to extract user code and solution code.
 #'
-#' @seealso [check_result()], [test_result()], and [check_code()]
+#' @seealso [grade_result()], [grade_conditions()], and [grade_code()]
 #' @param user,solution,expr An expression or quosure to evaluate.
 #' @param name Name to print if a `NULL` expression is provided.
 #'

@@ -1,4 +1,4 @@
-insert_exercise_check_code <- function() {
+insert_exercise_grade_code <- function() {
   random_chunk_label <- generate_random_chunk_label()
 
   # nolint start
@@ -25,13 +25,13 @@ ____
 
 ```{r <<random_chunk_label>>-check}
 # check code
-gradethis::check_code()
+gradethis::grade_code()
 ```
 " , .open = "<<", .close = ">>"))
   # nolint end
 }
 
-insert_exercise_check_result <- function() {
+insert_exercise_grade_result <- function() {
   random_chunk_label <- generate_random_chunk_label()
 
   # nolint start
@@ -52,7 +52,7 @@ ____
 ```
 
 ```{r <<random_chunk_label>>-check}
-gradethis::check_result(
+gradethis::grade_result(
   gradethis::pass_if(~ identical(.result, 1), \"YAY!\"),
   gradethis::fail_if(~ identical(.result, 2), \"Try Again.\")
 )
