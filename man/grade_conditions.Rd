@@ -64,6 +64,24 @@ marked incorrect.
 }
 \examples{
 \dontrun{gradethis_demo()}
+
+example_function <- function(x){
+  return(x + 1)
+}
+grade_conditions(
+  pass_if(~ .result(3) == 4),
+  pass_if(~ .result(10) == 11),
+  grader_args = list(),
+  learnr_args = list(last_value = example_function, envir_prep = new.env())
+)
+
+grade_conditions(
+  pass_if(~ .result(3) == 4),
+  fail_if(~ .result(10) == 11),
+  grader_args = list(),
+  learnr_args = list(last_value = example_function, envir_prep = new.env())
+)
+
 }
 \seealso{
 \code{test}
