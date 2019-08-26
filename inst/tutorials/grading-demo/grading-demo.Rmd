@@ -1,5 +1,5 @@
 ---
-title: "Grading demo"
+title: "Gradethis demo"
 output: learnr::tutorial
 runtime: shiny_prerendered
 # editor_options:
@@ -10,43 +10,43 @@ runtime: shiny_prerendered
 library(learnr)
 library(gradethis)
 
-tutorial_options(exercise.timelimit = 60, exercise.checker = grade_learnr)
+tutorial_options(exercise.timelimit = 60, exercise.checker = gradethis::grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Grading Types
-
-### Check Exercise Result
+## Grade Exercise Result
 
 `gradethis` can check for the final returned value.
-This grading approach does not inspect the code. It only inspects the final result.
+This grading approach does not inspect the code.
+It only inspects the final result.
+
+The final result submitted by the "student" is captured with the `.result` value.
 
 See `?grade_result` for more information.
 
 Example code written below:
 
 ````markdown
-`r ''````{r result, exercise = TRUE}
+`r ''````{r grade_result, exercise = TRUE}
 3
 ```
 
-`r ''````{r result-hint-1}
+`r ''````{r grade_result-hint-1}
 "Is it an even number"
 ```
 
-`r ''````{r result-hint-2}
+`r ''````{r grade_result-hint-2}
 "Enter an even number below 5"
 ```
 
-`r ''````{r result-check}
+`r ''````{r grade_result-check}
 grade_result(
-  results(
-    result(1, "Custom message for value 1."),
-    result(2, "Custom message for value 2.", correct = TRUE),
-    result(3, "Custom message for value 3."),
-    result(4, "Custom message for value 4.", correct = TRUE)
-  )
+  fail_if(~ identical(.result, 1), "Custom message for value 1."),
+  pass_if(~ identical(.result, 2), "Custom message for value 2."),
+  fail_if(~ identical(.result, 3), "Custom message for value 3."),
+  pass_if(~ identical(.result %% 2, 0) && (.result < 5),
+          "Even number below 5")
 )
 ```
 ````
@@ -55,74 +55,131 @@ grade_result(
 
 * Enter an small even number, then click Submit Answer.
 
-```{r result, exercise = TRUE}
+```{r grade_result, exercise = TRUE}
 3
 ```
 
-```{r result-hint-1}
+```{r grade_result-hint-1}
 "Is it an even number"
 ```
 
-```{r result-hint-2}
+```{r grade_result-hint-2}
 "Enter an even number below 5"
 ```
 
-```{r result-check}
+```{r grade_result-check}
 grade_result(
-  result(1, "Custom message for value 1."),
-  result(2, "Custom message for value 2.", correct = TRUE),
-  result(3, "Custom message for value 3."),
-  result(4, "Custom message for value 4.", correct = TRUE)
+  fail_if(~ identical(.result, 1), "Custom message for value 1."),
+  pass_if(~ identical(.result, 2), "Custom message for value 2."),
+  fail_if(~ identical(.result, 3), "Custom message for value 3."),
+  pass_if(~ identical(.result %% 2, 0) && (.result < 5),
+          "Even number below 5")
 )
 ```
 
-### Test Exercise Result
+## Grade Exercise Code
 
-`gradethis` can test against for the final returned value.  This grading approach does not inspect the code. It only inspects the final result.
+`gradethis` can test against an exact code match.
+This grading approach does not inspect the computed result.
 
-Writers can include as many testing functions as they would like.  The test functions should accept a single result value to test against.  If any test fails, it should throw an error.  This error message will be returned back to the user by default.  See `?grade_conditions` for more information.
+This check method requires a `*-solution` code chunk containing the solution to compare.
+Only the last solution expression and last user expression will be matched.
+
+See `?grade_code` for more information.
+
+Example code written below:
+
+````markdown
+`r ''````{r grade_code, exercise = TRUE}
+sqrt(exp(3))
+```
+
+`r ''```{r grade_code-hint-1}
+"You can take the log with `log()`"
+```
+
+`r ''```{r grade_code-hint-2}
+"You can take the square root with `sqrt()`"
+```
+
+`r ''````{r grade_code-solution}
+sqrt(log(2))
+```
+
+`r ''```{r grade_code-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+````
+
+<!-- Need this here so the rstudio editor will color code things correctly
+```
+-->
+
+---------------------------
+
+Here is a number. You can do great things with it, like this:
+
+* Take the square root of the log of the number `2`.
+
+Then click Submit Answer.
+
+```{r grade_code, exercise = TRUE}
+sqrt(exp(3))
+```
+
+```{r grade_code-hint-1}
+"You can take the log with `log()`"
+```
+
+```{r grade_code-hint-2}
+"You can take the square root with `sqrt()`"
+```
+
+```{r grade_code-solution}
+sqrt(log(2))
+```
+
+```{r grade_code-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+
+## Grade Exercise Conditions
+
+`gradethis` can create multiple tests against for the final returned value.
+This grading approach does not inspect the code.
+It only inspects the final result against all conditions.
+
+This method is analogous to creating unit tests that all need to pass.
+
+See `?grade_conditions` for more information.
 
 Example code written below:
 
 ````markdown
 `r ''````{r grade_conditions, exercise = TRUE}
 function(x) {
-  sqrt(log(x))
+  # solution is x + 1L
+  x + 1
 }
 ```
 
 `r ''````{r grade_conditions-hint-1}
-"function(x) {
-  sqrt(...)
-}"
+"Function should add an integer 1"
 ```
 
 `r ''````{r grade_conditions-hint-2}
-"function(x) {
-  sqrt(log(...))
-}"
+"Integers are created by adding a L to the number, e.g., 10L"
 ```
 
 `r ''````{r grade_conditions-check}
 grade_conditions(
-  tests(
-    function(your_answer) {
-      checkmate::expect_function(your_answer, args = c("x"))
-    },
-    test(
-      # use a custom error message
-      "Make sure your function returns a number!",
-      function(your_answer) {
-        checkmate::expect_number(your_answer(1))
-      }
-    ),
-    function(your_answer) {
-      testthat::expect_equal(your_answer(0), NaN)
-    },
-    function(your_answer) {
-      testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
-    }
-  )
+  pass_if(~ .result(3) == 4),
+  pass_if(~ identical(.result(0), 1)),
+  pass_if(~ identical(sapply(1:10, .result), 2:11)),
+  pass_if(~ sapply(1:10, .result) == 2:11),
+  pass_if(~ all.equal(sapply(1:10, .result), 2:11)),
+  pass_if(~ checkmate::test_function(.result, args = c("x")))
 )
 ```
 ````
@@ -133,120 +190,40 @@ grade_conditions(
 Please make a function in the exercise space below.  It should:
 
 * Take a single `x` argument
-* Take the `log` of `x`
-* Take the `sqrt` of the logged value.
+* Add the integer `1` to the `x` value.
 
 Then click Submit Answer.
 
 ```{r grade_conditions, exercise = TRUE}
 function(x) {
-  sqrt(log(x))
+  # solution is x + 1L
+  x + 1
 }
 ```
 
 ```{r grade_conditions-hint-1}
-"function(x) {
-  sqrt(...)
-}"
+"Function should add an integer 1"
 ```
 
 ```{r grade_conditions-hint-2}
-"function(x) {
-  sqrt(log(...))
-}"
+"Integers are created by adding a L to the number, e.g., 10L"
 ```
 
 ```{r grade_conditions-check}
 grade_conditions(
-  tests(
-    function(your_answer) {
-      checkmate::expect_function(your_answer, args = c("x"))
-    },
-    test(
-      # use a custom error message
-      "Make sure your function returns a number!",
-      function(your_answer) {
-        checkmate::expect_number(your_answer(1))
-      }
-    ),
-    function(your_answer) {
-      testthat::expect_equal(your_answer(0), NaN)
-    },
-    function(your_answer) {
-      testthat::expect_equal(your_answer(1:10), sqrt(log(1:10)))
-    }
-  )
+  pass_if(~ .result(3) == 4),
+  pass_if(~ identical(.result(0), 1)),
+  pass_if(~ identical(sapply(1:10, .result), 2:11)),
+  pass_if(~ sapply(1:10, .result) == 2:11),
+  pass_if(~ all.equal(sapply(1:10, .result), 2:11)),
+  pass_if(~ checkmate::test_function(.result, args = c("x")))
 )
 ```
 
-
-### Check Exercise Code
-
-`gradethis` can test against an exact code match.  This grading approach does not inspect the computed result.
-
-This check method requires a `*-solution` code chunk containing the solution to compare.  Only the last solution expression and last user expression will be matched.
-
-See `?grade_code` for more information.
-
-Example code written below:
-
-````markdown
-`r ''````{r strict, exercise = TRUE}
-2
-```
-
-`r ''````{r strict-hint-1}
-"You can take the log with `log()`"
-```
-
-`r ''````{r strict-hint-2}
-"You can take the square root with `sqrt()`"
-```
-
-`r ''````{r strict-solution}
-sqrt(log(2))
-```
-
-`r ''````{r strict-check}
-grade_code("Good job. Don't worry, things will soon get harder.")
-```
-````
-
----------------------------
-
-Here is a number. You can do great things with it, like this:
-
-* Take the square root of the log of the number `2`.
-
-Then click Submit Answer.
-
-```{r strict, exercise = TRUE}
-2
-```
-
-```{r strict-hint-1}
-"You can take the log with `log()`"
-```
-
-```{r strict-hint-2}
-"You can take the square root with `sqrt()`"
-```
-
-```{r strict-solution}
-sqrt(log(2))
-```
-
-```{r strict-check}
-grade_code("Good job. Don't worry, things will soon get harder.")
-```
-
-
-
-
-
 ## Custom Checking Code
 
-`gradethis` can accept any checking method that returns a `gradethis::result` object.  The example below returns a correct/incorrect answer with 50/50 probability.
+`gradethis` can accept any checking method that returns a `gradethis::graded` object.
+The example below returns a correct/incorrect answer with 50/50 probability.
 
 
 ````markdown
@@ -262,8 +239,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  gradethis::result(
-    x = user,
+  gradethis::graded(
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
   )
@@ -290,8 +266,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  gradethis::result(
-    x = user,
+  gradethis::graded(
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
   )
