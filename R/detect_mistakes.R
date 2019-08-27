@@ -11,6 +11,10 @@ detect_mistakes <- function(user,
   user <- rev(order_calls(unpipe_all(user), env = env))
   solution <- rev(order_calls(unpipe_all(solution), env = env))
 
+  
+  # do comparing named and unnamed arguments here
+  # probably something using rlang::call_arg_names
+  
   max_length <- max(length(user), length(solution))
 
   for (i in seq_len(max_length)) {

@@ -53,7 +53,9 @@ test_that("Spots differences in calls", {
   )
 
   expect_message(
-    grade_code(grader_args = list(user_quo = a, solution_quo = b)),
+    grade_code(grader_args = list(user_quo = a, solution_quo = b),
+               glue_correct = '{ .message } { .correct }',
+               glue_incorrect = '{ .message } { .incorrect }'),
     wrong_value(this = quote(lists), that = quote(vecs))
   )
 
