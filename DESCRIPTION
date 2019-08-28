@@ -43,3 +43,7 @@ URL: https://rstudio-education.github.io/gradethis/,
 BugReports: 
     https://github.com/rstudio-education/gradethis/issues
 Roxygen: list(markdown = TRUE)
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
