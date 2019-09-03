@@ -157,11 +157,18 @@ This is similar to providing a set of unit tests for a student provided function
 
 # Using `gradethis` as a standlone grader
 
+```{r}
+library(gradethis)
+```
+
 The grading functions, `grade_code`, `grade_result`, and `grade_conditions` can also be used
 outside the `learnr` context.
 The instructor will have to manually provide the
 result (in the case of `grade_result`, and `grade_conditions`) or
 a `quote`d expression (in the case of `grade_code`) manually.
+
+All of the grading function will return a `gradethis::graded` object
+with a `message`, `correct` status.
 
 ## Grade code
 
@@ -176,12 +183,26 @@ solution_code <- quote(sqrt(log(2)))
 gradethis::grade_code(grader_args = list(
   user_quo = student_code,
   solution_quo = solution_code
-))
+  )
+)
 ```
 
+## Grade result
 
+To manually grade a result, the student result needs to be passed as a
+`last_value` in the `learnr_args` parameter.
 
-## Grade result/conditions
+```{r}
+student_solution <- 5
+```
+
+```{r}
+gradethis::grade_result(
+  pass_if(5, "You also got a value of 5!"),
+  learnr_args = list(last_value = student_solution)
+)
+```
+
 
 
 [learnr]: https://rstudio.github.io/learnr
