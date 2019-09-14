@@ -39,6 +39,7 @@ detect_mistakes <- function(user,
   NULL
 }
 
+# nolint start
 isolate_mismatch <- function(user, solution, i) {
 
   # We've honed in on the error when we can narrow
@@ -148,6 +149,7 @@ isolate_mismatch <- function(user, solution, i) {
   }
   NULL
 }
+# nolint end
 
 real_name <- function(name) {
  !is.null(name) && name != ""

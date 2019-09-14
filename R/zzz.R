@@ -11,7 +11,7 @@ gradethis_default_options <- list(
   gradethis_glue_incorrect_test = "{ .num_correct }/{ .num_total } correct! { random_encourage() }"
 )
 
-.onLoad <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) { # nolint
   op <- options()
   toset <- !(names(gradethis_default_options) %in% names(op))
   if (any(toset)) options(gradethis_default_options[toset])
