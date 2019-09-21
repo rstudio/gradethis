@@ -33,5 +33,5 @@ To view the latest grading demo of the different checking methods:
 
 ``` r
 library(gradethis)
-gradethis::gradethis_demo())
+gradethis::gradethis_demo()
 ```
