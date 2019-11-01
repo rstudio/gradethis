@@ -1,56 +1,56 @@
 # given a user and solution expression,
 # recursively detect differences
-detect_mistakes_old <- function(user,
-                            solution, env = parent.frame()) {
-  force(env)
-
-  # code should be checked in the opposite order
-  # of evaluation (e.g. from the outside in for
-  # nested notation), whether or not the student
-  # (and/or teacher) used a pipe
-  user <- rev(order_calls(unpipe_all(user), env = env))
-  solution <- rev(order_calls(unpipe_all(solution), env = env))
-  
-  
-  # do comparing named and unnamed arguments here
-  # probably something using rlang::call_arg_names
-  
-  # user_len > solution_len ## surplus
-  # user_len < solution_len ## missing
-
-  # then for loop.
-
-  max_length <- max(length(user), length(solution))
-
-  for (i in seq_len(max_length)) {
-
+# detect_mistakes_old <- function(user,
+#                             solution, env = parent.frame()) {
+#   force(env)
+# 
+#   # code should be checked in the opposite order
+#   # of evaluation (e.g. from the outside in for
+#   # nested notation), whether or not the student
+#   # (and/or teacher) used a pipe
+#   user <- rev(order_calls(unpipe_all(user), env = env))
+#   solution <- rev(order_calls(unpipe_all(solution), env = env))
+#   
+#   
+#   # do comparing named and unnamed arguments here
+#   # probably something using rlang::call_arg_names
+#   
+#   # user_len > solution_len ## surplus
+#   # user_len < solution_len ## missing
+# 
+#   # then for loop.
+# 
+#   max_length <- max(length(user), length(solution))
+# 
+#   for (i in seq_len(max_length)) {
+# 
     ## missing/surplus argument should not just compare raw position
-    ## should determine what is missing/surplus by names
-    # Did the user miss something?
-    if (i > length(user)) {
-      return(missing_argument(this_call = user[[i - 1]],
-                              that = solution[[i]],
-                              that_name = names(solution[i])))
-    }
-
-    # Did the user write too much?
-    if (i > length(solution)) {
-      return(surplus_argument(this_call = user[[i - 1]][1],
-                              this_name = names(user[i]),
-                              this = ifelse(is.call(user[[i]]),
-                                            renest(user[i:length(user)]),
-                                            user[[i]])))
-    }
-
-    # Does the user code not match the solution code?
-    if (length(user[[i]]) != length(solution[[i]]) ||
-        !identical(user[[i]], solution[[i]])
-        ) {
-      return(isolate_mismatch(user, solution, i))
-    }
-  }
-  NULL
-}
+#     ## should determine what is missing/surplus by names
+#     # Did the user miss something?
+#     if (i > length(user)) {
+#       return(missing_argument(this_call = user[[i - 1]],
+#                               that = solution[[i]],
+#                               that_name = names(solution[i])))
+#     }
+# 
+#     # Did the user write too much?
+#     if (i > length(solution)) {
+#       return(surplus_argument(this_call = user[[i - 1]][1],
+#                               this_name = names(user[i]),
+#                               this = ifelse(is.call(user[[i]]),
+#                                             renest(user[i:length(user)]),
+#                                             user[[i]])))
+#     }
+# 
+#     # Does the user code not match the solution code?
+#     if (length(user[[i]]) != length(solution[[i]]) ||
+#         !identical(user[[i]], solution[[i]])
+#         ) {
+#       return(isolate_mismatch(user, solution, i))
+#     }
+#   }
+#   NULL
+# }
 
 detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
   force(env)
