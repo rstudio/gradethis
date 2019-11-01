@@ -61,6 +61,6 @@ wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
 
 prep <- function(text) {
   if (is.call(text)) text <- text[1]
-  if (!is.character(text)) text <- deparse(text)
+  if (!is.character(text)) text <- deparse_to_string(text)
   text
 }

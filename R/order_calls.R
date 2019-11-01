@@ -63,10 +63,7 @@ renest <- function(lst, .call = FALSE) {
 
   code <- purrr::reduce(lst, nest)
   if (.call) code
-  else deparse(code)
-}
-
-
+  else deparse_to_string(code)
 }
 
 remove_first_arg_name <- function(call, code, fxn) {

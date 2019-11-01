@@ -187,7 +187,7 @@ prep_snippet <- function(code, i, .solution = FALSE) {
   # errors that involve an infix operator make more
   # sense if the explanation refers to the operator
   if (i == 2 && is_infix(code[[1]]) && length(code[[1]]) == 1) {
-    paste(deparse(code[[1]][[1]]), deparse(code[[2]]))
+    paste(deparse_to_string(code[[1]][[1]]), deparse_to_string(code[[2]]))
 
     # Return the internal arguments of user code, but
     # not solution code (that could give away too much)
