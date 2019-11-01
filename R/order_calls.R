@@ -12,7 +12,7 @@ order_calls <- function(code, env = parent.frame()) {
     code <- list(code)
   }
   if (is.call(code[[1]]) && length(code[[1]]) != 1) {
-    code[[1]] <- standardize_call(code[[1]], env = env)
+    code[[1]] <- call_standardise_formals(code[[1]], env = env)
     code <- c(pre_pipe(code[[1]], name = names(code[1])), code[-1])
     code <- order_calls(code, env = env)
   }
