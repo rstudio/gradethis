@@ -89,6 +89,7 @@ grade_code <- function(
   if (is_code_identical(user, solution)) {
     is_same_info <- graded(correct = TRUE, message = NULL)
   } else {
+    # if (as.character(user[[1]]) == "test_fn") {browser()}
     message <- detect_mistakes(user, solution)
     if (is.null(message)) {
       # found no errors

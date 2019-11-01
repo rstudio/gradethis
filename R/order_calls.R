@@ -84,19 +84,19 @@ remove_first_arg_name <- function(call, code, fxn) {
 # Returns a version of the call that has
 # arguments in a standard order and
 # argument names supplied for each argument after the first
-standardize_call <- function(code, env = parent.frame()) {
-  stopifnot(is.call(code))
-  fxn <- eval(code[[1]], env)
-  if (!is.null(args(fxn))) {
-    #call <- match.call(args(fxn), code)
-    call <- call_standardise_formals(code, env)
-    #browser()
-    call <- remove_first_arg_name(call, code, fxn)
-  } else {
-    call <- code
-  }
-  return(call)
-}
+# standardize_call <- function(code, env = parent.frame()) {
+#   stopifnot(is.call(code))
+#   fxn <- eval(code[[1]], env)
+#   if (!is.null(args(fxn))) {
+#     #call <- match.call(args(fxn), code)
+#     call <- call_standardise_formals(code, env)
+#     #browser()
+#     call <- remove_first_arg_name(call, code, fxn)
+#   } else {
+#     call <- code
+#   }
+#   return(call)
+# }
 
 remove_null_from_call <- function(code){
   if (is.call(code) && length(code) > 1) {
