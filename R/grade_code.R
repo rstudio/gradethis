@@ -82,7 +82,22 @@ grade_code <- function(
   user <- grader_args$user_quo
   solution <- grader_args$solution_quo
 
-  is_same_info <- code_is_same(user, solution)
+  # MUST call user first to avoid "poisoning" the envir with solution information
+  user <- rlang::get_expr(user)
+  solution <- rlang::get_expr(solution)
+
+  if (is_code_identical(user, solution)) {
+    is_same_info <- graded(correct = TRUE, message = NULL)
+  } else {
+    # if (as.character(user[[1]]) == "test_fn") {browser()}
+    message <- detect_mistakes(user, solution)
+    if (is.null(message)) {
+      # found no errors
+      is_same_info <- graded(correct = TRUE, message = NULL)
+    } else {
+      is_same_info <- graded(correct = FALSE, message = message)
+    }
+  }
 
   if (is_same_info$correct) {
     return(
@@ -123,7 +138,7 @@ grade_code <- function(
 
 
 
-code_is_same <- function(user = NULL, solution = NULL) {
+is_code_identical <- function(user = NULL, solution = NULL) {
 
   # Sometimes no solution is provided, but that
   # means there is nothing to check against
@@ -131,28 +146,16 @@ code_is_same <- function(user = NULL, solution = NULL) {
     stop("No solution is provided for this exercise.")
   }
 
-    # Sometimes no user code is provided,
+  # Sometimes no user code is provided,
   # that means there is nothing to check
   if (is.null(user)) {
     stop("I didn't receive your code. Did you write any?")
   }
 
-  # MUST call user first to avoid "poisoning" the envir with solution information
-  user_code <- rlang::get_expr(user)
-  solution_code <- rlang::get_expr(solution)
-
   # Correct answers are all alike
-  if (identical(user_code, solution_code)) {
-    return(graded(correct = TRUE, message = NULL))
+  if (identical(user, solution)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
   }
-
-  message <- detect_mistakes(user, solution)
-  if (is.null(message)) {
-    # found no errors
-    return(graded(correct = TRUE, message = NULL))
-  }
-
-  return(
-    graded(correct = FALSE, message = message)
-  )
 }

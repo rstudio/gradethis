@@ -24,7 +24,8 @@ test_that("Spots differences in names", {
   user <- quote(x)
   solution <- quote(y)
   expect_message(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution)),
+    grade_code(grader_args = list(user_quo = user, solution_quo = solution))
+    ,
     wrong_value(this = quote(x), that = quote(y))
   )
 
@@ -53,7 +54,9 @@ test_that("Spots differences in calls", {
   )
 
   expect_message(
-    grade_code(grader_args = list(user_quo = a, solution_quo = b)),
+    grade_code(grader_args = list(user_quo = a, solution_quo = b),
+               glue_correct = '{ .message } { .correct }',
+               glue_incorrect = '{ .message } { .incorrect }'),
     wrong_value(this = quote(lists), that = quote(vecs))
   )
 
@@ -65,7 +68,8 @@ test_that("Spots differences in calls", {
   )
 
   expect_message(
-    grade_code(grader_args = list(user_quo = c, solution_quo = a)),
+    grade_code(grader_args = list(user_quo = c, solution_quo = a))
+    ,
     missing_argument(this_call = "vapply()",
                      that_name = "na.rm",
                      that = quote(TRUE))
@@ -100,9 +104,11 @@ test_that("Mentions only first non-matching element", {
 })
 
 test_that("Spots differences in argument names", {
-  a <- quote(mean(1:10, trim = 1, na.rm = TRUE))
-  b <- quote(mean(1:10, 1, TRUE))
-  c <- quote(mean(1:10, cut = 1, na.rm = TRUE))
+  test_fn <<- function(x, y = 1, z = 2, ...) {return(1)}
+  
+  a <- quote(test_fn(10, y = 1, z = TRUE))
+  b <- quote(test_fn(10, 1, TRUE))
+  c <- quote(test_fn(10, w = 1, z = TRUE))
 
   expect_correct(
     grade_code(grader_args = list(user_quo = a, solution_quo = a))
@@ -113,18 +119,21 @@ test_that("Spots differences in argument names", {
   )
 
   expect_message(
-    grade_code(grader_args = list(user_quo = c, solution_quo = a)),
-    wrong_value(this = quote(1), this_name = "cut",
-                that = quote(1), that_name = "trim")
+    grade_code(grader_args = list(user_quo = c, solution_quo = a))
+    ,
+    surplus_argument(this_call = c,
+                     this = 1,
+                     this_name = "w")
   )
 
 })
 
 test_that("Ignore differences in argument positions (for non ... arguments)", {
-  a <- quote(round(x = pi, digits = 2))
-  b <- quote(round(pi, digits = 2))
-  c <- quote(round(2, x = pi))
-  d <- quote(round(digits = 2, x = pi))
+  test_fn <<- function(x, digits = 0){return(1)}
+  a <- quote(test_fn(x = pi, digits = 2))
+  b <- quote(test_fn(pi, digits = 2))
+  c <- quote(test_fn(2, x = pi))
+  d <- quote(test_fn(digits = 2, x = pi))
 
   expect_correct(
     grade_code(grader_args = list(user_quo = b, solution_quo = a))
@@ -201,14 +210,14 @@ test_that("Spots differences in long calls", {
   # original discussion here:
   # https://github.com/rstudio-education/grader/issues/28
 
-  user <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
-  solution <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)") # nolint
+  user <- quote(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
+  solution <- quote(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)) # nolint
   expect_wrong(
     grade_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
 
-  user <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
-  solution <- rlang::sym("tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)") # nolint
+  user <- quote(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
+  solution <- quote(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
    expect_correct(
     grade_code(grader_args = list(user_quo = user, solution_quo = solution))
   )

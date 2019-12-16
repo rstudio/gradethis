@@ -5,7 +5,7 @@ gradethis_default_options <- list(
   gradethis_glue_pipe = paste0(
     "I see that you are using pipe operators (e.g. %>%), ",
     "so I want to let you know that this is how I am interpretting your code ",
-    "before I check it:\n\n{deparse(unpipe_all(.user))}\n\n{.message}"),
+    "before I check it:\n\n{deparse_to_string(unpipe_all(.user), 60)}\n\n{.message}"),
 
   gradethis_glue_correct_test = "{ .num_correct }/{ .num_total } correct! { random_praise() }",
   gradethis_glue_incorrect_test = "{ .num_correct }/{ .num_total } correct! { random_encourage() }"
