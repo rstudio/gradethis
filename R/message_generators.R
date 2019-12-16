@@ -55,7 +55,7 @@ wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
 
   glue::glue_data(
     list(this = this, that = that),
-    "I expected {that} where it was interpreted as {this}."
+    "I expected {that}; what you wrote was interpreted as {this}."
   )
 }
 
