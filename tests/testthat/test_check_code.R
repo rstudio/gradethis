@@ -209,6 +209,8 @@ test_that("Spot differences when pipes are involved", {
 test_that("Spots differences in long calls", {
   # original discussion here:
   # https://github.com/rstudio-education/grader/issues/28
+  
+  testthat::skip_if_not_installed("tidyr")
 
   user <- quote(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
   solution <- quote(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)) # nolint
