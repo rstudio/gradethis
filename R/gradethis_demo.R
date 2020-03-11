@@ -29,4 +29,5 @@ gradethis_demo <- function() {
   } else {
     browseURL(paste0("file://", gradethis_demo_path))
   }
+  message("I've opened a demo tutorial for you that uses gradethis.\nIf you are using the RStudio IDE, please check your source pane,\notherwise please check your web browser.")
 }
