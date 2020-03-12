@@ -104,7 +104,8 @@ detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
   #    The outcome of this order is that when a user writes na = TRUE, gradethis
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
-  missing_args <- solution_names[!(solution_names %in% user_names)]
+  actual_solution_names <-  solution_names[solution_names != ""]
+  missing_args <- actual_solution_names[!(actual_solution_names %in% user_names)]
   if (length(missing_args)) {
     missing_name <- missing_args[1]
     return(
@@ -116,17 +117,43 @@ detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
     )
   }
   
-  # 3. Extract the unmatched arguments from the user code and the solution code.
+  # 3. Check that the user code does not contain any named arguments that do not
+  #    appear in the solution code. Since both calls have been standardised, these
+  #    named arguments can only be being passed to ... and we should not match by
+  #    position a named argument that is passed to ... with an unamed argument
+  #    passed to ...
+  unmatched_user_names <- user_names[!(user_names %in% solution_names)] 
+  unmatched_user_names <- unmatched_user_names[unmatched_user_names != ""]
+  if (length(unmatched_user_names)) {
+    surplus_name <- unmatched_user_names[1]
+    return(
+      surplus_argument(
+        this_call = user,
+        this = user[[surplus_name]],
+        this_name = surplus_name
+      )
+    )
+  }
+  
+  # 4. Check that every named argument in the solution matches every
+  #    correspondingly named argument in the user code.
+  for (name in actual_solution_names) {
+    if (!identical(user[[name]], solution[[name]])) {
+      return(
+        detect_mistakes(user[[name]], solution[[name]], env = env)
+      )
+    }
+  }
+  
+  
+  # 5. Extract the remaining arguments from the user code and the solution code.
   #    Pair them in the order that they occur, checking that each pair matches.
   #    Check pairs in sequence and address unmatched arguments when you get to
   #    them.
-  matched_names <- intersect(user_names, solution_names)
-  matched_names <- matched_names[matched_names != ""]
-  
   user_args <- user[-1]         # remove the call
   solution_args <- solution[-1] # remove the call
   
-  for (name in matched_names) {
+  for (name in actual_solution_names) {
     user_args[[name]] <- NULL
     solution_args[[name]] <- NULL
   }

@@ -625,7 +625,7 @@ test_that("detect_mistakes handles argument names correctly", {
     #             this_name = "cut",
     #             that = quote(1),
     #             that_name = "trim")
-    surplus_argument(this_call = quote(test_fn()), this = quote(1), this_name = "a")
+    missing_argument(this_call = quote(test_fn()), that = quote(1), that_name = "b")
   )
 
   user <-     quote(test_fn(1:10, a = 1, z = TRUE))
@@ -643,7 +643,7 @@ test_that("detect_mistakes handles argument names correctly", {
     # wrong_value(this = quote(1),
     #             this_name = "cut",
     #             that = quote(TRUE))
-    surplus_argument(this_call = quote(mean()), this = quote(1), this_name = "cut")
+    surplus_argument(this_call = quote(mean()), this = quote(TRUE), this_name = "na.rm")
   )
 
 })
@@ -655,9 +655,8 @@ test_that("detect_mistakes handles weird cases", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    # wrong_value(this =  "sum(1, 2)", that = quote(1))
-    missing_argument(this_call =  quote(sum()),
-                     that = quote(3))
+    wrong_value(this =  "sum(1, 2)", that = quote(1))
+    # missing_argument(this_call =  quote(sum()), that = quote(3))
   )
 
   user <-     quote(sum(1, 2))
@@ -670,3 +669,17 @@ test_that("detect_mistakes handles weird cases", {
   )
 
 })
+
+test_that("detect_mistakes checks the call first", {
+  
+  user <-     quote(0 + sqrt(log(2)))
+  solution <- quote(sqrt(log(2)))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    wrong_value(this =  "0 + sqrt(log(2))", that = quote(sqrt(log(2))))
+    # missing_argument(this_call =  quote(sum()), that = quote(3))
+  )
+  
+})
+
