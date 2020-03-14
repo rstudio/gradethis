@@ -40,6 +40,32 @@ surplus_argument <- function(this_call, this, this_name = NULL) {
   )
 }
 
+# wrong call
+wrong_call <- function(this, 
+                       that, 
+                       enclosing_call = NULL, 
+                       enclosing_arg = NULL) {
+  this <- prep(this)
+  that <- prep(that)
+  
+  if(!is.null(enclosing_call)) {
+    enclosing_call <- prep(enclosing_call)
+    intro <- glue::glue("In {enclosing_call}, ")
+  } else {
+    intro <- ""
+  }
+  
+  if (!is.null(enclosing_arg) && enclosing_arg != "") {
+    that <- paste(enclosing_arg, "=", that)
+    this <- paste(enclosing_arg, "=", this)
+  }
+  
+  glue::glue_data(
+    list(intro = intro, this = this, that = that),
+    "{intro}I expected you to call {that} where you called {this}."
+  )
+}
+
 # wrong value
 wrong_value <- function(this, that, that_name = NULL, this_name = NULL) {
   this <- prep(this)
