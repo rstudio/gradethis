@@ -52,7 +52,11 @@
 #   NULL
 # }
 
-detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
+detect_mistakes <- function(user, 
+                            solution, 
+                            env = rlang::env_parent(), 
+                            enclosing_call = NULL,
+                            enclosing_arg = NULL) {
   force(env)
   # rlang::env_print(env)
   # print(sort(rlang::env_names(env)))
@@ -91,11 +95,11 @@ detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
   # SHOULD WE HAVE A TARGETED WRONG CALL FUNCTION?
   if (!identical(user[[1]], solution[[1]])) {
     return(
-      wrong_value(
-        this = deparse_to_string(user),
-        that = prep(solution),
-        this_name = user_names[1],
-        that_name = solution_names[1]
+      wrong_call(
+        this = user,
+        that = solution,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
       )
     )
   }
@@ -140,7 +144,14 @@ detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
   for (name in actual_solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
       return(
-        detect_mistakes(user[[name]], solution[[name]], env = env)
+        detect_mistakes(
+          user = user[[name]], 
+          solution = solution[[name]], 
+          env = env,
+          # if below is too verbose, consider user[1] 
+          enclosing_call = deparse_to_string(user),
+          enclosing_arg = name
+        )
       )
     }
   }
@@ -189,7 +200,14 @@ detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
     } else {
       if (!identical(user_args[[i]], solution_args[[i]])) {
         return(
-          detect_mistakes(user_args[[i]], solution_args[[i]], env = env)
+          detect_mistakes(
+            user = user_args[[i]], 
+            solution = solution_args[[i]], 
+            env = env,
+            # if below is too verbose, consider user[1] 
+            enclosing_call = deparse_to_string(user), 
+            enclosing_arg = name
+          )
         )
       }
     }
