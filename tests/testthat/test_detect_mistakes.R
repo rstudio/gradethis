@@ -625,7 +625,7 @@ test_that("detect_mistakes handles argument names correctly", {
     #             this_name = "cut",
     #             that = quote(1),
     #             that_name = "trim")
-    missing_argument(this_call = quote(test_fn()), that = quote(1), that_name = "b")
+    surplus_argument(this_call = quote(test_fn()), this = quote(1), this_name = "a")
   )
 
   user <-     quote(test_fn(1:10, a = 1, z = TRUE))
@@ -643,7 +643,7 @@ test_that("detect_mistakes handles argument names correctly", {
     # wrong_value(this = quote(1),
     #             this_name = "cut",
     #             that = quote(TRUE))
-    surplus_argument(this_call = quote(mean()), this = quote(TRUE), this_name = "na.rm")
+    surplus_argument(this_call = quote(mean()), this = quote(1), this_name = "cut")
   )
 
 })
@@ -655,8 +655,9 @@ test_that("detect_mistakes handles weird cases", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this =  "sum(1, 2)", that = quote(1))
-    # missing_argument(this_call =  quote(sum()), that = quote(3))
+    # wrong_value(this =  "sum(1, 2)", that = quote(1))
+    missing_argument(this_call =  quote(sum()),
+                     that = quote(3))
   )
 
   user <-     quote(sum(1, 2))
@@ -670,6 +671,7 @@ test_that("detect_mistakes handles weird cases", {
 
 })
 
+
 test_that("detect_mistakes checks the call first", {
   
   user <-     quote(0 + sqrt(log(2)))
@@ -679,6 +681,45 @@ test_that("detect_mistakes checks the call first", {
     ,
     wrong_value(this =  "0 + sqrt(log(2))", that = quote(sqrt(log(2))))
     # missing_argument(this_call =  quote(sum()), that = quote(3))
+  )
+  
+})
+
+test_that("detect_mistakes does not throw error for unused argument", {
+  
+  a <- function(x) x
+  user <-     quote(a(1, y = 2))
+  solution <- quote(a(1))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
+  )
+  
+})
+
+test_that("detect_mistakes does not throw error for multiple matches of argument", {
+  
+  a <- function(x, ya = 1, yb = 2) x
+  user <-     quote(a(1, y = 2))
+  solution <- quote(a(1, ya = 2))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    missing_argument(this_call =  quote(a()), that = quote(2), that_name = "ya")
+  )
+  
+})
+
+test_that("detect_mistakes does not throw error for multiple matches of formal", {
+  
+  a <- function(x, yab = 1, ...) x
+  user <-     quote(a(1, y = 2, ya = 3))
+  solution <- quote(a(1))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
   )
   
 })
