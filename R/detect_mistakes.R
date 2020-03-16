@@ -37,11 +37,9 @@ detect_mistakes <- function(user,
   # SHOULD WE HAVE A TARGETED WRONG CALL FUNCTION?
   if (!identical(user[[1]], solution[[1]])) {
     return(
-      wrong_value(
-        this = deparse_to_string(user),
-        that = prep(solution),
-        this_name = user_names[1],
-        that_name = solution_names[1]
+      wrong_call(
+        this = user,
+        that = solution
       )
     )
   }
@@ -82,8 +80,14 @@ detect_mistakes <- function(user,
     
     # names that match multiple arguments are a syntax error
     if (length(offenders) > 0) {
-      # RETURN MESSAGE with offenders[1]
-      return(NULL)
+      bad_name <- names(offenders[1])
+      return(
+        bad_argument_name(
+          this_call = user, 
+          this = user[[bad_name]], 
+          this_name = bad_name
+        )
+      )
     }
     
     # Unmatched named arguments are surplus
@@ -108,7 +112,13 @@ detect_mistakes <- function(user,
     
     if (length(offenders) > 0) {
       # RETURN MESSAGE with offenders[1]
-      return(NULL)
+      overmatched_name <- names(offenders[1])
+      return(
+        too_many_matches(
+          this_call = user, 
+          that = overmatched_name
+        )
+      )
     }
   }
   
