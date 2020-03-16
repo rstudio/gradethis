@@ -9,7 +9,7 @@ test_that("detect_mistakes detects surplus code", {
   expect_equal(
                detect_mistakes(user, solution)
                ,
-               wrong_value(this = "a(x = b(1))", that = quote(b()))
+               wrong_value(this = "a(b(1))", that = quote(b()))
                )
 
   user <-     quote(b(b(1)))
@@ -17,7 +17,7 @@ test_that("detect_mistakes detects surplus code", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "b(x = 1)", that = quote(1))
+    wrong_value(this = "b(1)", that = quote(1))
   )
 
   user <-     quote(a(b(1)))
@@ -25,7 +25,7 @@ test_that("detect_mistakes detects surplus code", {
   expect_equal(
                detect_mistakes(user, solution)
                ,
-               wrong_value(this = "b(x = 1)", that = quote(1))
+               wrong_value(this = "b(1)", that = quote(1))
                )
 
   # non-function
@@ -65,7 +65,7 @@ test_that("detect_mistakes detects missing code", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "b(x = 1)", that = quote(a()))
+    wrong_value(this = "b(1)", that = quote(a()))
   )
 
 
@@ -108,7 +108,7 @@ test_that("detect_mistakes detects mis-matched code", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "b(x = 1)", that = quote(a()))
+    wrong_value(this = "b(1)", that = quote(a()))
   )
 
   # non-function
@@ -135,7 +135,7 @@ test_that("detect_mistakes detects mis-matched code", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "b(x = 1)", that = quote(c()))
+    wrong_value(this = "b(1)", that = quote(c()))
   )
 
   # internal non-function
@@ -165,7 +165,7 @@ test_that("detect_mistakes works with atomic solutions", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "a(x = 1)", that = quote(1))
+    wrong_value(this = "a(1)", that = quote(1))
   )
 
   user <-     quote(a())
@@ -181,7 +181,7 @@ test_that("detect_mistakes works with atomic solutions", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "a(x = 1)", that = quote(pi))
+    wrong_value(this = "a(1)", that = quote(pi))
   )
 
   # non-function
@@ -577,7 +577,7 @@ test_that("detect_mistakes works with pipes", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "b(x = 1)", that = "a()")
+    wrong_value(this = "b(1)", that = "a()")
   )
 
 })
@@ -588,30 +588,42 @@ test_that("detect_mistakes handles argument names correctly", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    wrong_value(this = "a(x = b(1))",
+    wrong_value(this = "a(b(1))",
                 that = quote(b()),
                 this_name = "",
                 that_name = "")
   )
 
   user <-     quote(b(x = 1))
-  solution <- quote(b())
+  solution <- quote(b(1))
+  expect_null(
+    detect_mistakes(user, solution)
+  )
+  
+  user <-     quote(b(1))
+  solution <- quote(b(x = 1))
+  expect_null(
+    detect_mistakes(user, solution)
+  )
+  
+  user <-     quote(b(y = 1))
+  solution <- quote(b(x = 1))
   expect_equal(
     detect_mistakes(user, solution)
     ,
     surplus_argument(this_call =  quote(b()),
                      this = quote(1),
-                     this_name = "x")
+                     this_name = "y")
   )
 
-  user <-     quote(b(x = a(1)))
-  solution <- quote(b())
+  user <-     quote(b(y = a(1)))
+  solution <- quote(b(1))
   expect_equal(
     detect_mistakes(user, solution)
     ,
     surplus_argument(this_call =  quote(b()),
                      this = "a()",
-                     this_name = "x")
+                     this_name = "y")
   )
   
   test_fn <<- function(x, y = 1, z = FALSE, ...) {return(1)}
@@ -635,6 +647,8 @@ test_that("detect_mistakes handles argument names correctly", {
     surplus_argument(this_call = quote(test_fn()), this = quote(1), this_name = "a")
   )
 
+  # This user code looks correct (and runs!) but na.rm is an argument passed to
+  # ... that does not appear in the solution, and so should be flagged wrong.
   user <-     quote(mean(1:10, cut = 1, na.rm = TRUE))
   solution <- quote(mean(1:10, TRUE, cut = 1))
   expect_equal(
@@ -643,7 +657,7 @@ test_that("detect_mistakes handles argument names correctly", {
     # wrong_value(this = quote(1),
     #             this_name = "cut",
     #             that = quote(TRUE))
-    surplus_argument(this_call = quote(mean()), this = quote(1), this_name = "cut")
+    surplus_argument(this_call = quote(mean()), this = quote(TRUE), this_name = "na.rm")
   )
 
 })
@@ -655,9 +669,8 @@ test_that("detect_mistakes handles weird cases", {
   expect_equal(
     detect_mistakes(user, solution)
     ,
-    # wrong_value(this =  "sum(1, 2)", that = quote(1))
-    missing_argument(this_call =  quote(sum()),
-                     that = quote(3))
+    wrong_value(this =  "sum(1, 2)", that = quote(1))
+    # missing_argument(this_call =  quote(sum()), that = quote(3))
   )
 
   user <-     quote(sum(1, 2))
@@ -700,26 +713,22 @@ test_that("detect_mistakes does not throw error for unused argument", {
 
 test_that("detect_mistakes does not throw error for multiple matches of argument", {
   
-  a <- function(x, ya = 1, yb = 2) x
-  user <-     quote(a(1, y = 2))
-  solution <- quote(a(1, ya = 2))
-  expect_equal(
+  z <<- function(x, ya = 1, yb = 2) x
+  user <-     quote(z(1, y = 2))
+  solution <- quote(z(1, ya = 2))
+  expect_null(
     detect_mistakes(user, solution)
-    ,
-    missing_argument(this_call =  quote(a()), that = quote(2), that_name = "ya")
   )
   
 })
 
 test_that("detect_mistakes does not throw error for multiple matches of formal", {
   
-  a <- function(x, yab = 1, ...) x
-  user <-     quote(a(1, y = 2, ya = 3))
-  solution <- quote(a(1))
-  expect_equal(
+  zz <<- function(x, yab = 1, ...) x
+  user <-     quote(zz(1, y = 2, ya = 3))
+  solution <- quote(zz(1))
+  expect_null(
     detect_mistakes(user, solution)
-    ,
-    surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
   )
   
 })
