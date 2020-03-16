@@ -1,6 +1,8 @@
 detect_mistakes <- function(user, 
                             solution, 
-                            env = rlang::env_parent()) {
+                            env = rlang::env_parent(),
+                            enclosing_call = NULL, 
+                            enclosing_arg = NULL) {
   force(env)
 
   if (is.call(user)) {
@@ -18,7 +20,9 @@ detect_mistakes <- function(user,
       return(
         wrong_value(
           this = deparse_to_string(user),
-          that = solution
+          that = solution,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
       )
     }
@@ -39,7 +43,9 @@ detect_mistakes <- function(user,
     return(
       wrong_call(
         this = user,
-        that = solution
+        that = solution,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
       )
     )
   }
@@ -85,19 +91,23 @@ detect_mistakes <- function(user,
         bad_argument_name(
           this_call = user, 
           this = user[[bad_name]], 
-          this_name = bad_name
+          this_name = bad_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
       )
     }
     
     # Unmatched named arguments are surplus
     if (length(unused) > 0) {
-      surplus_name <- names(unused[1])
+      surplus_name <- rlang::names2(unused[1])
       return(
         surplus_argument(
           this_call = user,
           this = user[[surplus_name]],
-          this_name = surplus_name
+          this_name = surplus_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
       )
     }
@@ -112,11 +122,13 @@ detect_mistakes <- function(user,
     
     if (length(offenders) > 0) {
       # RETURN MESSAGE with offenders[1]
-      overmatched_name <- names(offenders[1])
+      overmatched_name <- rlang::names2(offenders[1])
       return(
         too_many_matches(
           this_call = user, 
-          that = overmatched_name
+          that = overmatched_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
       )
     }
@@ -132,13 +144,15 @@ detect_mistakes <- function(user,
   #    argument.
   actual_solution_names <-  solution_names[solution_names != ""]
   missing_args <- actual_solution_names[!(actual_solution_names %in% user_names)]
-  if (length(missing_args)) {
+  if (length(missing_args) > 0) {
     missing_name <- missing_args[1]
     return(
       missing_argument(
         this_call = solution,
         that = solution[[missing_name]],
-        that_name = missing_name
+        that_name = missing_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
       )
     )
   }
@@ -150,25 +164,44 @@ detect_mistakes <- function(user,
   #    passed to ...
   unmatched_user_names <- user_names[!(user_names %in% solution_names)] 
   unmatched_user_names <- unmatched_user_names[unmatched_user_names != ""]
-  if (length(unmatched_user_names)) {
+  if (length(unmatched_user_names) > 0) {
     surplus_name <- unmatched_user_names[1]
     return(
       surplus_argument(
         this_call = user,
         this = user[[surplus_name]],
-        this_name = surplus_name
+        this_name = surplus_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
       )
     )
   }
   
   # 7. Check that every named argument in the solution matches every
-  #    correspondingly named argument in the user code.
+  #    correspondingly named argument in the user code. We know each 
+  #    has a match because of Step 5.
+  user_args <- as.list(user[-1])         # remove the call
+  solution_args <- as.list(solution[-1]) # remove the call
+  
   for (name in actual_solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
+      arg_name <- ifelse(name == actual_solution_names[1], "", name)
       return(
-        detect_mistakes(user[[name]], solution[[name]], env = env)
+        detect_mistakes(
+          user = user[[name]], 
+          solution = solution[[name]], 
+          env = env,
+          # To be verbose, consider deparse_to_string(user) 
+          enclosing_call = user[1],
+          # avoid naming first arguments in messages
+          enclosing_arg = arg_name
+        )
       )
     }
+    
+    # Make these arguments invisible to further checks
+    user_args[[name]] <- NULL
+    solution_args[[name]] <- NULL
   }
   
   
@@ -176,14 +209,6 @@ detect_mistakes <- function(user,
   #    Pair them in the order that they occur, checking that each pair matches.
   #    Check pairs in sequence and address unmatched arguments when you get to
   #    them.
-  user_args <- user[-1]         # remove the call
-  solution_args <- solution[-1] # remove the call
-  
-  for (name in actual_solution_names) {
-    user_args[[name]] <- NULL
-    solution_args[[name]] <- NULL
-  }
-  
   user_len <- length(user_args)
   solution_len <- length(solution_args)
 
@@ -197,7 +222,9 @@ detect_mistakes <- function(user,
         missing_argument(
           this_call = solution,
           that = solution_args[[i]],
-          that_name = names(solution_args[i])
+          that_name = rlang::names2(solution_args[i]),
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
       )
       
@@ -207,17 +234,27 @@ detect_mistakes <- function(user,
         surplus_argument(
           this_call = user,
           this = user_args[[i]],
-          this_name = names(user_args[i])
+          this_name = rlang::names2(user_args[i]),
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
       )
       
     # The user argument has a matching solution argument, are they identical?
-    } else {
-      if (!identical(user_args[[i]], solution_args[[i]])) {
-        return(
-          detect_mistakes(user_args[[i]], solution_args[[i]], env = env)
+    } else if (!identical(user_args[[i]], solution_args[[i]])) {
+      name <- rlang::names2(user_args[i])
+      if (length(actual_solution_names) > 0 && name == actual_solution_names[1])
+        name <- ""
+      return(
+        detect_mistakes(
+          user = user_args[[i]], 
+          solution = solution_args[[i]], 
+          env = env,
+          # To be verbose, consider deparse_to_string(user) 
+          enclosing_call = user[1],
+          enclosing_arg = name
         )
-      }
+      )
     }
   }
 
