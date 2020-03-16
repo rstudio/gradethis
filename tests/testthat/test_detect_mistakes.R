@@ -711,3 +711,16 @@ test_that("detect_mistakes does not throw error for multiple matches of argument
   
 })
 
+test_that("detect_mistakes does not throw error for multiple matches of formal", {
+  
+  a <- function(x, yab = 1, ...) x
+  user <-     quote(a(1, y = 2, ya = 3))
+  solution <- quote(a(1))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
+  )
+  
+})
+
