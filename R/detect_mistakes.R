@@ -58,15 +58,15 @@ detect_mistakes <- function(user,
   # contain an unused argument, may contain multiple arguments whose names
   # partially match the same formal, or an argument whose name partially matches
   # more than one formal.
-  user_names <- user_names[user_names != ""]
-  user_args <- as.list(user)[user_names]
+  user_args <- as.list(user)
+  real_user_names <- user_names[user_names != ""]
   
-  solution_names <- solution_names[solution_names != ""]
-  solution_args <- as.list(solution)[solution_names]
+  solution_args <- as.list(solution)
+  real_solution_names <- solution_names[solution_names != ""]
   
   ## Remove exact matches from further scrutiny
-  for (name in user_names) {
-    if (name %in% solution_names) {
+  for (name in real_user_names) {
+    if (name %in% real_solution_names) {
       user_args[[name]] <- NULL
       solution_args[[name]] <- NULL
     }
@@ -74,16 +74,39 @@ detect_mistakes <- function(user,
   
   ## Check remaining arguments for partial matches
   user_names <- rlang::names2(user_args)
+  remaining_user_names <- user_names[user_names != ""]
   
   if (length(user_names) > 0) {
     solution_names <- rlang::names2(solution_args)
-
-    ## How many formals does each user arg partially match?
-    partial_matches_per_arg <- function(user_name) {
-      sum(startsWith(solution_names, user_name))
+    remaining_solution_names <- solution_names[solution_names != ""]
+    
+    ## Do any solution names partially match multiple user names?
+    pmatches_per_formal <- function(solution_name) {
+      sum(startsWith(solution_name, remaining_user_names))
     }
     
-    matches <- vapply(user_names, partial_matches_per_arg, 1)
+    matches <- vapply(remaining_solution_names, pmatches_per_formal, 1)
+    offenders <- matches[matches > 1]
+    
+    if (length(offenders) > 0) {
+      # RETURN MESSAGE with offenders[1]
+      overmatched_name <- rlang::names2(offenders[1])
+      return(
+        too_many_matches(
+          this_call = user, 
+          that = overmatched_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
+        )
+      )
+    }
+
+    ## How many formals does each user arg partially match?
+    pmatches_per_arg <- function(user_name) {
+      sum(startsWith(remaining_solution_names, user_name))
+    }
+    
+    matches <- vapply(remaining_user_names, pmatches_per_arg, 1)
     offenders <- matches[matches > 1]
     unused <- matches[matches == 0]
     
@@ -114,29 +137,33 @@ detect_mistakes <- function(user,
         )
       )
     }
+  }
     
-    ## Do any solution names partially match multiple user names?
-    partial_matches_per_formal <- function(solution_name) {
-      sum(startsWith(solution_name, user_names))
-    }
-    
-    matches <- vapply(solution_names, partial_matches_per_formal, 1)
-    offenders <- matches[matches > 1]
-    
-    if (length(offenders) > 0) {
-      # RETURN MESSAGE with offenders[1]
-      overmatched_name <- rlang::names2(offenders[1])
-      return(
-        too_many_matches(
-          this_call = user, 
-          that = overmatched_name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
-        )
-      )
+  # Check for unused unnamed arguments
+  # Remove used names
+  for (name in remaining_user_names) {
+    if (name %in% remaining_solution_names) {
+      user_args[[name]] <- NULL
+      solution_args[[name]] <- NULL
     }
   }
+  n_remaining_user <- length(user_args)
+  n_remaining_solution <- length(solution_args)
+  if (n_remaining_user > n_remaining_solution) {
+    i <- n_remaining_solution + 1
+    return(
+      surplus_argument(
+        this_call = user,
+        this = user[[i]],
+        this_name = rlang::names2(user[i]),
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
   
+  
+  # It is now safe to call call_standardise_formals on student code
   user <- call_standardise_formals(user, env = env)
   user_names <- rlang::names2(user)
   solution_names <- rlang::names2(solution)
