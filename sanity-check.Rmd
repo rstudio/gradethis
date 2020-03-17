@@ -607,6 +607,7 @@ gradethis:::detect_mistakes(user, solution)
 ```{r}
 # What if multiple arguments partially match ambiguous?
 tricky2 <- function(ambiguous = 1, ...) ambiguous
+not_tricky <- function(a = 1, ambiguous = 2, ...) a
 ```
 
 ***
@@ -614,6 +615,20 @@ tricky2 <- function(ambiguous = 1, ...) ambiguous
 ```{r}
 solution <- quote(tricky2(amb = 2))
 user <- quote(tricky2(a = 2, am = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(not_tricky(amb = 2))
+user <- quote(not_tricky(a = 1, am = 2))
 ```
 
 Correct: ``r gradethis:::deparse_to_string(solution)``  
@@ -719,5 +734,94 @@ gradethis:::detect_mistakes(user, solution)
 ***
 
 # `missing_argument()`
+
+```{r}
+f <- function(x, y) x + y
+g <- function(x, y = a(1)) x + y
+```
+
+***
+
+```{r}
+solution <- quote(f(x = 1, y = 1))
+user <- quote(f(x = 1))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(a(f(x = 1, y = 2)))
+user <- quote(a(f(x = 1)))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(f(x = 1, y = 2))
+user <- quote(f(y = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(f(x = 1, y = 2))
+user <- quote(f(1))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(f(x = 1, y = 2))
+user <- quote(1 %>% f())
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(a(f(x = 1, y = 2)))
+user <- quote(a(1 %>% f()))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
 
 
