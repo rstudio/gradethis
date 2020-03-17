@@ -61,7 +61,7 @@ missing_argument <- function(this_call,
   # "in a different way, or left out an important argument name."
   
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
-  intro <- ifelse(intro == "", "Y", paste0(intro, "Y"))
+  intro <- ifelse(intro == "", "Y", paste0(intro, "y"))
   
   this_call <- prep(this_call)
   
@@ -153,7 +153,7 @@ too_many_matches <- function(this_call,
     ),
     "Double check the argument names you are using. ",
     "{intro}{this_call} accepts an argument named {that}. ", 
-    "More than one of your argument names will ",
+    "More than one of your argument names in {this_call} will ",
     "be matched to {that}, which will cause an error. Try ",
     "writing out the full argument names."
   )
