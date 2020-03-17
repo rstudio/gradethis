@@ -4,9 +4,12 @@ detect_mistakes <- function(user,
                             enclosing_call = NULL, 
                             enclosing_arg = NULL) {
   force(env)
+  
+  submitted <- deparse_to_string(user)
 
   if (is.call(user)) {
     user <- unpipe_all(user) # cannot standardise yet without risking error
+    submitted_names <- rlang::names2(user)
   }
   if (is.call(solution)) {
     solution <- call_standardise_formals(unpipe_all(solution), env = env)
@@ -19,10 +22,10 @@ detect_mistakes <- function(user,
     if (!identical(user, solution)) {
       return(
         wrong_value(
-          this = deparse_to_string(user),
+          this = submitted,
           that = solution,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
+          this_name = enclosing_arg,
+          enclosing_call = enclosing_call
         )
       )
     }
@@ -44,8 +47,8 @@ detect_mistakes <- function(user,
       wrong_call(
         this = user,
         that = solution,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
+        this_name = enclosing_arg,
+        enclosing_call = enclosing_call
       )
     )
   }
@@ -86,7 +89,7 @@ detect_mistakes <- function(user,
     
     # names that match multiple arguments are a syntax error
     if (length(offenders) > 0) {
-      bad_name <- names(offenders[1])
+      bad_name <- rlang::names2(offenders[1])
       return(
         bad_argument_name(
           this_call = user, 
@@ -149,7 +152,6 @@ detect_mistakes <- function(user,
     return(
       missing_argument(
         this_call = solution,
-        that = solution[[missing_name]],
         that_name = missing_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
@@ -185,14 +187,14 @@ detect_mistakes <- function(user,
   
   for (name in actual_solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
-      arg_name <- ifelse(name == actual_solution_names[1], "", name)
+      arg_name <- ifelse(name %in% submitted_names, name, "")
       return(
         detect_mistakes(
           user = user[[name]], 
           solution = solution[[name]], 
           env = env,
-          # To be verbose, consider deparse_to_string(user) 
-          enclosing_call = user[1],
+          # If too verbose, use user[1]
+          enclosing_call = submitted,
           # avoid naming first arguments in messages
           enclosing_arg = arg_name
         )
@@ -221,7 +223,6 @@ detect_mistakes <- function(user,
       return(
         missing_argument(
           this_call = solution,
-          that = solution_args[[i]],
           that_name = rlang::names2(solution_args[i]),
           enclosing_call = enclosing_call,
           enclosing_arg = enclosing_arg
@@ -230,11 +231,13 @@ detect_mistakes <- function(user,
       
     # if user argument is unmatched due to no remaining solution arguments
     } else if (i > solution_len) {
+      arg_name <- rlang::names2(user_args[i])
+      if (!(arg_name %in% submitted_names)) arg_name <- ""
       return(
         surplus_argument(
           this_call = user,
           this = user_args[[i]],
-          this_name = rlang::names2(user_args[i]),
+          this_name = arg_name,
           enclosing_call = enclosing_call,
           enclosing_arg = enclosing_arg
         )
@@ -243,15 +246,14 @@ detect_mistakes <- function(user,
     # The user argument has a matching solution argument, are they identical?
     } else if (!identical(user_args[[i]], solution_args[[i]])) {
       name <- rlang::names2(user_args[i])
-      if (length(actual_solution_names) > 0 && name == actual_solution_names[1])
-        name <- ""
+      if (!(name %in% submitted_names)) name <- ""
       return(
         detect_mistakes(
           user = user_args[[i]], 
           solution = solution_args[[i]], 
           env = env,
-          # To be verbose, consider deparse_to_string(user) 
-          enclosing_call = user[1],
+          # If too verbose, use user[1]
+          enclosing_call = submitted,
           enclosing_arg = name
         )
       )

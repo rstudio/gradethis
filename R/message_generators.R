@@ -6,25 +6,25 @@
 # bad argument name
 bad_argument_name <- function(this_call, 
                               this, 
-                              this_name = NULL,
-                              enclosing_call = NULL, 
-                              enclosing_arg = NULL) {
+                              this_name,
+                              enclosing_call = NULL,
+                              enclosing_arg = NULL) { # only if the user supplied one (to match user code)
   
-  this_call <- prep(this_call)
+  # f(1, g(1, h(b = i(1))))
+  # f(1, a = g(1, a = h(ba = i(1)), bb = i(2)))
+  
+  # In f(1, g(1, h(b = i(1)))), h() accepts more than one argument that begins with b.
+  # As a result, R cannot figure out which argument you want to pass i(1) to.
+  # Check how you spelled b, or write out the full argument name.
+  
+  # {intro}{this_call} accepts more than one argument that begins with {this_name}.
+  # As a result, R cannot figure out which argument you want to pass {this} to.
+  # Check how you spelled {this_name}, or write out the full argument name.
+
+  intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
+
   this <- prep(this)
-  
-  if(!is.null(enclosing_call)) {
-    enclosing_call <- prep(enclosing_call)
-    intro <- glue::glue("In {enclosing_call}, ")
-  } else {
-    intro <- ""
-  }
-  
-  if (!is.null(enclosing_arg) && enclosing_arg != "")
-    that <- paste(enclosing_arg, "=", this_call)
-  
-  if (!is.null(this_name) && this_name != "")
-    this <- paste(this_name, "=", this)
+  this_call <- prep(this_call)
   
   if (grepl("\\(\\)", this))
     this <- paste("a call to", this)
@@ -38,45 +38,42 @@ bad_argument_name <- function(this_call,
     ),
     "{intro}{this_call} accepts more than one argument name that begins ",
     "with {this_name}. As a result, R cannot figure out which ", 
-    "argument you want to use for {this}. Check how you spelled ",
+    "argument you want to pass {this} to. Check how you spelled ",
     "{this_name}, or write out the full argument name."
   )
 }
 
 # missing argument
 missing_argument <- function(this_call, 
-                             that, 
                              that_name = NULL,
-                             enclosing_call = NULL, 
+                             enclosing_call = NULL,
                              enclosing_arg = NULL) {
+  
+  # f(1, g(1, h(i(1))))
+  # f(1, a = g(1, a = h(a = i(1)), b = i(2)))
+  
+  # "In g(1, h(i(1))), Your call to h() should include b",
+  # "as one of its arguments. You may have referred to it ",
+  # "in a different way, or left out an important argument name."
+  
+  # "{intro}Your call to {this_call} should include {that_name} ",
+  # "as one of its arguments. You may have referred to it ",
+  # "in a different way, or left out an important argument name."
+  
+  intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
+  intro <- ifelse(intro == "", "Y", paste0(intro, "Y"))
+  
   this_call <- prep(this_call)
-  that <- prep(that)
-  
-  if(!is.null(enclosing_call)) {
-    enclosing_call <- prep(enclosing_call)
-    intro <- glue::glue("In {enclosing_call}, ")
-  } else {
-    intro <- ""
-  }
-  
-  if (!is.null(enclosing_arg) && enclosing_arg != "")
-    that <- paste(enclosing_arg, "=", this_call)
-  
-  if (!is.null(that_name) && that_name != "")
-    that <- paste(that_name, "=", that)
-  
-  if (grepl("\\(\\)", that))
-    that <- paste("a call to", that)
   
   glue::glue_data(
     list(
       intro = intro,
       this_call = this_call,
-      that = that
+      that_name = that_name
     ),
-    "{intro}Your call to {this_call} should include {that} ",
-    "as one of its arguments. You may have referred to it ",
-    "in a different way, or left out an important argument name."
+    "{intro}our call to {this_call} should include {that_name} ",
+    "as one of its arguments. You may have misspelled the name, ",
+    "or left out an important argument."
   )
 }
 
@@ -87,18 +84,25 @@ surplus_argument <- function(this_call,
                              enclosing_call = NULL, 
                              enclosing_arg = NULL) {
   
+  # f(1, g(1, h(1, b = i(1))))
+  # f(1, a = g(1, a = h(a = 1)))
+
+  # "In g(1, h(1, i(1))), I did not expect your call to h() to ",
+  # "include b = i(1). You ",
+  # "may have included an unnecessary argument, or you ",
+  # "may have left out or misspelled an important ",
+  # "argument name."
+    
+  # "{intro}I did not expect your call to {this_call} to ",
+  # "include {this}. You ",
+  # "may have included an unnecessary argument, or you ",
+  # "may have left out or misspelled an important ",
+  # "argument name."
+  
+  intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
+  
   this_call <- prep(this_call)
   this      <- prep(this)
-  
-  if(!is.null(enclosing_call)) {
-    enclosing_call <- prep(enclosing_call)
-    intro <- glue::glue("In {enclosing_call}, ")
-  } else {
-    intro <- ""
-  }
-  
-  if (!is.null(enclosing_arg) && enclosing_arg != "")
-    that <- paste(enclosing_arg, "=", this_call)
   
   if (!is.null(this_name) && this_name != "")
     this <- paste(this_name, "=", this)
@@ -119,18 +123,27 @@ surplus_argument <- function(this_call,
 # too_many_matches
 too_many_matches <- function(this_call, 
                              that,
-                             enclosing_call = NULL, 
+                             enclosing_call = NULL,
                              enclosing_arg = NULL) {
+  
+  # f(1, g(1, h(b = i(1), ba = 2)))
+  # f(1, a = g(1, a = h(bab = 1)))
+  
+  # "Double check the argument names you are using. ",
+  # "In g(1, h(b = i(1), ba = 2)), h() accepts an argument named bab. More than one of your argument names will ",
+  # "be matched to bab, which will cause an error. Try ",
+  # "writing out the full argument names."
+  
+  # "Double check the argument names you are using. ",
+  # "{intro}{this_call} accepts an argument named {that} and it ", 
+  # "looks like more than one of your argument names will ",
+  # "be matched to {that}, which will cause an error. Try ",
+  # "writing out the full argument names."
   
   this_call <- prep(this_call)
   that <- prep(that)
   
-  if(!is.null(enclosing_call)) {
-    enclosing_call <- prep(enclosing_call)
-    intro <- glue::glue("In {enclosing_call}, ")
-  } else {
-    intro <- ""
-  }
+  intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
   
   glue::glue_data(
     list(
@@ -139,8 +152,8 @@ too_many_matches <- function(this_call,
       that = that
     ),
     "Double check the argument names you are using. ",
-    "{intro}{this_call} accepts an argument named {that} and it ", 
-    "looks like more than one of your argument names will ",
+    "{intro}{this_call} accepts an argument named {that}. ", 
+    "More than one of your argument names will ",
     "be matched to {that}, which will cause an error. Try ",
     "writing out the full argument names."
   )
@@ -149,21 +162,24 @@ too_many_matches <- function(this_call,
 # wrong call
 wrong_call <- function(this, 
                        that, 
-                       enclosing_call = NULL, 
-                       enclosing_arg = NULL) {
+                       this_name = NULL,
+                       enclosing_call = NULL) {
+  
+  # f(1, g(1, h(a = i(1))))
+  # f(1, a = g(1, a = h(a = j(1))))
+  
+  # "g(1, h(i(1))), I expected you to call a = j() where you called a = i()."
+  
+  # "{intro}I expected you to call {that} where you called {this}."
+  
+  intro <- build_intro(.call = enclosing_call)
+  
   this <- prep(this)
   that <- prep(that)
   
-  if(!is.null(enclosing_call)) {
-    enclosing_call <- prep(enclosing_call)
-    intro <- glue::glue("In {enclosing_call}, ")
-  } else {
-    intro <- ""
-  }
-  
-  if (!is.null(enclosing_arg) && enclosing_arg != "") {
-    that <- paste(enclosing_arg, "=", that)
-    this <- paste(enclosing_arg, "=", this)
+  if (!is.null(this_name) && this_name != "") {
+    that <- paste(this_name, "=", that)
+    this <- paste(this_name, "=", this)
   }
   
   glue::glue_data(
@@ -176,24 +192,29 @@ wrong_call <- function(this,
   )
 }
 
-# wrong value
+# wrong value for wrong value and wrong call, the enclosing argument is the
+# argument that appears before the call or value. It should be passed to
+# this_name
 wrong_value <- function(this, 
                         that, 
-                        enclosing_call = NULL, 
-                        enclosing_arg = NULL) {
+                        this_name = NULL,
+                        enclosing_call = NULL) {
+  
+  # f(1, g(1, h(1)))
+  # f(1, a = g(1, a = h(2)))
+  
+  # "h(1), I expected 2 where you wrote 1."
+  
+  # "{intro}I expected {that} where you wrote {this}."
+  
+  intro <- build_intro(.call = enclosing_call)
+  
   this <- prep(this)
   that <- prep(that)
   
-  if(!is.null(enclosing_call)) {
-    enclosing_call <- prep(enclosing_call)
-    intro <- glue::glue("In {enclosing_call}, ")
-  } else {
-    intro <- ""
-  }
-  
-  if (!is.null(enclosing_arg) && enclosing_arg != "") {
-    that <- paste(enclosing_arg, "=", that)
-    this <- paste(enclosing_arg, "=", this)
+  if (!is.null(this_name) && this_name != "") {
+    that <- paste(this_name, "=", that)
+    this <- paste(this_name, "=", this)
   }
   
   if (grepl("\\(\\)", that))
@@ -212,4 +233,17 @@ prep <- function(text) {
   if (is.call(text)) text <- text[1]
   if (!is.character(text)) text <- deparse_to_string(text)
   text
+}
+
+build_intro <- function(.call = NULL, .arg = NULL) {
+  
+  if(!is.null(.call) && .call != "") {
+    .call <- prep(.call)
+    if (!is.null(.arg) && .arg != "")
+      .call <- paste(.arg, "=", .call)
+    intro <- glue::glue("In {.call}, ")
+  } else {
+    intro <- ""
+  }
+  intro
 }

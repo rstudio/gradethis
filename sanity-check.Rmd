@@ -93,21 +93,6 @@ gradethis:::detect_mistakes(user, solution)
 
 ```{r}
 solution <- quote(a(1))
-user <- quote(b(b(1)))
-```
-
-Correct: ``r gradethis:::deparse_to_string(solution)``  
-Student: ``r gradethis:::deparse_to_string(user)``  
-
-```{r echo = FALSE}
-gradethis:::detect_mistakes(user, solution)
-```
-
-
-***
-
-```{r}
-solution <- quote(a(1))
 user <- quote(0 + a(1))
 ```
 
@@ -524,6 +509,215 @@ gradethis:::detect_mistakes(user, solution)
 
 ***
 
+```{r}
+solution <- quote(1 %>% f(2))
+user <- quote(3 %>% f(2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(1 %>% f(2))
+user <- quote(1 %>% f(3))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+# `bad_argument_name()`
+
+```{r}
+# the name a will fail to uniquely match
+tricky <- function(aa = 1, ab = 2, ac = 3) aa
+```
+
+***
+
+```{r}
+solution <- quote(tricky(ab = 1))
+user <- quote(tricky(a = 1))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(tricky(ab = 1))
+user <- quote(tricky(1, 2, a = 1))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(tricky(ab = 1))
+user <- quote(1 %>% tricky(a = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(tricky(ab = 1))
+user <- quote(1 %>% tricky(a = .))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+# `too_many_matches()`
+
+```{r}
+# What if multiple arguments partially match ambiguous?
+tricky2 <- function(ambiguous = 1, ...) ambiguous
+```
+
+***
+
+```{r}
+solution <- quote(tricky2(amb = 2))
+user <- quote(tricky2(a = 2, am = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(tricky2(amb = 2))
+user <- quote(2 %>% tricky2(a = ., am = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
 # `surplus_argument()`
 
+```{r}
+h <- function(x) x
+i <- function(x, ...) x
+```
+
+***
+
+```{r}
+solution <- quote(h(x = 1))
+user <- quote(h(x = 1, y = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(h(x = 1))
+user <- quote(h(1, 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(i(x = 1))
+user <- quote(i(1, 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(i(x = 1))
+user <- quote(i(1, x = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(h(x = 1))
+user <- quote(1 %>% h(2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
 # `missing_argument()`
+
+
