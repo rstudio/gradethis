@@ -94,7 +94,7 @@ detect_mistakes <- function(user,
       return(
         too_many_matches(
           this_call = user, 
-          that = overmatched_name,
+          that_name = overmatched_name,
           enclosing_call = enclosing_call,
           enclosing_arg = enclosing_arg
         )

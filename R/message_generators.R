@@ -122,7 +122,7 @@ surplus_argument <- function(this_call,
 
 # too_many_matches
 too_many_matches <- function(this_call, 
-                             that,
+                             that_name,
                              enclosing_call = NULL,
                              enclosing_arg = NULL) {
   
@@ -141,7 +141,7 @@ too_many_matches <- function(this_call,
   # "writing out the full argument names."
   
   this_call <- prep(this_call)
-  that <- prep(that)
+  that_name <- prep(that_name)
   
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
   
@@ -149,12 +149,12 @@ too_many_matches <- function(this_call,
     list(
       intro = intro,
       this_call = this_call,
-      that = that
+      that_name = that_name
     ),
     "Double check the argument names you are using. ",
-    "{intro}{this_call} accepts an argument named {that}. ", 
+    "{intro}{this_call} accepts an argument named {that_name}. ", 
     "More than one of your argument names in {this_call} will ",
-    "be matched to {that}, which will cause an error. Try ",
+    "be matched to {that_name}, which will cause an error. Try ",
     "writing out the full argument names."
   )
 }
