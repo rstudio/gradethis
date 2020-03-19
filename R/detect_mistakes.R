@@ -5,7 +5,7 @@ detect_mistakes <- function(user,
                             enclosing_arg = NULL) {
   force(env)
   
-  submitted <- deparse_to_string(user)
+  submitted <- user
 
   if (is.call(user)) {
     user <- unpipe_all(user) # cannot standardise yet without risking error
@@ -76,7 +76,7 @@ detect_mistakes <- function(user,
   user_names <- rlang::names2(user_args)
   remaining_user_names <- user_names[user_names != ""]
   
-  if (length(user_names) > 0) {
+  if (length(remaining_user_names) > 0) {
     solution_names <- rlang::names2(solution_args)
     remaining_solution_names <- solution_names[solution_names != ""]
     
@@ -89,7 +89,6 @@ detect_mistakes <- function(user,
     offenders <- matches[matches > 1]
     
     if (length(offenders) > 0) {
-      # RETURN MESSAGE with offenders[1]
       overmatched_name <- rlang::names2(offenders[1])
       return(
         too_many_matches(
@@ -247,10 +246,17 @@ detect_mistakes <- function(user,
     
     # if solution argument is unmatched due to no remaining user arguments
     if (i > user_len) {
+      name <- rlang::names2(solution_args[i])
+      
+      # if the missing argument is unnamed, pass the value
+      if (is.null(name) || name == "") {
+        name <- solution_args[[i]]
+      }
+      
       return(
         missing_argument(
           this_call = solution,
-          that_name = rlang::names2(solution_args[i]),
+          that_name = name,
           enclosing_call = enclosing_call,
           enclosing_arg = enclosing_arg
         )

@@ -748,6 +748,7 @@ gradethis:::detect_mistakes(user, solution)
 ```{r echo = TRUE}
 f <- function(x, y) x + y
 g <- function(x, y = a(1)) x + y
+z <- function(...) 1
 ```
 
 ***
@@ -825,6 +826,48 @@ gradethis:::detect_mistakes(user, solution)
 ```{r}
 solution <- quote(a(f(x = 1, y = 2)))
 user <- quote(a(1 %>% f()))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+Feedback:
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(a(1))
+user <- quote(a())
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+Feedback:
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(z(1))
+user <- quote(z())
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+Feedback:
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***
+
+```{r}
+solution <- quote(z(a(1)))
+user <- quote(z())
 ```
 
 Correct: ``r gradethis:::deparse_to_string(solution)``  

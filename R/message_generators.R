@@ -43,6 +43,7 @@ bad_argument_name <- function(this_call,
   )
 }
 
+# WHAT TO DO IF THE MISSING ARGUMENT DOESN"T HAVE A NAME IN THE SOLUTION?
 # missing argument
 missing_argument <- function(this_call, 
                              that_name = NULL,
@@ -64,6 +65,13 @@ missing_argument <- function(this_call,
   intro <- ifelse(intro == "", "Y", paste0(intro, "y"))
   
   this_call <- prep(this_call)
+  that_name <- prep(that_name)
+  
+  if (grepl("\\(\\)", that_name)) {
+    that_name <- paste0("an argument, possibly unnamed, that calls ", that_name, ".")
+  } else {
+    that_name <- paste(that_name, "as one of its arguments.")
+  }
   
   glue::glue_data(
     list(
@@ -72,7 +80,7 @@ missing_argument <- function(this_call,
       that_name = that_name
     ),
     "{intro}our call to {this_call} should include {that_name} ",
-    "as one of its arguments. You may have misspelled the name, ",
+    "You may have misspelled an argument name, ",
     "or left out an important argument."
   )
 }
@@ -237,8 +245,8 @@ prep <- function(text) {
 
 build_intro <- function(.call = NULL, .arg = NULL) {
   
-  if(!is.null(.call) && .call != "") {
-    .call <- prep(.call)
+  if(!is.null(.call)) {
+    .call <- deparse_to_string(.call)
     if (!is.null(.arg) && .arg != "")
       .call <- paste(.arg, "=", .call)
     intro <- glue::glue("In {.call}, ")
