@@ -71,8 +71,7 @@ test_that("Spots differences in calls", {
     grade_code(grader_args = list(user_quo = c, solution_quo = a))
     ,
     missing_argument(this_call = "vapply()",
-                     that_name = "na.rm",
-                     that = quote(TRUE))
+                     that_name = "na.rm")
   )
 })
 
@@ -93,7 +92,7 @@ test_that("Mentions only first non-matching element", {
 
   expect_message(
     grade_code(grader_args = list(user_quo = x, solution_quo = z)),
-    wrong_value(this = "log(1)", that = quote(sqrt()))
+    wrong_call(this = quote(log()), that = quote(sqrt()))
   )
 
   expect_message(

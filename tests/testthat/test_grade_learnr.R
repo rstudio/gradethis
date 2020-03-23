@@ -74,6 +74,6 @@ test_that("Grade learnr check_code", {
       check_code = "grade_code(glue_incorrect = '{.message}')",
       solution_code = "exp(log(1))"
     ),
-    "I expected 1; what you wrote was interpreted as 2."
+    "In log(2), I expected 1 where you wrote 2."
   )
 })

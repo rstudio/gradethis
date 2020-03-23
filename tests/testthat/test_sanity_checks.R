@@ -32,14 +32,14 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = "b(1)", that = 1, enclosing_call = deparse_to_string(user))
+    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
   )
   
   solution <- quote(a(1))
   user <-     quote(a(a(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = "a(1)", that = 1, enclosing_call = deparse_to_string(user))
+    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
   )
   
   solution <- quote(a(1))
@@ -60,14 +60,14 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a() + a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = solution[[3]], enclosing_call = deparse_to_string(user))
+    wrong_call(this = user[[3]], that = solution[[3]], enclosing_call = user)
   )
   
   solution <- quote(a() + b())
   user <-     quote(b() + a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]], that = solution[[2]], enclosing_call = deparse_to_string(user))
+    wrong_call(this = user[[2]], that = solution[[2]], enclosing_call = user)
   )
   
   solution <- quote(a(b(1)))
@@ -87,7 +87,7 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a(1) %>% a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = solution[[2]], enclosing_call = deparse_to_string(user))
+    wrong_call(this = user[[3]], that = solution[[2]], enclosing_call = user)
   )
   
   solution <- quote(a(b(1)))
@@ -105,7 +105,7 @@ test_that("detect_mistakes detects wrong calls", {
       this = user[[3]], 
       that = solution[[3]], 
       this_name = "y", 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -117,7 +117,7 @@ test_that("detect_mistakes detects wrong calls", {
       this = user[[3]], 
       that = solution[[3]], 
       this_name = "y", 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -126,9 +126,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[3]][[2]]), 
+      this = user[[3]][[2]], 
       that = solution[[3]][[2]], 
-      enclosing_call = deparse_to_string(user[[3]])
+      enclosing_call = user[[3]]
     )
   )
   
@@ -140,7 +140,7 @@ test_that("detect_mistakes detects wrong calls", {
       this = user[[3]], 
       that = solution[[3]], 
       this_name = "y", 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -149,9 +149,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[3]][[2]]), 
+      this = user[[3]][[2]], 
       that = solution[[3]][[2]], 
-      enclosing_call = deparse_to_string(user[[3]])
+      enclosing_call = user[[3]]
     )
   )
   
@@ -169,7 +169,7 @@ test_that("detect_mistakes detects wrong calls", {
       this = user[[3]], 
       that = formals(g)[[2]], 
       this_name = "y", 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -181,7 +181,7 @@ test_that("detect_mistakes detects wrong calls", {
       this = user[[3]], 
       that = formals(g)[[2]], 
       this_name = "y", 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -198,7 +198,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user), 
+      this = user, 
       that = solution
     )
   )
@@ -208,7 +208,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user), 
+      this = user, 
       that = solution
     )
   )
@@ -218,7 +218,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user), 
+      this = user, 
       that = solution
     )
   )
@@ -228,7 +228,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user), 
+      this = user, 
       that = solution
     )
   )
@@ -238,7 +238,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user), 
+      this = user, 
       that = solution
     )
   )
@@ -248,7 +248,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user), 
+      this = user, 
       that = solution
     )
   )
@@ -260,7 +260,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[2]]), 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -269,9 +269,9 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]), 
+      this = user[[2]], 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -282,7 +282,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[2]]), 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -293,7 +293,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[2]]), 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -304,7 +304,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[2]]), 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -315,7 +315,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[3]]), 
       that = solution[[3]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -326,7 +326,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[2]]), 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -337,7 +337,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[2]]), 
       that = solution[[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -348,7 +348,7 @@ test_that("detect_mistakes detects wrong values", {
     wrong_value(
       this = deparse_to_string(user[[3]][[2]]), 
       that = solution[[3]][[2]], 
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -518,7 +518,7 @@ test_that("detect_mistakes detects missing argument", {
     missing_argument(
       this_call = user[[2]], 
       that_name = names(as.list(solution[[2]])[3]),
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
@@ -559,7 +559,7 @@ test_that("detect_mistakes detects missing argument", {
     missing_argument(
       this_call = user[[2]][[3]], 
       that_name = names(as.list(solution[[2]])[3]),
-      enclosing_call = deparse_to_string(user)
+      enclosing_call = user
     )
   )
   
