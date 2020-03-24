@@ -1,0 +1,13 @@
+---
+title: "Developer's Guide"
+output: rmarkdown::html_vignette
+vignette: |-
+  >
+  %\VignetteIndexEntry{Developer's Guide}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# In `learnr` documents
+
+# Standalone
