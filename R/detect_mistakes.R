@@ -243,17 +243,16 @@ detect_mistakes <- function(user,
   for (name in solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
       arg_name <- ifelse(name %in% submitted_names, name, "")
-      return(
-        detect_mistakes(
-          user = user[[name]], 
-          solution = solution[[name]], 
-          env = env,
-          # If too verbose, use user[1]
-          enclosing_call = submitted,
-          # avoid naming first arguments in messages
-          enclosing_arg = arg_name
-        )
+      res <- detect_mistakes(
+        user = user[[name]], 
+        solution = solution[[name]], 
+        env = env,
+        # If too verbose, use user[1]
+        enclosing_call = submitted,
+        # avoid naming first arguments in messages
+        enclosing_arg = arg_name
       )
+      if(!is.null(res)) return(res)
     }
     
     # Make these arguments invisible to further checks
@@ -309,16 +308,15 @@ detect_mistakes <- function(user,
     } else if (!identical(user_args[[i]], solution_args[[i]])) {
       name <- rlang::names2(user_args[i])
       if (!(name %in% submitted_names)) name <- ""
-      return(
-        detect_mistakes(
-          user = user_args[[i]], 
-          solution = solution_args[[i]], 
-          env = env,
-          # If too verbose, use user[1]
-          enclosing_call = submitted,
-          enclosing_arg = name
-        )
+      res <- detect_mistakes(
+        user = user_args[[i]], 
+        solution = solution_args[[i]], 
+        env = env,
+        # If too verbose, use user[1]
+        enclosing_call = submitted,
+        enclosing_arg = name
       )
+      if(!is.null(res)) return(res)
     }
   }
 

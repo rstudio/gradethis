@@ -719,3 +719,14 @@ test_that("detect_mistakes handles duplicated argument names", {
   
 })
 
+test_that("detect_mistakes does not return correct prematurely", {
+  
+  j <<- function(...) 1
+  user <- quote(j(x = a(1), y = a(2)))
+  solution <- quote(j(x = a(x = 1), y = a(3)))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = user[[3]][[2]], that = solution[[3]][[2]], enclosing_call = user[[3]])
+  )
+  
+})
