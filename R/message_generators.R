@@ -43,6 +43,38 @@ bad_argument_name <- function(this_call,
   )
 }
 
+# duplicate_name
+duplicate_name <- function(this_call, 
+                           this_name,
+                           enclosing_call = NULL,
+                           enclosing_arg = NULL) {
+  
+  # f(a = 1, a = 2)
+  # f(a = 1)
+  
+  # "You passed multiple arguments named a to f(), which will cause "
+  # "an error. Check your spelling, or remove one of the arguments."
+  
+  # "You passed multiple arguments named {this_name} to {this_call}, which will cause "
+  # "an error. Check your spelling, or remove one of the arguments."
+  
+  this_call <- prep(this_call)
+  this_name <- prep(this_name)
+  
+  intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
+  
+  glue::glue_data(
+    list(
+      intro = intro,
+      this_call = this_call,
+      this_name = this_name
+    ),
+    "You passed multiple arguments named {this_name} ",
+    "to {this_call}, which will cause an error. ",
+    "Check your spelling, or remove one of the arguments."
+  )
+}
+
 # WHAT TO DO IF THE MISSING ARGUMENT DOESN"T HAVE A NAME IN THE SOLUTION?
 # missing argument
 missing_argument <- function(this_call, 
@@ -159,7 +191,6 @@ too_many_matches <- function(this_call,
       this_call = this_call,
       that_name = that_name
     ),
-    "Double check the argument names you are using. ",
     "{intro}{this_call} accepts an argument named {that_name}. ", 
     "More than one of your argument names in {this_call} will ",
     "be matched to {that_name}, which will cause an error. Try ",

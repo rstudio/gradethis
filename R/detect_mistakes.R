@@ -55,20 +55,46 @@ detect_mistakes <- function(user,
   
   # 3. Check that the user code is not malformed and can be safely passed to
   # call_standardise_formals(), which uses match.call(). Malformed code may
-  # contain an unused argument, may contain multiple arguments whose names
-  # partially match the same formal, or an argument whose name partially matches
-  # more than one formal.
+  # contain an unused argument, multiple arguments whose names partially match
+  # the same formal, duplicate argument names, or an argument whose name
+  # partially matches more than one formal.
   user_args <- as.list(user)
   real_user_names <- user_names[user_names != ""]
   
   solution_args <- as.list(solution)
   real_solution_names <- solution_names[solution_names != ""]
   
+  ## If the user duplicates an argument name, ensure that the solution does as
+  ## well. This should rarely happen, but might with map() for example.
+  user_arg_ns <- table(real_user_names)
+  solution_arg_ns <- table(real_solution_names)
+  if (any(user_arg_ns > 1)) {
+    duplicates <- names(user_arg_ns[user_arg_ns > 1])
+    for (name in duplicates) {
+      if (!identical(user_arg_ns[name], solution_arg_ns[name])) {
+        return(
+          duplicate_name(
+            this_call = user, 
+            this_name = name,
+            enclosing_call = enclosing_call,
+            enclosing_arg = enclosing_arg
+          )
+        )
+      }
+    }
+  }
+  
+  
   ## Remove exact matches from further scrutiny
   for (name in real_user_names) {
     if (name %in% real_solution_names) {
       user_args[[name]] <- NULL
       solution_args[[name]] <- NULL
+      
+      # remove first instance of name from real solution 
+      # names to handle duplicated argument names
+      name_index <- which(identical(real_solution_names, name))[1]
+      real_solution_names[name_index] <- ""
     }
   }
   

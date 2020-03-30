@@ -77,9 +77,10 @@ gradethis:::detect_mistakes(user, solution)
 solution <- quote(a(1))
 user <- quote(a(b(1)))
 ```
-Feedback:
+
 Correct: ``r gradethis:::deparse_to_string(solution)``  
 Student: ``r gradethis:::deparse_to_string(user)``  
+Feedback:
 
 ```{r echo = FALSE}
 gradethis:::detect_mistakes(user, solution)
@@ -91,10 +92,10 @@ gradethis:::detect_mistakes(user, solution)
 solution <- quote(a(1))
 user <- quote(a(a(1)))
 ```
-Feedback:
+
 Correct: ``r gradethis:::deparse_to_string(solution)``  
 Student: ``r gradethis:::deparse_to_string(user)``  
-
+Feedback:
 ```{r echo = FALSE}
 gradethis:::detect_mistakes(user, solution)
 ```
@@ -877,4 +878,26 @@ Feedback:
 gradethis:::detect_mistakes(user, solution)
 ```
 
+***
 
+# Duplicate names
+
+```{r echo = TRUE}
+i <- function(x, ...) x
+```
+
+***
+
+```{r}
+solution <- quote(i(x = 1))
+user <- quote(i(x = 1, x = 2))
+```
+
+Correct: ``r gradethis:::deparse_to_string(solution)``  
+Student: ``r gradethis:::deparse_to_string(user)``  
+Feedback:
+```{r echo = FALSE}
+gradethis:::detect_mistakes(user, solution)
+```
+
+***

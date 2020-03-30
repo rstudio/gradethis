@@ -707,3 +707,15 @@ test_that("detect_mistakes does not throw error for multiple matches of formal",
   
 })
 
+test_that("detect_mistakes handles duplicated argument names", {
+  
+  dd <<- function(a) a
+  user <-     quote(dd(a = 1, a = 2))
+  solution <- quote(dd(a = 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    duplicate_name(this_call = user, this_name = "a")
+  )
+  
+})
+
