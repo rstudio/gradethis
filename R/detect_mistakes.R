@@ -104,7 +104,7 @@ detect_mistakes <- function(user,
   
   if (length(remaining_user_names) > 0) {
     
-    ## Do any solution names partially match multiple user names?
+    ## Do any non-matched solution names partially match multiple user names?
     pmatches_per_formal <- function(solution_name) {
       sum(startsWith(solution_name, remaining_user_names))
     }
@@ -124,7 +124,7 @@ detect_mistakes <- function(user,
       )
     }
 
-    ## How many formals does each user arg partially match?
+    ## How many formals does each remaining user arg partially match?
     pmatches_per_arg <- function(user_name) {
       sum(startsWith(remaining_solution_names, user_name))
     }
@@ -132,6 +132,7 @@ detect_mistakes <- function(user,
     matches <- vapply(remaining_user_names, pmatches_per_arg, 1)
     offenders <- matches[matches > 1]
     unused <- matches[matches == 0]
+    well_matched <- matches[matches == 1]
     
     # names that match multiple arguments are a syntax error
     if (length(offenders) > 0) {
@@ -160,16 +161,23 @@ detect_mistakes <- function(user,
         )
       )
     }
+    
+    # Remove partially matched arguments from further consideration
+    if (length(well_matched > 0)) {
+      matched_user_names <- rlang::names2(well_matched)
+      
+      for (name in matched_user_names) {
+        # which solution name does it match?
+        match <- which(startsWith(remaining_solution_names, name))
+        matched_solution_name <- remaining_solution_names[match]
+        
+        user_args[[name]] <- NULL
+        solution_args[[matched_solution_name]] <- NULL
+      }
+    }
+    
   }
     
-  # Check for unused unnamed arguments
-  # Remove used names
-  for (name in remaining_user_names) {
-    if (name %in% remaining_solution_names) {
-      user_args[[name]] <- NULL
-      solution_args[[name]] <- NULL
-    }
-  }
   n_remaining_user <- length(user_args)
   n_remaining_solution <- length(solution_args)
   if (n_remaining_user > n_remaining_solution) {
