@@ -99,12 +99,10 @@ detect_mistakes <- function(user,
   }
   
   ## Check remaining arguments for partial matches
-  user_names <- rlang::names2(user_args)
-  remaining_user_names <- user_names[user_names != ""]
+  remaining_user_names <- real_names(user_args)
+  remaining_solution_names <- real_names(solution_args)
   
   if (length(remaining_user_names) > 0) {
-    solution_names <- rlang::names2(solution_args)
-    remaining_solution_names <- solution_names[solution_names != ""]
     
     ## Do any solution names partially match multiple user names?
     pmatches_per_formal <- function(solution_name) {
@@ -324,46 +322,8 @@ detect_mistakes <- function(user,
 }
 
 
-real_name <- function(name) {
- !is.null(name) && name != ""
+real_names <- function(x) {
+  x_names <- rlang::names2(x)
+  x_names[x_names != ""]
 }
 
-names_match <- function(user, solution, i) {
-
-  if (is.null(names(user))) return(TRUE)
-  user_names <- names(user)
-
-  if (is.null(names(solution))) return(TRUE)
-  solution_names <- names(solution)
-
-  if (real_name(user_names[i])) {
-    if (real_name(solution_names[i])) {
-      if (user_names[i] != solution_names[i]) {
-        return(FALSE)
-      }
-    } else if (user_names[i] %in% solution_names) {
-      return(FALSE)
-    }
-  } else if (real_name(solution_names[i]) &&
-             solution_names[i] %in% user_names) {
-    return(FALSE)
-  }
-  TRUE
-}
-
-prep_snippet <- function(code, i, .solution = FALSE) {
-
-  # errors that involve an infix operator make more
-  # sense if the explanation refers to the operator
-  if (i == 2 && is_infix(code[[1]]) && length(code[[1]]) == 1) {
-    paste(deparse_to_string(code[[1]][[1]]), deparse_to_string(code[[2]]))
-
-    # Return the internal arguments of user code, but
-    # not solution code (that could give away too much)
-  } else if (is.call(code[[i]])) {
-    ifelse(.solution, code[[i]][1], renest(code[i:length(code)]))
-  } else {
-    code[[i]]
-  }
-
-}
