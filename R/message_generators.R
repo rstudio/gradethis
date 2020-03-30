@@ -247,8 +247,9 @@ build_intro <- function(.call = NULL, .arg = NULL) {
   
   if(!is.null(.call)) {
     .call <- deparse_to_string(.call)
-    if (!is.null(.arg) && .arg != "")
+    if (!is.null(.arg) && !identical(.arg, "")) {
       .call <- paste(.arg, "=", .call)
+    }
     intro <- glue::glue("In {.call}, ")
   } else {
     intro <- ""
