@@ -62,7 +62,7 @@ missing_argument <- function(this_call,
   # "in a different way, or left out an important argument name."
   
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
-  intro <- ifelse(intro == "", "Y", paste0(intro, "y"))
+  your_char <- ifelse(intro == "", "Y", "y")
   
   this_call <- prep(this_call)
   that_name <- prep(that_name)
@@ -79,7 +79,7 @@ missing_argument <- function(this_call,
       this_call = this_call,
       that_name = that_name
     ),
-    "{intro}our call to {this_call} should include {that_name} ",
+    "{intro}{your_char}our call to {this_call} should include {that_name} ",
     "You may have misspelled an argument name, ",
     "or left out an important argument."
   )
