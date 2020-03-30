@@ -31,9 +31,6 @@ detect_mistakes <- function(user,
     }
   }
   # We can assume anything below here is a call
-
-  user_names <- rlang::names2(user)
-  solution_names <- rlang::names2(solution)
   
   # Dividing cases into groups based on the relative lengths of the user's code
   # and the solution code produces unitelligible messages as in issue #84. To
@@ -59,15 +56,15 @@ detect_mistakes <- function(user,
   # the same formal, duplicate argument names, or an argument whose name
   # partially matches more than one formal.
   user_args <- as.list(user)
-  real_user_names <- user_names[user_names != ""]
+  user_names <- real_names(user)
   
   solution_args <- as.list(solution)
-  real_solution_names <- solution_names[solution_names != ""]
+  solution_names <- real_names(solution)
   
   ## If the user duplicates an argument name, ensure that the solution does as
   ## well. This should rarely happen, but might with map() for example.
-  user_arg_ns <- table(real_user_names)
-  solution_arg_ns <- table(real_solution_names)
+  user_arg_ns <- table(user_names)
+  solution_arg_ns <- table(solution_names)
   if (any(user_arg_ns > 1)) {
     duplicates <- names(user_arg_ns[user_arg_ns > 1])
     for (name in duplicates) {
@@ -86,15 +83,15 @@ detect_mistakes <- function(user,
   
   
   ## Remove exact matches from further scrutiny
-  for (name in real_user_names) {
-    if (name %in% real_solution_names) {
+  for (name in user_names) {
+    if (name %in% solution_names) {
       user_args[[name]] <- NULL
       solution_args[[name]] <- NULL
       
       # remove first instance of name from real solution 
       # names to handle duplicated argument names
-      name_index <- which(identical(real_solution_names, name))[1]
-      real_solution_names[name_index] <- ""
+      name_index <- which(identical(solution_names, name))[1]
+      solution_names[name_index] <- ""
     }
   }
   
@@ -178,6 +175,8 @@ detect_mistakes <- function(user,
     
   }
     
+  # Check for unnamed, unused arguments
+  # Any further matching will now be by position not name
   n_remaining_user <- length(user_args)
   n_remaining_solution <- length(solution_args)
   if (n_remaining_user > n_remaining_solution) {
@@ -196,15 +195,14 @@ detect_mistakes <- function(user,
   
   # It is now safe to call call_standardise_formals on student code
   user <- call_standardise_formals(user, env = env)
-  user_names <- rlang::names2(user)
-  solution_names <- rlang::names2(solution)
+  user_names <- real_names(user)
   
   # 5. Check that every named argument in the solution appears in the user code.
   #    The outcome of this order is that when a user writes na = TRUE, gradethis
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
-  actual_solution_names <-  solution_names[solution_names != ""]
-  missing_args <- actual_solution_names[!(actual_solution_names %in% user_names)]
+  solution_names <-  real_names(solution) # original solution_names was modified above
+  missing_args <- solution_names[!(solution_names %in% user_names)]
   if (length(missing_args) > 0) {
     missing_name <- missing_args[1]
     return(
@@ -223,7 +221,6 @@ detect_mistakes <- function(user,
   #    position a named argument that is passed to ... with an unamed argument
   #    passed to ...
   unmatched_user_names <- user_names[!(user_names %in% solution_names)] 
-  unmatched_user_names <- unmatched_user_names[unmatched_user_names != ""]
   if (length(unmatched_user_names) > 0) {
     surplus_name <- unmatched_user_names[1]
     return(
@@ -240,10 +237,10 @@ detect_mistakes <- function(user,
   # 7. Check that every named argument in the solution matches every
   #    correspondingly named argument in the user code. We know each 
   #    has a match because of Step 5.
-  user_args <- as.list(user[-1])         # remove the call
-  solution_args <- as.list(solution[-1]) # remove the call
+  user_args <- as.list(user)[-1]         # remove the call
+  solution_args <- as.list(solution)[-1] # remove the call
   
-  for (name in actual_solution_names) {
+  for (name in solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
       arg_name <- ifelse(name %in% submitted_names, name, "")
       return(
