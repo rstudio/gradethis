@@ -696,7 +696,7 @@ test_that("detect_mistakes does not throw error for multiple matches of argument
 })
 
 test_that("detect_mistakes does not throw error for multiple matches of formal", {
-  
+
   zz <<- function(x, yab = 1, ...) x
   user <-     quote(zz(1, y = 2, ya = 3))
   solution <- quote(zz(1))
