@@ -1,322 +1,332 @@
-# given a user and solution expression,
-# recursively detect differences
-# detect_mistakes_old <- function(user,
-#                             solution, env = parent.frame()) {
-#   force(env)
-# 
-#   # code should be checked in the opposite order
-#   # of evaluation (e.g. from the outside in for
-#   # nested notation), whether or not the student
-#   # (and/or teacher) used a pipe
-#   user <- rev(order_calls(unpipe_all(user), env = env))
-#   solution <- rev(order_calls(unpipe_all(solution), env = env))
-#   
-#   
-#   # do comparing named and unnamed arguments here
-#   # probably something using rlang::call_arg_names
-#   
-#   # user_len > solution_len ## surplus
-#   # user_len < solution_len ## missing
-# 
-#   # then for loop.
-# 
-#   max_length <- max(length(user), length(solution))
-# 
-#   for (i in seq_len(max_length)) {
-# 
-    ## missing/surplus argument should not just compare raw position
-#     ## should determine what is missing/surplus by names
-#     # Did the user miss something?
-#     if (i > length(user)) {
-#       return(missing_argument(this_call = user[[i - 1]],
-#                               that = solution[[i]],
-#                               that_name = names(solution[i])))
-#     }
-# 
-#     # Did the user write too much?
-#     if (i > length(solution)) {
-#       return(surplus_argument(this_call = user[[i - 1]][1],
-#                               this_name = names(user[i]),
-#                               this = ifelse(is.call(user[[i]]),
-#                                             renest(user[i:length(user)]),
-#                                             user[[i]])))
-#     }
-# 
-#     # Does the user code not match the solution code?
-#     if (length(user[[i]]) != length(solution[[i]]) ||
-#         !identical(user[[i]], solution[[i]])
-#         ) {
-#       return(isolate_mismatch(user, solution, i))
-#     }
-#   }
-#   NULL
-# }
-
-detect_mistakes <- function(user, solution, env = rlang::env_parent()) {
+detect_mistakes <- function(user, 
+                            solution, 
+                            env = rlang::env_parent(),
+                            enclosing_call = NULL, 
+                            enclosing_arg = NULL) {
   force(env)
-  # rlang::env_print(env)
-  # print(sort(rlang::env_names(env)))
+  
+  submitted <- user
 
   if (is.call(user)) {
-    user <- call_standardise_formals(unpipe_all(user), env = env)
+    user <- unpipe_all(user) # cannot standardise yet without risking error
+    submitted_names <- rlang::names2(user)
   }
   if (is.call(solution)) {
     solution <- call_standardise_formals(unpipe_all(solution), env = env)
   }
 
-  # anything that is not a language, better the same
-  # else it's wrong
+  # 1. If the code contains a bare value, then the user and solution value
+  # should be identical.
+  # BUT WHAT IF ONE IS A CALL THAT EVALUATES TO THE VALUE OF THE OTHER?
   if (!is.call(user) || !is.call(solution)) {
     if (!identical(user, solution)) {
-      return(wrong_value(this = deparse_to_string(user),
-                  that = solution)
+      return(
+        wrong_value(
+          this = submitted,
+          that = solution,
+          this_name = enclosing_arg,
+          enclosing_call = enclosing_call
+        )
       )
     }
   }
-
-  user_len <- length(user)
-  solution_len <- length(solution)
-
-  user_names <- rlang::names2(user)
-  solution_names <- rlang::names2(solution)
-
-  if (user_len > solution_len) {
-    for (i in seq_len(user_len)) {
-      if (i > solution_len || user_names[i] != solution_names[i]) {
+  # We can assume anything below here is a call
+  
+  # Dividing cases into groups based on the relative lengths of the user's code
+  # and the solution code produces unitelligible messages as in issue #84. To
+  # produce more transparent messages that accord with how a user thinks of calls,
+  # check these things in this order:
+  
+  # 2. Check that the user and the solution use the same call
+  # SHOULD WE HAVE A TARGETED WRONG CALL FUNCTION?
+  if (!identical(user[[1]], solution[[1]])) {
+    return(
+      wrong_call(
+        this = user,
+        that = solution,
+        this_name = enclosing_arg,
+        enclosing_call = enclosing_call
+      )
+    )
+  }
+  
+  # 3. Check that the user code is not malformed and can be safely passed to
+  # call_standardise_formals(), which uses match.call(). Malformed code may
+  # contain an unused argument, multiple arguments whose names partially match
+  # the same formal, duplicate argument names, or an argument whose name
+  # partially matches more than one formal.
+  user_args <- as.list(user)
+  user_names <- real_names(user)
+  
+  solution_args <- as.list(solution)
+  solution_names <- real_names(solution)
+  
+  ## If the user duplicates an argument name, ensure that the solution does as
+  ## well. This should rarely happen, but might with map() for example.
+  user_arg_ns <- table(user_names)
+  solution_arg_ns <- table(solution_names)
+  if (any(user_arg_ns > 1)) {
+    duplicates <- names(user_arg_ns[user_arg_ns > 1])
+    for (name in duplicates) {
+      if (!identical(user_arg_ns[name], solution_arg_ns[name])) {
         return(
-          surplus_argument(
-            this_call = user,
-            this = user[[i]],
-            this_name = user_names[[i]]
+          duplicate_name(
+            this_call = user, 
+            this_name = name,
+            enclosing_call = enclosing_call,
+            enclosing_arg = enclosing_arg
           )
         )
       }
     }
-
-  } else if (user_len < solution_len) {
-    for (i in seq_len(solution_len)) {
-      if (i > user_len || user_names[i] != solution_names[i]) {
-        return(
-          missing_argument(
-            this_call = solution,
-            that = solution[[i]],
-            that_name = solution_names[[i]]
-          )
-        )
-      }
+  }
+  
+  
+  ## Remove exact matches from further scrutiny
+  for (name in user_names) {
+    if (name %in% solution_names) {
+      user_args[[name]] <- NULL
+      solution_args[[name]] <- NULL
+      
+      # remove first instance of name from real solution 
+      # names to handle duplicated argument names
+      name_index <- which(identical(solution_names, name))[1]
+      solution_names[name_index] <- ""
     }
-  } else {
-    # see if call is same
-    if (!identical(user[[1]], solution[[1]])) {
-      return(wrong_value(this = deparse_to_string(user),
-                         that = prep(solution),
-                         this_name = user_names[1],
-                         that_name = solution_names[1]))
+  }
+  
+  ## Check remaining arguments for partial matches
+  remaining_user_names <- real_names(user_args)
+  remaining_solution_names <- real_names(solution_args)
+  
+  if (length(remaining_user_names) > 0) {
+    
+    ## Do any non-matched solution names partially match multiple user names?
+    pmatches_per_formal <- function(solution_name) {
+      sum(startsWith(solution_name, remaining_user_names))
     }
     
-    for (i in seq_len(user_len)) {
-      if (user_names[i] != solution_names[i]) {
-         return(
-           surplus_argument(
-             this_call = user,
-             this = user[[i]],
-             this_name = user_names[[i]]
-           )
-         )
-      }
-      # if user[i] solution[i] not same: isolate_mismatch_2
-      if (!identical(user[[i]], solution[[i]])) {
-        return(
-          detect_mistakes(user[[i]], solution[[i]], env = env)
+    matches <- vapply(remaining_solution_names, pmatches_per_formal, 1)
+    offenders <- matches[matches > 1]
+    
+    if (length(offenders) > 0) {
+      overmatched_name <- rlang::names2(offenders[1])
+      return(
+        too_many_matches(
+          this_call = user, 
+          that_name = overmatched_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
         )
-      }
+      )
+    }
+
+    ## How many formals does each remaining user arg partially match?
+    pmatches_per_arg <- function(user_name) {
+      sum(startsWith(remaining_solution_names, user_name))
+    }
+    
+    matches <- vapply(remaining_user_names, pmatches_per_arg, 1)
+    offenders <- matches[matches > 1]
+    unused <- matches[matches == 0]
+    well_matched <- matches[matches == 1]
+    
+    # names that match multiple arguments are a syntax error
+    if (length(offenders) > 0) {
+      bad_name <- rlang::names2(offenders[1])
+      return(
+        bad_argument_name(
+          this_call = user, 
+          this = user[[bad_name]], 
+          this_name = bad_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
+        )
+      )
+    }
+    
+    # Unmatched named arguments are surplus
+    if (length(unused) > 0) {
+      surplus_name <- rlang::names2(unused[1])
+      return(
+        surplus_argument(
+          this_call = user,
+          this = user[[surplus_name]],
+          this_name = surplus_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
+        )
+      )
+    }
+    
+    # Remove partially matched arguments from further consideration
+    if (length(well_matched > 0)) {
+      matched_user_names <- rlang::names2(well_matched)
       
+      for (name in matched_user_names) {
+        # which solution name does it match?
+        match <- which(startsWith(remaining_solution_names, name))
+        matched_solution_name <- remaining_solution_names[match]
+        
+        user_args[[name]] <- NULL
+        solution_args[[matched_solution_name]] <- NULL
+      }
     }
     
   }
+    
+  # Check for unnamed, unused arguments
+  # Any further matching will now be by position not name
+  n_remaining_user <- length(user_args)
+  n_remaining_solution <- length(solution_args)
+  if (n_remaining_user > n_remaining_solution) {
+    i <- n_remaining_solution + 1
+    return(
+      surplus_argument(
+        this_call = user,
+        this = user[[i]],
+        this_name = rlang::names2(user[i]),
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+  
+  
+  # It is now safe to call call_standardise_formals on student code
+  user <- call_standardise_formals(user, env = env)
+  user_names <- real_names(user)
+  
+  # 5. Check that every named argument in the solution appears in the user code.
+  #    The outcome of this order is that when a user writes na = TRUE, gradethis
+  #    will tell them that it expected an na.rm argument, not that na is a surplus
+  #    argument.
+  solution_names <-  real_names(solution) # original solution_names was modified above
+  missing_args <- solution_names[!(solution_names %in% user_names)]
+  if (length(missing_args) > 0) {
+    missing_name <- missing_args[1]
+    return(
+      missing_argument(
+        this_call = solution,
+        that_name = missing_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+  
+  # 6. Check that the user code does not contain any named arguments that do not
+  #    appear in the solution code. Since both calls have been standardised, these
+  #    named arguments can only be being passed to ... and we should not match by
+  #    position a named argument that is passed to ... with an unamed argument
+  #    passed to ...
+  unmatched_user_names <- user_names[!(user_names %in% solution_names)] 
+  if (length(unmatched_user_names) > 0) {
+    surplus_name <- unmatched_user_names[1]
+    return(
+      surplus_argument(
+        this_call = user,
+        this = user[[surplus_name]],
+        this_name = surplus_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+  
+  # 7. Check that every named argument in the solution matches every
+  #    correspondingly named argument in the user code. We know each 
+  #    has a match because of Step 5.
+  user_args <- as.list(user)[-1]         # remove the call
+  solution_args <- as.list(solution)[-1] # remove the call
+  
+  for (name in solution_names) {
+    if (!identical(user[[name]], solution[[name]])) {
+      arg_name <- ifelse(name %in% submitted_names, name, "")
+      res <- detect_mistakes(
+        user = user[[name]], 
+        solution = solution[[name]], 
+        env = env,
+        # If too verbose, use user[1]
+        enclosing_call = submitted,
+        # avoid naming first arguments in messages
+        enclosing_arg = arg_name
+      )
+      if(!is.null(res)) return(res)
+    }
+    
+    # Make these arguments invisible to further checks
+    user_args[[name]] <- NULL
+    solution_args[[name]] <- NULL
+  }
+  
+  
+  # 8. Extract the remaining arguments from the user code and the solution code.
+  #    Pair them in the order that they occur, checking that each pair matches.
+  #    Check pairs in sequence and address unmatched arguments when you get to
+  #    them.
+  user_len <- length(user_args)
+  solution_len <- length(solution_args)
+
+  n <- max(user_len, solution_len)
+  
+  for (i in seq_len(n)) {
+    
+    # if solution argument is unmatched due to no remaining user arguments
+    if (i > user_len) {
+      name <- rlang::names2(solution_args[i])
+      
+      # if the missing argument is unnamed, pass the value
+      if (is.null(name) || name == "") {
+        name <- solution_args[[i]]
+      }
+      
+      return(
+        missing_argument(
+          this_call = solution,
+          that_name = name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
+        )
+      )
+      
+    # if user argument is unmatched due to no remaining solution arguments
+    } else if (i > solution_len) {
+      arg_name <- rlang::names2(user_args[i])
+      if (!(arg_name %in% submitted_names)) arg_name <- ""
+      return(
+        surplus_argument(
+          this_call = user,
+          this = user_args[[i]],
+          this_name = arg_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
+        )
+      )
+      
+    # The user argument has a matching solution argument, are they identical?
+    } else if (!identical(user_args[[i]], solution_args[[i]])) {
+      name <- rlang::names2(user_args[i])
+      if (!(name %in% submitted_names)) name <- ""
+      res <- detect_mistakes(
+        user = user_args[[i]], 
+        solution = solution_args[[i]], 
+        env = env,
+        # If too verbose, use user[1]
+        enclosing_call = submitted,
+        enclosing_arg = name
+      )
+      if(!is.null(res)) return(res)
+    }
+  }
+
   # No missmatch found
   return(NULL)
 }
 
-# isolate_mismatch_2 <- function(user, solution, i) {
-#   # For a given order call, we found code that is different
-#   # if the the first argument is different,
-#   # i.e., the wrong function was used,  mean(1:3) vs std(1:3)
-#   # return wrong message
-#   if (length(user[[i]]) == 1 &&
-#       length(solution[[i]]) == 1) {
-# 
-#     wrong <- prep_snippet(user, i)
-#     right <- prep_snippet(solution, i, .solution = TRUE)
-# 
-#     return(wrong_value(this = wrong,
-#                        that = right,
-#                        this_name = names(user[i]),
-#                        that_name = names(solution[i])))
-# 
-#     # If we cannot do this, we are working with two
-#     # multipart calls and we need to identify which
-#     # elements of the calls do not align (here we
-#     # rely heavily on the fact that both calls have
-#     # been previously standardized)
-#   }
-# 
-#   # some other part of the code is different
-#   detect_mistakes(user[[i]], solution[[i]])
-# }
 
-# isolate_mismatch <- function(user, solution, i) {
-
-#   # We've honed in on the error when we can narrow
-#   # it down to a single incorrect user element
-#   # matched to a single correct solution element
-#   if (length(user[[i]]) == 1 &&
-#       length(solution[[i]]) == 1) {
-
-#     wrong <- prep_snippet(user, i)
-#     right <- prep_snippet(solution, i, .solution = TRUE)
-
-#     return(wrong_value(this = wrong,
-#                        that = right,
-#                        this_name = names(user[i]),
-#                        that_name = names(solution[i])))
-
-#     # If we cannot do this, we are working with two
-#     # multipart calls and we need to identify which
-#     # elements of the calls do not align (here we
-#     # rely heavily on the fact that both calls have
-#     # been previously standardized)
-#   } else {
-
-#     user_call <- user[[i]]
-#     solution_call <- solution[[i]]
-
-#     # First check that the calls match.
-#     if (user_call[[1]] != solution_call[[1]]) {
-#       wrong <- renest(user[i:length(user)])
-#       right <- ifelse(is_infix(solution_call[1]),
-#                       renest(solution[i:length(solution)]),
-#                       solution_call[1])
-
-#       return(wrong_value(this = wrong,
-#                          that = right,
-#                          this_name = names(user[i]),
-#                          that_name = names(solution[i])))
-#     }
-
-#     ## 
-
-#     # Then inspect the first argument (which appears on the next line)
-#     if (length(user) == i && length(solution) > i) {
-#       return(missing_argument(this_call = user[[i]],
-#                               that = solution[[i + 1]],
-#                               that_name = names(solution[i + 1])))
-
-#     } else if (length(user) > i && length(solution) == i) {
-#       return(surplus_argument(this_call = user[[i]][1],
-#                               this_name = names(user[i + 1]),
-#                               this = ifelse(is.call(user[[i + 1]]),
-#                                             renest(user[(i + 1):length(user)]),
-#                                             user[[i + 1]])))
-
-#     } else if (length(user) > i && length(solution) > i) {
-#       if (!names_match(user, solution, i + 1)) {
-#         return(wrong_value(this = user[[i + 1]],
-#                            this_name = names(user[i + 1]),
-#                            that = solution[[i + 1]],
-#                            that_name = names(solution[i + 1])))
-
-#       } else if (user[[i + 1]] != solution[[i + 1]]) {
-#         if (is_infix(user_call[1])) {
-#           return(detect_mistakes(user_call, solution_call))
-#         } else {
-#           return(detect_mistakes(renest(user[(i + 1):length(user)]),
-#                                     renest(solution[(i + 1):length(solution)])))
-#         }
-#       }
-#     }
-
-#     # Then iterate through the remaining arguments one at a time
-#     # here we are iterating across a call instead of down a call
-#     # stack as in detect_mistakes
-
-#     max_length <- max(length(user_call), length(solution_call))
-
-#     for (j in seq_len(max_length)) {
-#       if (j == 1) next
-
-#       # Did the user leave out an argument?
-#       if (j > length(user_call)) {
-#         return(missing_argument(this_call = user_call[1],
-#                                 that = solution_call[[j]],
-#                                 that_name = names(solution_call[j])))
-#       }
-
-#       # Did the user include an extra argument?
-#       if (j > length(solution_call)) {
-#         return(surplus_argument(this_call = user_call[1],
-#                                 this = user_call[[j]],
-#                                 this_name = names(user_call[j])))
-#       }
-
-#       # Do the argument names match?
-#       if (!names_match(user_call, solution_call, j)) {
-#         return(wrong_value(this = user_call[[j]],
-#                            this_name = names(user_call[j]),
-#                            that = solution_call[[j]],
-#                            that_name = names(solution_call[j])))
-#       }
-
-#       # Do two arguments conflict? They may themselves
-#       # contain an expression that we should drill into.
-#       if (user_call[[j]] != solution_call[[j]]) {
-#         return(detect_mistakes(user_call, solution_call))
-#       }
-#     }
-#   }
-#   NULL
-# }
-
-real_name <- function(name) {
- !is.null(name) && name != ""
+real_names <- function(x) {
+  x_names <- rlang::names2(x)
+  x_names[x_names != ""]
 }
 
-names_match <- function(user, solution, i) {
-
-  if (is.null(names(user))) return(TRUE)
-  user_names <- names(user)
-
-  if (is.null(names(solution))) return(TRUE)
-  solution_names <- names(solution)
-
-  if (real_name(user_names[i])) {
-    if (real_name(solution_names[i])) {
-      if (user_names[i] != solution_names[i]) {
-        return(FALSE)
-      }
-    } else if (user_names[i] %in% solution_names) {
-      return(FALSE)
-    }
-  } else if (real_name(solution_names[i]) &&
-             solution_names[i] %in% user_names) {
-    return(FALSE)
-  }
-  TRUE
-}
-
-prep_snippet <- function(code, i, .solution = FALSE) {
-
-  # errors that involve an infix operator make more
-  # sense if the explanation refers to the operator
-  if (i == 2 && is_infix(code[[1]]) && length(code[[1]]) == 1) {
-    paste(deparse_to_string(code[[1]][[1]]), deparse_to_string(code[[2]]))
-
-    # Return the internal arguments of user code, but
-    # not solution code (that could give away too much)
-  } else if (is.call(code[[i]])) {
-    ifelse(.solution, code[[i]][1], renest(code[i:length(code)]))
-  } else {
-    code[[i]]
-  }
-
-}
