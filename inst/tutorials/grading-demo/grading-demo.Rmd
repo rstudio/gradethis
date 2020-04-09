@@ -22,17 +22,21 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ###
 
-The `gradethis` package provides four ways to autocheck student exercises. You can use:
+The `gradethis` package provides three ways to autocheck student code in [learnr](https://rstudio.github.io/learnr/) tutorials. You can use:
 
 1. `grade_result()` to check that the student's code returns a correct _result_.
 1. `grade_conditions()` to check that the student's code returns a _result_ that satisfies a complete set of conditions. This is akin to unit testing the result.
 1. `grade_code()` to check that the student's _code_ exactly matches the solution code.
 
-...or you can create your own customized checking code.
+You can also use gradethis to create your own customized checking code.
 
 ### Syntax
 
-In each case, you grade an exercise by passing a `gradethis` function to the `-check` chunk associated with the exercise. This chunk will share the same label root as the exercise chunk, but the root will be suffixed with `-check`. 
+In each case, you grade an exercise by passing a `gradethis` function to the `-check` code chunk associated with the exercise. This code chunk will share the same label root as the exercise code chunk, but the root will be suffixed with `-check`. 
+
+See the [learnr documentation](https://rstudio.github.io/learnr/exercises.html) to learn more about code chunks in learnr tutorials.
+
+### 
 
 Here is how an example exercise and `-check` chunk would appear in a learnr document.
 
@@ -68,6 +72,8 @@ tutorial_options(exercise.checker = gradethis::grade_learnr)
 ```
 ````
 
+You can also see this in the first code chunk of the .Rmd file associated with this tutorial.
+
 ### 
 
 The remainder of this document looks at how to use individual `gradethis` functions.
@@ -76,22 +82,43 @@ The remainder of this document looks at how to use individual `gradethis` functi
 
 ###
 
-Use `grade_result()` to check the result that is returned by the student's code, but not the code itself, e.g.
+`grade_result()` checks whether or not the student's code returns the correct result. It matches the result against one or more conditions and returns the message (and correct/incorrect status) associated with the first matched condition.
+
+Here is an example of `grade_result()` in use.
+
+* Calculate the average number of weeks in a month.
+
+```{r grade_res, exercise = TRUE}
+
+```
+
+```{r grade_res-check}
+grade_result(
+  pass_if(~ identical(.result, 365.25 / 12 / 7), "There are 4.348214 weeks on average in a month."),
+  fail_if(~ identical(.result, 365 / 7 / 12), "Did you assume the average year has 365 days? Due to leap years, the average year actually has 365.25 days."),
+  fail_if(~ identical(.result, 52 / 12), "Did you assume that the average year has 52 weeks? It is actually has a little more because 52 * 7 is only 364 days."),
+  fail_if(~ identical(.result, 4), "Close, but four is the average number of whole weeks in a month."),
+  fail_if(~ TRUE, "Not quite. Consider that there are 365.25 days in an average year, 12 months in a year, and 7 days in a week.")
+)
+```
+
+
+### 
+
+And here is the code behind the example.
 
 ````markdown
-Enter an even number below five.
-
 `r ''````{r grade_result, exercise = TRUE}
-12 / 3
+
 ```
 
 `r ''````{r grade_result-check}
 grade_result(
-  fail_if(~ identical(.result, 1), "Custom message for value 1."),
-  pass_if(~ identical(.result, 2), "Custom message for value 2."),
-  fail_if(~ identical(.result, 3), "Custom message for value 3."),
-  pass_if(~ identical(.result %% 2, 0) && (.result < 5),
-          "Even number below 5")
+  pass_if(~ identical(.result, 365.25 / 12 / 7), "There are 4.348214 weeks on average in a month."),
+  fail_if(~ identical(.result, 365 / 7 / 12), "Did you assume the average year has 365 days? Due to leap years, the average year actually has 365.25 days."),
+  fail_if(~ identical(.result, 52 / 12), "Did you assume that the average year has 52 weeks? It is actually has a little more because 52 * 7 is only 364 days."),
+  fail_if(~ identical(.result, 4), "Close, but four is the average number of whole weeks in a month."),
+  fail_if(~ TRUE, "Not quite. Consider that there are 365.25 days in an average year, 12 months in a year, and 7 days in a week.")
 )
 ```
 ````
@@ -102,53 +129,33 @@ grade_result(
 
 Each `fail_if()` and `pass_if()` function should contain:
 
-1. a logical test prefixed by a `~` 
-1. a character string to display if the logical test evaluates to true
+1. A logical test prefixed by a `~` 
+1. A character string to display if the logical test evaluates to true
 
 Use `.result` to refer to the student's answer within the logical tests.
 
 ### Execution
 
-`grade_result()` will evaluate the `_if` functions in order, replacing `.result` with the student's result as it does. `grade_result()` will stop and return the message of the first `_if` function whose condition evaluates to true. If that function is: 
+`grade_result()` will evaluate the `_if` functions in order, replacing `.result` with the student's result as it does. 
+
+`grade_result()` will stop and return the message of the first `_if` function whose condition evaluates to true. If that function is: 
 
 * `pass_if()`, the exercise will be marked correct 
 * `fail_if()`, the exercise will be marked wrong
 
-Order matters! `grade_result()` will not continue to evaluate `_if()` functions after one returns true.
-### 
+Order matters! `grade_result()` will not continue to evaluate `_if()` functions after one returns a message.
+
+### Choose the best grading function for you
 
 `grade_result()` will mark a result correct if it passes a _single_ `pass_if()` statement (without first triggering a `fail_if()`). 
 
 If you would like to ensure that a result satisfies _every_ `pass_if` statement use `grade_conditions()`.
 
-### Try it!
+### 
 
-________________________
+`grade_result()` will not check the students code. Nor will `grade_result()` know if the student directly typed the correct result into the exercise box.
 
-Enter a small even number, then click Submit Answer.
-
-```{r grade_result, exercise = TRUE}
-12 / 3
-```
-
-```{r grade_result-hint-1}
-"Is it an even number"
-```
-
-```{r grade_result-hint-2}
-"Enter an even number below 5"
-```
-
-```{r grade_result-check}
-grade_result(
-  fail_if(~ identical(.result, 1), "Custom message for value 1."),
-  pass_if(~ identical(.result, 2), "Custom message for value 2."),
-  fail_if(~ identical(.result, 3), "Custom message for value 3."),
-  fail_if(~ .result > 5, "Try a smaller number."),
-  pass_if(~ identical(.result %% 2, 0) && (.result < 5),
-          "Even number below 5")
-)
-```
+If you want to check the code the student used to get a result, use `grade_code()`
 
 ###
 
@@ -158,7 +165,38 @@ See `?grade_result` for more information.
 
 ### 
 
-`grade_conditions()` is similar to `grade_result()`, but it requires a result to pass _every_ `pass_if()` function contained in its function body. This method is analogous to creating unit tests that all need to pass:
+`grade_conditions()` is similar to `grade_result()`, but it requires a result to pass _every_ `pass_if()` function contained in its function body. This method is analogous to creating unit tests that all need to pass.
+
+Here is an example of `grade_condition()` in use:
+
+Please make a function in the exercise space below, but do not assign the function to an object.  The function should:
+
+* Take a single `x` argument
+* Add the integer `1` to the `x` value.
+
+Then click Submit Answer.
+
+```{r grade_cond, exercise = TRUE}
+function(x) {
+  # solution is x + 1L
+  x + 1
+}
+```
+
+```{r grade_cond-check}
+grade_conditions(
+  pass_if(~ .result(3) == 4),
+  pass_if(~ identical(.result(0), 1)),
+  pass_if(~ identical(sapply(1:10, .result), 2:11)),
+  pass_if(~ sapply(1:10, .result) == 2:11),
+  pass_if(~ all.equal(sapply(1:10, .result), 2:11)),
+  pass_if(~ checkmate::test_function(.result, args = c("x")))
+)
+```
+
+### 
+
+And here is the code behind the example.
 
 ````markdown
 `r ''````{r grade_conditions, exercise = TRUE}
@@ -192,45 +230,6 @@ Use `.result` to refer to the student's answer within the logical tests.
 
 `grade_conditions()` will mark a result as correct only if passes every `pass_if()` statement. This is especially useful for grading function definitions.
 
-
-### Try it!
-
----------------------------
-
-
-Please make a function in the exercise space below.  It should:
-
-* Take a single `x` argument
-* Add the integer `1` to the `x` value.
-
-Then click Submit Answer.
-
-```{r grade_conditions, exercise = TRUE}
-function(x) {
-  # solution is x + 1L
-  x + 1
-}
-```
-
-```{r grade_conditions-hint-1}
-"Function should add an integer 1"
-```
-
-```{r grade_conditions-hint-2}
-"Integers are created by adding a L to the number, e.g., 10L"
-```
-
-```{r grade_conditions-check}
-grade_conditions(
-  pass_if(~ .result(3) == 4),
-  pass_if(~ identical(.result(0), 1)),
-  pass_if(~ identical(sapply(1:10, .result), 2:11)),
-  pass_if(~ sapply(1:10, .result) == 2:11),
-  pass_if(~ all.equal(sapply(1:10, .result), 2:11)),
-  pass_if(~ checkmate::test_function(.result, args = c("x")))
-)
-```
-
 ### 
 
 See `?grade_conditions` for more information.
@@ -239,11 +238,27 @@ See `?grade_conditions` for more information.
 
 ### 
 
-Use `grade_code()` to check whether student code matches the solution code. `grade_code()` will tell the student exactly where their code begins to diverge from the solution and how to get back on track. Here's an example:
+`grade_code()` to checks whether the student code matches the solution code. If the code does not match, `grade_code()` will tell the student exactly where their code begins to diverge from the solution and how to get back on track. Here's an example:
+
+* Take the square root of the log of 2. Then click Submit Answer.
+
+```{r grade_code, exercise = TRUE}
+
+```
+
+```{r grade_code-solution}
+sqrt(log(2))
+```
+
+```{r grade_code-check}
+grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+### 
+
+And here is the code behind the example.
 
 ````markdown
-Modify the code below to take the square root of the log of two.
-
 `r ''````{r grade_code, exercise = TRUE}
 sqrt(exp(3))
 ```
@@ -271,7 +286,7 @@ sqrt(log(2))
 
 `grade_code()` will compare the last expression in the student submission to the last expression in the solution chunk.
 
-Teachers will usually pass `grade_code()` a character string to display if the student code successfully matches the solutiuon, e.g.
+Teachers will usually pass `grade_code()` a character string to display to the student if their code successfully matches the solutiuon, e.g.
 
 ```r
 grade_code("Good job. Don't worry, things will soon get harder.")
@@ -291,6 +306,7 @@ Finally, `grade_code()` recursively walks the two call trees.
 
 `grade_code()` stops and returns a message if the student code:
 
+1. **contains malformed code** that would cause an error if passed to `match.call()`
 1. **contains a different element** than the solution
 1. **contains an extra element** that is not in the solution
 1. **is missing an element** that appears in the solution
@@ -299,39 +315,13 @@ If none of the above occurs, `grade_code()` marks the answer as correct.
 
 ### Feedback
 
-`grade_code()` attempts to supply helpful feedback that makes sense to the student without giving away the solution. To do this, `grade_code()` message take the form of 
+`grade_code()` attempts to supply helpful feedback that makes sense to the student without giving away the solution. To do this, `grade_code()` messages take the form of 
 
 > "I expected X, where you wrote Y. Please try again." 
 
 Here Y may be an argument or function call that appears at the beginning, end, or middle of the student code. 
 
 `grade_code()` will catch mistakes one at a time in the order that they appear in the students code. This lets the student iteratively improve their code.
-
-### Try it!
-
----------------------------
-
-Take the square root of the log of 2. Then click Submit Answer.
-
-```{r grade_code, exercise = TRUE}
-sqrt(exp(3))
-```
-
-```{r grade_code-hint-1}
-"You can take the log with `log()`"
-```
-
-```{r grade_code-hint-2}
-"You can take the square root with `sqrt()`"
-```
-
-```{r grade_code-solution}
-sqrt(log(2))
-```
-
-```{r grade_code-check}
-grade_code("Good job. Don't worry, things will soon get harder.")
-```
 
 ### 
 
