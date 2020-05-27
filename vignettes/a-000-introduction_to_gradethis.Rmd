@@ -117,7 +117,7 @@ In this case, in the `-check` chunk we call `check_result`,
 and pass in various `pass_if` and `fail_if` conditions.
 The **first** condition that matches will return the corresponding feedback, i.e.,
 if a `pass_if` case matches then the student's solution passed,
-if a `fail_if case matches then the student's solution failed.
+if a `fail_if` case matches then the student's solution failed.
 
 The `pass_if`, `fail_if`, and `check_result` functions all have parameters to customize the
 message to the student.
