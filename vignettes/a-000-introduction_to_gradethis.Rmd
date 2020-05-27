@@ -24,6 +24,11 @@ check it in one of 3 ways:
     **Compares all result conditions** to see if a student's function passes all test cases,
     analogous to running unittests.
 
+You can see the slides for
+[satRday 2020](http://dc2020.netlify.com/)
+on `gradethis`
+[here](https://speakerdeck.com/chendaniely/satrday-grading-code-with-gradethis).
+
 # Using `gradethis` in `learnr` documents
 
 `gradethis` can be used to grade exercises within `learnr` documents.
