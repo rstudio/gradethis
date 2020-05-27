@@ -15,12 +15,7 @@ Pairing with the `learnr` R package, `gradethis` provides multiple methods to gr
 
 ## Installation
 
-You can install the released version of gradethis from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("gradethis")
-```
-
+`gradethis` is still in development and not on [CRAN](https://CRAN.R-project.org) yet.
 The development version of `gradethis` can be installed from GitHub with:
 
 ```r
