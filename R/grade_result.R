@@ -27,10 +27,8 @@ grade_result <- function(
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
-
-  results <- list(...)
-  
-  mat <- find_matching_condition(results, grader_args, learnr_args)
+  args <- list(..., grader_args = grader_args, learnr_args = learnr_args)
+  mat <- do.call(find_matching_condition, args)
   final_result <- mat$result
   
   message <- glue_message(
@@ -51,14 +49,16 @@ grade_result <- function(
 #' Find a matching condition
 #' 
 #' Looks through a given set of conditions to attempt to find a match.
-#' @param results A list of [pass_if()] or [fail_if()] [condition()]s
+#' @param ... [pass_if()] or [fail_if()] [condition()]s
 #' @inheritParams grade_code
 #' @return A list with two elements: 
 #' 
 #'  - `matching_conditional` - `TRUE` if the given list of conditions contained a match. Otherwise, FALSE
 #'  - `result` - The evaluated [condition()] object; a [graded()] value.
 #' @export
-find_matching_condition <- function(results, grader_args, learnr_args){
+find_matching_condition <- function(..., grader_args, learnr_args){
+  
+  results <- list(...)
   chkm8_item_class(results, "grader_condition")
   
   if (!any(vapply(results, `[[`, logical(1), "correct"))) {
