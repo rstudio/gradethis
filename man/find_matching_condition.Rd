@@ -4,10 +4,10 @@
 \alias{find_matching_condition}
 \title{Find a matching condition}
 \usage{
-find_matching_condition(..., grader_args, learnr_args)
+find_matching_condition(results, grader_args, learnr_args)
 }
 \arguments{
-\item{...}{\code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s}
+\item{results}{A list of \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
