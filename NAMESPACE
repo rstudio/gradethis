@@ -3,6 +3,7 @@
 export(condition)
 export(evaluate_condition)
 export(fail_if)
+export(find_matching_condition)
 export(grade_code)
 export(grade_conditions)
 export(grade_learnr)

@@ -106,7 +106,7 @@ grade_conditions <- function(
 #' conditions match, we are done.
 #' However, in test_result, we need to go though all the conditions
 #' and store their values to tally up the total number of "good" passing cases.
-#' It's behaviour is similar to running a unit testing suite,
+#' It's behavior is similar to running a unit testing suite,
 #' all the cases need to be run and tallied up in the end.
 #'
 #' Since the API for test_result uses pass_if and fail_if,
