@@ -1,7 +1,7 @@
 Package: gradethis
 Type: Package
 Title: Tools for "grading" student exercises in learnr tutorials
-Version: 0.1.0.9002
+Version: 0.1.0.9003
 Authors@R: 
     c(person(given = "Daniel",
              family = "Chen",
