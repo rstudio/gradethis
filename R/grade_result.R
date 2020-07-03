@@ -28,8 +28,12 @@ grade_result <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
   args <- list(..., grader_args = grader_args, learnr_args = learnr_args)
-  mat <- do.call(find_matching_condition, args)
-  final_result <- mat$result
+  mat <- do.call(find_first_condition, args)
+  
+  final_result <- mat
+  if (is.null(mat)){
+    final_result <- list(correct = FALSE, matching_conditional = FALSE, message="")
+  }
   
   message <- glue_message(
     {if (final_result$correct) glue_correct else glue_incorrect}, # nolint
@@ -48,15 +52,13 @@ grade_result <- function(
 
 #' Find a matching condition
 #' 
-#' Looks through a given set of conditions to attempt to find a match.
+#' Looks through a given set of conditions to attempt to find a match. 
 #' @param ... [pass_if()] or [fail_if()] [condition()]s
 #' @inheritParams grade_code
-#' @return A list with two elements: 
-#' 
-#'  - `matching_conditional` - `TRUE` if the given list of conditions contained a match. Otherwise, FALSE
-#'  - `result` - The evaluated [condition()] object; a [graded()] value.
+#' @return The first condition that matches. If no conditional matches, returns 
+#' `NULL`.
 #' @export
-find_matching_condition <- function(..., grader_args, learnr_args){
+find_first_condition <- function(..., grader_args, learnr_args){
   
   results <- list(...)
   chkm8_item_class(results, "grader_condition")
@@ -65,18 +67,12 @@ find_matching_condition <- function(..., grader_args, learnr_args){
     stop("At least one correct result must be provided")
   }
   
-  # init final answer as not found
-  final_result <- graded(correct = FALSE, message = NULL)
-  found_match <- FALSE
-  
   for (resu in results) {
     evaluated_condi <- evaluate_condition(resu, grader_args, learnr_args)
     if (! is.null(evaluated_condi)) {
-      final_result <- evaluated_condi
-      found_match <- TRUE
-      break
+      return(evaluated_condi)
     }
   }
   
-  list(matching_conditional = found_match, result = final_result)
+  NULL
 }

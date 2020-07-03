@@ -104,28 +104,25 @@ test_that("Spots differences in atomics -- value", {
   )
 })
 
-test_that("find_matching_condition works", {
-  mc <- find_matching_condition(
+test_that("find_first_condition works", {
+  mc <- find_first_condition(
     fail_if(5, "Wrong"),
     pass_if(~ TRUE, "passing!"),
     learnr_args = list(last_value = 5)
   )
-  expect_true(mc$matching_conditional)
-  expect_wrong(mc$result)
+  expect_wrong(mc)
   
-  mc <- find_matching_condition(
+  mc <- find_first_condition(
     fail_if(5, "Wrong"),
     pass_if(~ TRUE, "passing!"),
     learnr_args = list(last_value = TRUE, envir_prep = new.env())
   )
-  expect_true(mc$matching_conditional)
-  expect_correct(mc$result)
+  expect_correct(mc)
   
-  mc <- find_matching_condition(
+  mc <- find_first_condition(
     fail_if(5, "Wrong"),
     pass_if(6, "passing!"),
     learnr_args = list(last_value = "I don't match!")
   )
-  expect_false(mc$matching_conditional)
-  expect_wrong(mc$result)
+  expect_null(mc)
 })
