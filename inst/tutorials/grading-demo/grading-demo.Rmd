@@ -14,7 +14,19 @@ description: "Learn how to use gradethis to provide automated, personalized, for
 library(learnr)
 library(gradethis)
 
-tutorial_options(exercise.timelimit = 60, exercise.checker = gradethis::grade_learnr)
+error_checker <- function(user_code, solution_code, ...) {
+  list(
+    correct = FALSE,
+    message = paste0("I see you wrote '", user_code, "' but I was expecting '", solution_code, "'")
+  )
+}
+
+tutorial_options(
+  exercise.timelimit = 60, 
+  exercise.checker = gradethis::grade_learnr,
+  exercise.parse.checker = error_checker,
+  exercise.error.checker = error_checker
+)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -258,6 +270,8 @@ grade_code("Good job. Don't worry, things will soon get harder.")
 
 And here is the code behind the example.
 
+
+
 ````markdown
 `r ''````{r grade_code, exercise = TRUE}
 sqrt(exp(3))
@@ -268,7 +282,7 @@ sqrt(log(2))
 ```
 
 `r ''````{r grade_code-check}
-grade_code("Good job. Don't worry, things will soon get harder.")
+grade_code("Don't worry, things will soon get harder.")
 ```
 ````
 
@@ -368,7 +382,7 @@ The custom checking function should return the output of `gradethis::graded()`. 
 
 ### Evaluation
 
-To use the custom checking function, place it in a nexercises `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
+To use the custom checking function, place it in an exercise `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
 
 ### Try it!
 

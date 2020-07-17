@@ -44,27 +44,49 @@ grade_learnr <- function(label = NULL,
                          envir_prep = NULL,
                          last_value = NULL,
                          ...) {
-
-  # Sometimes no user code is provided, but
-  # that means there is nothing to check. Also,
-  # you do not want to parse NULL
-  if (is.null(user_code)) {
-    return(list(
+  
+  # copy in all learnr arguments
+  learnr_args <- list(...)
+  learnr_args$label <- label
+  learnr_args$solution_code <- solution_code
+  learnr_args$user_code <- user_code
+  learnr_args$check_code <- check_code
+  learnr_args$envir_result <- envir_result
+  learnr_args$evaluate_result <- evaluate_result
+  learnr_args$envir_prep <- envir_prep
+  learnr_args$last_value <- last_value
+  
+  
+  user_code <- tryCatch(
+    parse(text = user_code %||% ""),
+    error = function(e) {
+      learnr_args$parse_error <- e
+      parse_checker <- getOption(
+        "exercise.parse.checker", 
+        default = function(parse_error, ...) {
+          conditionMessage(attr(parse_error, "condition"))
+        }
+      )
+      feedback(
+        message = do.call(parse_checker, learnr_args),
+        correct = FALSE,
+        type = "error",
+        location = "append"
+      )
+    }
+  )
+  
+  if (is_feedback(user_code)) {
+    return(user_code)
+  }
+    
+  if (length(user_code) == 0) {
+    return(feedback(
       message = "I didn't receive your code. Did you write any?",
       correct = FALSE,
       type = "error",
       location = "append"
     ))
-  } else {
-    user_code <- parse(text = user_code)
-    if (length(user_code) == 0) {
-      return(list(
-        message = "I didn't receive your code. Did you write any?",
-        correct = FALSE,
-        type = "error",
-        location = "append"
-      ))
-    }
   }
 
   # Sometimes no solution is provided, but that
@@ -95,7 +117,7 @@ grade_learnr <- function(label = NULL,
       }
       grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
                                              envir_prep)
-
+      
       # get all grader args
       grader_args <- list(
         user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
@@ -106,23 +128,12 @@ grade_learnr <- function(label = NULL,
                                                       envir_prep)
       }
 
-      # copy in all learnr arguments
-      learnr_args <- list(...)
-      learnr_args$label <- label
-      learnr_args$solution_code <- solution_code
-      learnr_args$user_code <- user_code
-      learnr_args$check_code <- check_code
-      learnr_args$envir_result <- envir_result
-      learnr_args$evaluate_result <- evaluate_result
-      learnr_args$envir_prep <- envir_prep
-      learnr_args$last_value <- last_value
-
       # copy in all grader arguments
       grading_code$grader_args <- grader_args
       grading_code$learnr_args <- learnr_args
 
       # set user answer for the environment to find
-      envir_prep$ans <- grader_args$user
+      envir_prep$ans <- grader_args$user_quo
 
       # eval code in a copy of the chunk's prepped environment
       eval(grading_code, envir_prep)
@@ -153,12 +164,22 @@ grade_learnr <- function(label = NULL,
       }
     }
 
-  ret <- list(
+  feedback(
     message = checked_result$message,
     correct = checked_result$correct,
     type = message_type,
     location = "append"
   )
+}
 
-  ret
+
+feedback <- function(message, correct, type, location) {
+  structure(
+    list(message = message, correct = correct, type = type, location = location),
+    class = "gradethis_feedback"
+  )
+}
+
+is_feedback <- function(x) {
+  inherits(x, "gradethis_feedback")
 }
