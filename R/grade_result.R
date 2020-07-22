@@ -28,37 +28,44 @@ grade_result <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect")
 ) {
 
-  results <- list(...)
-  chkm8_item_class(results, "grader_condition")
-
-  if (!any(vapply(results, `[[`, logical(1), "correct"))) {
-    stop("At least one correct result must be provided")
+  conditions <- list(...)
+  if (!length(conditions)) {
+    stop("At least one condition object (e.g., `pass_if()`, `fail_if()`, `condition()`) must be provided to `grade_result()`", call. = FALSE)
   }
+  chkm8_item_class(conditions, "grader_condition")
 
-  # init final answer as not found
-  final_result <- graded(correct = FALSE, message = NULL)
-  found_match <- FALSE
-
-  for (resu in results) {
-    evaluated_condi <- evaluate_condition(resu, grader_args, learnr_args)
-    if (! is.null(evaluated_condi)) {
-      final_result <- evaluated_condi
-      found_match <- TRUE
+  # If there is at least one pass_if() condition, then we default to a incorrect grade;
+  # otherwise, we default to a correct grade https://github.com/rstudio-education/gradethis/issues/118
+  final_grade <- graded(correct = !any(vapply(conditions, `[[`, logical(1), "correct")))
+  found_grade <- FALSE
+  for (cond in conditions) {
+    grade <- evaluate_condition(cond, grader_args, learnr_args)
+    if (length(grade)) {
+      final_grade <- grade
+      found_grade <- TRUE
       break
     }
   }
 
   message <- glue_message(
-    {if (final_result$correct) glue_correct else glue_incorrect}, # nolint
-    .is_match = found_match,
-    .is_correct = final_result$correct,
-    .message = final_result$message,
+    if (final_grade$correct) glue_correct else glue_incorrect, # nolint
+    .is_match = found_grade,
+    .is_correct = final_grade$correct,
+    .message = final_grade$message,
     .correct = correct,
     .incorrect = incorrect
   )
 
-  return(graded(
-    correct = final_result$correct,
+  res <- graded(
+    correct = final_grade$correct,
     message = message
-  ))
+  )
+  
+  # Add a class for identifying when we're returning the default grade
+  # https://github.com/rstudio-education/gradethis/pull/115
+  if (!found_grade) {
+    class(res) <- c(class(res), "grader_graded_default")
+  }
+  
+  res
 }
