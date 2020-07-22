@@ -56,23 +56,22 @@ grade_learnr <- function(label = NULL,
   learnr_args$envir_prep <- envir_prep
   learnr_args$last_value <- last_value
   
-  
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
     error = function(e) {
-      learnr_args$parse_error <- e
       parse_checker <- getOption(
-        "exercise.parse.checker", 
-        default = function(parse_error, ...) {
-          conditionMessage(attr(parse_error, "condition"))
+        "exercise.parse.error", 
+        function(...) {
+          feedback(
+            correct = FALSE, type = "error", location = "append",
+            message = paste(
+              "Uh oh, the R code produced a syntax error:",
+              conditionMessage(e)
+            )
+          )
         }
       )
-      feedback(
-        message = do.call(parse_checker, learnr_args),
-        correct = FALSE,
-        type = "error",
-        location = "append"
-      )
+      do.call(parse_checker, learnr_args)
     }
   )
   
@@ -109,6 +108,7 @@ grade_learnr <- function(label = NULL,
     { # nolint
       # Run checking code to get feedback
       parsed_check_code <- parse(text = check_code %||% "")
+      
       if (length(parsed_check_code) > 1) {
         # don't eval the last one to avoid bad check calls
         for (i in 1:(length(parsed_check_code) - 1)) {
@@ -183,3 +183,4 @@ feedback <- function(message, correct, type, location) {
 is_feedback <- function(x) {
   inherits(x, "gradethis_feedback")
 }
+

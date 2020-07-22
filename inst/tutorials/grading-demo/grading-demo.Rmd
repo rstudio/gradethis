@@ -14,18 +14,9 @@ description: "Learn how to use gradethis to provide automated, personalized, for
 library(learnr)
 library(gradethis)
 
-error_checker <- function(user_code, solution_code, ...) {
-  list(
-    correct = FALSE,
-    message = paste0("I see you wrote '", user_code, "' but I was expecting '", solution_code, "'")
-  )
-}
-
 tutorial_options(
   exercise.timelimit = 60, 
-  exercise.checker = gradethis::grade_learnr,
-  exercise.parse.checker = error_checker,
-  exercise.error.checker = error_checker
+  exercise.checker = grade_learnr
 )
 knitr::opts_chunk$set(echo = FALSE)
 ```
@@ -262,8 +253,22 @@ See `?grade_conditions` for more information.
 sqrt(log(2))
 ```
 
-```{r grade_code-check}
+```{r grade_code-code-check}
 grade_code("Good job. Don't worry, things will soon get harder.")
+```
+
+* Throw an error message of `"boom"`:
+
+```{r grade_error, exercise = TRUE}
+
+```
+
+```{r grade_error-solution}
+stop("boom")
+```
+
+```{r grade_error-code-check}
+grade_code("Nice error!")
 ```
 
 ### 
