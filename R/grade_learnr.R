@@ -71,7 +71,8 @@ grade_learnr <- function(label = NULL,
           )
         }
       )
-      do.call(parse_checker, learnr_args)
+      # check that parse_checker is a function with proper args
+      do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
     }
   )
   
