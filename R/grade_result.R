@@ -7,7 +7,12 @@
 #' @inheritParams grade_code
 #'
 #' @param ... [pass_if()] or [fail_if()] [condition()]s to check
-#'
+#' @param default_correct In the event that no [condition()]s are met, should the end result
+#'   be correct? When `"auto"`, this will be `TRUE` when all the [conditions()] are [fail_if()] 
+#'   (and `FALSE` otherwise).
+#' @param default_message In the event that no [condition()]s are met, what message should be
+#'   included with the returned [graded()] object?
+#'   
 #' @return a [graded()] object from either [pass_if()] or [fail_if()] containing
 #'   a formatted `correct` or `incorrect` message and whether or not a match was
 #'   found.
@@ -25,7 +30,9 @@ grade_result <- function(
   grader_args = list(),
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect")
+  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  default_correct = "auto",
+  default_message = NULL
 ) {
 
   conditions <- list(...)
@@ -34,9 +41,14 @@ grade_result <- function(
   }
   chkm8_item_class(conditions, "grader_condition")
 
-  # If there is at least one pass_if() condition, then we default to a incorrect grade;
-  # otherwise, we default to a correct grade https://github.com/rstudio-education/gradethis/issues/118
-  final_grade <- graded(correct = !any(vapply(conditions, `[[`, logical(1), "correct")))
+  # If there is at least one pass_if() condition, then default to an incorrect grade;
+  # otherwise, default to a correct grade https://github.com/rstudio-education/gradethis/issues/118
+  if (identical(default_correct, "auto")) {
+    default_correct <- !any(vapply(conditions, `[[`, logical(1), "correct"))
+  }
+  chkm8_class(default_correct, "logical")
+  
+  final_grade <- graded(correct = default_correct, message = default_message)
   found_grade <- FALSE
   for (cond in conditions) {
     grade <- evaluate_condition(cond, grader_args, learnr_args)
@@ -56,16 +68,8 @@ grade_result <- function(
     .incorrect = incorrect
   )
 
-  res <- graded(
+  graded(
     correct = final_grade$correct,
     message = message
   )
-  
-  # Add a class for identifying when we're returning the default grade
-  # https://github.com/rstudio-education/gradethis/pull/115
-  if (!found_grade) {
-    class(res) <- c(class(res), "grader_graded_default")
-  }
-  
-  res
 }

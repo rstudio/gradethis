@@ -4,11 +4,15 @@
 \alias{grade_code}
 \title{Grade code against a solution}
 \usage{
-grade_code(correct = NULL, incorrect = NULL, grader_args = list(),
+grade_code(
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe"))
+  glue_pipe = getOption("gradethis_glue_pipe")
+)
 }
 \arguments{
 \item{correct}{A character string to display if the student answer matches a
@@ -23,7 +27,7 @@ a known incorrect answer.}
 \item \code{user_quo}: Quoted R code submitted by the user. For example
 \code{\link[rlang:quo]{rlang::quo(1)}}
 \item \code{solution_quo}: (Optional) Quoted solution R code provided by the
-\code{*-solution} chunk for an exercise.
+\verb{*-solution} chunk for an exercise.
 }}
 
 \item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
@@ -38,7 +42,7 @@ displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
 displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 
 \item{glue_pipe}{A glue string that returns the final message displayed when
-the student uses a pipe, \code{$>$}. Defaults to
+the student uses a pipe, \verb{$>$}. Defaults to
 \code{getOption("gradethis_glue_pipe")}.}
 }
 \value{

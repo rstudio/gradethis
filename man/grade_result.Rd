@@ -4,10 +4,17 @@
 \alias{grade_result}
 \title{Grade result of exercise code}
 \usage{
-grade_result(..., correct = NULL, incorrect = NULL,
-  grader_args = list(), learnr_args = list(),
+grade_result(
+  ...,
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect"))
+  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  default_correct = "auto",
+  default_message = NULL
+)
 }
 \arguments{
 \item{...}{\code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s to check}
@@ -24,7 +31,7 @@ a known incorrect answer.}
 \item \code{user_quo}: Quoted R code submitted by the user. For example
 \code{\link[rlang:quo]{rlang::quo(1)}}
 \item \code{solution_quo}: (Optional) Quoted solution R code provided by the
-\code{*-solution} chunk for an exercise.
+\verb{*-solution} chunk for an exercise.
 }}
 
 \item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
@@ -37,6 +44,13 @@ displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
 
 \item{glue_incorrect}{A glue string that returns the final incorrect message
 displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
+
+\item{default_correct}{In the event that no \code{\link[=condition]{condition()}}s are met, should the end result
+be correct? When \code{"auto"}, this will be \code{TRUE} when all the \code{\link[=conditions]{conditions()}} are \code{\link[=fail_if]{fail_if()}}
+(and \code{FALSE} otherwise).}
+
+\item{default_message}{In the event that no \code{\link[=condition]{condition()}}s are met, what message should be
+included with the returned \code{\link[=graded]{graded()}} object?}
 }
 \value{
 a \code{\link[=graded]{graded()}} object from either \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} containing
