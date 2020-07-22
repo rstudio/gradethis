@@ -108,7 +108,7 @@ grade_learnr <- function(label = NULL,
   checked_result <- tryCatch(
     { # nolint
       # Run checking code to get feedback
-      parsed_check_code <- parse(text = check_code)
+      parsed_check_code <- parse(text = check_code %||% "")
       if (length(parsed_check_code) > 1) {
         # don't eval the last one to avoid bad check calls
         for (i in 1:(length(parsed_check_code) - 1)) {
