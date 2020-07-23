@@ -4,9 +4,17 @@
 \alias{grade_learnr}
 \title{A checker function to use with \code{learnr}}
 \usage{
-grade_learnr(label = NULL, solution_code = NULL, user_code = NULL,
-  check_code = NULL, envir_result = NULL, evaluate_result = NULL,
-  envir_prep = NULL, last_value = NULL, ...)
+grade_learnr(
+  label = NULL,
+  solution_code = NULL,
+  user_code = NULL,
+  check_code = NULL,
+  envir_result = NULL,
+  evaluate_result = NULL,
+  envir_prep = NULL,
+  last_value = NULL,
+  ...
+)
 }
 \arguments{
 \item{label}{Label for exercise chunk}
