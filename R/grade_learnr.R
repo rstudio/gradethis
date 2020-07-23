@@ -45,16 +45,16 @@ grade_learnr <- function(label = NULL,
                          last_value = NULL,
                          ...) {
   
-  # copy in all learnr arguments
-  learnr_args <- list(...)
-  learnr_args$label <- label
-  learnr_args$solution_code <- solution_code
-  learnr_args$user_code <- user_code
-  learnr_args$check_code <- check_code
-  learnr_args$envir_result <- envir_result
-  learnr_args$evaluate_result <- evaluate_result
-  learnr_args$envir_prep <- envir_prep
-  learnr_args$last_value <- last_value
+  learnr_args <- list(
+    ..., label = label,
+    solution_code = solution_code,
+    user_code = user_code,
+    check_code = check_code,
+    envir_result = envir_result,
+    evaluate_result = evaluate_result,
+    envir_prep = envir_prep,
+    last_value = last_value
+  )
   
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
