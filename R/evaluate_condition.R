@@ -21,9 +21,10 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
   checkmate::assert_class(condition, "grader_condition")
 
   err_msg <- NULL
+  envir <- learnr_args$envir_result %||% learnr_args$envir_prep %||% new.env()
   res <- tryCatch({
     switch(condition$type,
-           "formula" = evaluate_condi_formula(condition$x, learnr_args$last_value, learnr_args$envir_prep), # nolint
+           "formula" = evaluate_condi_formula(condition$x, learnr_args$last_value, envir), # nolint
            "function" = evaluate_condi_function(condition$x, learnr_args$last_value),
            "value" = evaluate_condi_value(condition$x, learnr_args$last_value)
          )
