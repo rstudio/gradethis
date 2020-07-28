@@ -58,36 +58,5 @@ a \code{grader_graded} structure from \code{\link[=graded]{graded()}} containing
 \code{correct} or \code{incorrect} message.
 }
 \description{
-Executes tests against the final result of the user code. If
-a test throws an error, the test fails and the submitted answer will be
-marked incorrect.
-}
-\details{
-Executes tests against the final result of the user code. If
-a test throws an error, the test fails and the submitted answer will be
-marked incorrect.
-}
-\examples{
-\dontrun{gradethis_demo()}
-
-example_function <- function(x){
-  return(x + 1)
-}
-grade_conditions(
-  pass_if(~ .result(3) == 4),
-  pass_if(~ .result(10) == 11),
-  grader_args = list(),
-  learnr_args = list(last_value = example_function, envir_prep = new.env())
-)
-
-grade_conditions(
-  pass_if(~ .result(3) == 4),
-  fail_if(~ .result(10) == 11),
-  grader_args = list(),
-  learnr_args = list(last_value = example_function, envir_prep = new.env())
-)
-
-}
-\seealso{
-\code{test}
+This function is deprecated, use \code{\link[=grade_result_strict]{grade_result_strict()}} instead.
 }

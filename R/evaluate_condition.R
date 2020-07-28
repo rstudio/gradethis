@@ -52,27 +52,24 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
 
   checkmate::assert_logical(res, len = 1, null.ok = FALSE)
   if (res) {
-    return(graded(correct = condition$correct, message = condition$message))
+    graded(correct = condition$correct, message = condition$message)
   } else {
-    return(NULL)
+    NULL
   }
 }
 
 evaluate_condi_formula <- function(formula, user_answer, env) {
-  form_result <- rlang::eval_tidy(
+  rlang::eval_tidy(
     formula[[2]],
     data = list(.result = user_answer, . = user_answer),
     env = env
   )
-  return(form_result)
 }
 
 evaluate_condi_function <- function(fxn, user_answer) {
-  fxn_result <- fxn(user_answer)
-  return(fxn_result)
+  fxn(user_answer)
 }
 
 evaluate_condi_value <- function(val, user_answer) {
-  val_result <- identical(val, user_answer)
-  return(val_result)
+  identical(val, user_answer)
 }

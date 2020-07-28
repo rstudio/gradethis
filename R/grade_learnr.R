@@ -4,7 +4,7 @@
 #' `learnr` can use in the background to run the code in each "-check"
 #' chunk and to format the results into a format that `learnr` can display.
 #' The function must accept a specific set of inputs and return a specific type
-#' of output (see [graded()]). Instructors are not intended to use the
+#' of output (see [grade_feedback()]). Instructors are not intended to use the
 #' `grade_learnr` function directly, but to pass it to the
 #' `exercise.checker` knitr chunk option within the setup chunk of the
 #' `learnr` tutorial.
@@ -17,10 +17,10 @@
 #' `grade_learnr()`.
 #'
 #' @param label Label for exercise chunk
-#' @param solution_code Code provided within the “-solution” chunk for the
+#' @param solution_code Code provided within the "-solution" chunk for the
 #'   exercise.
 #' @param user_code R code submitted by the user
-#' @param check_code Code provided within the “-check” chunk for the exercise.
+#' @param check_code Code provided within the "-check" chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the `evaluate::evaluate`
 #'   function.
@@ -62,11 +62,13 @@ grade_learnr <- function(label = NULL,
       parse_checker <- getOption(
         "exercise.parse.error", 
         function(...) {
-          feedback(
-            correct = FALSE, type = "error", location = "append",
-            message = paste(
-              "Uh oh, the R code produced a syntax error:",
-              conditionMessage(e)
+          grade_feedback(
+            graded(
+              correct = FALSE,
+              message = paste(
+                "Uh oh, the R code produced a syntax error:",
+                conditionMessage(e)
+              )
             )
           )
         }
@@ -76,17 +78,18 @@ grade_learnr <- function(label = NULL,
     }
   )
   
+  
+  if (is_grade(user_code)) {
+    user_code <- grade_feedback(user_code)
+  }
   if (is_feedback(user_code)) {
     return(user_code)
   }
-    
   if (length(user_code) == 0) {
-    return(feedback(
-      message = "I didn't receive your code. Did you write any?",
-      correct = FALSE,
-      type = "error",
-      location = "append"
-    ))
+    return(grade_feedback(graded(
+        message = "I didn't receive your code. Did you write any?",
+        correct = FALSE
+    )))
   }
 
   # Sometimes no solution is provided, but that
@@ -95,12 +98,11 @@ grade_learnr <- function(label = NULL,
   if (!is.null(solution_code)) {
     solution_code <- parse(text = solution_code)
     if (length(solution_code) == 0) {
-      return(list(
+      grade <- graded(
         message = "No solution is provided for this exercise.",
-        correct = TRUE,
-        type = "info",
-        location = "append"
-      ))
+        correct = TRUE
+      )
+      return(grade_feedback(grade, type = "info"))
     }
   }
 
@@ -154,34 +156,8 @@ grade_learnr <- function(label = NULL,
     stop("`grade_learnr` should receive a `graded` value from every `-check` chunk")
   }
 
-  message_type <-
-    if (had_error_checking) {
-      "warning"
-    } else {
-      if (checked_result$correct) {
-        "success"
-      } else {
-        "error"
-      }
-    }
-
-  feedback(
-    message = checked_result$message,
-    correct = checked_result$correct,
-    type = message_type,
-    location = "append"
+  grade_feedback(
+    checked_result,
+    type = if (had_error_checking) "warning" else "auto"
   )
 }
-
-
-feedback <- function(message, correct, type, location) {
-  structure(
-    list(message = message, correct = correct, type = type, location = location),
-    class = "gradethis_feedback"
-  )
-}
-
-is_feedback <- function(x) {
-  inherits(x, "gradethis_feedback")
-}
-

@@ -61,7 +61,7 @@
 #'   that the answer differs, the message will be the content of the `glue_pipe`
 #'   argument.
 #'
-#' @seealso [grade_code()], [grade_result()], and [grade_conditions()]
+#' @seealso [grade_result()]
 #' @export
 #' @examples
 #' \dontrun{gradethis_demo()}
@@ -79,24 +79,14 @@ grade_code <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe")
 ) {
-  user <- grader_args$user_quo
-  solution <- grader_args$solution_quo
-
-  # MUST call user first to avoid "poisoning" the envir with solution information
-  user <- rlang::get_expr(user)
-  solution <- rlang::get_expr(solution)
+  user <- rlang::get_expr(grader_args$user_quo)
+  solution <- rlang::get_expr(grader_args$solution_quo)
 
   if (is_code_identical(user, solution)) {
-    is_same_info <- graded(correct = TRUE, message = NULL)
+    is_same_info <- graded(correct = TRUE)
   } else {
-    # if (as.character(user[[1]]) == "test_fn") {browser()}
     message <- detect_mistakes(user, solution)
-    if (is.null(message)) {
-      # found no errors
-      is_same_info <- graded(correct = TRUE, message = NULL)
-    } else {
-      is_same_info <- graded(correct = FALSE, message = message)
-    }
+    is_same_info <- graded(correct = is.null(message), message = message)
   }
 
   if (is_same_info$correct) {
@@ -128,12 +118,7 @@ grade_code <- function(
     )
   }
 
-  return(
-    graded(
-      correct = FALSE,
-      message = message
-    )
-  )
+  graded(correct = FALSE, message = message)
 }
 
 
@@ -153,9 +138,5 @@ is_code_identical <- function(user = NULL, solution = NULL) {
   }
 
   # Correct answers are all alike
-  if (identical(user, solution)) {
-    return(TRUE)
-  } else {
-    return(FALSE)
-  }
+  identical(user, solution)
 }

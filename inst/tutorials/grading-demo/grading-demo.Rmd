@@ -14,10 +14,7 @@ description: "Learn how to use gradethis to provide automated, personalized, for
 library(learnr)
 library(gradethis)
 
-tutorial_options(
-  exercise.timelimit = 60, 
-  exercise.checker = grade_learnr
-)
+tutorial_options(exercise.timelimit = 60, exercise.checker = grade_learnr)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -257,25 +254,9 @@ sqrt(log(2))
 grade_code("Good job. Don't worry, things will soon get harder.")
 ```
 
-* Throw an error message of `"boom"`:
-
-```{r grade_error, exercise = TRUE}
-
-```
-
-```{r grade_error-solution}
-stop("boom")
-```
-
-```{r grade_error-code-check}
-grade_code("Nice error!")
-```
-
 ### 
 
 And here is the code behind the example.
-
-
 
 ````markdown
 `r ''````{r grade_code, exercise = TRUE}
@@ -287,7 +268,7 @@ sqrt(log(2))
 ```
 
 `r ''````{r grade_code-check}
-grade_code("Don't worry, things will soon get harder.")
+grade_code("Good job. Don't worry, things will soon get harder.")
 ```
 ````
 
@@ -369,7 +350,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  gradethis::graded(
+  gradethis::grade_feedback(
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
   )
@@ -380,14 +361,14 @@ fifty_fifty_checker()
 
 ### Syntax
 
-The custom checking function should return the output of `gradethis::graded()`. `graded()` takes two arguments:
+The custom checking function should return the output of `gradethis::grade_feedback()` which takes two arguments:
 
 1. `correct` - `TRUE` is the answer is correct, `FALSE` otherwise
 1. `message` - an optional character string to display to the student
 
 ### Evaluation
 
-To use the custom checking function, place it in an exercise `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
+To use the custom checking function, place it in a nexercises `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
 
 ### Try it!
 
@@ -409,7 +390,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  gradethis::graded(
+  gradethis::grade_feedback(
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
   )

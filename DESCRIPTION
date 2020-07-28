@@ -36,7 +36,8 @@ Imports:
     checkmate,
     testthat
 Suggests:
-    tidyr
+    tidyr,
+    learnr
 Remotes:
     rstudio/learnr
 URL: https://rstudio-education.github.io/gradethis/,

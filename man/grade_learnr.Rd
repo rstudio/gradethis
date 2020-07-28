@@ -19,12 +19,12 @@ grade_learnr(
 \arguments{
 \item{label}{Label for exercise chunk}
 
-\item{solution_code}{Code provided within the “-solution” chunk for the
+\item{solution_code}{Code provided within the "-solution" chunk for the
 exercise.}
 
 \item{user_code}{R code submitted by the user}
 
-\item{check_code}{Code provided within the “-check” chunk for the exercise.}
+\item{check_code}{Code provided within the "-check" chunk for the exercise.}
 
 \item{envir_result}{The R environment after the execution of the chunk.}
 
@@ -47,7 +47,7 @@ For exercise checking, \code{learnr} tutorials require a function that
 \code{learnr} can use in the background to run the code in each "-check"
 chunk and to format the results into a format that \code{learnr} can display.
 The function must accept a specific set of inputs and return a specific type
-of output (see \code{\link[=graded]{graded()}}). Instructors are not intended to use the
+of output (see \code{\link[=grade_feedback]{grade_feedback()}}). Instructors are not intended to use the
 \code{grade_learnr} function directly, but to pass it to the
 \code{exercise.checker} knitr chunk option within the setup chunk of the
 \code{learnr} tutorial.
