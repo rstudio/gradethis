@@ -121,9 +121,6 @@ grade_learnr <- function(label = NULL,
       grading_code$grader_args <- grader_args
       grading_code$learnr_args <- learnr_args
 
-      # set user answer for the environment to find
-      envir_prep$ans <- grader_args$user
-
       # eval code in a copy of the chunk's prepped environment
       eval(grading_code, envir_prep)
     },
