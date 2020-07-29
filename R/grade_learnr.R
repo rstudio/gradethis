@@ -98,11 +98,11 @@ grade_learnr <- function(label = NULL,
 
       # get all grader args
       grader_args <- list(
-        user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
+        user_quo = rlang::as_quosure(user_code, envir_result)
       )
 
       if (!is.null(solution_code)) {
-        grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]],
+        grader_args$solution_quo <- rlang::as_quosure(solution_code,
                                                       envir_prep)
       }
 

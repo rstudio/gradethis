@@ -1,10 +1,46 @@
-detect_mistakes <- function(user, 
-                            solution, 
+detect_mistakes <- function(user,
+                            solution,
                             env = rlang::env_parent(),
-                            enclosing_call = NULL, 
+                            enclosing_call = NULL,
                             enclosing_arg = NULL) {
   force(env)
-  
+
+  if (is.expression(user)) {
+    stopifnot(is.expression(solution))
+    # need to preemptively return after each line if a result is returned
+    max_len <- max(c(length(user), length(solution)))
+    for (i in seq_len(max_len)) {
+
+      if (i > length(user)) {
+        return(
+          missing_answer(
+            this_prior_line = user[[length(user)]]
+          )
+        )
+      }
+      if (i > length(solution)) {
+        return(
+          extra_answer(
+            this_line = user[[i]]
+          )
+        )
+      }
+      res <- detect_mistakes(
+        user[[i]],
+        solution[[i]],
+        env = env,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+      if (!is.null(res)) {
+        # found a non-NULL result, return it!
+        return(res)
+      }
+    }
+    # no mistakes found above!
+    return(NULL)
+  }
+
   submitted <- user
 
   if (is.call(user)) {

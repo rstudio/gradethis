@@ -3,6 +3,38 @@
 # because it is not at hand in the submission. "this" always refers to
 # incorrect/user code, which is always at hand). Cases:
 
+
+
+extra_answer <- function(
+  this_line
+) {
+  "Are you submitting more lines than are suggested?"
+
+  glue::glue_data(
+    list(
+      this_line = prep(this_line)
+    ),
+    "I didn't expect the call {this_line} in your answer. Please remove it and resubmit your work."
+  )
+
+}
+
+missing_answer <- function(
+  this_prior_line
+) {
+  "Are you missing some of your submission?"
+
+  glue::glue_data(
+    list(
+      this_prior_line = prep(this_prior_line)
+    ),
+    "I expected another call after {this_prior_line}. Did you forget to write one?"
+  )
+}
+
+
+
+
 # bad argument name
 bad_argument_name <- function(this_call,
                               this,

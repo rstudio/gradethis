@@ -422,7 +422,7 @@ test_that("detect_mistakes detects too many matches", {
   solution <- quote(not_tricky(ambiguous = 2))
   user <-     quote(not_tricky(a = 1, am = 2))
   expect_null(
-    detect_mistakes(user, solution)
+    suppressWarnings(detect_mistakes(user, solution))
   )
 
   solution <- quote(tricky2(ambiguous = 2))
