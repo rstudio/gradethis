@@ -367,7 +367,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  gradethis::grade_feedback(
+  gradethis::graded(
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
   )
@@ -378,7 +378,7 @@ fifty_fifty_checker()
 
 ### Syntax
 
-The custom checking function should return the output of `gradethis::grade_feedback()` which takes two arguments:
+The custom checking function should return the output of `gradethis::graded()` which takes two arguments:
 
 1. `correct` - `TRUE` is the answer is correct, `FALSE` otherwise
 1. `message` - an optional character string to display to the student
@@ -407,7 +407,7 @@ fifty_fifty_checker <- function(
   user
 ) {
   is_correct <- (runif(1) < 0.5)
-  gradethis::grade_feedback(
+  gradethis::graded(
     correct = is_correct,
     message = ifelse(is_correct, correct, incorrect)
   )

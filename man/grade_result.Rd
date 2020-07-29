@@ -69,7 +69,7 @@ be correct? When \code{"auto"}, this will be \code{TRUE} when all the \code{\lin
 (and \code{FALSE} otherwise).}
 
 \item{default_message}{In the event that no \code{\link[=condition]{condition()}}s are met, what message should be
-included with the returned \code{\link[=grade_feedback]{grade_feedback()}} object?}
+included with the returned \code{\link[=graded]{graded()}} object?}
 
 \item{x}{A formula, function, or value, that returns \code{TRUE} or \code{FALSE}.
 When comparing objects that are greater than length 1

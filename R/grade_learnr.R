@@ -4,7 +4,7 @@
 #' `learnr` can use in the background to run the code in each "-check"
 #' chunk and to format the results into a format that `learnr` can display.
 #' The function must accept a specific set of inputs and return a specific type
-#' of output (see [grade_feedback()]). Instructors are not intended to use the
+#' of output (see [graded()]). Instructors are not intended to use the
 #' `grade_learnr` function directly, but to pass it to the
 #' `exercise.checker` knitr chunk option within the setup chunk of the
 #' `learnr` tutorial.
@@ -62,13 +62,11 @@ grade_learnr <- function(label = NULL,
       parse_checker <- getOption(
         "exercise.parse.error", 
         function(...) {
-          grade_feedback(
-            graded(
-              correct = FALSE,
-              message = paste(
-                "Uh oh, the R code produced a syntax error:",
-                conditionMessage(e)
-              )
+          graded(
+            correct = FALSE,
+            message = paste(
+              "Uh oh, the R code produced a syntax error:",
+              conditionMessage(e)
             )
           )
         }

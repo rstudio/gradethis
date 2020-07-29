@@ -13,7 +13,7 @@
 #'   be correct? When `"auto"`, this will be `TRUE` when all the [conditions()] are [fail_if()] 
 #'   (and `FALSE` otherwise).
 #' @param default_message In the event that no [condition()]s are met, what message should be
-#'   included with the returned [grade_feedback()] object?
+#'   included with the returned [graded()] object?
 #'   
 #' @return a [graded()] object from either [pass_if()] or [fail_if()] containing
 #'   a formatted `correct` or `incorrect` message.
