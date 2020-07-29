@@ -169,3 +169,9 @@ grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()"
   }
   grade_learnr(solution_code = solution_code, check_code = check_code, ...)
 }
+
+learnr_env <- function(learnr_args) {
+  learnr_args$envir_result %||%
+    learnr_args$envir_prep %||%
+    stop("Internal error. learnr did not pass a relevant environment")
+}
