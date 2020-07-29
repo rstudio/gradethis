@@ -161,3 +161,13 @@ grade_learnr <- function(label = NULL,
     type = if (had_error_checking) "warning" else "auto"
   )
 }
+
+
+#' @rdname grade_learnr
+#' @export
+grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()", ...) {
+  if (is.null(solution_code)) {
+    return(NULL)
+  }
+  grade_learnr(solution_code = solution_code, check_code = check_code, ...)
+}

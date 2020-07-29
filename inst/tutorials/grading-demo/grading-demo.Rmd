@@ -14,7 +14,11 @@ description: "Learn how to use gradethis to provide automated, personalized, for
 library(learnr)
 library(gradethis)
 
-tutorial_options(exercise.timelimit = 60, exercise.checker = grade_learnr)
+tutorial_options(
+  exercise.timelimit = 60, 
+  exercise.checker = gradethis::grade_learnr,
+  exercise.error.checker = gradethis::grade_learnr_error
+)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -240,7 +244,7 @@ See `?grade_conditions` for more information.
 
 `grade_code()` to checks whether the student code matches the solution code. If the code does not match, `grade_code()` will tell the student exactly where their code begins to diverge from the solution and how to get back on track. Here's an example:
 
-* Take the square root of the log of 2. Then click Submit Answer.
+* Take the square root of the log of 2, then click Submit Answer.
 
 ```{r grade_code, exercise = TRUE}
 
@@ -250,8 +254,21 @@ See `?grade_conditions` for more information.
 sqrt(log(2))
 ```
 
-```{r grade_code-code-check}
-grade_code("Good job. Don't worry, things will soon get harder.")
+```{r grade_code-check}
+grade_code("Don't worry, things will soon get harder.")
+```
+
+* Now, throw an error message of `"boom"`
+
+```{r grade_error, exercise = TRUE}
+```
+
+```{r grade_error-solution}
+stop("boom")
+```
+
+```{r grade_error-code-check}
+grade_code("Nice error!")
 ```
 
 ### 
@@ -368,7 +385,7 @@ The custom checking function should return the output of `gradethis::grade_feedb
 
 ### Evaluation
 
-To use the custom checking function, place it in a nexercises `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
+To use the custom checking function, place it in an exercise `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
 
 ### Try it!
 

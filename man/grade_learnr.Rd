@@ -2,6 +2,7 @@
 % Please edit documentation in R/grade_learnr.R
 \name{grade_learnr}
 \alias{grade_learnr}
+\alias{grade_learnr_error}
 \title{A checker function to use with \code{learnr}}
 \usage{
 grade_learnr(
@@ -15,6 +16,8 @@ grade_learnr(
   last_value = NULL,
   ...
 )
+
+grade_learnr_error(solution_code = NULL, check_code = "grade_code()", ...)
 }
 \arguments{
 \item{label}{Label for exercise chunk}
