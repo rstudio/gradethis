@@ -56,6 +56,12 @@ grade_learnr <- function(label = NULL,
     last_value = last_value
   )
   
+  # When this function gets called in learnr (via tutorial_options(exercise.checker = gradethis::grade_learnr))
+  # It's unable to find these internal functions correctly, so we "import" them now
+  `%||%` <- rlang::`%||%`
+  is_grade <- utils::getFromNamespace("is_grade", "gradethis")
+  is_feedback <- utils::getFromNamespace("is_feedback", "gradethis")
+  
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
     error = function(e) {
@@ -75,7 +81,6 @@ grade_learnr <- function(label = NULL,
       do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
     }
   )
-  
   
   if (is_grade(user_code)) {
     user_code <- grade_feedback(user_code)
