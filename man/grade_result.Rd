@@ -115,6 +115,8 @@ grade_result(
   learnr_args = list(last_value = function(x) x + 2)
 )
 
+# To learn more about using grade_result() and grade_code() with learnr, see:
+\dontrun{gradethis_demo()}
 }
 \seealso{
 \code{\link[=grade_code]{grade_code()}}

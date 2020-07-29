@@ -44,6 +44,31 @@ grade_learnr <- function(label = NULL,
                          envir_prep = NULL,
                          last_value = NULL,
                          ...) {
+  # Call this function in such a way that it can use other gradethis internals when called by learnr
+  # (i.e., make tutorial_options(exercise.checker = gradethis::grade_learnr) always work)
+  utils::getFromNamespace("grade_learnr_", "gradethis")(
+    label = label,
+    solution_code = solution_code,
+    user_code = user_code,
+    check_code = check_code,
+    envir_result = envir_result,
+    evaluate_result = evaluate_result,
+    envir_prep = envir_prep,
+    last_value = last_value,
+    ...
+  )
+}
+
+
+grade_learnr_ <- function(label = NULL,
+                         solution_code = NULL,
+                         user_code = NULL,
+                         check_code = NULL,
+                         envir_result = NULL,
+                         evaluate_result = NULL,
+                         envir_prep = NULL,
+                         last_value = NULL,
+                         ...) {
   
   learnr_args <- list(
     ..., label = label,
@@ -55,12 +80,6 @@ grade_learnr <- function(label = NULL,
     envir_prep = envir_prep,
     last_value = last_value
   )
-  
-  # When this function gets called in learnr (via tutorial_options(exercise.checker = gradethis::grade_learnr))
-  # It's unable to find these internal functions correctly, so we "import" them now
-  `%||%` <- rlang::`%||%`
-  is_grade <- utils::getFromNamespace("is_grade", "gradethis")
-  is_feedback <- utils::getFromNamespace("is_feedback", "gradethis")
   
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
@@ -172,5 +191,7 @@ grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()"
   if (is.null(solution_code)) {
     return(NULL)
   }
-  grade_learnr(solution_code = solution_code, check_code = check_code, ...)
+  utils::getFromNamespace("grade_learnr", "gradethis")(
+    solution_code = solution_code, check_code = check_code, ...
+  )
 }
