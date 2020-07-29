@@ -261,6 +261,7 @@ grade_code("Don't worry, things will soon get harder.")
 * Now, throw an error message of `"boom"`
 
 ```{r grade_error, exercise = TRUE}
+
 ```
 
 ```{r grade_error-solution}
