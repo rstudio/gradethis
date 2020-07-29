@@ -5,11 +5,7 @@
 
 
 
-extra_answer <- function(
-  this_line
-) {
-  "Are you submitting more lines than are suggested?"
-
+extra_answer <- function(this_line) {
   glue::glue_data(
     list(
       this_line = prep(this_line)
@@ -19,11 +15,7 @@ extra_answer <- function(
 
 }
 
-missing_answer <- function(
-  this_prior_line
-) {
-  "Are you missing some of your submission?"
-
+missing_answer <- function(this_prior_line) {
   glue::glue_data(
     list(
       this_prior_line = prep(this_prior_line)

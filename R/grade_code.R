@@ -169,8 +169,5 @@ is_code_identical <- function(user = NULL, solution = NULL) {
   lines_are_identical <- vapply(seq_along(user), function(i) {
     identical(user[[i]], solution[[i]])
   }, logical(1))
-  if (!all(lines_are_identical)) {
-    return(FALSE)
-  }
-  return(TRUE)
+  all(lines_are_identical)
 }
