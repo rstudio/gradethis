@@ -61,7 +61,7 @@
 #'   that the answer differs, the message will be the content of the `glue_pipe`
 #'   argument.
 #'
-#' @seealso [grade_code()], [grade_result()], and [grade_conditions()]
+#' @seealso [grade_result()]
 #' @export
 #' @examples
 #' \dontrun{gradethis_demo()}
@@ -79,6 +79,7 @@ grade_code <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe")
 ) {
+  
   user <- rlang::as_quosure(grader_args$user_quo)
   solution <- rlang::as_quosure(grader_args$solution_quo)
 
@@ -93,15 +94,10 @@ grade_code <- function(
   }
 
   if (is_code_identical(user, solution)) {
-    is_same_info <- graded(correct = TRUE, message = NULL)
+    is_same_info <- graded(correct = TRUE)
   } else {
     message <- detect_mistakes(user, solution)
-    if (is.null(message)) {
-      # found no errors
-      is_same_info <- graded(correct = TRUE, message = NULL)
-    } else {
-      is_same_info <- graded(correct = FALSE, message = message)
-    }
+    is_same_info <- graded(correct = is.null(message), message = message)
   }
 
   if (is_same_info$correct) {
@@ -133,12 +129,7 @@ grade_code <- function(
     )
   }
 
-  return(
-    graded(
-      correct = FALSE,
-      message = message
-    )
-  )
+  graded(correct = FALSE, message = message)
 }
 
 

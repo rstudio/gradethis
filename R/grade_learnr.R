@@ -17,10 +17,10 @@
 #' `grade_learnr()`.
 #'
 #' @param label Label for exercise chunk
-#' @param solution_code Code provided within the “-solution” chunk for the
+#' @param solution_code Code provided within the "-solution" chunk for the
 #'   exercise.
 #' @param user_code R code submitted by the user
-#' @param check_code Code provided within the “-check” chunk for the exercise.
+#' @param check_code Code provided within the "-check" chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the `evaluate::evaluate`
 #'   function.
@@ -44,27 +44,74 @@ grade_learnr <- function(label = NULL,
                          envir_prep = NULL,
                          last_value = NULL,
                          ...) {
+  # Call this function in such a way that it can use other gradethis internals when called by learnr
+  # (i.e., make tutorial_options(exercise.checker = gradethis::grade_learnr) always work)
+  utils::getFromNamespace("grade_learnr_", "gradethis")(
+    label = label,
+    solution_code = solution_code,
+    user_code = user_code,
+    check_code = check_code,
+    envir_result = envir_result,
+    evaluate_result = evaluate_result,
+    envir_prep = envir_prep,
+    last_value = last_value,
+    ...
+  )
+}
 
-  # Sometimes no user code is provided, but
-  # that means there is nothing to check. Also,
-  # you do not want to parse NULL
-  if (is.null(user_code)) {
-    return(list(
-      message = "I didn't receive your code. Did you write any?",
-      correct = FALSE,
-      type = "error",
-      location = "append"
-    ))
-  } else {
-    user_code <- parse(text = user_code)
-    if (length(user_code) == 0) {
-      return(list(
-        message = "I didn't receive your code. Did you write any?",
-        correct = FALSE,
-        type = "error",
-        location = "append"
-      ))
+
+grade_learnr_ <- function(label = NULL,
+                         solution_code = NULL,
+                         user_code = NULL,
+                         check_code = NULL,
+                         envir_result = NULL,
+                         evaluate_result = NULL,
+                         envir_prep = NULL,
+                         last_value = NULL,
+                         ...) {
+  
+  learnr_args <- list(
+    ..., label = label,
+    solution_code = solution_code,
+    user_code = user_code,
+    check_code = check_code,
+    envir_result = envir_result,
+    evaluate_result = evaluate_result,
+    envir_prep = envir_prep,
+    last_value = last_value
+  )
+  
+  user_code <- tryCatch(
+    parse(text = user_code %||% ""),
+    error = function(e) {
+      parse_checker <- getOption(
+        "exercise.parse.error", 
+        function(...) {
+          graded(
+            correct = FALSE,
+            message = paste(
+              "Uh oh, the R code produced a syntax error:",
+              conditionMessage(e)
+            )
+          )
+        }
+      )
+      # check that parse_checker is a function with proper args
+      do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
     }
+  )
+  
+  if (is_grade(user_code)) {
+    user_code <- grade_feedback(user_code)
+  }
+  if (is_feedback(user_code)) {
+    return(user_code)
+  }
+  if (length(user_code) == 0) {
+    return(grade_feedback(graded(
+        message = "I didn't receive your code. Did you write any?",
+        correct = FALSE
+    )))
   }
 
   # Sometimes no solution is provided, but that
@@ -73,12 +120,11 @@ grade_learnr <- function(label = NULL,
   if (!is.null(solution_code)) {
     solution_code <- parse(text = solution_code)
     if (length(solution_code) == 0) {
-      return(list(
+      grade <- graded(
         message = "No solution is provided for this exercise.",
-        correct = TRUE,
-        type = "info",
-        location = "append"
-      ))
+        correct = TRUE
+      )
+      return(grade_feedback(grade, type = "info"))
     }
   }
 
@@ -86,7 +132,8 @@ grade_learnr <- function(label = NULL,
   checked_result <- tryCatch(
     { # nolint
       # Run checking code to get feedback
-      parsed_check_code <- parse(text = check_code)
+      parsed_check_code <- parse(text = check_code %||% "")
+      
       if (length(parsed_check_code) > 1) {
         # don't eval the last one to avoid bad check calls
         for (i in 1:(length(parsed_check_code) - 1)) {
@@ -95,7 +142,7 @@ grade_learnr <- function(label = NULL,
       }
       grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
                                              envir_prep)
-
+      
       # get all grader args
       grader_args <- list(
         user_quo = rlang::as_quosure(user_code, envir_result)
@@ -105,17 +152,6 @@ grade_learnr <- function(label = NULL,
         grader_args$solution_quo <- rlang::as_quosure(solution_code,
                                                       envir_prep)
       }
-
-      # copy in all learnr arguments
-      learnr_args <- list(...)
-      learnr_args$label <- label
-      learnr_args$solution_code <- solution_code
-      learnr_args$user_code <- user_code
-      learnr_args$check_code <- check_code
-      learnr_args$envir_result <- envir_result
-      learnr_args$evaluate_result <- evaluate_result
-      learnr_args$envir_prep <- envir_prep
-      learnr_args$last_value <- last_value
 
       # copy in all grader arguments
       grading_code$grader_args <- grader_args
@@ -139,25 +175,10 @@ grade_learnr <- function(label = NULL,
     stop("`grade_learnr` should receive a `graded` value from every `-check` chunk")
   }
 
-  message_type <-
-    if (had_error_checking) {
-      "warning"
-    } else {
-      if (checked_result$correct) {
-        "success"
-      } else {
-        "error"
-      }
-    }
-
-  ret <- list(
-    message = checked_result$message,
-    correct = checked_result$correct,
-    type = message_type,
-    location = "append"
+  grade_feedback(
+    checked_result,
+    type = if (had_error_checking) "warning" else "auto"
   )
-
-  ret
 }
 
 
@@ -167,7 +188,9 @@ grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()"
   if (is.null(solution_code)) {
     return(NULL)
   }
-  grade_learnr(solution_code = solution_code, check_code = check_code, ...)
+  utils::getFromNamespace("grade_learnr", "gradethis")(
+    solution_code = solution_code, check_code = check_code, ...
+  )
 }
 
 learnr_env <- function(learnr_args) {

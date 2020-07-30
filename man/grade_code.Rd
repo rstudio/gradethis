@@ -88,5 +88,5 @@ z <- expression(sqrt(log(1)))
 grade_code(grader_args = list(user_quo = y, solution_quo = z))
 }
 \seealso{
-\code{\link[=grade_code]{grade_code()}}, \code{\link[=grade_result]{grade_result()}}, and \code{\link[=grade_conditions]{grade_conditions()}}
+\code{\link[=grade_result]{grade_result()}}
 }

@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = FALSE)
 The `gradethis` package provides three ways to autocheck student code in [learnr](https://rstudio.github.io/learnr/) tutorials. You can use:
 
 1. `grade_result()` to check that the student's code returns a correct _result_.
-1. `grade_conditions()` to check that the student's code returns a _result_ that satisfies a complete set of conditions. This is akin to unit testing the result.
+1. `grade_result_strict()` to check that the student's code returns a _result_ that satisfies a complete set of conditions. This is akin to unit testing the result.
 1. `grade_code()` to check that the student's _code_ exactly matches the solution code.
 
 You can also use gradethis to create your own customized checking code.
@@ -153,7 +153,7 @@ Order matters! `grade_result()` will not continue to evaluate `_if()` functions 
 
 `grade_result()` will mark a result correct if it passes a _single_ `pass_if()` statement (without first triggering a `fail_if()`). 
 
-If you would like to ensure that a result satisfies _every_ `pass_if` statement use `grade_conditions()`.
+If you would like to ensure that a result satisfies _every_ `pass_if` statement use `grade_result_strict()`.
 
 ### 
 
@@ -165,11 +165,11 @@ If you want to check the code the student used to get a result, use `grade_code(
 
 See `?grade_result` for more information.
 
-## `grade_conditions()`
+## `grade_result_strict()`
 
 ### 
 
-`grade_conditions()` is similar to `grade_result()`, but it requires a result to pass _every_ `pass_if()` function contained in its function body. This method is analogous to creating unit tests that all need to pass.
+`grade_result_strict()` is similar to `grade_result()`, but it requires a result to pass _every_ `pass_if()` function contained in its function body. This method is analogous to creating unit tests that all need to pass.
 
 Here is an example of `grade_condition()` in use:
 
@@ -188,7 +188,7 @@ function(x) {
 ```
 
 ```{r grade_cond-check}
-grade_conditions(
+grade_result_strict(
   pass_if(~ .result(3) == 4),
   pass_if(~ identical(.result(0), 1)),
   pass_if(~ identical(sapply(1:10, .result), 2:11)),
@@ -203,15 +203,15 @@ grade_conditions(
 And here is the code behind the example.
 
 ````markdown
-`r ''````{r grade_conditions, exercise = TRUE}
+`r ''````{r grade_result_strict, exercise = TRUE}
 function(x) {
   # solution is x + 1L
   x + 1
 }
 ```
 
-`r ''````{r grade_conditions-check}
-grade_conditions(
+`r ''````{r grade_result_strict-check}
+grade_result_strict(
   pass_if(~ .result(3) == 4),
   pass_if(~ identical(.result(0), 1)),
   pass_if(~ identical(sapply(1:10, .result), 2:11)),
@@ -224,7 +224,7 @@ grade_conditions(
 
 ### Syntax
 
-`grade_conditions()` takes a set of `pass_if()` functions. Each `pass_if()` function should contain:
+`grade_result_strict()` takes a set of `pass_if()` functions. Each `pass_if()` function should contain:
 
 1. a logical test prefixed by a `~` 
 
@@ -232,11 +232,11 @@ Use `.result` to refer to the student's answer within the logical tests.
 
 ### Evaluation
 
-`grade_conditions()` will mark a result as correct only if passes every `pass_if()` statement. This is especially useful for grading function definitions.
+`grade_result_strict()` will mark a result as correct only if passes every `pass_if()` statement. This is especially useful for grading function definitions.
 
 ### 
 
-See `?grade_conditions` for more information.
+See `?grade_result_strict` for more information.
 
 ## `grade_code()`
 
@@ -261,6 +261,7 @@ grade_code("Don't worry, things will soon get harder.")
 * Now, throw an error message of `"boom"`
 
 ```{r grade_error, exercise = TRUE}
+
 ```
 
 ```{r grade_error-solution}
@@ -378,14 +379,14 @@ fifty_fifty_checker()
 
 ### Syntax
 
-The custom checking function should return the output of `gradethis::graded()`. `graded()` takes two arguments:
+The custom checking function should return the output of `gradethis::graded()` which takes two arguments:
 
 1. `correct` - `TRUE` is the answer is correct, `FALSE` otherwise
 1. `message` - an optional character string to display to the student
 
 ### Evaluation
 
-To use the custom checking function, place it in an exercise `-check` chunk, as you would place `grade_result()`, `grade_conditions()`, or `grade_code()`.
+To use the custom checking function, place it in an exercise `-check` chunk, as you would place `grade_result()`, `grade_result_strict()`, or `grade_code()`.
 
 ### Try it!
 

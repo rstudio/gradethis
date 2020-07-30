@@ -22,12 +22,12 @@ grade_learnr_error(solution_code = NULL, check_code = "grade_code()", ...)
 \arguments{
 \item{label}{Label for exercise chunk}
 
-\item{solution_code}{Code provided within the “-solution” chunk for the
+\item{solution_code}{Code provided within the "-solution" chunk for the
 exercise.}
 
 \item{user_code}{R code submitted by the user}
 
-\item{check_code}{Code provided within the “-check” chunk for the exercise.}
+\item{check_code}{Code provided within the "-check" chunk for the exercise.}
 
 \item{envir_result}{The R environment after the execution of the chunk.}
 

@@ -2,6 +2,10 @@
 % Please edit documentation in R/grade_result.R
 \name{grade_result}
 \alias{grade_result}
+\alias{grade_result_strict}
+\alias{condition}
+\alias{pass_if}
+\alias{fail_if}
 \title{Grade result of exercise code}
 \usage{
 grade_result(
@@ -15,12 +19,27 @@ grade_result(
   default_correct = "auto",
   default_message = NULL
 )
+
+grade_result_strict(
+  ...,
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct_test"),
+  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+)
+
+condition(x, message, correct)
+
+pass_if(x, message = NULL)
+
+fail_if(x, message = NULL)
 }
 \arguments{
-\item{...}{\code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s to check}
+\item{...}{\code{pass_if()}/\code{fail_if()} \code{condition()}s to check.}
 
-\item{correct}{A character string to display if the student answer matches a
-known correct answer.}
+\item{correct}{logical whether the condition is the correct answer.}
 
 \item{incorrect}{A character string to display if the student answer matches
 a known incorrect answer.}
@@ -51,42 +70,54 @@ be correct? When \code{"auto"}, this will be \code{TRUE} when all the \code{\lin
 
 \item{default_message}{In the event that no \code{\link[=condition]{condition()}}s are met, what message should be
 included with the returned \code{\link[=graded]{graded()}} object?}
+
+\item{x}{A formula, function, or value, that returns \code{TRUE} or \code{FALSE}.
+When comparing objects that are greater than length 1
+(e.g., vectors, dataframes, matricies, etc)
+A boolean vector will be returned if the user uses \code{==}, not a single boolean value.
+\code{gradethis} will run the vector through
+\code{all(..., na.rm = TRUE)} to check for the boolean value.
+It is advised that the user use \code{identical()} instead of \code{==} in this case.}
+
+\item{message}{character string for message returned (usually passed in from
+\code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}}.}
 }
 \value{
 a \code{\link[=graded]{graded()}} object from either \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} containing
-a formatted \code{correct} or \code{incorrect} message and whether or not a match was
-found.
+a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
-Compares the final result of the student code to known \code{\link[=pass_if]{pass_if()}} and
-\code{\link[=fail_if]{fail_if()}} \code{\link[=condition]{condition()}}s. If the student result exactly matches a known
-case, returns the matching message value.
+\code{grade_result()} and \code{grade_result_strict()} both take a set of \code{pass_if()}/\code{fail_if()}
+conditions, evaluate them, and return a final \code{\link[=graded]{graded()}} object. For \code{grade_result_strict()}
+to return a correct grade, every \code{pass_if()} condition must be met, and every \code{fail_if()} condition
+must not be met. On the other hand, \code{\link[=grade_result]{grade_result()}}'s final grade reflects the first satisfied
+condition (if no conditions are met, the final grade can be controlled by \code{default_correct} and
+\code{default_message}).
 }
 \examples{
-\dontrun{gradethis_demo()}
 
 grade_result(
-  pass_if(~ identical(.result, 5), "This is a correct message"),
-          grader_args = list(),
-          learnr_args = list(last_value = 5, envir_prep = new.env())
+  fail_if(~ identical(.result, 4), "Try adding 1"),
+  pass_if(~ identical(.result, 5), "You got 5, great!"),
+  fail_if(~ TRUE, "Some generic failing message."),
+  learnr_args = list(last_value = 5)
 )
 
-grade_result(
-  pass_if(function(x) identical(x, 5), "This is a correct message"),
+grade_result_strict(
+  pass_if(~ identical(.result, 5), "You got 5, great!"),
+  fail_if(~ !is.integer(.result), "I expected an integer"),
   learnr_args = list(last_value = 5)
 )
 
 grade_result(
-  pass_if(5, "This is a correct message"),
-          learnr_args = list(last_value = 5)
+  fail_if(~ !is.function(.result), "I expected a function."),
+  fail_if(~ .result(1) != 2, "Your function should add one."),
+  learnr_args = list(last_value = function(x) x + 2)
 )
 
-grade_result(
-  fail_if(5, "You were supposed to do this other thing!"),
-          pass_if(~ TRUE, "should never reach here"),
-          learnr_args = list(last_value = 5)
-)
+# To learn more about using grade_result() and grade_code() with learnr, see:
+\dontrun{gradethis_demo()}
 }
 \seealso{
-\code{\link[=grade_code]{grade_code()}}, \code{\link[=grade_result]{grade_result()}}, and \code{\link[=grade_conditions]{grade_conditions()}}
+\code{\link[=grade_code]{grade_code()}}
 }
