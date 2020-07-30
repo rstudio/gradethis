@@ -67,8 +67,8 @@
 #' \dontrun{gradethis_demo()}
 #'
 #' # This is a manual example, see grading demo for `learnr` tutorial usage
-#' y <- quote(sqrt(log(2)))
-#' z <- quote(sqrt(log(1)))
+#' y <- expression(sqrt(log(2)))
+#' z <- expression(sqrt(log(1)))
 #' grade_code(grader_args = list(user_quo = y, solution_quo = z))
 grade_code <- function(
   correct = NULL,
@@ -95,7 +95,6 @@ grade_code <- function(
   if (is_code_identical(user, solution)) {
     is_same_info <- graded(correct = TRUE, message = NULL)
   } else {
-    # if (as.character(user[[1]]) == "test_fn") {browser()}
     message <- detect_mistakes(user, solution)
     if (is.null(message)) {
       # found no errors
