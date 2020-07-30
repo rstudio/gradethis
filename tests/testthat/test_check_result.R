@@ -7,14 +7,16 @@ test_that("Provide a passing solution. Give the students a fighting chance!", {
       learnr_args = list(last_value = 5, envir_prep = new.env())
     )
   )
-
-  expect_correct(
-    grade_result(
-      fail_if(~ .result == 5, "You were supposed to do this other thing!"),
-      grader_args = list(),
-      learnr_args = list(last_value = 6, envir_prep = new.env())
-    )
+  
+  grade <- grade_result(
+    fail_if(~ .result == 5, "You were supposed to do this other thing!"),
+    grader_args = list(),
+    learnr_args = list(last_value = 6, envir_prep = new.env()),
+    default_message = "My custom message",
+    glue_correct = "{.message}"
   )
+  expect_correct(grade)
+  expect_equal(grade$message, "My custom message")
 
   expect_correct(
     grade_result(
