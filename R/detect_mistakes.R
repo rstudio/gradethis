@@ -5,6 +5,13 @@ detect_mistakes <- function(user,
                             enclosing_arg = NULL) {
   force(env)
 
+  if (rlang::is_quosure(user)) {
+    user <- rlang::get_expr(user)
+  }
+  if (rlang::is_quosure(solution)) {
+    solution <- rlang::get_expr(solution)
+  }
+
   if (is.expression(user)) {
     stopifnot(is.expression(solution))
     # need to preemptively return after each line if a result is returned

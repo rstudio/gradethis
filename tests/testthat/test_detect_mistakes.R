@@ -729,3 +729,40 @@ test_that("detect_mistakes does not return correct prematurely", {
   )
 
 })
+
+
+
+
+test_that("detect_mistakes works with multiple lines", {
+
+  user <- rlang::as_quosure(parse(text = "1\n2\n3\n4"), new.env())
+  solution <- rlang::as_quosure(parse(text = "1\n2\n3\n4"), new.env())
+  expect_null(
+    detect_mistakes(user, solution)
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n8\n3\n4", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = quote(8), that = quote(2))
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n8\n3\n4", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = quote(8), that = quote(2))
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n2\n3\n4\n5", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    extra_answer(quote(5))
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n2\n3", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    missing_answer(quote(3))
+  )
+
+})
