@@ -83,8 +83,8 @@ For best results, name all arguments provided in the solution code.
 \dontrun{gradethis_demo()}
 
 # This is a manual example, see grading demo for `learnr` tutorial usage
-y <- quote(sqrt(log(2)))
-z <- quote(sqrt(log(1)))
+y <- expression(sqrt(log(2)))
+z <- expression(sqrt(log(1)))
 grade_code(grader_args = list(user_quo = y, solution_quo = z))
 }
 \seealso{

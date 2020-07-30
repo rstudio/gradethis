@@ -67,8 +67,8 @@
 #' \dontrun{gradethis_demo()}
 #'
 #' # This is a manual example, see grading demo for `learnr` tutorial usage
-#' y <- quote(sqrt(log(2)))
-#' z <- quote(sqrt(log(1)))
+#' y <- expression(sqrt(log(2)))
+#' z <- expression(sqrt(log(1)))
 #' grade_code(grader_args = list(user_quo = y, solution_quo = z))
 grade_code <- function(
   correct = NULL,
@@ -79,8 +79,19 @@ grade_code <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe")
 ) {
-  user <- rlang::get_expr(grader_args$user_quo)
-  solution <- rlang::get_expr(grader_args$solution_quo)
+  
+  user <- rlang::as_quosure(grader_args$user_quo)
+  solution <- rlang::as_quosure(grader_args$solution_quo)
+
+  user <- rlang::get_expr(user)
+  solution <- rlang::get_expr(solution)
+
+  if (!is.null(user)) {
+    stopifnot(is.expression(user))
+  }
+  if (!is.null(solution)) {
+    stopifnot(is.expression(solution))
+  }
 
   if (is_code_identical(user, solution)) {
     is_same_info <- graded(correct = TRUE)
@@ -137,6 +148,16 @@ is_code_identical <- function(user = NULL, solution = NULL) {
     stop("I didn't receive your code. Did you write any?")
   }
 
+  # user and solution are expressions with `srcref`s. Must compare each element. Can not compare as a whole unit
+  if (!identical(class(user), class(solution))) {
+    return(FALSE)
+  }
+  if (length(user) != length(solution)) {
+    return(FALSE)
+  }
   # Correct answers are all alike
-  identical(user, solution)
+  lines_are_identical <- vapply(seq_along(user), function(i) {
+    identical(user[[i]], solution[[i]])
+  }, logical(1))
+  all(lines_are_identical)
 }

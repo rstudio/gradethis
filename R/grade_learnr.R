@@ -145,20 +145,17 @@ grade_learnr_ <- function(label = NULL,
       
       # get all grader args
       grader_args <- list(
-        user_quo = rlang::as_quosure(user_code[[length(user_code)]], envir_result)
+        user_quo = rlang::as_quosure(user_code, envir_result)
       )
 
       if (!is.null(solution_code)) {
-        grader_args$solution_quo <- rlang::as_quosure(solution_code[[length(solution_code)]],
+        grader_args$solution_quo <- rlang::as_quosure(solution_code,
                                                       envir_prep)
       }
 
       # copy in all grader arguments
       grading_code$grader_args <- grader_args
       grading_code$learnr_args <- learnr_args
-
-      # set user answer for the environment to find
-      envir_prep$ans <- grader_args$user_quo
 
       # eval code in a copy of the chunk's prepped environment
       eval(grading_code, envir_prep)
@@ -194,4 +191,10 @@ grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()"
   utils::getFromNamespace("grade_learnr", "gradethis")(
     solution_code = solution_code, check_code = check_code, ...
   )
+}
+
+learnr_env <- function(learnr_args) {
+  learnr_args$envir_result %||%
+    learnr_args$envir_prep %||%
+    stop("Internal error. learnr did not pass a relevant environment")
 }
