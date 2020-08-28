@@ -91,6 +91,9 @@ grade_code <- function(
   }
   if (!is.null(solution)) {
     stopifnot(is.expression(solution))
+  } else {
+    # If no solution is provided, then don't provide a grade!
+    return(NULL)
   }
 
   if (is_code_identical(user, solution)) {
