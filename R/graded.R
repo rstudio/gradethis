@@ -1,7 +1,7 @@
 #' Graded object for submission value
 #'
 #'The return value from `graded` should be returned by every
-#'`*-check` chunk when used with \code{link{grade_learnr}}.
+#'`*-check` chunk when used with [grade_learnr()].
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A boolean value of whether or not the checked code is correct.

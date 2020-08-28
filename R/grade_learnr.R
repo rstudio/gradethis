@@ -201,17 +201,22 @@ learnr_env <- function(learnr_args) {
 }
 
 
-#' Enable gradethis in learnr
+#' Setup gradethis for use within learnr
 #' 
-#' Call this function inside a learnr document to use gradethis' suggested
-#' setup for grading exercises.
+#' Call this function inside a learnr document's setup chunk in order to use 
+#' a suggested behavior when grading exercises.
 #' 
+#' @inheritParams learnr::tutorial_options
+#' @param ... arguments passed to [learnr::tutorial_options()]
 #' @export
 #' @seealso [grade_learnr()]
-enable_gradethis <- function() {
+gradethis_setup <- function(exercise.timelimit = 60, exercise.checker = grade_learnr, 
+                            exercise.error.check.code = "grade_code()", ...) {
+  require(gradethis)
   learnr::tutorial_options(
-    exercise.timelimit = 60, 
-    exercise.checker = gradethis::grade_learnr,
-    exercise.error.check.code = "gradethis::grade_code()"
+    exercise.timelimit = exercise.timelimit, 
+    exercise.checker = exercise.checker,
+    exercise.error.check.code = exercise.error.check.code,
+    ...
   )
 }

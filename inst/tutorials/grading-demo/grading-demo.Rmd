@@ -13,7 +13,7 @@ description: "Learn how to use gradethis to provide automated, personalized, for
 ```{r setup, include=FALSE}
 library(learnr)
 library(gradethis)
-enable_gradethis()
+gradethis_setup()
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -63,12 +63,12 @@ grade_result(
 
 ### Setup
 
-To use `gradethis` inside a [learnr](https://rstudio.github.io/learnr/) tutorial, we suggest calling `gradethis::enable_gradethis()` inside the tutorial's `setup` chunk. This is how it will look in the learnr R Markdown file:
+To use `gradethis` inside a [learnr](https://rstudio.github.io/learnr/) tutorial, we suggest calling `gradethis::gradethis_setup()` inside the tutorial's `setup` chunk. This is how it will look in the learnr R Markdown file:
 
 ````markdown
 `r ''````{r setup}
 library(gradethis)
-enable_gradethis()
+gradethis_setup()
 ```
 ````
 
@@ -256,7 +256,7 @@ grade_code("Don't worry, things will soon get harder.")
 
 ## Grading exercise errors
 
-Since `enable_gradethis()` sets `learnr::tutorial_options(exercise.error.checker = grade_learnr_error)`, when an exercise submission produces an evaluation error, intelligent feedback is provided via `grade_code()` (when a solution is provided). Try it yourself by submitting `mt` (R error, incorrect answer), then `cars` (No error, incorrect answer), then `mtcars` (correct answer) below:
+Since `gradethis_setup()` sets `learnr::tutorial_options(exercise.error.checker = grade_learnr_error)`, when an exercise submission produces an evaluation error, intelligent feedback is provided via `grade_code()` (when a solution is provided). Try it yourself by submitting `mt` (R error, incorrect answer), then `cars` (No error, incorrect answer), then `mtcars` (correct answer) below:
 
 ```{r mtcars, exercise = TRUE}
 

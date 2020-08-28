@@ -17,7 +17,7 @@ grade_learnr(
   ...
 )
 
-grade_learnr_error(solution_code = NULL, check_code, ...)
+grade_learnr_error(solution_code = NULL, check_code = "grade_code()", ...)
 }
 \arguments{
 \item{label}{Label for exercise chunk}
