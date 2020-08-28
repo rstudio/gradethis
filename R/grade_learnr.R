@@ -32,6 +32,7 @@
 #' @return An R list which contains several fields indicating the result of the
 #'   check.
 #' @export
+#' @seealso [gradethis_setup()]
 #'
 #' @examples
 #' \dontrun{gradethis_demo()}
@@ -69,7 +70,7 @@ grade_learnr_ <- function(label = NULL,
                          envir_prep = NULL,
                          last_value = NULL,
                          ...) {
-  
+
   learnr_args <- list(
     ..., label = label,
     solution_code = solution_code,
@@ -80,12 +81,12 @@ grade_learnr_ <- function(label = NULL,
     envir_prep = envir_prep,
     last_value = last_value
   )
-  
+
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
     error = function(e) {
       parse_checker <- getOption(
-        "exercise.parse.error", 
+        "exercise.parse.error",
         function(...) {
           graded(
             correct = FALSE,
@@ -100,7 +101,7 @@ grade_learnr_ <- function(label = NULL,
       do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
     }
   )
-  
+
   if (is_grade(user_code)) {
     user_code <- grade_feedback(user_code)
   }
@@ -133,7 +134,7 @@ grade_learnr_ <- function(label = NULL,
     { # nolint
       # Run checking code to get feedback
       parsed_check_code <- parse(text = check_code %||% "")
-      
+
       if (length(parsed_check_code) > 1) {
         # don't eval the last one to avoid bad check calls
         for (i in 1:(length(parsed_check_code) - 1)) {
@@ -142,7 +143,7 @@ grade_learnr_ <- function(label = NULL,
       }
       grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
                                              envir_prep)
-      
+
       # get all grader args
       grader_args <- list(
         user_quo = rlang::as_quosure(user_code, envir_result)
@@ -197,4 +198,25 @@ learnr_env <- function(learnr_args) {
   learnr_args$envir_result %||%
     learnr_args$envir_prep %||%
     stop("Internal error. learnr did not pass a relevant environment")
+}
+
+
+#' Setup gradethis for use within learnr
+#'
+#' Call this function inside a learnr document's setup chunk in order to use
+#' a suggested behavior when grading exercises.
+#'
+#' @inheritParams learnr::tutorial_options
+#' @param ... arguments passed to [learnr::tutorial_options()]
+#' @export
+#' @seealso [grade_learnr()]
+gradethis_setup <- function(exercise.timelimit = 60, exercise.checker = grade_learnr,
+                            exercise.error.check.code = "grade_code()", ...) {
+  require(gradethis)
+  learnr::tutorial_options(
+    exercise.timelimit = exercise.timelimit,
+    exercise.checker = exercise.checker,
+    exercise.error.check.code = exercise.error.check.code,
+    ...
+  )
 }

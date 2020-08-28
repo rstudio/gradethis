@@ -13,12 +13,7 @@ description: "Learn how to use gradethis to provide automated, personalized, for
 ```{r setup, include=FALSE}
 library(learnr)
 library(gradethis)
-
-tutorial_options(
-  exercise.timelimit = 60, 
-  exercise.checker = gradethis::grade_learnr,
-  exercise.error.checker = gradethis::grade_learnr_error
-)
+gradethis_setup()
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
@@ -68,11 +63,12 @@ grade_result(
 
 ### Setup
 
-To use `gradethis` functions within a [learnr](https://rstudio.github.io/learnr/) tutorial, you must set the `exercise.checker` tutorial option to `gradethis::grade_learnr` in the tutorial's `setup` chunk. This is how it will look in the learnr R Markdown file:
+To use `gradethis` inside a [learnr](https://rstudio.github.io/learnr/) tutorial, we suggest calling `gradethis::gradethis_setup()` inside the tutorial's `setup` chunk. This is how it will look in the learnr R Markdown file:
 
 ````markdown
 `r ''````{r setup}
-tutorial_options(exercise.checker = gradethis::grade_learnr)
+library(gradethis)
+gradethis_setup()
 ```
 ````
 
@@ -258,18 +254,23 @@ sqrt(log(2))
 grade_code("Don't worry, things will soon get harder.")
 ```
 
-* Now, throw an error message of `"boom"`
+## Grading exercise errors
 
-```{r grade_error, exercise = TRUE}
+Since `gradethis_setup()` sets `learnr::tutorial_options(exercise.error.check.code = "gradethis::grade_code()")`, when an exercise submission produces an evaluation error, intelligent feedback is provided via `grade_code()` (when a solution is provided). Try it yourself by submitting `mt` (R error, incorrect answer), then `cars` (No error, incorrect answer), then `mtcars` (correct answer) below:
+
+```{r mtcars, exercise = TRUE}
 
 ```
 
-```{r grade_error-solution}
-stop("boom")
+```{r mtcars-solution}
+mtcars
 ```
 
-```{r grade_error-code-check}
-grade_code("Nice error!")
+```{r mtcars-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
 ```
 
 ### 
@@ -277,16 +278,66 @@ grade_code("Nice error!")
 And here is the code behind the example.
 
 ````markdown
-`r ''````{r grade_code, exercise = TRUE}
-sqrt(exp(3))
+`r ''````{r mtcars, exercise = TRUE}
+
 ```
 
-`r ''````{r grade_code-solution}
-sqrt(log(2))
+`r ''````{r mtcars-solution}
+mtcars
 ```
 
-`r ''````{r grade_code-check}
-grade_code("Good job. Don't worry, things will soon get harder.")
+`r ''````{r mtcars-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+````
+
+### 
+
+In the case that you wish to provide custom checking logic for errors, you can also provide a `-error-check` chunk. If the student submission generates an error, gradethis will run the checking code in the `-error-check` chunk instead of the checking code in the `-check` chunk. gradethis will only run the `-error-check` code if the student submission generates an error. 
+
+
+```{r mtcars2, exercise = TRUE}
+
+```
+
+```{r mtcars2-solution}
+mtcars
+```
+
+```{r mtcars2-error-check}
+grade_code(incorrect = "This code produces an error (press 'Run Code' to see it).", glue_incorrect = "{ .message } { .incorrect }")
+```
+
+```{r mtcars2-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
+```
+
+And here is the code behind the example.
+
+````markdown
+`r ''````{r mtcars2, exercise = TRUE}
+
+```
+
+`r ''````{r mtcars2-solution}
+mtcars
+```
+
+`r ''````{r mtcars2-error-check}
+grade_code(incorrect = "This code produces an error (press 'Run Code' to see it).", glue_incorrect = "{ .message } { .incorrect }")
+```
+
+`r ''````{r mtcars2-check}
+grade_result(
+  fail_if(~identical(.result, cars), "This is the cars (not mtcars) dataset."),
+  pass_if(~identical(.result, mtcars))
+)
 ```
 ````
 

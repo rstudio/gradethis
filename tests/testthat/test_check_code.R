@@ -150,11 +150,10 @@ test_that("Ignore differences in argument positions (for non ... arguments)", {
 
 })
 
-test_that("Returns intelligent error when no solution code", {
+test_that("Returns nothing when no solution code is provided", {
 
-  testthat::expect_error(
-    grade_code(),
-    "No solution is provided for this exercise."
+  testthat::expect_null(
+    grade_code(grader_args = list(user_quo = expression(5)))
   )
 
 })
@@ -170,8 +169,7 @@ test_that("Empty user solution messages", {
   grader_args <- list()
   learnr_args <- list()
 
-  testthat::expect_error(grade_code(grader_args = grader_args, learnr_args = learnr_args),
-                         "No solution is provided for this exercise.")
+  testthat::expect_null(grade_code(grader_args = grader_args, learnr_args = learnr_args))
 })
 
 test_that("Spot differences when pipes are involved", {

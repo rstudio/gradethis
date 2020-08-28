@@ -66,3 +66,6 @@ Run \code{gradethis_demo()} to see an example learnr document that uses
 \examples{
 \dontrun{gradethis_demo()}
 }
+\seealso{
+\code{\link[=gradethis_setup]{gradethis_setup()}}
+}
