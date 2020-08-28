@@ -296,7 +296,7 @@ grade_result(
 
 ### 
 
-In the case that you wish to provide custom checking logic for errors, you can also provide a `-error-check` chunk. 
+In the case that you wish to provide custom checking logic for errors, you can also provide a `-error-check` chunk. If the student submission generates an error, gradethis will run the checking code in the `-error-check` chunk instead of the checking code in the `-check` chunk. gradethis will only run the `-error-check` code if the student submission generates an error. 
 
 
 ```{r mtcars2, exercise = TRUE}
