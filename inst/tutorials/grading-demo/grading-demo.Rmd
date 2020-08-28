@@ -256,7 +256,7 @@ grade_code("Don't worry, things will soon get harder.")
 
 ## Grading exercise errors
 
-Since `gradethis_setup()` sets `learnr::tutorial_options(exercise.error.checker = grade_learnr_error)`, when an exercise submission produces an evaluation error, intelligent feedback is provided via `grade_code()` (when a solution is provided). Try it yourself by submitting `mt` (R error, incorrect answer), then `cars` (No error, incorrect answer), then `mtcars` (correct answer) below:
+Since `gradethis_setup()` sets `learnr::tutorial_options(exercise.error.check.code = "gradethis::grade_code()")`, when an exercise submission produces an evaluation error, intelligent feedback is provided via `grade_code()` (when a solution is provided). Try it yourself by submitting `mt` (R error, incorrect answer), then `cars` (No error, incorrect answer), then `mtcars` (correct answer) below:
 
 ```{r mtcars, exercise = TRUE}
 
