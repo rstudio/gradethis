@@ -67,5 +67,5 @@ Run \code{gradethis_demo()} to see an example learnr document that uses
 \dontrun{gradethis_demo()}
 }
 \seealso{
-\code{\link[=enable_gradethis]{enable_gradethis()}}
+\code{\link[=gradethis_setup]{gradethis_setup()}}
 }
