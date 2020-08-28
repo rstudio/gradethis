@@ -184,12 +184,12 @@ grade_learnr_ <- function(label = NULL,
 
 #' @rdname grade_learnr
 #' @export
-grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()", ...) {
+grade_learnr_error <- function(solution_code = NULL, check_code, ...) {
   if (is.null(solution_code)) {
     return(NULL)
   }
   utils::getFromNamespace("grade_learnr", "gradethis")(
-    solution_code = solution_code, check_code = check_code, ...
+    solution_code = solution_code, check_code = "grade_code()", ...
   )
 }
 
