@@ -32,6 +32,7 @@
 #' @return An R list which contains several fields indicating the result of the
 #'   check.
 #' @export
+#' @seealso [enable_gradethis()]
 #'
 #' @examples
 #' \dontrun{gradethis_demo()}
@@ -197,4 +198,20 @@ learnr_env <- function(learnr_args) {
   learnr_args$envir_result %||%
     learnr_args$envir_prep %||%
     stop("Internal error. learnr did not pass a relevant environment")
+}
+
+
+#' Enable gradethis in learnr
+#' 
+#' Call this function inside a learnr document to use gradethis' suggested
+#' setup for grading exercises.
+#' 
+#' @export
+#' @seealso [grade_learnr()]
+enable_gradethis <- function() {
+  learnr::tutorial_options(
+    exercise.timelimit = 60, 
+    exercise.checker = gradethis::grade_learnr,
+    exercise.error.check.code = "gradethis::grade_code()"
+  )
 }

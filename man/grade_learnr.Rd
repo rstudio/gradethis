@@ -17,7 +17,7 @@ grade_learnr(
   ...
 )
 
-grade_learnr_error(solution_code = NULL, check_code = "grade_code()", ...)
+grade_learnr_error(solution_code = NULL, check_code, ...)
 }
 \arguments{
 \item{label}{Label for exercise chunk}
@@ -65,4 +65,7 @@ Run \code{gradethis_demo()} to see an example learnr document that uses
 }
 \examples{
 \dontrun{gradethis_demo()}
+}
+\seealso{
+\code{\link[=enable_gradethis]{enable_gradethis()}}
 }
