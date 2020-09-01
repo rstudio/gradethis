@@ -7,6 +7,7 @@
 #' contain a top-level call to \code{\link[magrittr]{\%>\%}}, `unpipe()` returns it as is.
 #'
 #' @param code a quoted piece of code
+#' @noRd
 unpipe <- function(code) {
 
   # Ceci n'est pas une pipe
