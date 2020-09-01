@@ -92,7 +92,11 @@ grade_learnr_ <- function(label = NULL,
             correct = FALSE,
             message = paste(
               "Uh oh, the R code produced a syntax error:",
-              conditionMessage(e)
+              conditionMessage(e),
+              "\nCheck that you have closed every \", ', (, and { ",
+              "with a matching \", ', ), and }. Also look for missing ",
+              "commas. R cannot determine how to turn your text into ",
+              "a complete command."
             )
           )
         }
