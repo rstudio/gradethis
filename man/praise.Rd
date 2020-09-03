@@ -12,7 +12,7 @@ random_encourage()
 \description{
 Generate a random praise or encouragement phrase.
 This can be used in conjunction with
-\code{glue::[glue][glue::glue()]} to generate praise or encouragement within feedback to users.
+\verb{glue::[glue][glue::glue()]} to generate praise or encouragement within feedback to users.
 }
 \section{Functions}{
 \itemize{

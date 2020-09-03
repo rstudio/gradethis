@@ -4,16 +4,21 @@
 \alias{grade_conditions}
 \title{Grade all specified conditions}
 \usage{
-grade_conditions(..., correct = NULL, incorrect = NULL,
-  grader_args = list(), learnr_args = list(),
+grade_conditions(
+  ...,
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test"))
+  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+)
 }
 \arguments{
 \item{...}{ignored}
 
 \item{correct}{A character string to display if all tests pass. This
-character string will be run through \link[glue:glue_data]{glue::glue_data} with:
+character string will be run through \link[glue:glue]{glue::glue_data} with:
 \itemize{
 \item \code{num_correct}: Number of correct tests. (Equals \code{num_total})
 \item \code{num_total}: Number of tests
@@ -21,7 +26,7 @@ character string will be run through \link[glue:glue_data]{glue::glue_data} with
 }}
 
 \item{incorrect}{A character string to display if at least one test fails.
-This character string will be run through \code{\link[glue:glue_data]{glue::glue_data()}} with:
+This character string will be run through \code{\link[glue:glue]{glue::glue_data()}} with:
 \itemize{
 \item \code{num_correct}: Number of correct tests
 \item \code{num_total}: Number of tests
@@ -34,7 +39,7 @@ This character string will be run through \code{\link[glue:glue_data]{glue::glue
 \item \code{user_quo}: Quoted R code submitted by the user. For example
 \code{\link[rlang:quo]{rlang::quo(1)}}
 \item \code{solution_quo}: (Optional) Quoted solution R code provided by the
-\code{*-solution} chunk for an exercise.
+\verb{*-solution} chunk for an exercise.
 }}
 
 \item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by

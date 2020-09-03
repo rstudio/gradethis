@@ -183,8 +183,16 @@ test_that("detect_mistakes works with atomic solutions", {
 
 })
 
-# test_that("detect_mistakes works with infix operators", {
-# 
+test_that("detect_mistakes works with infix operators", {
+
+  user <- quote(123)
+  solution <- quote(a <- sample(1:6, size = 1))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    wrong_value(this = user, that = solution)
+  )
+  
 #   # surplus
 #   user <-     quote(b(1 + 2))
 #   solution <- quote(b(1))
@@ -414,7 +422,7 @@ test_that("detect_mistakes works with atomic solutions", {
 #   # Why? Because checking will stop at the initial call
 #   # because it is not an infix.
 # 
-# })
+})
 
 test_that("detect_mistakes works with pipes", {
 

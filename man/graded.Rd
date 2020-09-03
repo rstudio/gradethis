@@ -13,5 +13,5 @@ graded(correct, message = NULL)
 }
 \description{
 The return value from \code{graded} should be returned by every
-\code{*-check} chunk when used with \code{link{grade_learnr}}.
+\verb{*-check} chunk when used with \code{link{grade_learnr}}.
 }
