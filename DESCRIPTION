@@ -1,7 +1,7 @@
 Package: gradethis
 Type: Package
 Title: Tools for "grading" student exercises in learnr tutorials
-Version: 0.1.0.9002
+Version: 0.1.0.9004
 Authors@R: 
     c(person(given = "Daniel",
              family = "Chen",
@@ -27,14 +27,16 @@ Description: Pairing with the 'learnr' R package,
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Imports:
+    utils,
     purrr,
     rlang,
     rstudioapi,
     glue,
     checkmate,
-    testthat
+    testthat,
+    learnr
 Suggests:
     tidyr
 Remotes:

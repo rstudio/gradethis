@@ -1,4 +1,4 @@
-context("Check grade_conditions messages")
+context("Check grade_result_strict messages")
 
 expect_message <- function(x, message, correct) {
   expect_s3_class(x, "grader_graded")
@@ -13,7 +13,7 @@ test_that("Correct messages without random praise", {
   }
 
   expect_message(
-    grade_conditions(
+    grade_result_strict(
         pass_if(~ .result(3) == 4),
         pass_if(~ .result(10) == 11),
         grader_args = list(),
@@ -32,7 +32,7 @@ test_that("Incorrect mesages without random praise", {
   }
 
   expect_message(
-    grade_conditions(
+    grade_result_strict(
       pass_if(~ .result(3) == 4),
       fail_if(~ .result(10) == 11),
       grader_args = list(),

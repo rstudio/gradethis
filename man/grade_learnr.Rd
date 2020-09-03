@@ -2,6 +2,7 @@
 % Please edit documentation in R/grade_learnr.R
 \name{grade_learnr}
 \alias{grade_learnr}
+\alias{grade_learnr_error}
 \title{A checker function to use with \code{learnr}}
 \usage{
 grade_learnr(
@@ -19,12 +20,12 @@ grade_learnr(
 \arguments{
 \item{label}{Label for exercise chunk}
 
-\item{solution_code}{Code provided within the “-solution” chunk for the
+\item{solution_code}{Code provided within the "-solution" chunk for the
 exercise.}
 
 \item{user_code}{R code submitted by the user}
 
-\item{check_code}{Code provided within the “-check” chunk for the exercise.}
+\item{check_code}{Code provided within the "-check" chunk for the exercise.}
 
 \item{envir_result}{The R environment after the execution of the chunk.}
 
@@ -62,4 +63,7 @@ Run \code{gradethis_demo()} to see an example learnr document that uses
 }
 \examples{
 \dontrun{gradethis_demo()}
+}
+\seealso{
+\code{\link[=gradethis_setup]{gradethis_setup()}}
 }

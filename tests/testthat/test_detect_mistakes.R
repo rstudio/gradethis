@@ -201,7 +201,7 @@ test_that("detect_mistakes works with infix operators", {
 #                ,
 #                wrong_value("1 + 2", quote(1))
 #                )
-# 
+#
 #   # missing
 #   user <-     quote(sqrt(1))
 #   solution <- quote(sqrt(1 + 2))
@@ -210,7 +210,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = quote(1), that = "1 + 2")
 #   )
-# 
+#
 #   user <-     quote(sqrt(1))
 #   solution <- quote(sqrt(1 + 2 + 3))
 #   expect_equal(
@@ -218,7 +218,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = quote(1), that = "1 + 2 + 3")
 #   )
-# 
+#
 #   user <-     quote(sqrt(1 + 2))
 #   solution <- quote(sqrt(1 + 2 + 3))
 #   expect_equal(
@@ -226,7 +226,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 2", that = "+ 3")
 #   )
-# 
+#
 #   user <-     quote(sqrt(1 + 3))
 #   solution <- quote(sqrt(1 + 2 + 3))
 #   expect_equal(
@@ -234,7 +234,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1", that = "1 + 2")
 #   )
-# 
+#
 #   # internal infix
 #   user <-     quote(a(1 + 2))
 #   solution <- quote(a(1 + 3))
@@ -243,7 +243,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 2", that = "+ 3")
 #   )
-# 
+#
 #   user <-     quote(a(1 + 2 + 4))
 #   solution <- quote(a(1 + 3 + 4))
 #   expect_equal(
@@ -251,7 +251,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 2", that = "+ 3")
 #   )
-# 
+#
 #   user <-     quote(a(1 + 2 + 4))
 #   solution <- quote(a(1 + 3 + 5))
 #   expect_equal(
@@ -259,7 +259,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 4", that = "+ 5")
 #   )
-# 
+#
 #   user <-     quote(a(2 + 1))
 #   solution <- quote(a(3 + 1))
 #   expect_equal(
@@ -267,7 +267,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "2", that = "3")
 #   )
-# 
+#
 #   user <-     quote(a(1 + 1))
 #   solution <- quote(a(1 - 1))
 #   expect_equal(
@@ -275,7 +275,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1 + 1", that = "1 - 1")
 #   )
-# 
+#
 #   user <-     quote(a(1 + 1 + 1))
 #   solution <- quote(a(1 - 1 + 1))
 #   expect_equal(
@@ -283,7 +283,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1 + 1", that = "1 - 1")
 #   )
-# 
+#
 #   # surplus
 #   user <-     quote(1 + 2)
 #   solution <- quote(1)
@@ -292,7 +292,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value("1 + 2", quote(1))
 #   )
-# 
+#
 #   # missing
 #   user <-     quote(1)
 #   solution <- quote(1 + 2)
@@ -301,7 +301,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = quote(1), that = "1 + 2")
 #   )
-# 
+#
 #   user <-     quote(1)
 #   solution <- quote(1 + 2 + 3)
 #   expect_equal(
@@ -309,7 +309,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = quote(1), that = "1 + 2 + 3")
 #   )
-# 
+#
 #   user <-     quote(1 + 2)
 #   solution <- quote(1 + 2 + 3)
 #   expect_equal(
@@ -317,7 +317,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 2", that = "+ 3")
 #   )
-# 
+#
 #   user <-     quote(1 + 3)
 #   solution <- quote(1 + 2 + 3)
 #   expect_equal(
@@ -325,7 +325,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1", that = "1 + 2")
 #   )
-# 
+#
 #   # internal infix
 #   user <-     quote(1 + 2)
 #   solution <- quote(1 + 3)
@@ -334,7 +334,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 2", that = "+ 3")
 #   )
-# 
+#
 #   user <-     quote(1 + 2 + 4)
 #   solution <- quote(1 + 3 + 4)
 #   expect_equal(
@@ -342,7 +342,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 2", that = "+ 3")
 #   )
-# 
+#
 #   user <-     quote(1 + 2 + 4)
 #   solution <- quote(1 + 3 + 5)
 #   expect_equal(
@@ -350,7 +350,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "+ 4", that = "+ 5")
 #   )
-# 
+#
 #   user <-     quote(2 + 1)
 #   solution <- quote(3 + 1)
 #   expect_equal(
@@ -358,7 +358,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "2", that = "3")
 #   )
-# 
+#
 #   user <-     quote(1 + 1)
 #   solution <- quote(1 - 1)
 #   expect_equal(
@@ -366,7 +366,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1 + 1", that = "1 - 1")
 #   )
-# 
+#
 #   user <-     quote(1 + 1 + 1)
 #   solution <- quote(1 - 1 + 1)
 #   expect_equal(
@@ -374,7 +374,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1 + 1", that = "1 - 1")
 #   )
-# 
+#
 #   # function
 #   user <-     quote(a(1))
 #   solution <- quote(1 + pi)
@@ -383,7 +383,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "a(1)", that = "1 + pi")
 #   )
-# 
+#
 #   user <-     quote(b(1))
 #   solution <- quote(b(1) + 2)
 #   expect_equal(
@@ -391,7 +391,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "b(1)", that = "b(1) + 2")
 #   )
-# 
+#
 #   user <-     quote(b(1))
 #   solution <- quote(b(1) + a(2))
 #   expect_equal(
@@ -399,7 +399,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "b(1)", that = "b(1) + a(2)")
 #   )
-# 
+#
 #   # non-function
 #   user <-     quote(pi(1))
 #   solution <- quote(1 + pi)
@@ -408,7 +408,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "pi(1)", that = "1 + pi")
 #   )
-# 
+#
 #   user <-     quote(1(1)) # nolint
 #   solution <- quote(b(1) + 2)
 #   expect_equal(
@@ -416,7 +416,7 @@ test_that("detect_mistakes works with infix operators", {
 #     ,
 #     wrong_value(this = "1(1)", that = "b(1) + 2")
 #   )
-# 
+#
 #   # internal atomics, functions, non-functions, infixes,
 #   # and pipes will not matter if the above tests pass.
 #   # Why? Because checking will stop at the initial call
@@ -541,7 +541,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(2 %>% log() %>% sqrt()) # nolint
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = unpipe(unpipe(user)[[2]]), 
+    wrong_call(this = unpipe(unpipe(user)[[2]]),
                 that = unpipe(unpipe(solution)[[2]]),
                 enclosing_call = user)
   )
@@ -581,13 +581,13 @@ test_that("detect_mistakes handles argument names correctly", {
   expect_null(
     detect_mistakes(user, solution)
   )
-  
+
   user <-     quote(b(1))
   solution <- quote(b(x = 1))
   expect_null(
     detect_mistakes(user, solution)
   )
-  
+
   user <-     quote(b(y = 1))
   solution <- quote(b(x = 1))
   expect_equal(
@@ -607,7 +607,7 @@ test_that("detect_mistakes handles argument names correctly", {
                      this = "a()",
                      this_name = "y")
   )
-  
+
   test_fn <<- function(x, y = 1, z = FALSE, ...) {return(1)}
 
   user <-     quote(test_fn(1:10, a = 1, z = TRUE))
@@ -656,28 +656,27 @@ test_that("detect_mistakes handles weird cases", {
   user <-     quote(sum(1, 2))
   solution <- quote(sum(1, 2, 3))
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     missing_argument(this_call =  quote(sum()),
-                     that = quote(3))
+                     that_name = quote(3))
   )
 
 })
 
 
 test_that("detect_mistakes checks the call first", {
-  
+
   user <-     quote(0 + sqrt(log(2)))
   solution <- quote(sqrt(log(2)))
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(this = user, that = solution)
   )
-  
+
 })
 
 test_that("detect_mistakes does not throw error for unused argument", {
-  
+
   a <- function(x) x
   user <-     quote(a(1, y = 2))
   solution <- quote(a(1))
@@ -686,21 +685,21 @@ test_that("detect_mistakes does not throw error for unused argument", {
     ,
     surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
   )
-  
+
 })
 
 test_that("detect_mistakes does not throw error for multiple matches of argument", {
-  
+
   z <<- function(x, ya = 1, yb = 2) x
   user <-     quote(z(1, y = 2))
   solution <- quote(z(1, ya = 2))
   expect_equal(
     detect_mistakes(user, solution),
-    bad_argument_name(this_call = user, 
-                      this = user[[3]], 
+    bad_argument_name(this_call = user,
+                      this = user[[3]],
                       this_name = names(as.list(user)[3]))
   )
-  
+
 })
 
 test_that("detect_mistakes does not throw error for multiple matches of formal", {
@@ -712,11 +711,11 @@ test_that("detect_mistakes does not throw error for multiple matches of formal",
     detect_mistakes(user, solution),
     too_many_matches(this_call = user, that_name = "yab")
   )
-  
+
 })
 
 test_that("detect_mistakes handles duplicated argument names", {
-  
+
   dd <<- function(a) a
   user <-     quote(dd(a = 1, a = 2))
   solution <- quote(dd(a = 1))
@@ -724,11 +723,11 @@ test_that("detect_mistakes handles duplicated argument names", {
     detect_mistakes(user, solution),
     duplicate_name(this_call = user, this_name = "a")
   )
-  
+
 })
 
 test_that("detect_mistakes does not return correct prematurely", {
-  
+
   j <<- function(...) 1
   user <- quote(j(x = a(1), y = a(2)))
   solution <- quote(j(x = a(x = 1), y = a(3)))
@@ -736,5 +735,42 @@ test_that("detect_mistakes does not return correct prematurely", {
     detect_mistakes(user, solution),
     wrong_value(this = user[[3]][[2]], that = solution[[3]][[2]], enclosing_call = user[[3]])
   )
-  
+
+})
+
+
+
+
+test_that("detect_mistakes works with multiple lines", {
+
+  user <- rlang::as_quosure(parse(text = "1\n2\n3\n4"), new.env())
+  solution <- rlang::as_quosure(parse(text = "1\n2\n3\n4"), new.env())
+  expect_null(
+    detect_mistakes(user, solution)
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n8\n3\n4", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = quote(8), that = quote(2))
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n8\n3\n4", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = quote(8), that = quote(2))
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n2\n3\n4\n5", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    extra_answer(quote(5))
+  )
+
+  user <- rlang::as_quosure(parse(text = "1\n2\n3", new.env()))
+  expect_equal(
+    detect_mistakes(user, solution),
+    missing_answer(quote(3))
+  )
+
 })

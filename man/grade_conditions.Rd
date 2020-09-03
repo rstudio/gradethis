@@ -81,13 +81,16 @@ grade_conditions(
 )
 
 grade_conditions(
-  pass_if(~ .result(3) == 4),
-  fail_if(~ .result(10) == 11),
+  ...,
+  correct = NULL,
+  incorrect = NULL,
   grader_args = list(),
-  learnr_args = list(last_value = example_function, envir_prep = new.env())
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct_test"),
+  glue_incorrect = getOption("gradethis_glue_incorrect_test")
 )
-
 }
-\seealso{
-\code{test}
+\description{
+This function is deprecated, use \code{\link[=grade_result_strict]{grade_result_strict()}} instead.
 }
+\keyword{internal}
