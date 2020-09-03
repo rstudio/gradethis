@@ -244,14 +244,19 @@ wrong_call <- function(this,
     that <- paste(this_name, "=", that)
     this <- paste(this_name, "=", this)
   }
-
+  
+  if (grepl("<-", that)) {
+    that <- paste("you to assign something to something else with", that)
+  } else {
+    that <- paste("you to call", that)
+  }
+  
   glue::glue_data(
     list(
-      intro = intro,
       this = this,
       that = that
     ),
-    "{intro}I expected you to call {that} where you called {this}."
+    "{intro}I expected {that} where you called {this}."
   )
 }
 
@@ -283,8 +288,11 @@ wrong_value <- function(this,
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
-  if (grepl("\\(\\)", that) || grepl("<-", that))
+  if (grepl("<-", that)) {
+    that <- paste("you to assign something to something else with", that)
+  } else if(grepl("\\(\\)", that)) {
     that <- paste("you to call", that)
+  }
 
   glue::glue_data(
     list(

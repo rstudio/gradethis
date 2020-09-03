@@ -193,6 +193,24 @@ test_that("detect_mistakes works with infix operators", {
     wrong_value(this = user, that = solution)
   )
   
+  # changing direction of assign should still work
+  user <- quote(123)
+  solution <- quote(sample(1:6, size = 1) -> a)
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    wrong_value(this = user, that = solution)
+  )
+  
+  # call vs assign
+  user <- quote(sample(1:6, size = 1))
+  solution <- quote(a <- sample(1:6, size = 1))
+  expect_equal(
+    detect_mistakes(user, solution)
+    ,
+    wrong_call(this = user, that = solution)
+  )
+  
 #   # surplus
 #   user <-     quote(b(1 + 2))
 #   solution <- quote(b(1))
