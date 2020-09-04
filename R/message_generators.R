@@ -237,6 +237,7 @@ wrong_call <- function(this,
 
   intro <- build_intro(.call = enclosing_call)
 
+  that_original <- that
   this <- prep(this)
   that <- prep(that)
 
@@ -245,7 +246,7 @@ wrong_call <- function(this,
     this <- paste(this_name, "=", this)
   }
   
-  if (grepl("<-", that)) {
+  if (is_infix_assign(that_original)) {
     that <- paste("you to assign something to something else with", that)
   } else {
     that <- paste("you to call", that)
@@ -277,6 +278,7 @@ wrong_value <- function(this,
 
   intro <- build_intro(.call = enclosing_call)
 
+  that_original <- that
   this <- prep(this)
   that <- prep(that)
 
@@ -288,7 +290,7 @@ wrong_value <- function(this,
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
-  if (grepl("<-", that)) {
+  if (is_infix_assign(that_original)) {
     that <- paste("you to assign something to something else with", that)
   } else if(grepl("\\(\\)", that)) {
     that <- paste("you to call", that)
@@ -308,7 +310,7 @@ prep <- function(text) {
   # grab whole expression ending up with: NULL <- NULL.
   # this extra condition to use `[[` works, but requires further 
   # investigation for a cleaner solution.
-  if (is.call(text) && identical(paste(text[[1]]), "<-")) {
+  if (is_infix(text)) {
     text <- text[[1]]
   } else if (is.call(text)) {
     text <- text[1]

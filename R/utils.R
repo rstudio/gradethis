@@ -8,11 +8,16 @@ is_pipe <- function(x) {
   ifelse(is.call(x), as.character(x[[1]]) %in% .pipes, FALSE)
 }
 
-.infixes <- c("+", "-", "*", "/", "^", "%%", "%/%", "%in%")
+.infixes_assign <- c("<-", "<<-", "->", "->>", "=")
+.infixes <- c("+", "-", "*", "/", "^", "%%", "%/%", "%in%", .infixes_assign)
 
-is_infix <- function(x) {
+is_infix <- function(x, infix_vals = .infixes) {
   if (is.character(x)) x <- parse(text = x)[[1]]
-  ifelse(is.call(x), as.character(x[[1]]) %in% .infixes, FALSE)
+  ifelse(is.call(x), as.character(x[[1]]) %in% infix_vals, FALSE)
+}
+
+is_infix_assign <- function(x) {
+  is_infix(x, infix_vals = .infixes_assign)
 }
 
 deparse_to_string <- function(x, width.cutoff = 500L, ...) {

@@ -254,6 +254,24 @@ sqrt(log(2))
 grade_code("Don't worry, things will soon get harder.")
 ```
 
+We can also provide a more specific feedback when we expect an assign statement, for example.
+
+* The expected here is `a <- sample(1:6, size = 1)`. Enter 123, then click Submit Answer.
+
+```{r grade_code_assign, exercise = TRUE}
+
+```
+
+```{r grade_code_assign-solution}
+a <- sample(1:6, size = 1)
+```
+
+```{r grade_code_assign-check}
+grade_code("Don't worry, things will soon get harder.")
+```
+
+You should see a red box with "I expected you to assign something to something else with <- where you wrote 123."
+
 ## Grading exercise errors
 
 Since `gradethis_setup()` sets `learnr::tutorial_options(exercise.error.check.code = "gradethis::grade_code()")`, when an exercise submission produces an evaluation error, intelligent feedback is provided via `grade_code()` (when a solution is provided). Try it yourself by submitting `mt` (R error, incorrect answer), then `cars` (No error, incorrect answer), then `mtcars` (correct answer) below:
