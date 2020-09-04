@@ -304,7 +304,15 @@ wrong_value <- function(this,
 }
 
 prep <- function(text) {
-  if (is.call(text)) text <- text[1]
+  # NOTE: `[` does not work well for assign `<-` and would
+  # grab whole expression ending up with: NULL <- NULL.
+  # this extra condition to use `[[` works, but requires further 
+  # investigation for a cleaner solution.
+  if (is.call(text) && identical(paste(text[[1]]), "<-")) {
+    text <- text[[1]]
+  } else if (is.call(text)) {
+    text <- text[1]
+  }
   if (!is.character(text)) text <- deparse_to_string(text)
   text
 }
