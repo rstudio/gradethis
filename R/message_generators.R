@@ -237,6 +237,7 @@ wrong_call <- function(this,
 
   intro <- build_intro(.call = enclosing_call)
 
+  that_original <- that
   this <- prep(this)
   that <- prep(that)
 
@@ -244,14 +245,19 @@ wrong_call <- function(this,
     that <- paste(this_name, "=", that)
     this <- paste(this_name, "=", this)
   }
-
+  
+  if (is_infix_assign(that_original)) {
+    that <- paste("you to assign something to something else with", that)
+  } else {
+    that <- paste("you to call", that)
+  }
+  
   glue::glue_data(
     list(
-      intro = intro,
       this = this,
       that = that
     ),
-    "{intro}I expected you to call {that} where you called {this}."
+    "{intro}I expected {that} where you called {this}."
   )
 }
 
@@ -272,6 +278,7 @@ wrong_value <- function(this,
 
   intro <- build_intro(.call = enclosing_call)
 
+  that_original <- that
   this <- prep(this)
   that <- prep(that)
 
@@ -279,9 +286,15 @@ wrong_value <- function(this,
     that <- paste(this_name, "=", that)
     this <- paste(this_name, "=", this)
   }
-
-  if (grepl("\\(\\)", that))
+  
+  # NOTE: infix operators that are calls like `<-` also
+  # need to be accounted for but perhaps there's a cleaner
+  # solution than tacking on more greps.
+  if (is_infix_assign(that_original)) {
+    that <- paste("you to assign something to something else with", that)
+  } else if(grepl("\\(\\)", that)) {
     that <- paste("you to call", that)
+  }
 
   glue::glue_data(
     list(
@@ -293,7 +306,15 @@ wrong_value <- function(this,
 }
 
 prep <- function(text) {
-  if (is.call(text)) text <- text[1]
+  # NOTE: `[` does not work well for assign `<-` and would
+  # grab whole expression ending up with: NULL <- NULL.
+  # this extra condition to use `[[` works, but requires further 
+  # investigation for a cleaner solution.
+  if (is_infix(text)) {
+    text <- text[[1]]
+  } else if (is.call(text)) {
+    text <- text[1]
+  }
   if (!is.character(text)) text <- deparse_to_string(text)
   text
 }

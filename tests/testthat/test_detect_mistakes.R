@@ -139,8 +139,7 @@ test_that("detect_mistakes works with atomic solutions", {
   user <-     quote(2)
   solution <- quote(1)
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     wrong_value(this = "2", that = quote(1))
   )
 
@@ -148,16 +147,14 @@ test_that("detect_mistakes works with atomic solutions", {
   user <-     quote(a(1))
   solution <- quote(1)
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     wrong_value(this = user, that = solution)
   )
 
   user <-     quote(a())
   solution <- quote(1)
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     wrong_value(this = "a()", that = quote(1))
   )
 
@@ -183,8 +180,47 @@ test_that("detect_mistakes works with atomic solutions", {
 
 })
 
-# test_that("detect_mistakes works with infix operators", {
-#
+test_that("detect_mistakes works with infix operators", {
+
+  user <- quote(123)
+  solution <- quote(x <- sample(1:6, size = 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = user, that = solution)
+  )
+  
+  # changing direction of assign should still work
+  user <- quote(123)
+  solution <- quote(sample(1:6, size = 1) -> x)
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = user, that = solution)
+  )
+  
+  # other variants of assign like <<- should also work
+  
+  user <- quote(123)
+  solution <- quote(x <<- sample(1:6, size = 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = user, that = solution)
+  )
+  
+  user <- quote(123)
+  solution <- quote(sample(1:6, size = 1) ->> x)
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_value(this = user, that = solution)
+  )
+  
+  # call vs assign
+  user <- quote(sample(1:6, size = 1))
+  solution <- quote(x <- sample(1:6, size = 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    wrong_call(this = user, that = solution)
+  )
+  
 #   # surplus
 #   user <-     quote(b(1 + 2))
 #   solution <- quote(b(1))
@@ -413,8 +449,8 @@ test_that("detect_mistakes works with atomic solutions", {
 #   # and pipes will not matter if the above tests pass.
 #   # Why? Because checking will stop at the initial call
 #   # because it is not an infix.
-#
-# })
+# 
+})
 
 test_that("detect_mistakes works with pipes", {
 
@@ -492,16 +528,14 @@ test_that("detect_mistakes works with pipes", {
   user <-     quote(1)
   solution <- quote(1 %>% log())
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     wrong_value(this = quote(1), that = quote(log()))
   )
 
   user <-     quote(1)
   solution <- quote(1 %>% log() %>% abs()) # nolint
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     wrong_value(this = quote(1), that = quote(abs()))
   )
 
@@ -583,8 +617,7 @@ test_that("detect_mistakes handles argument names correctly", {
   user <-     quote(b(y = 1))
   solution <- quote(b(x = 1))
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     surplus_argument(this_call =  quote(b()),
                      this = quote(1),
                      this_name = "y")
@@ -593,8 +626,7 @@ test_that("detect_mistakes handles argument names correctly", {
   user <-     quote(b(y = a(1)))
   solution <- quote(b(1))
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     surplus_argument(this_call =  quote(b()),
                      this = "a()",
                      this_name = "y")
@@ -605,8 +637,7 @@ test_that("detect_mistakes handles argument names correctly", {
   user <-     quote(test_fn(1:10, a = 1, z = TRUE))
   solution <- quote(test_fn(1:10, b = 1, z = TRUE))
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     # wrong_value(this = quote(1),
     #             this_name = "cut",
     #             that = quote(1),
@@ -626,8 +657,7 @@ test_that("detect_mistakes handles argument names correctly", {
   user <-     quote(mean(1:10, cut = 1, na.rm = TRUE))
   solution <- quote(mean(1:10, TRUE, cut = 1))
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     # wrong_value(this = quote(1),
     #             this_name = "cut",
     #             that = quote(TRUE))
@@ -673,8 +703,7 @@ test_that("detect_mistakes does not throw error for unused argument", {
   user <-     quote(a(1, y = 2))
   solution <- quote(a(1))
   expect_equal(
-    detect_mistakes(user, solution)
-    ,
+    detect_mistakes(user, solution),
     surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
   )
 
