@@ -83,6 +83,15 @@ test_that("Grade learnr check_code", {
   expect_false(parse_error$correct)
   expect_true(parse_error$type == "error")
   
+  # Code scaffolding produces informative parsing error message
+  one_blank <- grade_learnr(user_code = "____(mtcars, cyl)")
+  expect_false(one_blank$correct)
+  expect_true(grepl("1 blank", one_blank$message))
+  
+  three_blanks <- grade_learnr(user_code = "________(___, ____)")
+  expect_false(three_blanks$correct)
+  expect_true(grepl("3 blanks", three_blanks$message))
+  
   # Can customize the feedback through an exercise.parse.error function
   parse_error_func <- function(parse_error, learnr_args) {
     graded(

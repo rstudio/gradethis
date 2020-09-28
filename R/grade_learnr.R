@@ -85,22 +85,7 @@ grade_learnr_ <- function(label = NULL,
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
     error = function(e) {
-      parse_checker <- getOption(
-        "exercise.parse.error",
-        function(...) {
-          graded(
-            correct = FALSE,
-            message = paste(
-              "Uh oh, the R code produced a syntax error:",
-              conditionMessage(e),
-              "\nCheck that you have closed every \", ', (, and { ",
-              "with a matching \", ', ), and }. Also look for missing ",
-              "commas. R cannot determine how to turn your text into ",
-              "a complete command."
-            )
-          )
-        }
-      )
+      parse_checker <- getOption("exercise.parse.error", grade_learnr_parse_error)
       # check that parse_checker is a function with proper args
       do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
     }
@@ -184,6 +169,37 @@ grade_learnr_ <- function(label = NULL,
     checked_result,
     type = if (had_error_checking) "warning" else "auto"
   )
+}
+
+grade_learnr_parse_error <- function(parse_error, learnr_args) {
+  # Code scaffolding in exercise code will cause parse errors, so first check
+  # for blanks. We consider a blank to be 3+ "_" characters.
+  n_blanks <- sum(vapply(
+    gregexpr("_{3,}", learnr_args$user_code),
+    function(x) sum(x > 0),
+    integer(1)
+  ))
+  msg <- if (n_blanks > 0) {
+    paste0(
+      "The exercise contains ", 
+      if (n_blanks == 1L) {
+        "1 blank"
+      } else {
+        paste(n_blanks, "blanks")
+      },
+      ". Please replace the '____' with valid R code."
+    )
+  } else {
+    paste(
+      "Uh oh, the R code produced a syntax error:",
+      conditionMessage(parse_error),
+      "\nCheck that you have closed every \", ', (, and { ",
+      "with a matching \", ', ), and }. Also look for missing ",
+      "commas. R cannot determine how to turn your text into ",
+      "a complete command."
+    )
+  }
+  graded(correct = FALSE, message = msg)
 }
 
 
