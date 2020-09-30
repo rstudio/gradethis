@@ -171,7 +171,7 @@ grade_learnr_ <- function(label = NULL,
       had_error_checking <<- TRUE
       graded(
         correct = FALSE,
-        message = "Error occured while checking the submission"
+        message = "Error occurred while checking the submission"
       )
     }
   )
