@@ -9,4 +9,4 @@ test_that("infix is robust", {
   expect_false(is_infix("[azeazer]"))
   expect_false(is_infix("[azeazer"))
   expect_false(is_infix("[azeazer*"))
-  })
+})
