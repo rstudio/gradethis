@@ -15,8 +15,26 @@ grade_result(
   grader_args = list(),
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect")
+  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  default_correct = "auto",
+  default_message = NULL
 )
+
+grade_result_strict(
+  ...,
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = list(),
+  learnr_args = list(),
+  glue_correct = getOption("gradethis_glue_correct_test"),
+  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+)
+
+condition(x, message, correct)
+
+pass_if(x, message = NULL)
+
+fail_if(x, message = NULL)
 }
 \arguments{
 \item{...}{\code{pass_if()}/\code{fail_if()} \code{condition()}s to check.}
