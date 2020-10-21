@@ -184,6 +184,52 @@ surplus_argument <- function(this_call,
   )
 }
 
+
+# partial matching
+pmatches_argument_name <- function(this_call,
+                                   this,
+                                   this_name = NULL,
+                                   correct_name = NULL,
+                                   enclosing_call = NULL,
+                                   enclosing_arg = NULL) {
+  
+  
+  # "{intro}I did not expect your call to {this_call} to ",
+  # "include {this}. You ",
+  # "may have included an unnecessary argument, or you ",
+  # "may have left out or misspelled an important ",
+  # "argument name."
+  # intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
+  
+  
+  # "This code seems correct, but please write with full parameter(s) names."
+  # "You wrote {this} please rewrite with {correct_name} ."
+  # "You wrote {this} please rewrite with {correct_name} ."
+  
+  
+  this_call <- prep(this_call)
+  this      <- prep(this)
+  this_user <- this
+  
+  if (!is.null(this_name) && this_name != "")
+    this_user <- paste(this_name, "=", this)
+  
+  if (!is.null(this_name) && this_name != "")
+    correct_name <- paste(correct_name, "=", this)
+  
+  intro  <- "This code seems correct, but please write with full parameter(s) names.\n"
+  msg <- glue::glue_data(
+    list(
+      this = this_user,
+      correct_name = correct_name,
+      this_call = this_call
+    ),
+    "You wrote `{this}` please rewrite with `{correct_name}` ."
+  )
+  
+glue::glue("{paste0(intro,paste(msg,collapse = '\n'))  }")
+}
+
 # too_many_matches
 too_many_matches <- function(this_call,
                              that_name,

@@ -2,7 +2,8 @@ detect_mistakes <- function(user,
                             solution,
                             env = rlang::env_parent(),
                             enclosing_call = NULL,
-                            enclosing_arg = NULL) {
+                            enclosing_arg = NULL,
+                            allow_partial_matching = TRUE) {
   force(env)
 
   if (rlang::is_quosure(user)) {
@@ -37,7 +38,8 @@ detect_mistakes <- function(user,
         solution[[i]],
         env = env,
         enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
+        enclosing_arg = enclosing_arg,
+        allow_partial_matching = allow_partial_matching
       )
       if (!is.null(res)) {
         # found a non-NULL result, return it!
@@ -124,7 +126,6 @@ detect_mistakes <- function(user,
     }
   }
 
-
   ## Remove exact matches from further scrutiny
   for (name in user_names) {
     if (name %in% solution_names) {
@@ -133,7 +134,7 @@ detect_mistakes <- function(user,
 
       # remove first instance of name from real solution
       # names to handle duplicated argument names
-      name_index <- which(identical(solution_names, name))[1]
+      name_index <- which(identical(solution_names, name))[1] 
       solution_names[name_index] <- ""
     }
   }
@@ -202,9 +203,34 @@ detect_mistakes <- function(user,
       )
     }
 
-    # Remove partially matched arguments from further consideration
-    if (length(well_matched > 0)) {
+    # donc ici on accepte le partial matching
+    
+    if (length(well_matched > 0)){
       matched_user_names <- rlang::names2(well_matched)
+      
+      
+      
+      
+    if ( !allow_partial_matching ){
+    
+      matches <- which(sapply(lapply(remaining_solution_names,startsWith, matched_user_names),sum)==1)
+      
+      matched_solution_name <- remaining_solution_names[matches]
+      return(
+        pmatches_argument_name(
+          this_call = user,
+          this = as.character(user[matched_user_names]),
+          this_name = matched_user_names,
+          correct_name = matched_solution_name,
+          enclosing_call = enclosing_call,
+          enclosing_arg = enclosing_arg
+        )
+      )
+      
+    }
+    
+    
+    # Remove partially matched arguments from further consideration
 
       for (name in matched_user_names) {
         # which solution name does it match?
@@ -234,7 +260,6 @@ detect_mistakes <- function(user,
       )
     )
   }
-
 
   # It is now safe to call call_standardise_formals on student code
   user <- call_standardise_formals(user, env = env)
@@ -293,7 +318,8 @@ detect_mistakes <- function(user,
         # If too verbose, use user[1]
         enclosing_call = submitted,
         # avoid naming first arguments in messages
-        enclosing_arg = arg_name
+        enclosing_arg = arg_name,
+        allow_partial_matching = allow_partial_matching
       )
       if(!is.null(res)) return(res)
     }
@@ -357,7 +383,8 @@ detect_mistakes <- function(user,
         env = env,
         # If too verbose, use user[1]
         enclosing_call = submitted,
-        enclosing_arg = name
+        enclosing_arg = name,
+        allow_partial_matching = allow_partial_matching
       )
       if(!is.null(res)) return(res)
     }

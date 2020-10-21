@@ -56,6 +56,8 @@
 #' @param glue_pipe A glue string that returns the final message displayed when
 #'   the student uses a pipe, `$>$`. Defaults to
 #'   `getOption("gradethis_glue_pipe")`.
+#'   
+#' @param allow_partial_matching A boolean if `FALSE` don't allow partial matching
 #'
 #' @return a [graded()] object. An incorrect message will describe the first way
 #'   that the answer differs, the message will be the content of the `glue_pipe`
@@ -77,7 +79,8 @@ grade_code <- function(
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe")
+  glue_pipe = getOption("gradethis_glue_pipe"),
+  allow_partial_matching = TRUE
 ) {
   
   user <- rlang::as_quosure(grader_args$user_quo)
@@ -99,7 +102,7 @@ grade_code <- function(
   if (is_code_identical(user, solution)) {
     is_same_info <- graded(correct = TRUE)
   } else {
-    message <- detect_mistakes(user, solution)
+    message <- detect_mistakes(user, solution, allow_partial_matching = allow_partial_matching)
     is_same_info <- graded(correct = is.null(message), message = message)
   }
 
