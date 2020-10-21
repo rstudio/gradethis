@@ -71,7 +71,6 @@ test_that("Standarize call minimalist mode", {
   user <- rlang::get_expr(quote(read_csv("foo.csv", skip = 3)))
   user_stand <- gradethis:::call_standardise_formals(user)
   user_stand_mini <- gradethis:::call_standardise_formals(user,minimalist = TRUE)
-  call("readr::read_csv", file = "foo.csv", skip = 3)
   testthat::expect_equal(    user_stand_mini,
                              call('read_csv', file = "foo.csv", skip = 3)
                              )
