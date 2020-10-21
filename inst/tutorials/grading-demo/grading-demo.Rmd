@@ -167,7 +167,7 @@ See `?grade_result` for more information.
 
 `grade_result_strict()` is similar to `grade_result()`, but it requires a result to pass _every_ `pass_if()` function contained in its function body. This method is analogous to creating unit tests that all need to pass.
 
-Here is an example of `grade_condition()` in use:
+Here is an example of `grade_result_strict()` in use:
 
 Please make a function in the exercise space below, but do not assign the function to an object.  The function should:
 
