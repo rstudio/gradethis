@@ -126,7 +126,7 @@ grade_code <- function(
   if (uses_pipe(user)) {
     message <- glue_message(
       glue_pipe,
-      .user = user,
+      .user = as.character(user),
       .message = message,
       .incorrect = incorrect
     )
