@@ -13,11 +13,23 @@ is_pipe <- function(x) {
 
 is_infix <- function(x, infix_vals = .infixes) {
   
-  # if str2lang fails, x is not an infix
-  out <- x
-  if (is.character(x)){out<-"";  try(out <- str2lang(x), silent=TRUE) } 
-  # if (is.character(x)) x <- parse(text = x)[[1]]
-  ifelse(is.call(out), as.character(out[[1]]) %in% infix_vals, FALSE)
+  tryCatch({
+    if (is.character(x)) {
+      # if str2lang throws, x is not an infix
+      out <- str2lang(x)
+    } else {
+      out <- x
+    }
+    
+    if (!is.call(out)) {
+      return(FALSE)
+    }
+    
+    as.character(out[[1]]) %in% infix_vals
+  }, error = function(e) {
+    # x is not an infix
+    FALSE
+  })
 }
 
 
