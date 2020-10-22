@@ -66,11 +66,11 @@ test_that("When an invalid function passed (i.e., corrupt language object)", {
 })
 
 
-test_that("Standarize call minimalist mode", {
+test_that("Standarize call with include_defaults = FALSE", {
   library(readr)
   user <- rlang::get_expr(quote(read_csv("foo.csv", skip = 3)))
   user_stand <- gradethis:::call_standardise_formals(user)
-  user_stand_mini <- gradethis:::call_standardise_formals(user,minimalist = TRUE)
+  user_stand_mini <- gradethis:::call_standardise_formals(user,include_defaults = FALSE)
   testthat::expect_equal(    user_stand_mini,
                              call('read_csv', file = "foo.csv", skip = 3)
                              )

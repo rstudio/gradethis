@@ -1,4 +1,4 @@
-call_standardise_formals <- function(code, env = rlang::current_env(),minimalist = FALSE) {
+call_standardise_formals <- function(code, env = rlang::current_env(), include_defaults = TRUE) {
   # try to catch invalid function, i.e., corrupt language object
   tryCatch({
     fxn <- rlang::call_fn(code, env = env)
@@ -11,9 +11,9 @@ call_standardise_formals <- function(code, env = rlang::current_env(),minimalist
   
   
   
-  # standarise, but dont bother trying to fill out default formals
+  # if include_defaults == FALSE standarise, but dont bother trying to fill out default formals
   # - for primitives like mean, unable to distinguish between mean and mean.default
-  if (minimalist | (is_infix(code) || is.primitive(fxn))) {
+  if ( !include_defaults | (is_infix(code) || is.primitive(fxn))) {
     return(rlang::call_standardise(code))
   }
 
