@@ -243,7 +243,11 @@ detect_mistakes <- function(user,
   #    argument.
  
   explicit_solution <-call_standardise_formals(unpipe_all(answer),env = env,include_defaults = FALSE)
-  explicit_user <-call_standardise_formals(unpipe_all(submitted),env = env,include_defaults = FALSE)
+  explicit_user <- call_standardise_formals(
+    unpipe_all(submitted),
+    env = env,
+    include_defaults = FALSE
+  )
   explicit_user_names <- real_names(explicit_user)
   explicit_solution_names <-  real_names(explicit_solution)
   missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
