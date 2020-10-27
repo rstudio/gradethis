@@ -242,7 +242,11 @@ detect_mistakes <- function(user,
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
  
-  explicit_solution <-call_standardise_formals(unpipe_all(solution_original),env = env,include_defaults = FALSE)
+  explicit_solution <- call_standardise_formals(
+    unpipe_all(solution_original),
+    env = env,
+    include_defaults = FALSE
+  )
   explicit_user <- call_standardise_formals(
     unpipe_all(submitted),
     env = env,
