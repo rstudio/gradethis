@@ -179,26 +179,27 @@ grade_learnr_parse_error <- function(parse_error, learnr_args) {
     function(x) sum(x > 0),
     integer(1)
   ))
-  msg <- if (n_blanks > 0) {
-    paste0(
-      "The exercise contains ", 
-      if (n_blanks == 1L) {
-        "1 blank"
-      } else {
-        paste(n_blanks, "blanks")
-      },
-      ". Please replace the '____' with valid R code."
-    )
-  } else {
-    paste(
-      "Uh oh, the R code produced a syntax error:",
-      conditionMessage(parse_error),
-      "\nCheck that you have closed every \", ', (, and { ",
-      "with a matching \", ', ), and }. Also look for missing ",
-      "commas. R cannot determine how to turn your text into ",
-      "a complete command."
-    )
-  }
+  msg <- 
+    if (n_blanks > 0) {
+      paste0(
+        "The exercise contains ", 
+        if (n_blanks == 1L) {
+          "1 blank"
+        } else {
+          paste(n_blanks, "blanks")
+        },
+        ". Please replace the '____' with valid R code."
+      )
+    } else {
+      paste(
+        "Uh oh, the R code produced a syntax error:",
+        conditionMessage(parse_error),
+        "\nCheck that you have closed every \", ', (, and { ",
+        "with a matching \", ', ), and }. Also look for missing ",
+        "commas. R cannot determine how to turn your text into ",
+        "a complete command."
+      )
+    }
   graded(correct = FALSE, message = msg)
 }
 
