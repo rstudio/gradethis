@@ -123,10 +123,11 @@ grade_code <- function(
     .message = is_same_info$message,
     .incorrect = incorrect
   )
+  
   if (uses_pipe(user)) {
     message <- glue_message(
       glue_pipe,
-      .user = user,
+      .user = as.character(user),
       .message = message,
       .incorrect = incorrect
     )
