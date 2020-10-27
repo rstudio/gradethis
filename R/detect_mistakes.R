@@ -49,7 +49,7 @@ detect_mistakes <- function(user,
   }
 
   submitted <- user
-  answer <- solution
+  solution_original <- solution
 
   if (is.call(user)) {
     user <- unpipe_all(user) # cannot standardise yet without risking error
@@ -242,7 +242,7 @@ detect_mistakes <- function(user,
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
  
-  explicit_solution <-call_standardise_formals(unpipe_all(answer),env = env,include_defaults = FALSE)
+  explicit_solution <-call_standardise_formals(unpipe_all(solution_original),env = env,include_defaults = FALSE)
   explicit_user <- call_standardise_formals(
     unpipe_all(submitted),
     env = env,
