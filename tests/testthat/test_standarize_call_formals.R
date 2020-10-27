@@ -64,3 +64,19 @@ test_that("When an invalid function passed (i.e., corrupt language object)", {
   testthat::expect_equal(
     call_standardise_formals(user), user)
 })
+
+
+test_that("Standarize call with include_defaults = FALSE", {
+  library(purrr)
+  user <- rlang::get_expr(quote(insistently(mean,quiet = TRUE)))
+  user_stand <- gradethis:::call_standardise_formals(user)
+  user_stand_mini <- gradethis:::call_standardise_formals(user,include_defaults = FALSE)
+  testthat::expect_equal(    user_stand_mini,
+                             quote(insistently(f = mean, quiet = TRUE))
+                             )
+  testthat::expect_equal(    user_stand,
+                             quote(insistently(f = mean,rate = rate_backoff(), quiet = TRUE))
+                             )
+  
+  
+})
