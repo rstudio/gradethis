@@ -67,22 +67,16 @@ test_that("When an invalid function passed (i.e., corrupt language object)", {
 
 
 test_that("Standarize call with include_defaults = FALSE", {
-  library(readr)
-  user <- rlang::get_expr(quote(read_csv("foo.csv", skip = 3)))
+  library(purrr)
+  user <- rlang::get_expr(quote(insistently(mean,quiet = TRUE)))
   user_stand <- gradethis:::call_standardise_formals(user)
   user_stand_mini <- gradethis:::call_standardise_formals(user,include_defaults = FALSE)
   testthat::expect_equal(    user_stand_mini,
-                             call('read_csv', file = "foo.csv", skip = 3)
+                             quote(insistently(f = mean, quiet = TRUE))
                              )
   testthat::expect_equal(    user_stand,
-                             quote(read_csv(file = "foo.csv", col_names = TRUE, col_types = NULL, 
-                                            locale = default_locale(), na = c("", "NA"), 
-                                            quoted_na = TRUE, quote = "\"", comment = "", 
-                                            trim_ws = TRUE, skip = 3, n_max = Inf, guess_max = min(1000, 
-                                            n_max), progress = show_progress(), skip_empty_rows = TRUE))
+                             quote(insistently(f = mean,rate = rate_backoff(), quiet = TRUE))
                              )
   
-  
-
   
 })
