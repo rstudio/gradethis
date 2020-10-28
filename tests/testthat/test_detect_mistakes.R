@@ -801,3 +801,44 @@ test_that("detect_mistakes works with multiple lines", {
 
 })
 
+
+
+
+
+
+
+
+test_that("detect_mistakes : Differentiate between 'strings' and objects in messages", {
+  
+  
+  quote_as_name <- as.expression(quote(library(dplyr)))
+  quote_as_chr <- as.expression(quote(library('dplyr')))
+
+  
+  outputA <- grade_code(
+             grader_args = list(
+               user_quo = quote_as_name, 
+               solution_quo = quote_as_chr
+             )
+  )
+  outputB <- grade_code(
+             grader_args = list(
+               user_quo = quote_as_chr, 
+               solution_quo = quote_as_name
+             )
+  )
+    expect_false(outputA$correct)
+    expect_false(outputB$correct)
+    expect_match(object = outputA$message,
+                 regexp = 'I expected \"dplyr\" where you wrote dplyr')
+    expect_match(object = outputA$message,
+                 regexp = 'library\\(dplyr\\)')
+    expect_match(object = outputB$message,
+                 regexp = 'I expected dplyr where you wrote \"dplyr\"')
+    expect_match(object = outputB$message,
+                 regexp = 'library\\(\"dplyr\"\\)')
+
+})
+
+
+
