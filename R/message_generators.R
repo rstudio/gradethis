@@ -314,8 +314,8 @@ prep <- function(text) {
     text <- text[[1]]
   } else if (is.call(text)) {
     text <- text[1]
-  } 
-    deparse_to_string(text)
+  }
+  deparse_to_string(text)
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {
