@@ -11,7 +11,8 @@ grade_code(
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe")
+  glue_pipe = getOption("gradethis_glue_pipe"),
+  allow_partial_matching = TRUE
 )
 }
 \arguments{
@@ -44,6 +45,8 @@ displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 \item{glue_pipe}{A glue string that returns the final message displayed when
 the student uses a pipe, \verb{$>$}. Defaults to
 \code{getOption("gradethis_glue_pipe")}.}
+
+\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
 }
 \value{
 a \code{\link[=graded]{graded()}} object. An incorrect message will describe the first way

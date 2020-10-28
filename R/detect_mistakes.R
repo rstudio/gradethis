@@ -204,20 +204,16 @@ detect_mistakes <- function(user,
       )
     }
 
-    # donc ici on accepte le partial matching
     
     if (length(well_matched > 0)){
-      matched_user_names <- rlang::names2(well_matched)
-      
-      
-      
+      matched_user_names <- sort(rlang::names2(well_matched))
       
     if ( !allow_partial_matching ){
-    
-      matches <- which(sapply(lapply(remaining_solution_names,startsWith, matched_user_names),sum)==1)
       
-      matched_solution_name <- remaining_solution_names[matches]
-      return(
+      matches <- which(sapply(lapply(remaining_solution_names,startsWith, matched_user_names),sum)==1)
+      matched_solution_name <- sort(remaining_solution_names[matches])
+      
+      return( 
         pmatches_argument_name(
           this_call = user,
           this = as.character(user[matched_user_names]),
