@@ -227,7 +227,13 @@ pmatches_argument_name <- function(this_call,
     "You wrote `{this}` please rewrite with `{correct_name}` ."
   )
   
-glue::glue("{paste0(intro,paste(msg,collapse = '\n'))  }")
+  glue::glue_data(
+    list(
+      intro = intro, 
+      msg = msg
+    ),
+    "{intro}{paste0(msg, collapse = '\n')}"
+  )
 }
 
 # too_many_matches

@@ -135,7 +135,7 @@ detect_mistakes <- function(user,
 
       # remove first instance of name from real solution
       # names to handle duplicated argument names
-      name_index <- which(identical(solution_names, name))[1] 
+      name_index <- which(identical(solution_names, name))[1]
       solution_names[name_index] <- ""
     }
   }
