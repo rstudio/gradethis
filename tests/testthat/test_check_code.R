@@ -15,7 +15,7 @@ test_that("Spots differences in atomics", {
   solution <- expression(2)
   expect_message(
     grade_code(grader_args = list(user_quo = user, solution_quo = solution)),
-    wrong_value(this = quote(1), that = quote(2))
+    gradethis:::wrong_value(this = quote(1), that = quote(2))
   )
 })
 
@@ -61,7 +61,7 @@ test_that("Spots differences in calls", {
 
   expect_message(
     grade_code(grader_args = list(user_quo = a, solution_quo = c)),
-    surplus_argument(this_call = "vapply()",
+    surplus_argument(this_call = as.name("vapply()"),
                      this_name = "na.rm",
                      this = quote(TRUE))
   )
@@ -69,7 +69,7 @@ test_that("Spots differences in calls", {
   expect_message(
     grade_code(grader_args = list(user_quo = c, solution_quo = a))
     ,
-    missing_argument(this_call = "vapply()",
+    missing_argument(this_call = as.name("vapply()"),
                      that_name = "na.rm")
   )
 })
@@ -96,7 +96,7 @@ test_that("Mentions only first non-matching element", {
 
   expect_message(
     grade_code(grader_args = list(user_quo = y, solution_quo = z)),
-    wrong_value(this = "2", that = quote(1))
+    wrong_value(this = as.name("2"), that = quote(1))
   )
 
 })
@@ -219,3 +219,4 @@ test_that("Spots differences in long calls", {
     grade_code(grader_args = list(user_quo = user, solution_quo = solution))
   )
 })
+

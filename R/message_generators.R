@@ -279,6 +279,7 @@ wrong_value <- function(this,
   intro <- build_intro(.call = enclosing_call)
 
   that_original <- that
+  this_original <- this
   this <- prep(this)
   that <- prep(that)
 
@@ -314,9 +315,14 @@ prep <- function(text) {
     text <- text[[1]]
   } else if (is.call(text)) {
     text <- text[1]
-  }
-  if (!is.character(text)) text <- deparse_to_string(text)
-  text
+  } #else if (is.character(text)) {
+    
+    
+    
+  # }
+  # if (!is.character(text)) text <- 
+      deparse_to_string(text)
+  # text
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {
