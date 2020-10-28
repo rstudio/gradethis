@@ -15,7 +15,7 @@ test_that("Spots differences in atomics", {
   solution <- expression(2)
   expect_message(
     grade_code(grader_args = list(user_quo = user, solution_quo = solution)),
-    gradethis:::wrong_value(this = quote(1), that = quote(2))
+    wrong_value(this = quote(1), that = quote(2))
   )
 })
 

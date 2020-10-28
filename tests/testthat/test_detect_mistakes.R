@@ -76,7 +76,6 @@ test_that("detect_mistakes detects missing code", {
   solution <- quote(a(x=1))
   
   
-  # XXXXX
   expect_equal(
     detect_mistakes(user, solution),
     missing_argument(this_call = user, that_name = "x")
