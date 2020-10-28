@@ -209,10 +209,14 @@ detect_mistakes <- function(user,
       matched_user_names <- sort(rlang::names2(well_matched))
       
     if ( !allow_partial_matching ){
+      ## where does partial matching occur ?
+      where_pmatches <- function(user_name) {
+        which(startsWith(remaining_solution_names, user_name))
+      }
       
-      matches <- which(sapply(lapply(remaining_solution_names,startsWith, matched_user_names),sum)==1)
+      matches <- vapply(remaining_user_names, where_pmatches, 1)
       matched_solution_name <- sort(remaining_solution_names[matches])
-      
+
       return( 
         pmatches_argument_name(
           this_call = user,
@@ -223,9 +227,7 @@ detect_mistakes <- function(user,
           enclosing_arg = enclosing_arg
         )
       )
-      
     }
-    
     
     # Remove partially matched arguments from further consideration
 
@@ -233,7 +235,6 @@ detect_mistakes <- function(user,
         # which solution name does it match?
         match <- which(startsWith(remaining_solution_names, name))
         matched_solution_name <- remaining_solution_names[match]
-
         user_args[[name]] <- NULL
         solution_args[[matched_solution_name]] <- NULL
       }
