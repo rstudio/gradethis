@@ -73,8 +73,6 @@ test_that("detect_mistakes detects missing code", {
   # internal atomic - NEEDS TO CATCH UNNAMED ARGUMENT HANDLING
   user <-     quote(a())
   solution <- quote(a(1))
-  solution <- quote(a(x=1))
-  
   
   expect_equal(
     detect_mistakes(user, solution),
