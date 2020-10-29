@@ -34,3 +34,8 @@ glue_message <- function(
   ret <- glue::glue_data(params, glue_expression)
   return(ret)
 }
+
+
+glue_with_env <- function(env, ...) {
+  glue::glue_data(.x = env, .envir = env, ...)
+}

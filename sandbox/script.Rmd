@@ -1,0 +1,175 @@
+---
+title: "script checking"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+<!-- New name! mentr -->
+
+```{r setup, include=FALSE}
+library(learnr)
+
+library(gradethis)
+learnr::tutorial_options(exercise.checker = grade_learnr_script)
+```
+
+```{r barret0, exercise = TRUE}
+4
+```
+
+```{r barret0-solution, exercise = TRUE}
+42
+```
+
+
+
+```{r barret0-check}
+expected <- 4
+
+grade_this({
+  if (.result == expected) pass("equals 4!")
+
+  if (identical(.result, expected)) pass("equals 4!")
+  testthat::expect_equal(.result, expected)
+
+  # pass_if_equal(4, MESSAGE)
+  # fail_if_equal(4, MESSAGE)
+
+  fail(random_encourage())
+})
+```
+
+
+
+```{r ex0, exercise = TRUE}
+4
+```
+
+
+```{r ex0-check}
+
+# # .envir_result <- new.env()
+# # .user_code <- "2"
+# # .result <- 2
+# # testthat::expect_equal(length(strsplit(trimws(.user_code), "\n")[[1]]), 1, info = "garrett")
+
+# pass_if_throw(exists("foo", envir = .envir_result))
+# pass_if_throw(identical(.result, 2), "custom 2")
+
+
+# pass_if_equal(2, "custom 2")
+# pass_if_equivalent(2, "custom 2ish")
+
+# success("custom 2")
+# fail_if(identical(.result, 2), "custom 2")
+# failure("custom fail message")
+# failure("custom fail message")
+
+# if (identical(.result, 3)) {
+#   failure("custom 3")
+# }
+# if (identical(.result, 4)) {
+#   success("custom 4")
+# }
+# testthat::expect_equal(.result, 5)
+```
+
+
+
+```{r ex1, exercise = TRUE}
+4
+```
+
+
+```{r ex1-check}
+# testthat::expect_equal(length(strsplit(trimws(.user_code), "\n")[[1]]), 1, info = "garrett")
+
+# pass_if_throw(exists("foo", envir = .envir_result))
+
+# pass_if_throw(identical(.result, 2), "custom 2")
+# fail_if_throw(identical(.result, 3), "custom 2")
+# if (identical(.result, 3)) {
+#   failure("custom 3")
+# }
+# if (identical(.result, 4)) {
+#   success("custom 4")
+# }
+# testthat::expect_equal(.result, 5)
+```
+
+
+```{r ex2-solution}
+print(4)
+Sys.sleep(3)
+print(5)
+6
+```
+
+```{r ex2, exercise = TRUE}
+Sys.time()
+5
+```
+
+```{r ex2-check}
+# print(1)
+# .solution
+# print(2)
+# fail_if_throw(identical(.result, 3), "custom 3")
+# pass_if_throw(identical(.result, 4), "custom 4")
+# testthat::expect_equal(.result, 5)
+# pass_if_throw(identical(.result, 6), "custom 6")
+```
+
+
+```{r ex5, exercise = TRUE}
+5
+```
+
+```{r ex5-check}
+# # str(.result)
+
+# # TODO remove all_success and any_success
+# all_success(
+#   any_success(
+#     testthat::expect_true(is.numeric(.result)),
+#     testthat::expect_equal(length(.result), 1),
+#     # testthat::expect_equal(.result, 4),
+#     if (identical(.result, 4))
+#       success()
+#     else
+#       failure()
+#   ),
+#   if (identical(.result, 7)) success("yay 7!"),
+#   stop("boom")
+# )
+```
+
+
+
+```{r exg-solution}
+sqrt(log(2))
+```
+
+
+
+```{r exg, exercise = TRUE}
+sqrt(log(4))
+```
+
+```{r exg-check}
+# print(pryr::rhls())
+# my_obj <- 4
+# if (identical(.result, my_obj)) pass("yay 4")
+# if (identical(.result, 5)) pass("yay 5")
+# if (identical(.result, 6)) pass("yay 6")
+# if (identical(.result, 7)) fail("fail 7")
+# if (identical(.result, 8)) pass("yay 8")
+# if (identical(.result, 9)) {
+#   fail("custom 5", add_code_suggestion = TRUE)
+#   # gradethis_incorrect_glue = "{ .incorrect } {.random_encourage()} {grade_code()}"
+#   # mention this in the fail/pass docs
+#   # gradethis_setup(incorrect = "{ .message } {.random_encourage()} {grade_code()}")
+# }
+# fail_if(identical(.result, 9), "boo custom 5", suggestion = TRUE)
+#   # if (isTRUE(suggestion)) add message from grade_code()
+```

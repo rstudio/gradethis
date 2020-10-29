@@ -136,43 +136,46 @@ grade_learnr_ <- function(label = NULL,
   had_error_checking <- FALSE
   checked_result <- tryCatch(
     { # nolint
-      # Run checking code to get feedback
-      parsed_check_code <- parse(text = check_code %||% "")
+      ignore_gradethis_conditions({
+        # Run checking code to get feedback
+        parsed_check_code <- parse(text = check_code %||% "")
 
-      if (length(parsed_check_code) > 1) {
-        # don't eval the last one to avoid bad check calls
-        for (i in 1:(length(parsed_check_code) - 1)) {
-          eval(parsed_check_code[[i]], envir_prep)
+        if (length(parsed_check_code) > 1) {
+          # don't eval the last one to avoid bad check calls
+          for (i in 1:(length(parsed_check_code) - 1)) {
+            eval(parsed_check_code[[i]], envir_prep)
+          }
         }
-      }
-      grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
-                                             envir_prep)
+        grading_code <- rlang::call_standardise(
+          parsed_check_code[[length(parsed_check_code)]],
+          envir_prep
+        )
 
-      # get all grader args
-      grader_args <- list(
-        user_quo = rlang::as_quosure(user_code, envir_result)
-      )
+        # get all grader args
+        grader_args <- list(
+          user_quo = rlang::as_quosure(user_code, envir_result)
+        )
 
-      if (!is.null(solution_code)) {
-        grader_args$solution_quo <- rlang::as_quosure(solution_code,
-                                                      envir_prep)
-      }
+        if (!is.null(solution_code)) {
+          grader_args$solution_quo <-
+            rlang::as_quosure(solution_code, envir_prep)
+        }
 
-      # copy in all grader arguments
-      grading_code$grader_args <- grader_args
-      grading_code$learnr_args <- learnr_args
+        # copy in all grader arguments
+        grading_code$grader_args <- grader_args
+        grading_code$learnr_args <- learnr_args
 
-      # eval code in a copy of the chunk's prepped environment
-      eval(grading_code, envir_prep)
+        # eval code in a copy of the chunk's prepped environment
+        eval(grading_code, envir_prep)
+      })
     },
     error = function(e) {
       # prevent the error from being re-thrown
       message("", e)
       had_error_checking <<- TRUE
-      graded(
-        correct = FALSE,
-        message = "Error occurred while checking the submission"
-      )
+      ignore_gradethis_conditions({
+        fail("Error occurred while checking the submission")
+      })
     }
   )
 

@@ -7,6 +7,9 @@
 grade_code(
   correct = NULL,
   incorrect = NULL,
+  env = parent.frame(),
+  solution = env$.solution,
+  user = env$.user,
   grader_args = list(),
   learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
