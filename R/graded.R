@@ -28,7 +28,10 @@ graded <- function(correct, message = NULL) {
 
   # _throw_ condition object
   # also pretty prints the condition
-  base::message(obj)
+  signalCondition(obj)
+
+  # return the object
+  obj
 }
 
 is_graded <- function(x) {
