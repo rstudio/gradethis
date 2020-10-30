@@ -12,3 +12,4 @@
 ^scripts/
 ^archive/
 ^\.github$
+^sandbox$
