@@ -46,7 +46,7 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
 
   # implement when we add a `exec`/`expect` api to grade_result
   # will account for function returns
-  # if (inherits(res, 'grader_graded')) {return(res)} # nolint
+  # if (inherits(res, 'gradethis_graded')) {return(res)} # nolint
   if (is.null(res)) return(NULL)
 
   checkmate::assert_logical(res, len = 1, null.ok = FALSE)

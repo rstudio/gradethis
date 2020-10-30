@@ -107,13 +107,13 @@ grade_learnr_script_ <- function(
   )
 
   if (is_grade(user_code)) {
-    user_code <- grade_feedback(user_code)
+    user_code <- feedback(user_code)
   }
   if (is_feedback(user_code)) {
     return(user_code)
   }
   if (length(user_code) == 0) {
-    return(grade_feedback(
+    return(feedback(
       fail("I didn't receive your code. Did you write any?"),
       type = "info"
     ))
@@ -125,7 +125,7 @@ grade_learnr_script_ <- function(
   if (!is.null(solution_code)) {
     solution_code <- parse(text = solution_code)
     if (length(solution_code) == 0) {
-      return(grade_feedback(
+      return(feedback(
         pass("No solution is provided for this exercise."),
         type = "info"
       ))
@@ -179,7 +179,7 @@ grade_learnr_script_ <- function(
     },
     error = function(e, ignore) {
       message("Error while executing checking `", check_label, "` chunk: ", e)
-      ret <- grade_feedback(
+      ret <- feedback(
         fail("Uh Oh! Error executing grading code. Marking as _incorrect_"),
         type = "error"
       )
@@ -196,7 +196,7 @@ grade_learnr_script_ <- function(
       paste0(capture.output(str(to_check_fn)), collapse = "\n")
     )
     return(
-      grade_feedback(
+      feedback(
         fail("Unexpected return value. Marking as _incorrect_"),
         type = "error"
       )
@@ -210,10 +210,10 @@ grade_learnr_script_ <- function(
   )
 
   # make sure the result is a pass or fail
-  if (!checkmate::test_class(checked_result, "gradethis_condition")) {
+  if (!is_grade(checked_result)) {
     message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
     return(
-      grade_feedback(
+      feedback(
         fail("No feedback given. Marking as _incorrect_"),
         type = "error"
       )
@@ -221,7 +221,7 @@ grade_learnr_script_ <- function(
   }
 
   # return result like normal
-  grade_feedback(
+  feedback(
     checked_result,
     type = "auto"
   )

@@ -1,15 +1,15 @@
 expect_correct <- function(x) {
-  expect_s3_class(x, "grader_graded")
+  expect_s3_class(x, "gradethis_graded")
   expect_true(x$correct)
 }
 
 expect_wrong <- function(x) {
-  expect_s3_class(x, "grader_graded")
+  expect_s3_class(x, "gradethis_graded")
   expect_false(x$correct)
 }
 
 expect_message <- function(x, message) {
-  expect_s3_class(x, "grader_graded")
+  expect_s3_class(x, "gradethis_graded")
   expect_true(!x$correct)
   expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
 }

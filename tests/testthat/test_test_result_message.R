@@ -1,7 +1,7 @@
 context("Check grade_result_strict messages")
 
 expect_message <- function(x, message, correct) {
-  expect_s3_class(x, "grader_graded")
+  expect_s3_class(x, "gradethis_graded")
   expect_equal(x$correct, correct)
   expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
 }

@@ -107,13 +107,13 @@ grade_learnr_ <- function(label = NULL,
   )
 
   if (is_grade(user_code)) {
-    user_code <- grade_feedback(user_code)
+    user_code <- feedback(user_code)
   }
   if (is_feedback(user_code)) {
     return(user_code)
   }
   if (length(user_code) == 0) {
-    return(grade_feedback(graded(
+    return(feedback(graded(
         message = "I didn't receive your code. Did you write any?",
         correct = FALSE
     )))
@@ -129,7 +129,7 @@ grade_learnr_ <- function(label = NULL,
         message = "No solution is provided for this exercise.",
         correct = TRUE
       )
-      return(grade_feedback(grade, type = "info"))
+      return(feedback(grade, type = "info"))
     }
   }
 
@@ -179,11 +179,11 @@ grade_learnr_ <- function(label = NULL,
     }
   )
 
-  if (!checkmate::test_class(checked_result, "grader_graded")) {
+  if (!checkmate::test_class(checked_result, "gradethis_graded")) {
     stop("`grade_learnr` should receive a `graded` value from every `-check` chunk")
   }
 
-  grade_feedback(
+  feedback(
     checked_result,
     type = if (had_error_checking) "warning" else "auto"
   )
