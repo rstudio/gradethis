@@ -193,7 +193,12 @@ grade_this_learnr_ <- function(
     message(
       "`", check_label, "` chunk did not return a function (such as `grade_this`) that accepts 1 argument containing the checking object",
       "\nObject returned:\n",
-      paste0(capture.output(str(to_check_fn)), collapse = "\n")
+      paste0(
+        utils::capture.output(
+          utils::str(to_check_fn)
+        ),
+        collapse = "\n"
+      )
     )
     return(
       feedback(
@@ -234,11 +239,16 @@ grade_this_learnr_ <- function(
 #' a suggested behavior when grading exercises.
 #'
 #' @inheritParams learnr::tutorial_options
+# ' @param exercise.error.check.code
 #' @param ... arguments passed to [learnr::tutorial_options()]
 #' @export
 #' @seealso [grade_learnr()]
-grade_this_setup <- function(exercise.timelimit = 60, exercise.checker = grade_this_learnr,
-                            exercise.error.check.code = "grade_code()", ...) {
+grade_this_setup <- function(
+  exercise.timelimit = 60,
+  exercise.checker = grade_this_learnr,
+  exercise.error.check.code = "grade_code()",
+  ...
+) {
   require(gradethis)
   learnr::tutorial_options(
     exercise.timelimit = exercise.timelimit,

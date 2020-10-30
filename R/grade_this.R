@@ -23,13 +23,14 @@ grade_this <- function(expr) {
   }
 }
 
-grade_this_code <- function(correct = "{random_praise()}", incorrect = "{random_encouragement()}") {
-  grade_this({
-    res <- code_feedback(user = .user_code, solution = .solution_code)
-    if (isTRUE(res)) {
-      pass(correct)
-    } else {
-      fail(incorrect)
-    }
-  })
-}
+
+# grade_this_code <- function(correct = "{random_praise()}", incorrect = "{random_encouragement()}") {
+#   grade_this({
+#     res <- code_feedback(user = .user_code, solution = .solution_code)
+#     if (isTRUE(res)) {
+#       pass(correct)
+#     } else {
+#       fail(incorrect)
+#     }
+#   })
+# }

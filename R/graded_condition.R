@@ -24,7 +24,7 @@ capture_errors <- function(expr, error = error) {
     error <- function(e, that_env) {
       # TODO DELETE
       print("turning error into failure")
-      str(e)
+      utils::str(e)
       # END TODO DELETE
       # must wrap in ignore statement to retrieve fail object
       ret <- capture_graded({
