@@ -49,6 +49,7 @@ detect_mistakes <- function(user,
   }
 
   submitted <- user
+  solution_original <- solution
 
   if (is.call(user)) {
     user <- unpipe_all(user) # cannot standardise yet without risking error
@@ -236,33 +237,49 @@ detect_mistakes <- function(user,
   }
 
 
-  # It is now safe to call call_standardise_formals on student code
-  user <- call_standardise_formals(user, env = env)
-  user_names <- real_names(user)
-
   # 5. Check that every named argument in the solution appears in the user code.
   #    The outcome of this order is that when a user writes na = TRUE, gradethis
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
-  solution_names <-  real_names(solution) # original solution_names was modified above
-  missing_args <- solution_names[!(solution_names %in% user_names)]
+ 
+  explicit_solution <- call_standardise_formals(
+    unpipe_all(solution_original),
+    env = env,
+    include_defaults = FALSE
+  )
+  explicit_user <- call_standardise_formals(
+    unpipe_all(submitted),
+    env = env,
+    include_defaults = FALSE
+  )
+  explicit_user_names <- real_names(explicit_user)
+  explicit_solution_names <-  real_names(explicit_solution)
+  missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
+
   if (length(missing_args) > 0) {
     missing_name <- missing_args[1]
     return(
       missing_argument(
-        this_call = solution,
+        this_call = explicit_solution,
         that_name = missing_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )
     )
   }
-
+  
+  # It is now safe to call call_standardise_formals on student code
+  user <- call_standardise_formals(user, env = env)
+  user_names <- real_names(user)
+  solution_names <-  real_names(solution) # original solution_names was modified above
+  
+  
   # 6. Check that the user code does not contain any named arguments that do not
   #    appear in the solution code. Since both calls have been standardised, these
   #    named arguments can only be being passed to ... and we should not match by
   #    position a named argument that is passed to ... with an unamed argument
   #    passed to ...
+
   unmatched_user_names <- user_names[!(user_names %in% solution_names)]
   if (length(unmatched_user_names) > 0) {
     surplus_name <- unmatched_user_names[1]
