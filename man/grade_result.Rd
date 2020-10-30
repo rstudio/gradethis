@@ -37,6 +37,10 @@ condition(x, message, correct)
 pass_if(x, message = NULL)
 
 fail_if(x, message = NULL)
+
+pass(message = "Correct!")
+
+fail(message = "Booooo!")
 }
 \arguments{
 \item{...}{\code{pass_if()}/\code{fail_if()} \code{condition()}s to check.}

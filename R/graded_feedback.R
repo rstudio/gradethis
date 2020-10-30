@@ -33,11 +33,11 @@ feedback <- function(grade,
       type = type,
       location = match.arg(location)
     ),
-    class = "grader_feedback"
+    class = "gradethis_feedback"
   )
 }
 
 
 is_feedback <- function(x) {
-  inherits(x, "grader_feedback")
+  inherits(x, "gradethis_feedback")
 }
