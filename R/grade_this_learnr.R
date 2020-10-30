@@ -36,7 +36,7 @@
 #'
 #' @examples
 #' \dontrun{gradethis_demo()}
-grade_learnr_script <- function(label = NULL,
+grade_this_learnr <- function(label = NULL,
                          solution_code = NULL,
                          user_code = NULL,
                          check_code = NULL,
@@ -46,8 +46,8 @@ grade_learnr_script <- function(label = NULL,
                          last_value = NULL,
                          ...) {
   # Call this function in such a way that it can use other gradethis internals when called by learnr
-  # (i.e., make tutorial_options(exercise.checker = gradethis::grade_learnr_script) always work)
-  utils::getFromNamespace("grade_learnr_script_", "gradethis")(
+  # (i.e., make tutorial_options(exercise.checker = gradethis::grade_this_learnr) always work)
+  utils::getFromNamespace("grade_this_learnr_", "gradethis")(
     label = label,
     solution_code = solution_code,
     user_code = user_code,
@@ -61,7 +61,7 @@ grade_learnr_script <- function(label = NULL,
 }
 
 
-grade_learnr_script_ <- function(
+grade_this_learnr_ <- function(
   label = NULL,
   solution_code = NULL,
   user_code = NULL,
@@ -106,7 +106,7 @@ grade_learnr_script_ <- function(
     }
   )
 
-  if (is_grade(user_code)) {
+  if (is_graded(user_code)) {
     user_code <- feedback(user_code)
   }
   if (is_feedback(user_code)) {
@@ -210,7 +210,7 @@ grade_learnr_script_ <- function(
   )
 
   # make sure the result is a pass or fail
-  if (!is_grade(checked_result)) {
+  if (!is_graded(checked_result)) {
     message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
     return(
       feedback(
