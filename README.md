@@ -30,3 +30,5 @@ To view the latest grading demo of the different checking methods:
 library(gradethis)
 gradethis::gradethis_demo()
 ```
+
+You can also view a deployed version of this demo [here](https://minecr.shinyapps.io/gradethis_demo/).

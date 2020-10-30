@@ -7,6 +7,7 @@
 #' contain a top-level call to \code{\link[magrittr]{\%>\%}}, `unpipe()` returns it as is.
 #'
 #' @param code a quoted piece of code
+#' @noRd
 unpipe <- function(code) {
 
   # Ceci n'est pas une pipe
@@ -16,6 +17,13 @@ unpipe <- function(code) {
   lhs <- code[[2]]
   rhs <- code[[3]]
 
+  if (!is.call(rhs)) {
+    # rhs need to be a call
+    # mainly because some user do `1 %>% print` instead of `1 %>% print()`
+    rhs <-  call(deparse(rhs))
+  }
+  
+  
   if (length(rhs) == 1) {
     rhs[[2]] <- lhs
     return(rhs)

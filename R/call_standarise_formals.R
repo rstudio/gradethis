@@ -1,5 +1,4 @@
-call_standardise_formals <- function(code, env = rlang::current_env()) {
-
+call_standardise_formals <- function(code, env = rlang::current_env(), include_defaults = TRUE) {
   # try to catch invalid function, i.e., corrupt language object
   tryCatch({
     fxn <- rlang::call_fn(code, env = env)
@@ -9,9 +8,12 @@ call_standardise_formals <- function(code, env = rlang::current_env()) {
   if (!exists("fxn")) {return(code)} ## some reason the above tryCatch doesn't go to the error part
   if(class(fxn) != "function") {return(code)}
 
-  # standarise, but dont bother trying to fill out default formals
-  # for primitives like mean, unable to distinguish between mean and mean.default
-  if (is_infix(code) || is.primitive(fxn)) {
+  
+  
+  
+  # if include_defaults == FALSE standarise, but dont bother trying to fill out default formals
+  # - for primitives like mean, unable to distinguish between mean and mean.default
+  if ( (!include_defaults) || is_infix(code) || is.primitive(fxn)) {
     return(rlang::call_standardise(code))
   }
 
