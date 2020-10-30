@@ -16,7 +16,7 @@ feedback <- function(grade,
   # do not allow grade objects to throw
   grade <- capture_gradethis_conditions(grade)
 
-  if (!is_grade(grade)) {
+  if (!is_graded(grade)) {
     stop("`grade` must be a `graded` object", call. = FALSE)
   }
 
