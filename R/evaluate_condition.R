@@ -18,7 +18,7 @@
 #'  learnr_args <- list(last_value = quote(5), envir_prep = new.env())
 #'  evaluate_condition(condi_formula_t, grader_args, learnr_args)
 evaluate_condition <- function(condition, grader_args, learnr_args) {
-  checkmate::assert_class(condition, "grader_condition")
+  checkmate::assert_class(condition, "gradethis_condition")
 
   err_msg <- NULL
   res <- tryCatch({
@@ -32,7 +32,7 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
   })
 
   if (!is.null(err_msg)) {
-    return(graded(correct = FALSE, message = err_msg))
+    return(legacy_graded(correct = FALSE, message = err_msg))
   }
 
   # if we compare something like a vector or dataframes to one another
@@ -51,7 +51,7 @@ evaluate_condition <- function(condition, grader_args, learnr_args) {
 
   checkmate::assert_logical(res, len = 1, null.ok = FALSE)
   if (res) {
-    graded(correct = condition$correct, message = condition$message)
+    legacy_graded(correct = condition$correct, message = condition$message)
   } else {
     NULL
   }
@@ -71,4 +71,11 @@ evaluate_condi_function <- function(fxn, user_answer) {
 
 evaluate_condi_value <- function(val, user_answer) {
   identical(val, user_answer)
+}
+
+
+legacy_graded <- function(...) {
+  capture_graded(
+    graded(...)
+  )
 }

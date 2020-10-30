@@ -59,7 +59,7 @@ grade_result <- function(
   if (!length(conditions)) {
     stop("At least one condition object (e.g., `pass_if()`, `fail_if()`, `condition()`) must be provided to `grade_result()`", call. = FALSE)
   }
-  chkm8_item_class(conditions, "grader_condition")
+  chkm8_item_class(conditions, "gradethis_condition")
 
   # If there is at least one pass_if() condition, then default to an incorrect grade;
   # otherwise, default to a correct grade https://github.com/rstudio-education/gradethis/issues/118
@@ -68,7 +68,7 @@ grade_result <- function(
   }
   chkm8_class(default_correct, "logical")
 
-  final_grade <- graded(correct = default_correct, message = default_message)
+  final_grade <- legacy_graded(correct = default_correct, message = default_message)
   found_grade <- FALSE
   for (cond in conditions) {
     grade <- evaluate_condition(cond, grader_args, learnr_args)
@@ -79,7 +79,7 @@ grade_result <- function(
     }
   }
 
-  graded(
+  legacy_graded(
     correct = final_grade$correct,
     message = glue_message(
       if (final_grade$correct) glue_correct else glue_incorrect, # nolint
@@ -107,19 +107,19 @@ grade_result_strict <- function(
 ) {
 
   conditions <- list(...)
-  chkm8_item_class(conditions, "grader_condition")
+  chkm8_item_class(conditions, "gradethis_condition")
 
   grades <- lapply(conditions, function(x) {
     res <- evaluate_condition(x, grader_args, learnr_args)
     # If a pass_if() condition isn't matched (i.e. res is NULL), then
     # it should be considered an incorrect result.
-    res %||% graded(correct = !x$correct)
+    res %||% legacy_graded(correct = !x$correct)
   })
 
   num_correct <- sum(vapply(grades, function(x) x$correct, logical(1)))
   is_correct <- num_correct == length(conditions)
 
-  graded(
+  legacy_graded(
     correct = is_correct,
     message = glue_message(
       if (is_correct) glue_correct else glue_incorrect, # nolint
@@ -165,7 +165,7 @@ condition <- function(x, message, correct) {
         "value"
       }
     ),
-    class = "grader_condition"
+    class = "gradethis_condition"
   )
 }
 

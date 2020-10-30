@@ -14,7 +14,7 @@ feedback <- function(grade,
                            type = c("auto", "success", "info", "warning", "error", "custom"),
                            location = c("append", "prepend", "replace")) {
   # do not allow grade objects to throw
-  grade <- capture_gradethis_conditions(grade)
+  grade <- capture_graded(grade)
 
   if (!is_graded(grade)) {
     stop("`grade` must be a `graded` object", call. = FALSE)

@@ -19,7 +19,7 @@ expect_condi <- function(x) {
     checkmate::expect_character(x$message, null.ok = TRUE)
     checkmate::expect_logical(x$correct, null.ok = FALSE, len = 1)
     checkmate::expect_choice(x$type, choices = c("formula", "function", "value"))
-    checkmate::expect_class(x, "grader_condition")
+    checkmate::expect_class(x, "gradethis_condition")
 }
 
 expect_condi_correct <- function(x, message = NULL) {

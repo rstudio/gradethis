@@ -85,7 +85,7 @@ test_that("Grade learnr check_code", {
 
   # Can customize the feedback through an exercise.parse.error function
   parse_error_func <- function(parse_error, learnr_args) {
-    graded(
+    legacy_graded(
       correct = FALSE,
       message = paste(
         "The user code of", shQuote(learnr_args$user_code),
@@ -98,7 +98,7 @@ test_that("Grade learnr check_code", {
   expect_equal(
     grade_learnr(user_code = "function("),
     feedback(
-      graded(
+      legacy_graded(
         correct = FALSE,
         message = "The user code of 'function(' produced an parsing error: <text>:2:0: unexpected end of input\n1: function(\n   ^"
       )

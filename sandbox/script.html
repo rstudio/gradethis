@@ -117,18 +117,56 @@ $(document).ready(function () {
 <div class="topics">
 
 <!-- New name! mentr -->
+<div id="section-script-style" class="section level3">
+<h3>Script Style</h3>
 <div class="tutorial-exercise" data-label="barret0" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>4</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true}</script>
 </div>
-<div class="tutorial-exercise" data-label="barret0-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<div class="tutorial-exercise-support" data-label="barret0-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>42</code></pre>
-<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":false}</script>
 </div>
-<div class="tutorial-exercise" data-label="ex0" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
-<pre class="text"><code>4</code></pre>
+</div>
+<div id="section-old-grade-code" class="section level3">
+<h3>(old) Grade Code</h3>
+<div class="tutorial-exercise" data-label="barret0-old" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>log(sqrt(2))</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true}</script>
 </div>
+<div class="tutorial-exercise-support" data-label="barret0-old-solution" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>log(sqrt(3))</code></pre>
+</div>
+</div>
+<div id="section-old-grade-result" class="section level3">
+<h3>(old) Grade Result</h3>
+<div class="tutorial-exercise" data-label="barret1-old" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
+<pre class="text"><code>log(sqrt(2))</code></pre>
+<script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true}</script>
+</div>
+<pre class="r"><code># # .envir_result &lt;- new.env()
+# # .user_code &lt;- &quot;2&quot;
+# # .result &lt;- 2
+# # testthat::expect_equal(length(strsplit(trimws(.user_code), &quot;\n&quot;)[[1]]), 1, info = &quot;garrett&quot;)
+
+# pass_if_throw(exists(&quot;foo&quot;, envir = .envir_result))
+# pass_if_throw(identical(.result, 2), &quot;custom 2&quot;)
+
+
+# pass_if_equal(2, &quot;custom 2&quot;)
+# pass_if_equivalent(2, &quot;custom 2ish&quot;)
+
+# success(&quot;custom 2&quot;)
+# fail_if(identical(.result, 2), &quot;custom 2&quot;)
+# failure(&quot;custom fail message&quot;)
+# failure(&quot;custom fail message&quot;)
+
+# if (identical(.result, 3)) {
+#   failure(&quot;custom 3&quot;)
+# }
+# if (identical(.result, 4)) {
+#   success(&quot;custom 4&quot;)
+# }
+# testthat::expect_equal(.result, 5)</code></pre>
 <div class="tutorial-exercise" data-label="ex1" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="0">
 <pre class="text"><code>4</code></pre>
 <script type="application/json" data-ui-opts="1">{"engine":"r","has_checker":true}</script>
@@ -159,8 +197,9 @@ print(5)
 <script type="application/shiny-prerendered" data-context="server-start">
 library(learnr)
 
-library(gradethis)
-learnr::tutorial_options(exercise.checker = grade_learnr_script)
+# library(gradethis)
+gradethis::grade_this_learnr()
+# learnr::tutorial_options(exercise.checker = grade_this_learnr)
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -186,59 +225,99 @@ output$`tutorial-exercise-barret0-output` <- renderUI({
  
 <script type="application/shiny-prerendered" data-context="server">
 learnr:::store_exercise_cache("barret0", list(chunks = list(list(label = "barret0", code = "4", opts = list(
-    label = "\"barret0\"", exercise = "TRUE"), engine = "r")), 
-    code_check = NULL, check = structure(c("barret <- Sys.time()", 
-    "", "# last_result()", "", "grade_this({", "  browser()", 
-    "  if (identical(.result, 4)) pass(\"equals 4!\")", "  pass_if_equal(4, MESSAGE)", 
-    "  fail_if_equal(4, MESSAGE)", "", "  # testthat::expect_equal(last_result(), 4)", 
-    "  # testthat::expect_true(barret <= Sys.time())", "  # testthat::expect_true(barret >  Sys.time())", 
-    "", "  if (barret > Sys.time()) fail(\"You time traveller!\")", 
-    "  pass(\"You are not a time traveller\")", "})"), chunk_opts = list(
-        label = "barret0-check")), solution = structure("42", chunk_opts = list(
-        label = "barret0-solution", exercise = TRUE)), options = list(
-        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
-        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
-        highlight = FALSE, strip.white = TRUE, size = "normalsize", 
-        background = "#F7F7F7", cache = 0, cache.path = "script_cache/html/", 
-        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
-        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
-        fig.show = "asis", fig.align = "default", fig.path = "script_files/figure-html/", 
-        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
-        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
-        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
-        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
-        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
-        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
-        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
-        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
-            solution_code = NULL, user_code = NULL, check_code = NULL, 
-            envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
-            last_value = NULL, ...) 
-        {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "barret0", exercise = TRUE, 
-        code = "4", out.width.px = 624, out.height.px = 384, 
-        params.src = "barret0, exercise = TRUE", fig.num = 0, 
-        exercise.df_print = "paged"), engine = "r"))
+    label = "\"barret0\"", exercise = "TRUE", exercise.checker = "grade_this_learnr"), 
+    engine = "r")), code_check = NULL, check = structure(c("expected <- 4", 
+"", "grade_this({", "  if (.result == expected) pass(\"equals 4!\")", 
+"", "  if (identical(.result, expected)) pass(\"equals 4!\")", 
+"  testthat::expect_equal(.result, expected)", "", "  # pass_if_equal(4, MESSAGE)", 
+"  # fail_if_equal(4, MESSAGE)", "", "  fail(random_encourage())", 
+"})"), chunk_opts = list(label = "barret0-check")), solution = structure("42", chunk_opts = list(
+    label = "barret0-solution")), options = list(eval = FALSE, 
+    echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
+    collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
+    strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
+    cache = 0, cache.path = "script_cache/html/", cache.vars = NULL, 
+    cache.lazy = TRUE, dependson = NULL, autodep = FALSE, cache.rebuild = FALSE, 
+    fig.keep = "high", fig.show = "asis", fig.align = "default", 
+    fig.path = "script_files/figure-html/", dev = "png", dev.args = NULL, 
+    dpi = 192, fig.ext = "png", fig.width = 6.5, fig.height = 4, 
+    fig.env = "figure", fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", 
+    fig.subcap = NULL, fig.pos = "", out.width = 624, out.height = NULL, 
+    out.extra = NULL, fig.retina = 2, external = TRUE, sanitize = FALSE, 
+    interval = 1, aniopts = "controls,loop", warning = TRUE, 
+    error = FALSE, message = TRUE, render = NULL, ref.label = NULL, 
+    child = NULL, engine = "r", split = FALSE, include = TRUE, 
+    purl = TRUE, tutorial = TRUE, max.print = 1000, label = "barret0", 
+    exercise = TRUE, exercise.checker = function (label = NULL, 
+        solution_code = NULL, user_code = NULL, check_code = NULL, 
+        envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
+        last_value = NULL, ...) 
+    {
+        (utils::getFromNamespace("grade_this_learnr_", "gradethis"))(label = label, 
+            solution_code = solution_code, user_code = user_code, 
+            check_code = check_code, envir_result = envir_result, 
+            evaluate_result = evaluate_result, envir_prep = envir_prep, 
+            last_value = last_value, ...)
+    }, code = "4", out.width.px = 624, out.height.px = 384, params.src = "barret0, exercise = TRUE, exercise.checker = grade_this_learnr", 
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-`tutorial-exercise-barret0-solution-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-barret0-solution-code-editor`)), session)
-output$`tutorial-exercise-barret0-solution-output` <- renderUI({
-  `tutorial-exercise-barret0-solution-result`()
+`tutorial-exercise-barret0-old-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-barret0-old-code-editor`)), session)
+output$`tutorial-exercise-barret0-old-output` <- renderUI({
+  `tutorial-exercise-barret0-old-result`()
 })
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("barret0-solution", list(chunks = list(list(label = "barret0-solution", code = "42", 
-    opts = list(label = "\"barret0-solution\"", exercise = "TRUE"), 
-    engine = "r")), code_check = NULL, check = NULL, solution = NULL, 
+learnr:::store_exercise_cache("barret0-old", list(chunks = list(list(label = "barret0-old", code = "log(sqrt(2))", 
+    opts = list(label = "\"barret0-old\"", exercise = "TRUE", 
+        exercise.checker = "grade_learnr"), engine = "r")), code_check = structure("grade_code()", chunk_opts = list(
+    label = "barret0-old-code-check")), check = NULL, solution = structure("log(sqrt(3))", chunk_opts = list(
+    label = "barret0-old-solution")), options = list(eval = FALSE, 
+    echo = TRUE, results = "markup", tidy = FALSE, tidy.opts = NULL, 
+    collapse = FALSE, prompt = FALSE, comment = NA, highlight = FALSE, 
+    strip.white = TRUE, size = "normalsize", background = "#F7F7F7", 
+    cache = 0, cache.path = "script_cache/html/", cache.vars = NULL, 
+    cache.lazy = TRUE, dependson = NULL, autodep = FALSE, cache.rebuild = FALSE, 
+    fig.keep = "high", fig.show = "asis", fig.align = "default", 
+    fig.path = "script_files/figure-html/", dev = "png", dev.args = NULL, 
+    dpi = 192, fig.ext = "png", fig.width = 6.5, fig.height = 4, 
+    fig.env = "figure", fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", 
+    fig.subcap = NULL, fig.pos = "", out.width = 624, out.height = NULL, 
+    out.extra = NULL, fig.retina = 2, external = TRUE, sanitize = FALSE, 
+    interval = 1, aniopts = "controls,loop", warning = TRUE, 
+    error = FALSE, message = TRUE, render = NULL, ref.label = NULL, 
+    child = NULL, engine = "r", split = FALSE, include = TRUE, 
+    purl = TRUE, tutorial = TRUE, max.print = 1000, label = "barret0-old", 
+    exercise = TRUE, exercise.checker = function (label = NULL, 
+        solution_code = NULL, user_code = NULL, check_code = NULL, 
+        envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
+        last_value = NULL, ...) 
+    {
+        (utils::getFromNamespace("grade_learnr_", "gradethis"))(label = label, 
+            solution_code = solution_code, user_code = user_code, 
+            check_code = check_code, envir_result = envir_result, 
+            evaluate_result = evaluate_result, envir_prep = envir_prep, 
+            last_value = last_value, ...)
+    }, code = "log(sqrt(2))", out.width.px = 624, out.height.px = 384, 
+    params.src = "barret0-old, exercise = TRUE, exercise.checker = grade_learnr", 
+    fig.num = 0, exercise.df_print = "paged"), engine = "r"))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+`tutorial-exercise-barret1-old-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-barret1-old-code-editor`)), session)
+output$`tutorial-exercise-barret1-old-output` <- renderUI({
+  `tutorial-exercise-barret1-old-result`()
+})
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::store_exercise_cache("barret1-old", list(chunks = list(list(label = "barret1-old", code = "log(sqrt(2))", 
+    opts = list(label = "\"barret1-old\"", exercise = "TRUE", 
+        exercise.checker = "grade_learnr"), engine = "r")), code_check = NULL, 
+    check = structure(c("grade_result(", "  pass_if(~ identical(.result, log(sqrt(3))))", 
+    ")"), chunk_opts = list(label = "barret1-old-check")), solution = NULL, 
     options = list(eval = FALSE, echo = TRUE, results = "markup", 
         tidy = FALSE, tidy.opts = NULL, collapse = FALSE, prompt = FALSE, 
         comment = NA, highlight = FALSE, strip.white = TRUE, 
@@ -255,74 +334,20 @@ learnr:::store_exercise_cache("barret0-solution", list(chunks = list(list(label 
         aniopts = "controls,loop", warning = TRUE, error = FALSE, 
         message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
         engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
+        tutorial = TRUE, max.print = 1000, label = "barret1-old", 
+        exercise = TRUE, exercise.checker = function (label = NULL, 
             solution_code = NULL, user_code = NULL, check_code = NULL, 
             envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
             last_value = NULL, ...) 
         {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "barret0-solution", exercise = TRUE, 
-        code = "42", out.width.px = 624, out.height.px = 384, 
-        params.src = "barret0-solution, exercise = TRUE", fig.num = 0, 
-        exercise.df_print = "paged"), engine = "r"))
-</script>
- 
-<script type="application/shiny-prerendered" data-context="server">
-`tutorial-exercise-ex0-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-ex0-code-editor`)), session)
-output$`tutorial-exercise-ex0-output` <- renderUI({
-  `tutorial-exercise-ex0-result`()
-})
-</script>
- 
-<script type="application/shiny-prerendered" data-context="server">
-learnr:::store_exercise_cache("ex0", list(chunks = list(list(label = "ex0", code = "4", opts = list(
-    label = "\"ex0\"", exercise = "TRUE"), engine = "r")), code_check = NULL, 
-    check = structure(c("", "# # .envir_result <- new.env()", 
-    "# # .user_code <- \"2\"", "# # .result <- 2", "# # testthat::expect_equal(length(strsplit(trimws(.user_code), \"\\n\")[[1]]), 1, info = \"garrett\")", 
-    "", "# pass_if_throw(exists(\"foo\", envir = .envir_result))", 
-    "# pass_if_throw(identical(.result, 2), \"custom 2\")", "", 
-    "", "# pass_if_equal(2, \"custom 2\")", "# pass_if_equivalent(2, \"custom 2ish\")", 
-    "", "# success(\"custom 2\")", "# fail_if(identical(.result, 2), \"custom 2\")", 
-    "# failure(\"custom fail message\")", "# failure(\"custom fail message\")", 
-    "", "# if (identical(.result, 3)) {", "#   failure(\"custom 3\")", 
-    "# }", "# if (identical(.result, 4)) {", "#   success(\"custom 4\")", 
-    "# }", "# testthat::expect_equal(.result, 5)"), chunk_opts = list(
-        label = "ex0-check")), solution = NULL, options = list(
-        eval = FALSE, echo = TRUE, results = "markup", tidy = FALSE, 
-        tidy.opts = NULL, collapse = FALSE, prompt = FALSE, comment = NA, 
-        highlight = FALSE, strip.white = TRUE, size = "normalsize", 
-        background = "#F7F7F7", cache = 0, cache.path = "script_cache/html/", 
-        cache.vars = NULL, cache.lazy = TRUE, dependson = NULL, 
-        autodep = FALSE, cache.rebuild = FALSE, fig.keep = "high", 
-        fig.show = "asis", fig.align = "default", fig.path = "script_files/figure-html/", 
-        dev = "png", dev.args = NULL, dpi = 192, fig.ext = "png", 
-        fig.width = 6.5, fig.height = 4, fig.env = "figure", 
-        fig.cap = NULL, fig.scap = NULL, fig.lp = "fig:", fig.subcap = NULL, 
-        fig.pos = "", out.width = 624, out.height = NULL, out.extra = NULL, 
-        fig.retina = 2, external = TRUE, sanitize = FALSE, interval = 1, 
-        aniopts = "controls,loop", warning = TRUE, error = FALSE, 
-        message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
-        engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
-            solution_code = NULL, user_code = NULL, check_code = NULL, 
-            envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
-            last_value = NULL, ...) 
-        {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "ex0", exercise = TRUE, 
-        code = "4", out.width.px = 624, out.height.px = 384, 
-        params.src = "ex0, exercise = TRUE", fig.num = 0, exercise.df_print = "paged"), 
-    engine = "r"))
+            (utils::getFromNamespace("grade_learnr_", "gradethis"))(label = label, 
+                solution_code = solution_code, user_code = user_code, 
+                check_code = check_code, envir_result = envir_result, 
+                evaluate_result = evaluate_result, envir_prep = envir_prep, 
+                last_value = last_value, ...)
+        }, code = "log(sqrt(2))", out.width.px = 624, out.height.px = 384, 
+        params.src = "barret1-old, exercise = TRUE, exercise.checker = grade_learnr", 
+        fig.num = 0, exercise.df_print = "paged"), engine = "r"))
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
@@ -358,18 +383,7 @@ learnr:::store_exercise_cache("ex1", list(chunks = list(list(label = "ex1", code
         aniopts = "controls,loop", warning = TRUE, error = FALSE, 
         message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
         engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
-            solution_code = NULL, user_code = NULL, check_code = NULL, 
-            envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
-            last_value = NULL, ...) 
-        {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "ex1", exercise = TRUE, 
+        tutorial = TRUE, max.print = 1000, label = "ex1", exercise = TRUE, 
         code = "4", out.width.px = 624, out.height.px = 384, 
         params.src = "ex1, exercise = TRUE", fig.num = 0, exercise.df_print = "paged"), 
     engine = "r"))
@@ -407,18 +421,7 @@ learnr:::store_exercise_cache("ex2", list(chunks = list(list(label = "ex2", code
         aniopts = "controls,loop", warning = TRUE, error = FALSE, 
         message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
         engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
-            solution_code = NULL, user_code = NULL, check_code = NULL, 
-            envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
-            last_value = NULL, ...) 
-        {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "ex2", exercise = TRUE, 
+        tutorial = TRUE, max.print = 1000, label = "ex2", exercise = TRUE, 
         code = c("Sys.time()", "5"), out.width.px = 624, out.height.px = 384, 
         params.src = "ex2, exercise = TRUE", fig.num = 0, exercise.df_print = "paged"), 
     engine = "r"))
@@ -456,18 +459,7 @@ learnr:::store_exercise_cache("ex5", list(chunks = list(list(label = "ex5", code
         aniopts = "controls,loop", warning = TRUE, error = FALSE, 
         message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
         engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
-            solution_code = NULL, user_code = NULL, check_code = NULL, 
-            envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
-            last_value = NULL, ...) 
-        {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "ex5", exercise = TRUE, 
+        tutorial = TRUE, max.print = 1000, label = "ex5", exercise = TRUE, 
         code = "5", out.width.px = 624, out.height.px = 384, 
         params.src = "ex5, exercise = TRUE", fig.num = 0, exercise.df_print = "paged"), 
     engine = "r"))
@@ -509,18 +501,7 @@ learnr:::store_exercise_cache("exg", list(chunks = list(list(label = "exg", code
         aniopts = "controls,loop", warning = TRUE, error = FALSE, 
         message = TRUE, render = NULL, ref.label = NULL, child = NULL, 
         engine = "r", split = FALSE, include = TRUE, purl = TRUE, 
-        tutorial = TRUE, exercise.checker = function (label = NULL, 
-            solution_code = NULL, user_code = NULL, check_code = NULL, 
-            envir_result = NULL, evaluate_result = NULL, envir_prep = NULL, 
-            last_value = NULL, ...) 
-        {
-            (utils::getFromNamespace("grade_learnr_script_", 
-                "gradethis"))(label = label, solution_code = solution_code, 
-                user_code = user_code, check_code = check_code, 
-                envir_result = envir_result, evaluate_result = evaluate_result, 
-                envir_prep = envir_prep, last_value = last_value, 
-                ...)
-        }, max.print = 1000, label = "exg", exercise = TRUE, 
+        tutorial = TRUE, max.print = 1000, label = "exg", exercise = TRUE, 
         code = "sqrt(log(4))", out.width.px = 624, out.height.px = 384, 
         params.src = "exg, exercise = TRUE", fig.num = 0, exercise.df_print = "paged"), 
     engine = "r"))
@@ -532,9 +513,10 @@ learnr:::store_exercise_cache("exg", list(chunks = list(list(label = "exg", code
 <!--/html_preserve-->
 <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="execution_dependencies">
-{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","bootstraplib","cache","callr","checkmate","cli","clisymbols","codetools","colorout","commonmark","compiler","crayon","curl","datasets","desc","devtools","digest","ellipsis","evaluate","fansi","fastmap","fs","git2r","glue","gradethis","graphics","grDevices","htmltools","htmlwidgets","httpuv","jquerylib","jsonlite","knitr","later","learnr","magrittr","markdown","memoise","memuse","methods","mime","pkgbuild","pkgload","prettyunits","processx","promises","prompt","pryr","ps","purrr","R6","rappdirs","Rcpp","remotes","rlang","rmarkdown","roxygen2","rprojroot","rstudioapi","sass","sessioninfo","shiny","stats","stringi","stringr","testthat","tools","usethis","utils","withr","xfun","xml2","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.1.10","4.0.2","0.2.1","0.0.0.9000","3.4.4","2.0.0","2.1.0","1.2.0","0.2-16","1.2-2","1.7","4.0.2","1.3.4","4.3","4.0.2","1.2.0","2.3.1","0.6.27","0.3.1","0.14","0.4.1","1.0.1","1.5.0","0.27.1","1.4.2","0.1.0.9004","4.0.2","4.0.2","0.5.0.9001","1.5.2.9000","1.5.4.9000","0.1.2","1.7.1","1.30","1.1.0.9000","0.10.1.9006","1.5","1.1","1.1.0.9000","4.1-0","4.0.2","0.9","1.1.0","1.1.0","1.1.1","3.4.4","1.1.1.9000","1.0.0","0.1.4","1.3.4","0.3.4","2.4.1","0.3.1","1.0.5","2.2.0","0.4.8","2.5.2","7.1.1","1.3-2","0.11","0.2.0.9005","1.1.1","1.5.0.9004","4.0.2","1.5.3","1.4.0","2.3.2","4.0.2","1.6.1","4.0.2","2.3.0","0.18","1.3.2","1.8-4","2.2.1"]}]}]}
+{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["packages","version"]},"class":{"type":"character","attributes":{},"value":["data.frame"]},"row.names":{"type":"integer","attributes":{},"value":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71]}},"value":[{"type":"character","attributes":{},"value":["assertthat","backports","base","bootstraplib","cache","callr","checkmate","cli","clisymbols","colorout","compiler","crayon","curl","datasets","desc","devtools","digest","ellipsis","evaluate","fansi","fastmap","fs","git2r","glue","gradethis","graphics","grDevices","htmltools","htmlwidgets","httpuv","jquerylib","jsonlite","knitr","later","learnr","magrittr","markdown","memoise","memuse","methods","mime","pkgbuild","pkgload","prettyunits","processx","promises","prompt","ps","purrr","R6","rappdirs","Rcpp","remotes","rlang","rmarkdown","rprojroot","rstudioapi","sass","sessioninfo","shiny","stats","stringi","stringr","testthat","tools","usethis","utils","withr","xfun","xtable","yaml"]},{"type":"character","attributes":{},"value":["0.2.1","1.1.10","4.0.2","0.2.1","0.0.0.9000","3.4.4","2.0.0","2.1.0","1.2.0","1.2-2","4.0.2","1.3.4","4.3","4.0.2","1.2.0","2.3.1","0.6.27","0.3.1","0.14","0.4.1","1.0.1","1.5.0","0.27.1","1.4.2","0.1.0.9004","4.0.2","4.0.2","0.5.0.9001","1.5.2.9000","1.5.4.9000","0.1.2","1.7.1","1.30","1.1.0.9000","0.10.1.9006","1.5","1.1","1.1.0.9000","4.1-0","4.0.2","0.9","1.1.0","1.1.0","1.1.1","3.4.4","1.1.1.9000","1.0.0","1.3.4","0.3.4","2.4.1","0.3.1","1.0.5","2.2.0","0.4.8","2.5.2","1.3-2","0.11","0.2.0.9005","1.1.1","1.5.0.9004","4.0.2","1.5.3","1.4.0","2.3.2","4.0.2","1.6.1","4.0.2","2.3.0","0.18","1.8-4","2.2.1"]}]}]}
 </script>
 <!--/html_preserve-->
+</div>
 
 </div> <!-- topics -->
 

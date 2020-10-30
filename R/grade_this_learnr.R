@@ -205,12 +205,12 @@ grade_this_learnr_ <- function(
 
   # evaluate the function with the check envir passed in. (Passing an environment allows for `.solution` to be calculated on demand)
   # evaluation should handle errors themselves, but wrap in eval_gradethis_expr to be sure
-  checked_result <- eval_gradethis_expr(
+  graded_result <- eval_gradethis_expr(
     to_check_fn(check_obj_envir)
   )
 
   # make sure the result is a pass or fail
-  if (!is_graded(checked_result)) {
+  if (!is_graded(graded_result)) {
     message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
     return(
       feedback(
@@ -222,28 +222,9 @@ grade_this_learnr_ <- function(
 
   # return result like normal
   feedback(
-    checked_result,
+    graded_result,
     type = "auto"
   )
-}
-
-
-### This code is not needed anymore as `exercise.error.check.code` is used instead
-# #' @rdname grade_learnr
-# #' @export
-# grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()", ...) {
-#   if (is.null(solution_code)) {
-#     return(NULL)
-#   }
-#   utils::getFromNamespace("grade_learnr", "gradethis")(
-#     solution_code = solution_code, check_code = check_code, ...
-#   )
-# }
-
-learnr_env <- function(learnr_args) {
-  learnr_args$envir_result %||%
-    learnr_args$envir_prep %||%
-    stop("Internal error. learnr did not pass a relevant environment")
 }
 
 
@@ -256,7 +237,7 @@ learnr_env <- function(learnr_args) {
 #' @param ... arguments passed to [learnr::tutorial_options()]
 #' @export
 #' @seealso [grade_learnr()]
-gradethis_setup <- function(exercise.timelimit = 60, exercise.checker = grade_learnr,
+grade_this_setup <- function(exercise.timelimit = 60, exercise.checker = grade_this_learnr,
                             exercise.error.check.code = "grade_code()", ...) {
   require(gradethis)
   learnr::tutorial_options(

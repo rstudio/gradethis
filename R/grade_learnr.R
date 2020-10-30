@@ -88,7 +88,7 @@ grade_learnr_ <- function(label = NULL,
       parse_checker <- getOption(
         "exercise.parse.error",
         function(...) {
-          graded(
+          legacy_graded(
             correct = FALSE,
             message = paste(
               "Uh oh, the R code produced a syntax error:",
@@ -106,14 +106,14 @@ grade_learnr_ <- function(label = NULL,
     }
   )
 
-  if (is_grade(user_code)) {
+  if (is_graded(user_code)) {
     user_code <- feedback(user_code)
   }
   if (is_feedback(user_code)) {
     return(user_code)
   }
   if (length(user_code) == 0) {
-    return(feedback(graded(
+    return(feedback(legacy_graded(
         message = "I didn't receive your code. Did you write any?",
         correct = FALSE
     )))
@@ -125,7 +125,7 @@ grade_learnr_ <- function(label = NULL,
   if (!is.null(solution_code)) {
     solution_code <- parse(text = solution_code)
     if (length(solution_code) == 0) {
-      grade <- graded(
+      grade <- legacy_graded(
         message = "No solution is provided for this exercise.",
         correct = TRUE
       )
@@ -136,7 +136,7 @@ grade_learnr_ <- function(label = NULL,
   had_error_checking <- FALSE
   checked_result <- tryCatch(
     { # nolint
-      ignore_gradethis_conditions({
+      ignore_graded({
         # Run checking code to get feedback
         parsed_check_code <- parse(text = check_code %||% "")
 
@@ -173,7 +173,7 @@ grade_learnr_ <- function(label = NULL,
       # prevent the error from being re-thrown
       message("", e)
       had_error_checking <<- TRUE
-      ignore_gradethis_conditions({
+      ignore_graded({
         fail("Error occurred while checking the submission")
       })
     }

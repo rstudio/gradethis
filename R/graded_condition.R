@@ -22,9 +22,14 @@ conditionMessage.gradethis_graded <- function(c) {
 capture_errors <- function(expr, error = error) {
   if (is.null(error)) {
     error <- function(e, that_env) {
+      # TODO DELETE
       print("turning error into failure")
       str(e)
-      ret <- fail(e$message)
+      # END TODO DELETE
+      # must wrap in ignore statement to retrieve fail object
+      ret <- capture_graded({
+        fail(e$message)
+      })
       rlang::return_from(that_env)
     }
   }
@@ -45,10 +50,10 @@ capture_errors <- function(expr, error = error) {
 #   pass_if_throw(2)
 #   pass_if_throw(3)
 # }
-capture_gradethis_conditions <- function(expr) {
+capture_graded <- function(expr) {
   this_env <- rlang::current_env()
   withCallingHandlers(
-    gradethis_condition = function(gc_obj) {
+    gradethis_graded = function(gc_obj) {
       rlang::return_from(this_env, gc_obj)
     },
     expr
@@ -56,14 +61,14 @@ capture_gradethis_conditions <- function(expr) {
 
   # tryCatch(expr,
   #   # return object right away
-  #   gradethis_condition = function(gc_obj) {
+  #   gradethis_graded = function(gc_obj) {
   #     gc_obj
   #   }
   # )
 }
-ignore_gradethis_conditions <- function(expr) {
+ignore_graded <- function(expr) {
   withCallingHandlers(
-    gradethis_condition = function(gc_obj) {
+    gradethis_graded = function(gc_obj) {
       # do nothing
     },
     expr
@@ -75,7 +80,7 @@ ignore_gradethis_conditions <- function(expr) {
 #
 #' @export
 eval_gradethis_expr <- function(expr, error = NULL) {
-  capture_gradethis_conditions({
+  capture_graded({
     capture_errors(expr, error = error)
   })
 }

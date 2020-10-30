@@ -34,12 +34,12 @@ is_graded <- function(x) {
 #' @rdname grade_result
 #' @export
 pass <- function(message = "Correct!") {
-  graded(message = glue_env(parent.frame(1), message), correct = TRUE)
+  graded(message = glue_with_env(parent.frame(1), message), correct = TRUE)
 }
 #' @rdname grade_result
 #' @export
 fail <- function(message = "Booooo!") {
-  graded(message = glue_env(parent.frame(1), message), correct = FALSE)
+  graded(message = glue_with_env(parent.frame(1), message), correct = FALSE)
 }
 
 
@@ -51,12 +51,12 @@ pass_if_equal <- function(y, message = "Correct!", x = get(".result", envir = pa
 fail_if_equal <- function(y, message = "Incorrect!", x = get(".result", envir = parent.frame())) {
   grade_if_equal(x = x, y = y, message = message, correct = FALSE)
 }
-grade_if_equal <- function(x, y, message, correct, glue_envir = parent.frame(2)) {
+grade_if_equal <- function(x, y, message, correct, glue_env = parent.frame(2)) {
   if (!isTRUE(identical(x, y))) {
     # not equal! quit early
     return()
   }
 
   # equal!
-  graded(message = glue_env(glue_envir, message), correct = correct)
+  graded(message = glue_with_env(glue_env, message), correct = correct)
 }

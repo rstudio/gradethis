@@ -82,7 +82,7 @@ grade_code <- function(
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe")
 ) {
-  
+
   user <- rlang::as_quosure(grader_args$user_quo)
   solution <- rlang::as_quosure(grader_args$solution_quo)
 
@@ -100,15 +100,15 @@ grade_code <- function(
   }
 
   if (is_code_identical(user, solution)) {
-    is_same_info <- graded(correct = TRUE)
+    is_same_info <- legacy_graded(correct = TRUE)
   } else {
     message <- detect_mistakes(user, solution)
-    is_same_info <- graded(correct = is.null(message), message = message)
+    is_same_info <- legacy_graded(correct = is.null(message), message = message)
   }
 
   if (is_same_info$correct) {
     return(
-      graded(
+      legacy_graded(
         correct = TRUE,
         message = glue_message(
           glue_correct,
@@ -126,7 +126,7 @@ grade_code <- function(
     .message = is_same_info$message,
     .incorrect = incorrect
   )
-  
+
   if (uses_pipe(user)) {
     message <- glue_message(
       glue_pipe,
@@ -136,7 +136,7 @@ grade_code <- function(
     )
   }
 
-  graded(correct = FALSE, message = message)
+  legacy_graded(correct = FALSE, message = message)
 }
 
 

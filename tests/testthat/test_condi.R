@@ -18,7 +18,7 @@ context("Check evaluate_condition")
 test_that("Condi switch statement formula", {
     expect_equal(
         evaluate_condition(condi_formula_t, grader_args, learnr_args),
-        graded(correct = TRUE, message = "my correct message")
+        legacy_graded(correct = TRUE, message = "my correct message")
     )
 
     expect_null(

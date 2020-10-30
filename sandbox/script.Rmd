@@ -9,19 +9,20 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 
-library(gradethis)
-learnr::tutorial_options(exercise.checker = grade_learnr_script)
+# library(gradethis)
+gradethis::grade_this_learnr()
+# learnr::tutorial_options(exercise.checker = grade_this_learnr)
 ```
 
-```{r barret0, exercise = TRUE}
+### Script Style
+
+```{r barret0, exercise = TRUE, exercise.checker = grade_this_learnr}
 4
 ```
 
-```{r barret0-solution, exercise = TRUE}
+```{r barret0-solution}
 42
 ```
-
-
 
 ```{r barret0-check}
 expected <- 4
@@ -39,10 +40,26 @@ grade_this({
 })
 ```
 
+### (old) Grade Code
+```{r barret0-old, exercise = TRUE, exercise.checker = grade_learnr}
+log(sqrt(2))
+```
+```{r barret0-old-solution}
+log(sqrt(3))
+```
+```{r barret0-old-code-check}
+grade_code()
+```
 
+### (old) Grade Result
+```{r barret1-old, exercise = TRUE, exercise.checker = grade_learnr}
+log(sqrt(2))
+```
 
-```{r ex0, exercise = TRUE}
-4
+```{r barret1-old-check}
+grade_result(
+  pass_if(~ identical(.result, log(sqrt(3))))
+)
 ```
 
 
