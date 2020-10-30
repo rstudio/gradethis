@@ -15,15 +15,7 @@ graded <- function(correct, message = NULL) {
       message = message %||% "",
       correct = correct
     ),
-    class = c(
-        if (correct) {
-          "gradethis_graded_correct"
-        } else {
-          "gradethis_graded_incorrect"
-        },
-        "gradethis_graded",
-        "condition"
-      )
+    class = c("gradethis_graded", "condition")
   )
 
   # _throw_ condition object
