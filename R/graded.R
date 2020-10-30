@@ -10,55 +10,58 @@ graded <- function(correct, message = NULL) {
   chkm8_single_character(message)
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
 
-  structure(
-    list(message = message %||% "", correct = correct),
-    class = "grader_graded"
-  )
-}
-
-is_grade <- function(x) {
-  inherits(x, "grader_graded")
-}
-
-
-#' Provide grade feedback
-#'
-#' Creates a feedback object suitable for returning in a learnr checking function
-#' (e.g., the `exercise.checker` option in [learnr::tutorial_options()])
-#'
-#' @param grade a [graded()] object.
-#' @param type Feedback type (visual presentation style). Can be "auto", "success", "info", "warning", "error", or "custom".
-#' Note that "custom" implies that the "message" field is custom HTML rather than a character vector.
-#' @param location Location for feedback ("append", "prepend", or "replace").
-#' @export
-grade_feedback <- function(grade,
-                           type = c("auto", "success", "info", "warning", "error", "custom"),
-                           location = c("append", "prepend", "replace")) {
-  # do not allow grade objects to throw
-  grade <- capture_gradethis_conditions(grade)
-
-  if (!(is_grade(grade) || is_gradethis_condition(grade))) {
-    stop("`grade` must be a `graded` object", call. = FALSE)
-  }
-
-  type <- match.arg(type)
-
-  if (identical("auto", type)) {
-    type <- if (grade$correct) "success" else "error"
-  }
-
-  structure(
+  obj <- structure(
     list(
-      message = grade$message,
-      correct = grade$correct,
-      type = type,
-      location = match.arg(location)
+      message = message %||% "",
+      correct = correct
     ),
-    class = "grader_feedback"
+    class = c(
+        if (correct) {
+          "gradethis_graded_correct"
+        } else {
+          "gradethis_graded_incorrect"
+        },
+        "gradethis_graded",
+        "condition"
+      )
   )
+
+  # _throw_ condition object
+  # also pretty prints the condition
+  base::message(obj)
+}
+
+is_graded <- function(x) {
+  inherits(x, "gradethis_graded")
 }
 
 
-is_feedback <- function(x) {
-  inherits(x, "grader_feedback")
+#' @rdname grade_result
+#' @export
+pass <- function(message = "Correct!") {
+  graded(message = glue_env(parent.frame(1), message), correct = TRUE)
+}
+#' @rdname grade_result
+#' @export
+fail <- function(message = "Booooo!") {
+  graded(message = glue_env(parent.frame(1), message), correct = FALSE)
+}
+
+
+#' @export
+pass_if_equal <- function(y, message = "Correct!", x = get(".result", envir = parent.frame())) {
+  grade_if_equal(x = x, y = y, message = message, correct = TRUE)
+}
+#' @export
+fail_if_equal <- function(y, message = "Incorrect!", x = get(".result", envir = parent.frame())) {
+  grade_if_equal(x = x, y = y, message = message, correct = FALSE)
+}
+grade_if_equal <- function(x, y, message, correct, glue_envir = parent.frame(2)) {
+  if (!isTRUE(identical(x, y))) {
+    # not equal! quit early
+    return()
+  }
+
+  # equal!
+  graded(message = glue_env(glue_envir, message), correct = correct)
 }
