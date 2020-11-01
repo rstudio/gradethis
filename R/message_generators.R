@@ -217,7 +217,7 @@ pmatches_argument_name <- function(this_call,
   if (!is.null(this_name) && this_name != "")
     correct_name <- paste(correct_name, "=", this)
   
-  intro  <- "This code seems correct, but please write with full parameter(s) names.\n"
+  intro  <- "This code seems correct, but please write with full argument(s) names.\n"
   msg <- glue::glue_data(
     list(
       this = this_user,
