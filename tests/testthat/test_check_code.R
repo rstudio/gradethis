@@ -209,13 +209,13 @@ test_that("Spots differences in long calls", {
 
   user <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
   solution <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)) # nolint
-  expect_wrong(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution))
+  expect_output(
+    cat(detect_mistakes(user = user, solution = solution)),
+    "I expected na.rm = FALSE where you wrote na.rm = TRUE",
+    fixed = TRUE
   )
 
   user <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
   solution <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
-   expect_correct(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution))
-  )
+  expect_equal(detect_mistakes(user = user, solution = solution), NULL)
 })
