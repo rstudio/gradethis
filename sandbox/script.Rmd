@@ -1,3 +1,4 @@
+
 ---
 title: "script checking"
 output: learnr::tutorial
@@ -9,8 +10,8 @@ runtime: shiny_prerendered
 ```{r setup, include=FALSE}
 library(learnr)
 
-# library(gradethis)
-gradethis::grade_this_learnr()
+library(gradethis)
+# gradethis::grade_this_learnr()
 # learnr::tutorial_options(exercise.checker = grade_this_learnr)
 ```
 
@@ -38,6 +39,20 @@ grade_this({
 
   fail(random_encourage())
 })
+```
+
+####  Grade code
+
+```{r barret0-gc, exercise = TRUE, exercise.checker = grade_this_learnr}
+4
+```
+
+```{r barret0-gc-solution}
+42
+```
+
+```{r barret0-gc-check}
+grade_this_code()
 ```
 
 ### (old) Grade Code
@@ -115,16 +130,16 @@ grade_result(
 ```
 
 
+```{r ex2, exercise = TRUE}
+Sys.time()
+5
+```
+
 ```{r ex2-solution}
 print(4)
 Sys.sleep(3)
 print(5)
 6
-```
-
-```{r ex2, exercise = TRUE}
-Sys.time()
-5
 ```
 
 ```{r ex2-check}
