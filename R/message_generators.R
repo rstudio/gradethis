@@ -211,10 +211,10 @@ pmatches_argument_name <- function(this_call,
   this <- lapply(this,prep) #yes devrait etre quoted
   this_user <- this
   
-  if (!is.null(this_name) && this_name != "")
+  if ( !is.null(this_name) )
     this_user <- paste(this_name, "=", this)
   
-  if (!is.null(this_name) && this_name != "")
+  if ( !is.null(this_name) )
     correct_name <- paste(correct_name, "=", this)
   
   intro  <- "This code seems correct, but please write with full argument(s) names.\n"
