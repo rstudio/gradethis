@@ -220,7 +220,7 @@ detect_mistakes <- function(user,
       return( 
         pmatches_argument_name(
           this_call = user,
-          this = as.character(user[matched_user_names]),
+          this = unname(as.list(user)[matched_user_names]),
           this_name = matched_user_names,
           correct_name = matched_solution_name,
           enclosing_call = enclosing_call,
@@ -258,6 +258,7 @@ detect_mistakes <- function(user,
       )
     )
   }
+
 
   # 5. Check that every named argument in the solution appears in the user code.
   #    The outcome of this order is that when a user writes na = TRUE, gradethis

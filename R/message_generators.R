@@ -208,7 +208,7 @@ pmatches_argument_name <- function(this_call,
   
   
   this_call <- prep(this_call)
-  this      <- prep(this)
+  this <- lapply(this,prep) #yes devrait etre quoted
   this_user <- this
   
   if (!is.null(this_name) && this_name != "")
@@ -367,8 +367,7 @@ prep <- function(text) {
   } else if (is.call(text)) {
     text <- text[1]
   }
-  if (!is.character(text)) text <- deparse_to_string(text)
-  text
+  deparse_to_string(text)
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {
