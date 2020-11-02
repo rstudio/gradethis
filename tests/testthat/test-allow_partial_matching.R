@@ -51,7 +51,6 @@ test_that("allow_partial_matching works 1 error bool", {
       solution_quo = solution_quo
     )
   )
-  # debugonce(gradethis:::pmatches_argument_name)
   pmatch_FALSE <- grade_code(allow_partial_matching = FALSE,
                              grader_args = list(
                                user_quo = user_quo, 
@@ -89,7 +88,6 @@ test_that("allow_partial_matching works 1 error fun", {
       solution_quo = solution_quo
     )
   )
-  # debugonce(gradethis:::pmatches_argument_name)
   pmatch_FALSE <- grade_code(allow_partial_matching = FALSE,
                              grader_args = list(
                                user_quo = user_quo, 
@@ -126,8 +124,6 @@ test_that("allow_partial_matching works 1 error chr", {
   user_quo <- as.expression(quote(ff(p="no")))
   solution_quo <- as.expression(quote(ff(p1="no")))
   
-  
-  # debugonce(gradethis:::pmatches_argument_name)
   pmatch_FALSE <- grade_code(allow_partial_matching = FALSE,
                              grader_args = list(
                                user_quo = user_quo, 
