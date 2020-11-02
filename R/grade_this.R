@@ -1,5 +1,4 @@
 
-
 # #' @export
 # last_result <- function(
 #   env = parent.frame()
@@ -13,24 +12,59 @@
 #' @export
 grade_this <- function(expr) {
   expr_quo <- rlang::enquo(expr)
-  function(check_obj) {
+
+  function(checking_env) {
     eval_gradethis_expr({
       rlang::eval_tidy(
         rlang::get_expr(expr_quo),
-        env = check_obj
+        env = checking_env
       )
     })
   }
 }
 
+#' @export
+grade_this_code <- function(
+  correct = "Correct! {random_praise()}",
+  incorrect = "{.message} {random_encouragement()}"
+) {
 
-# grade_this_code <- function(correct = "{random_praise()}", incorrect = "{random_encouragement()}") {
-#   grade_this({
-#     res <- code_feedback(user = .user_code, solution = .solution_code)
-#     if (isTRUE(res)) {
-#       pass(correct)
-#     } else {
-#       fail(incorrect)
-#     }
-#   })
-# }
+  # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
+  function(checking_env) {
+    checking_env$.correct <- correct
+    checking_env$.incorrect <- incorrect
+
+    grade_this({
+      # create variable `.message` for glue to find
+      .message <- code_feedback()
+
+      # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
+      if (is.null(.message)) {
+        # need to use `get()` to avoid using `utils::globalVariables`
+        pass(get(".correct"))
+      } else {
+        fail(get(".incorrect"))
+      }
+    })(checking_env)
+  }
+}
+
+
+#' @export
+code_feedback <- function(
+  user_code = get(".user_code", envir = calling_env),
+  solution_code = get(".solution_code", envir = calling_env),
+  envir_prep = get(".envir_prep", envir = calling_env),
+  calling_env = parent.frame()
+) {
+
+  chkm8_single_character(user_code)
+  chkm8_single_character(solution_code)
+  checkmate::assert_environment(calling_env, null.ok = FALSE)
+
+  detect_mistakes(
+    user = str2expression(user_code),
+    solution = str2expression(solution_code),
+    env = learnr::duplicate_env(envir_prep)
+  )
+}
