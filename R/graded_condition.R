@@ -30,7 +30,7 @@ capture_errors <- function(expr, error = error) {
       ret <- capture_graded({
         fail(e$message)
       })
-      rlang::return_from(that_env)
+      rlang::return_from(that_env, ret)
     }
   }
   this_env <- rlang::current_env()
