@@ -73,6 +73,7 @@ test_that("detect_mistakes detects missing code", {
   # internal atomic - NEEDS TO CATCH UNNAMED ARGUMENT HANDLING
   user <-     quote(a())
   solution <- quote(a(1))
+  
   expect_equal(
     detect_mistakes(user, solution),
     missing_argument(this_call = user, that_name = "x")
@@ -140,7 +141,7 @@ test_that("detect_mistakes works with atomic solutions", {
   solution <- quote(1)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = "2", that = quote(1))
+    wrong_value(this = as.name("2"), that = quote(1))
   )
 
   # function
@@ -155,7 +156,7 @@ test_that("detect_mistakes works with atomic solutions", {
   solution <- quote(1)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = "a()", that = quote(1))
+    wrong_value(this = as.name("a()"), that = quote(1))
   )
 
   user <-     quote(a(1))
@@ -560,7 +561,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(2 %>% log())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = unpipe(user), that = "log()")
+    wrong_call(this = unpipe(user), that = as.name("log()"))
   )
 
   user <-     quote(2 %>% abs() %>% sqrt()) # nolint
@@ -586,7 +587,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(b(1) %>% a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = "a()")
+    wrong_call(this = user, that = as.name("a()"))
   )
 
 })
@@ -628,7 +629,7 @@ test_that("detect_mistakes handles argument names correctly", {
   expect_equal(
     detect_mistakes(user, solution),
     surplus_argument(this_call =  quote(b()),
-                     this = "a()",
+                     this = as.name("a()"),
                      this_name = "y")
   )
 
@@ -751,6 +752,7 @@ test_that("detect_mistakes does not return correct prematurely", {
 
   j <<- function(...) 1
   user <- quote(j(x = a(1), y = a(2)))
+  user <- quote(j(x = a(x = 1), y = a(2)))
   solution <- quote(j(x = a(x = 1), y = a(3)))
   expect_equal(
     detect_mistakes(user, solution),
@@ -795,3 +797,45 @@ test_that("detect_mistakes works with multiple lines", {
   )
 
 })
+
+
+
+
+
+
+
+
+test_that("detect_mistakes : Differentiate between 'strings' and objects in messages", {
+  
+  
+  quote_as_name <- as.expression(quote(library(dplyr)))
+  quote_as_chr <- as.expression(quote(library('dplyr')))
+
+  
+  outputA <- grade_code(
+             grader_args = list(
+               user_quo = quote_as_name, 
+               solution_quo = quote_as_chr
+             )
+  )
+  outputB <- grade_code(
+             grader_args = list(
+               user_quo = quote_as_chr, 
+               solution_quo = quote_as_name
+             )
+  )
+    expect_false(outputA$correct)
+    expect_false(outputB$correct)
+    expect_match(object = outputA$message,
+                 regexp = 'I expected \"dplyr\" where you wrote dplyr')
+    expect_match(object = outputA$message,
+                 regexp = 'library\\(dplyr\\)')
+    expect_match(object = outputB$message,
+                 regexp = 'I expected dplyr where you wrote \"dplyr\"')
+    expect_match(object = outputB$message,
+                 regexp = 'library\\(\"dplyr\"\\)')
+
+})
+
+
+
