@@ -8,13 +8,13 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   if (!exists("fxn")) {return(code)} ## some reason the above tryCatch doesn't go to the error part
   if(class(fxn) != "function") {return(code)}
 
-  
-  
-  
+
+
+
   # if include_defaults == FALSE standarise, but dont bother trying to fill out default formals
   # - for primitives like mean, unable to distinguish between mean and mean.default
   if ( (!include_defaults) || is_infix(code) || is.primitive(fxn)) {
-    return(rlang::call_standardise(code))
+    return(rlang::call_standardise(code, env = env))
   }
 
   forms <- rlang::fn_fmls(fxn)
