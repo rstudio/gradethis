@@ -6,10 +6,14 @@ test_that("Comparing dataframes, testing for null env", {
   # check that the results are the same
   testthat::expect_equal(billboard_user, billboard_solution)
 
-  expect_correct(
-    grade_result(
-        pass_if(~ identical(.result, billboard_solution), "This is a correct message"),
-        learnr_args = list(last_value = billboard_user, envir_prep = new.env())
-    )
-  )
+  eval_this(
+    expr = {
+      pass_if_equal(billboard_solution, "This is a correct message")
+      fail()
+    },
+    user_code = deparse_to_string(billboard_user),
+    solution_code = deparse_to_string(billboard_solution)
+  ) %>%
+    expect_correct() %>%
+    expect_message("This is a correct message")
 })

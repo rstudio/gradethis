@@ -4,172 +4,102 @@ context("Check Code")
 
 test_that("Spots differences in atomics", {
 
-  user <- expression(1)
-  solution <- expression(1)
+  expect_correct_code("1", "1")
 
-  expect_correct(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution))
-  )
-
-  user <- expression(1)
-  solution <- expression(2)
-  expect_message(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution)),
-    wrong_value(this = quote(1), that = quote(2))
-  )
+  expect_wrong_code("1", "2", msg = wrong_value(this = quote(1), that = quote(2)))
 })
 
 test_that("Spots differences in names", {
-
-  user <- expression(x)
-  solution <- expression(y)
-  expect_message(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution)),
-    wrong_value(this = quote(x), that = quote(y))
-  )
-
-  user <- expression(x)
-  solution <- expression(x)
-  expect_correct(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution))
-  )
-
-  user <- expression(5)
-  solution <- expression(y)
-  expect_message(
-    grade_code(grader_args = list(user_quo = user, solution_quo = solution)),
-    wrong_value(this = quote(5), that = quote(y))
-  )
+  x <- 1
+  expect_correct_code("x", "x")
+  expect_wrong_code("x", "y", msg = wrong_value(this = quote(x), that = quote(y)))
+  expect_wrong_code("5", "y", msg = wrong_value(this = quote(5), that = quote(y)))
 })
 
 test_that("Spots differences in calls", {
-  a <- expression(vapply(lists, mean, numeric(1), na.rm = TRUE))
-  b <- expression(vapply(vecs, mean, numeric(1), na.rm = TRUE))
-  c <- expression(vapply(lists, mean, numeric(1)))
-  d <- expression(vapply(vecs, mean, numeric(1)))
+  a <- "vapply(lists, mean, numeric(1), na.rm = TRUE)"
+  b <- "vapply(vecs, mean, numeric(1), na.rm = TRUE)"
+  c <- "vapply(lists, mean, numeric(1))"
+  d <- "vapply(vecs, mean, numeric(1))"
 
-  expect_correct(
-    grade_code(grader_args = list(user_quo = a, solution_quo = a))
+  expect_correct_code(a, a)
+  expect_wrong_code(a, b, msg = wrong_value(this = quote(lists), that = quote(vecs)))
+
+  expect_wrong_code(
+    a, c,
+    msg = surplus_argument(
+      this_call = "vapply()",
+      this_name = "na.rm",
+      this = quote(TRUE)
+    )
   )
 
-  expect_message(
-    grade_code(grader_args = list(user_quo = a, solution_quo = b),
-               glue_correct = '{ .message } { .correct }',
-               glue_incorrect = '{ .message } { .incorrect }'),
-    wrong_value(this = quote(lists), that = quote(vecs))
-  )
-
-  expect_message(
-    grade_code(grader_args = list(user_quo = a, solution_quo = c)),
-    surplus_argument(this_call = "vapply()",
-                     this_name = "na.rm",
-                     this = quote(TRUE))
-  )
-
-  expect_message(
-    grade_code(grader_args = list(user_quo = c, solution_quo = a))
-    ,
-    missing_argument(this_call = "vapply()",
-                     that_name = "na.rm")
+  expect_wrong_code(
+    c, a,
+    msg = missing_argument(
+      this_call = "vapply()",
+      that_name = "na.rm"
+    )
   )
 })
 
 test_that("Mentions only first non-matching element", {
-  w <- expression(1)
-  x <- expression(log(1))
-  y <- expression(sqrt(log(2)))
-  z <- expression(sqrt(log(1)))
+  w <- "1"
+  x <- "log(1)"
+  y <- "sqrt(log(2))"
+  z <- "sqrt(log(1))"
 
-  expect_correct(
-    grade_code(grader_args = list(user_quo = w, solution_quo = w))
-  )
-
-  expect_message(
-    grade_code(grader_args = list(user_quo = w, solution_quo = z)),
-    wrong_value(this = quote(1), that = quote(sqrt()))
-  )
-
-  expect_message(
-    grade_code(grader_args = list(user_quo = x, solution_quo = z)),
-    wrong_call(this = quote(log()), that = quote(sqrt()))
-  )
-
-  expect_message(
-    grade_code(grader_args = list(user_quo = y, solution_quo = z)),
-    wrong_value(this = "2", that = quote(1))
-  )
+  expect_correct_code(w, w)
+  expect_wrong_code(w, z, msg = wrong_value(this = quote(1), that = quote(sqrt())))
+  expect_wrong_code(x, z, msg = wrong_call(this = quote(log()), that = quote(sqrt())))
+  expect_wrong_code(y, z, msg = wrong_value(this = "2", that = quote(1)))
 
 })
 
 test_that("Spots differences in argument names", {
-  test_fn <<- function(x, y = 1, z = 2, ...) {return(1)}
+  test_fn <- function(x, y = 1, z = 2, ...) {return(1)}
 
-  a <- expression(test_fn(10, y = 1, z = TRUE))
-  b <- expression(test_fn(10, 1, TRUE))
-  c <- expression(test_fn(10, w = 1, z = TRUE))
+  a <- "test_fn(10, y = 1, z = TRUE)"
+  b <- "test_fn(10, 1, TRUE)"
+  c <- "test_fn(10, w = 1, z = TRUE)"
 
-  expect_correct(
-    grade_code(grader_args = list(user_quo = a, solution_quo = a))
-  )
-
-  expect_correct(
-    grade_code(grader_args = list(user_quo = b, solution_quo = a))
-  )
-
-  expect_message(
-    grade_code(grader_args = list(user_quo = c, solution_quo = a)),
-    surplus_argument(this_call = c[[1]],
-                     this = 1,
-                     this_name = "w")
+  expect_correct_code(a, a)
+  expect_correct_code(b, a)
+  expect_wrong_code(
+    c, a,
+    msg = surplus_argument(
+      this_call = quote(test_fn()),
+      this = 1,
+      this_name = "w"
+    )
   )
 
 })
 
 test_that("Ignore differences in argument positions (for non ... arguments)", {
-  test_fn <<- function(x, digits = 0){return(1)}
-  a <- expression(test_fn(x = pi, digits = 2))
-  b <- expression(test_fn(pi, digits = 2))
-  c <- expression(test_fn(2, x = pi))
-  d <- expression(test_fn(digits = 2, x = pi))
+  test_fn2 <- function(x, digits = 0){return(1)}
+  a <- "test_fn2(x = pi, digits = 2)"
+  b <- "test_fn2(pi, digits = 2)"
+  c <- "test_fn2(2, x = pi)"
+  d <- "test_fn2(digits = 2, x = pi)"
 
-  expect_correct(
-    grade_code(grader_args = list(user_quo = b, solution_quo = a))
-  )
-
-  expect_correct(
-    grade_code(grader_args = list(user_quo = c, solution_quo = a))
-  )
-
-  expect_correct(
-    grade_code(grader_args = list(user_quo = d, solution_quo = a))
-  )
-
-  expect_correct(
-    grade_code(grader_args = list(user_quo = a, solution_quo = d))
-  )
+  expect_correct_code(b, a)
+  expect_correct_code(c, a)
+  expect_correct_code(d, a)
+  expect_correct_code(a, d)
 
 })
 
-test_that("Returns nothing when no solution code is provided", {
-
-  testthat::expect_null(
-    grade_code(grader_args = list(user_quo = expression(5)))
+test_that("Error is when trying to call code_feedback with no solution", {
+  testthat::expect_error(
+    code_feedback(user_code = "5", solution_code = NULL, envir_prep = environment())
   )
-
 })
 
 test_that("Returns intelligent error when no user code", {
   testthat::expect_error(
-    grade_code(grader_args = list(solution_quo = expression(5))),
-    "I didn't receive your code. Did you write any?"
+    code_feedback(user_code = NULL, solution_code = "5", envir_prep = environment())
   )
-})
-
-test_that("Empty user solution messages", {
-  grader_args <- list()
-  learnr_args <- list()
-
-  testthat::expect_null(grade_code(grader_args = grader_args, learnr_args = learnr_args))
 })
 
 test_that("Spot differences when pipes are involved", {
@@ -182,22 +112,22 @@ test_that("Spot differences when pipes are involved", {
     df
   }
 
-  pipe <- expression(1:10 %>% mean(na.rm = TRUE) %>% log(base = 10)) # nolint
-  func <- expression(log(1:10 %>% mean(na.rm = TRUE), base = 10))
-  func1 <- expression(log(mean(1:10, na.rm = TRUE), base = 10))
-  pipe3 <- expression(iris %>% lm(Sepal.Length ~ Sepal.Width, data = .))
-  func3 <- expression(lm(Sepal.Length ~ Sepal.Width, data = iris))
+  func <- "log(1:10 %>% mean(na.rm = TRUE), base = 10)"
+  pipe <- "1:10 %>% mean(na.rm = TRUE) %>% log(base = 10)"
+  func1 <- "log(mean(1:10, na.rm = TRUE), base = 10)"
+  pipe3 <- "iris %>% lm(Sepal.Length ~ Sepal.Width, data = .)"
+  func3 <- "lm(Sepal.Length ~ Sepal.Width, data = iris)"
 
-  expect_correct(grade_code(grader_args = list(user_quo = func,  solution_quo = pipe)))
-  expect_correct(grade_code(grader_args = list(user_quo = func1, solution_quo = pipe)))
-  expect_correct(grade_code(grader_args = list(user_quo = pipe,  solution_quo = func)))
-  expect_correct(grade_code(grader_args = list(user_quo = pipe,  solution_quo = func1)))
-  expect_correct(grade_code(grader_args = list(user_quo = pipe,  solution_quo = pipe)))
-  expect_correct(grade_code(grader_args = list(user_quo = func,  solution_quo = func1)))
-  expect_correct(grade_code(grader_args = list(user_quo = func1, solution_quo = func1)))
-  expect_correct(grade_code(grader_args = list(user_quo = func3, solution_quo = pipe3)))
-  expect_correct(grade_code(grader_args = list(user_quo = pipe3, solution_quo = func3)))
-  expect_correct(grade_code(grader_args = list(user_quo = pipe3, solution_quo = pipe3)))
+  expect_correct_code(func,  pipe)
+  expect_correct_code(func1, pipe)
+  expect_correct_code(pipe,  func)
+  expect_correct_code(pipe,  func1)
+  expect_correct_code(pipe,  pipe)
+  expect_correct_code(func,  func1)
+  expect_correct_code(func1, func1)
+  expect_correct_code(func3, pipe3)
+  expect_correct_code(pipe3, func3)
+  expect_correct_code(pipe3, pipe3)
 
 })
 
@@ -207,15 +137,16 @@ test_that("Spots differences in long calls", {
 
   testthat::skip_if_not_installed("tidyr")
 
-  user <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
-  solution <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)) # nolint
-  expect_output(
-    cat(detect_mistakes(user = user, solution = solution)),
-    "I expected na.rm = FALSE where you wrote na.rm = TRUE",
-    fixed = TRUE
+  user <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
+  solution <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)" # nolint
+
+  expect_wrong_code(
+    user, solution,
+    msg = wrong_value(quote(TRUE), that = quote(FALSE), this_name = quote(na.rm))
   )
 
-  user <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
-  solution <- expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)) # nolint
-  expect_equal(detect_mistakes(user = user, solution = solution), NULL)
+  user <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
+  solution <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
+  expect_correct_code(user, solution)
+
 })
