@@ -6,8 +6,8 @@ chkm8_item_class <- function(x, class, name = checkmate::vname(x)) {
   })
 }
 
-chkm8_single_character <- function(x, name = checkmate::vname(x)) {
-  checkmate::assert_character(x, null.ok = TRUE, len = 1, any.missing = FALSE, .var.name = name)
+chkm8_single_character <- function(x, name = checkmate::vname(x), null.ok = TRUE, any.missing = FALSE, ...) {
+  checkmate::assert_character(x, null.ok = null.ok, len = 1, any.missing = any.missing, .var.name = name, ...)
 }
 
 chm8_single_atomic <- function(x, name = checkmate::vname(x)) {
