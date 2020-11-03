@@ -100,7 +100,7 @@ test_that("Grade learnr check_code", {
     grade_feedback(
       graded(
         correct = FALSE,
-        message = "The user code of 'function(' produced an parsing error: <text>:2:0: unexpected end of input\n1: function(\n   ^"
+        message = "The user code of \"function(\" produced an parsing error: <text>:2:0: unexpected end of input\n1: function(\n   ^"
       )
     )
   )
