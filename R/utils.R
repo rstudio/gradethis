@@ -12,7 +12,7 @@ is_pipe <- function(x) {
 .infixes <- c("+", "-", "*", "/", "^", "%%", "%/%", "%in%", .infixes_assign)
 
 is_infix <- function(x, infix_vals = .infixes) {
-  
+
   tryCatch({
     if (is.character(x)) {
       # if str2lang throws, x is not an infix
@@ -20,12 +20,12 @@ is_infix <- function(x, infix_vals = .infixes) {
     } else {
       out <- x
     }
-    
+
     if (!is.call(out)) {
       return(FALSE)
     }
-    
-    as.character(out[[1]]) %in% infix_vals
+
+    any(as.character(out[[1]]) %in% infix_vals)
   }, error = function(e) {
     # x is not an infix
     FALSE
