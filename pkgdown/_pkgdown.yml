@@ -1,7 +1,7 @@
 url: https://rstudio-education.github.io/gradethis/
 
-# template:
-#   params:
-#     docsearch:
-#       api_key: API_KEY
-#       index_name: INDEX_NAME
+template:
+  params:
+    docsearch:
+      api_key: 6e6350018f3204fb7cb6f4e7d3487cce
+      index_name: rstudio-education
