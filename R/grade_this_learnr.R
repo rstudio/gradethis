@@ -128,7 +128,7 @@ grade_this_learnr_ <- function(
     solution_code <- parse(text = solution_code)
     if (length(solution_code) == 0) {
       return(feedback(
-        pass("No solution is provided for this exercise."),
+        fail("No solution is provided for this exercise."),
         type = "info"
       ))
     }
@@ -162,10 +162,8 @@ grade_this_learnr_ <- function(
     x = ".solution",
     {
       message("Delayed evaluation of `.solution!`")
-      if (is.null(solution_code)) {
-        stop("no solution provided. TODO: BETTER MESSAGE")
-      }
-
+      # (empty solutioncode is checked above)
+      # solution code exists...
       rlang::eval_tidy(
         rlang::as_quosure(solution_code, envir_result)
       )
