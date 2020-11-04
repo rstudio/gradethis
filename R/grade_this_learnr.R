@@ -175,9 +175,30 @@ grade_this_learnr_ <- function(
   to_check_fn <- capture_errors(
     {
       parsed_check_code <- parse(text = check_code %||% "")
-      eval(parsed_check_code, envir = chunk_envir)
+      capture_graded(
+        {
+          eval(parsed_check_code, envir = chunk_envir)
+        },
+        # if a `pass()`/`fail()` is used in the regular check chunk with no user submission context, it should be an error
+        on_graded = function(gc_obj, ignore) {
+          fn_used <- if (isTRUE(gc_obj$correct)) "`pass()`" else "`fail()`"
+
+          # notify author of their mistake
+          message(
+            "A ", fn_used, " statement was executed without access to student feedback. (Prematurely graded)\n",
+            "Remember to only call ", fn_used, " inside your checking function (ex: `grade_this({})`"
+          )
+          # return from main function (even though in a inner function! voodoo!)
+          rlang::return_from(checking_envir, feedback(
+            fail("Uh Oh! Submission prematurely graded. Marking as _incorrect_"),
+            type = "error"
+          ))
+        }
+      )
     },
-    error = function(e, ignore) {
+    # if an unhandled error occurs while checking...
+    on_error = function(e, ignore) {
+      # notify author of their mistake
       message("Error while executing checking `", check_label, "` chunk: ", e)
       ret <- feedback(
         fail("Uh Oh! Error executing grading code. Marking as _incorrect_"),

@@ -19,9 +19,9 @@ conditionMessage.gradethis_graded <- function(c) {
 }
 
 # Turn errors into `fail()`ures
-capture_errors <- function(expr, error = error) {
-  if (is.null(error)) {
-    error <- function(e, that_env) {
+capture_errors <- function(expr, on_error = NULL) {
+  if (is.null(on_error)) {
+    on_error <- function(e, that_env) {
       # TODO DELETE
       print("turning error into failure")
       utils::str(e)
@@ -33,10 +33,12 @@ capture_errors <- function(expr, error = error) {
       rlang::return_from(that_env, ret)
     }
   }
+  stopifnot(is.function(on_error))
+
   this_env <- rlang::current_env()
   withCallingHandlers(
     error = function(e) {
-      error(e, this_env)
+      on_error(e, this_env)
     },
     expr
   )
@@ -50,11 +52,18 @@ capture_errors <- function(expr, error = error) {
 #   pass_if_throw(2)
 #   pass_if_throw(3)
 # }
-capture_graded <- function(expr) {
+capture_graded <- function(expr, on_graded = NULL) {
+  if (is.null(on_graded)) {
+    on_graded <- function(gc_obj, that_env) {
+      rlang::return_from(that_env, gc_obj)
+    }
+  }
+  stopifnot(is.function(on_graded))
+
   this_env <- rlang::current_env()
   withCallingHandlers(
     gradethis_graded = function(gc_obj) {
-      rlang::return_from(this_env, gc_obj)
+      on_graded(gc_obj, this_env)
     },
     expr
   )
@@ -79,8 +88,8 @@ ignore_graded <- function(expr) {
 # will capture errors and turn them into `failure("message")`
 #
 #' @export
-eval_gradethis_expr <- function(expr, error = NULL) {
+eval_gradethis_expr <- function(expr, on_error = NULL) {
   capture_graded({
-    capture_errors(expr, error = error)
+    capture_errors(expr, on_error = on_error)
   })
 }
