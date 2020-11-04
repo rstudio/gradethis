@@ -25,7 +25,7 @@ is_infix <- function(x, infix_vals = .infixes) {
       return(FALSE)
     }
     
-    as.character(out[[1]]) %in% infix_vals
+    any(as.character(out[[1]]) %in% infix_vals)
   }, error = function(e) {
     # x is not an infix
     FALSE
