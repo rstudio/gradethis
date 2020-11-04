@@ -1,152 +1,117 @@
 context("Check grade_conditions messages")
 
-expect_message <- function(x, message, correct) {
-  expect_s3_class(x, "gradethis_graded")
-  expect_equal(x$correct, correct)
-  expect_true(grepl(message, paste0(x$message, collapse = ""), fixed = TRUE))
-}
-
 test_that("Correct messages without random praise", {
-    glue_correct_no_praise <- "{ .message } { .correct }"
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 5, message = "A pass_if message."),
-            correct = "A correct message.",
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            glue_correct = glue_correct_no_praise
-        ),
-        message = "A pass_if message. A correct message.",
-        correct = TRUE
-    )
+  with_options(
+    list(gradethis.pass = "A pass message"),
+    {
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 5),
-            correct = "Only a correct message.",
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            glue_correct = glue_correct_no_praise
-        ),
-        message = "Only a correct message.",
-        correct = TRUE
-    )
+      eval_this(
+        expr = {
+          pass_if_equal(5, "A pass_if_equal message")
+          fail()
+        },
+        user_code = "5"
+      ) %>%
+        expect_correct() %>%
+        expect_message("A pass_if_equal message")
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 5, "Only a pass_if message."),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            glue_correct = glue_correct_no_praise
-        ),
-        message = "Only a pass_if message.",
-        correct = TRUE
-    )
+      eval_this(
+        expr = {
+          pass_if_equal(5)
+          fail()
+        },
+        user_code = "5"
+      ) %>%
+        expect_correct() %>%
+        expect_message("A pass message")
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 5),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            glue_correct = glue_correct_no_praise
-        ),
-        message = "",
-        correct = TRUE
-    )
+    }
+  )
+
 })
 
 test_that("Incorrect messages no match pass_if", {
-    glue_incorrect_no_praise <- "{ .message } { .incorrect }"
+  with_options(
+    list(gradethis.fail = "A fail message"),
+    {
+      eval_this(
+        expr = {
+          fail_if_equal(5, "A fail_if_equal message")
+          pass()
+        },
+        user_code = "5"
+      ) %>%
+        expect_wrong() %>%
+        expect_message("A fail_if_equal message")
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            glue_incorrect = glue_incorrect_no_praise
-        ),
-        message = "",
-        correct = FALSE
-    )
+      eval_this(
+        expr = {
+          fail_if_equal(5)
+          pass()
+        },
+        user_code = "5"
+      ) %>%
+        expect_wrong() %>%
+        expect_message("A fail message")
+    }
+  )
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42, message = "This does nothing (expected)."),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env())
-        ),
-        message = "",
-        correct = FALSE
-    )
-
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42, message = "This does nothing (expected)."),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            incorrect = "hello"
-        ),
-        message = "hello",
-        correct = FALSE
-    )
-
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            incorrect = "incorrect with no pass_if message"
-        ),
-        message = "incorrect with no pass_if message",
-        correct = FALSE
-    )
 })
 
-test_that("Incorrect messages match fail_if", {
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42),
-            fail_if(~ .result == 5),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env())
-        ),
-        message = "",
-        correct = FALSE
-    )
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42, message = "No match here."),
-            fail_if(~ .result == 5, message = "Found an incorrect match."),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env())
-        ),
-        message = "Found an incorrect match.",
-        correct = FALSE
-    )
+test_that("messages work with glue", {
+  with_options(
+    list(
+      gradethis.pass = "A pass message. {extra}",
+      gradethis.fail = "A fail message. {extra}"
+    ),
+    {
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42, message = "No match here."),
-            fail_if(~ .result == 5, message = "Found an incorrect match."),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            incorrect = "hello"
-        ),
-        message = "Found an incorrect match. hello",
-        correct = FALSE
-    )
+      eval_this(
+        expr = {
+          extra <- "Extra!"
+          pass_if_equal(5, "A pass_if_equal message. {extra}")
+          fail()
+        },
+        user_code = "5"
+      ) %>%
+        expect_correct() %>%
+        expect_message("A pass_if_equal message. Extra!")
 
-    expect_message(
-        grade_result(
-            pass_if(~ .result == 42),
-            fail_if(~ .result == 5),
-            grader_args = list(),
-            learnr_args = list(last_value = 5, envir_prep = new.env()),
-            incorrect = "incorrect with no fail_if message."
-        ),
-        message = "incorrect with no fail_if message.",
-        correct = FALSE
-    )
+      eval_this(
+        expr = {
+          extra <- "Extra!"
+          pass_if_equal(5)
+          fail()
+        },
+        user_code = "5"
+      ) %>%
+        expect_correct() %>%
+        expect_message("A pass message. Extra!")
+
+      eval_this(
+        expr = {
+          extra <- "Extra!"
+          fail_if_equal(5, "A fail_if_equal message. {extra}")
+          pass()
+        },
+        user_code = "5"
+      ) %>%
+        expect_wrong() %>%
+        expect_message("A fail_if_equal message. Extra!")
+
+      eval_this(
+        expr = {
+          extra <- "Extra!"
+          fail_if_equal(5)
+          pass()
+        },
+        user_code = "5"
+      ) %>%
+        expect_wrong() %>%
+        expect_message("A fail message. Extra!")
+    }
+  )
+
 })

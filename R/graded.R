@@ -44,11 +44,11 @@ fail <- function(message = getOption("gradethis.fail", "Incorrect")) {
 
 
 #' @export
-pass_if_equal <- function(y, message = "Correct!", x = get(".result", envir = parent.frame())) {
+pass_if_equal <- function(y, message = getOption("gradethis.pass", "Correct!"), x = get(".result", envir = parent.frame())) {
   grade_if_equal(x = x, y = y, message = message, correct = TRUE)
 }
 #' @export
-fail_if_equal <- function(y, message = "Incorrect!", x = get(".result", envir = parent.frame())) {
+fail_if_equal <- function(y, message = getOption("gradethis.fail", "Incorrect"), x = get(".result", envir = parent.frame())) {
   grade_if_equal(x = x, y = y, message = message, correct = FALSE)
 }
 grade_if_equal <- function(x, y, message, correct, glue_env = parent.frame(2)) {

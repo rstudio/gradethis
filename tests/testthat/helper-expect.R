@@ -47,8 +47,8 @@ eval_this <- function(
   user_code,
   solution_code = NULL,
   envir_prep = parent.frame(),
-  correct = "Correct",
-  incorrect = "Wrong"
+  correct = "valid",
+  incorrect = "invalid"
 ) {
   env <- new.env(parent = envir_prep)
   env$.result <-
@@ -68,7 +68,6 @@ eval_this <- function(
   x <- grade_this(!!expr_quo)(env)
 
   expect_s3_class(x, "gradethis_graded")
-
   invisible(x)
 }
 
@@ -76,8 +75,8 @@ expect_correct_code <- function(
   user_code,
   solution_code,
   envir_prep = parent.frame(),
-  correct = "Correct",
-  incorrect = "Wrong"
+  correct = "valid",
+  incorrect = "invalid"
 ) {
   env <- new.env(parent = envir_prep)
   env$.user_code <- user_code
