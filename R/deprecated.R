@@ -10,5 +10,9 @@ NULL
 #' @describeIn gradethis-deprecated Removed from package
 #' @export
 grade_feedback <- function(...) {
-  stop("`gradethis::grade_feedback()` is no longer supported")
+  lifecycle::deprecate_warn("0.2.0", "grade_feedback()")
+
+  ret <- feedback(...)
+  class(ret) <- "grader_feedback"
+  ret
 }
