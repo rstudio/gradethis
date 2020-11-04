@@ -173,7 +173,7 @@ grade_learnr_ <- function(label = NULL,
       # prevent the error from being re-thrown
       message("", e)
       had_error_checking <<- TRUE
-      ignore_graded({
+      capture_graded({
         fail("Error occurred while checking the submission")
       })
     }

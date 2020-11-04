@@ -52,7 +52,7 @@ fail_if_equal <- function(y, message = getOption("gradethis.fail", "Incorrect"),
   grade_if_equal(x = x, y = y, message = message, correct = FALSE)
 }
 grade_if_equal <- function(x, y, message, correct, glue_env = parent.frame(2)) {
-  if (!isTRUE(identical(x, y))) {
+  if (!identical(x, y)) {
     # not equal! quit early
     return()
   }

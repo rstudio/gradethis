@@ -28,7 +28,7 @@ capture_errors <- function(expr, on_error = NULL) {
       # END TODO DELETE
       # must wrap in ignore statement to retrieve fail object
       ret <- capture_graded({
-        fail(e$message)
+        fail(conditionMessage(e))
       })
       rlang::return_from(that_env, ret)
     }
@@ -67,13 +67,6 @@ capture_graded <- function(expr, on_graded = NULL) {
     },
     expr
   )
-
-  # tryCatch(expr,
-  #   # return object right away
-  #   gradethis_graded = function(gc_obj) {
-  #     gc_obj
-  #   }
-  # )
 }
 ignore_graded <- function(expr) {
   withCallingHandlers(
