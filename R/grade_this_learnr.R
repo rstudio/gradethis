@@ -200,17 +200,23 @@ grade_this_learnr_ <- function(
     on_error = function(e, ignore) {
       # notify author of their mistake
       message("Error while executing checking `", check_label, "` chunk: ", e)
-      ret <- feedback(
+      # return from main function (even though in a inner function! voodoo!)
+      rlang::return_from(checking_envir, feedback(
         fail("Uh Oh! Error executing grading code. Marking as _incorrect_"),
         type = "error"
-      )
-      # return from main function (even though in a inner function! voodoo!)
-      rlang::return_from(checking_envir, ret)
+      ))
     }
   )
 
-  # make sure the returned value from check chunk evaluation is a function that accepts a single argument
-  if (!checkmate::test_function(to_check_fn, nargs = 1)) {
+  if (
+    !(
+      # make sure the returned value from check chunk evaluation is a function
+      checkmate::test_function(to_check_fn) &&
+      # ...that accepts at least 1 argument
+      checkmate::test_number(length(formals(to_check_fn)), lower = 1)
+    )
+  ) {
+    # notify author of their mistake
     message(
       "`", check_label, "` chunk did not return a function (such as `grade_this`) that accepts 1 argument containing the checking object",
       "\nObject returned:\n",
@@ -223,7 +229,7 @@ grade_this_learnr_ <- function(
     )
     return(
       feedback(
-        fail("Unexpected return value. Marking as _incorrect_"),
+        fail("Uh Oh! Unexpected grading behavior. Marking as _incorrect_"),
         type = "error"
       )
     )
@@ -240,7 +246,7 @@ grade_this_learnr_ <- function(
     message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
     return(
       feedback(
-        fail("No feedback given. Marking as _incorrect_"),
+        fail("Uh Oh! No feedback given. Marking as _incorrect_"),
         type = "error"
       )
     )
