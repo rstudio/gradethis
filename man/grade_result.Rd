@@ -38,9 +38,9 @@ pass_if(x, message = NULL)
 
 fail_if(x, message = NULL)
 
-pass(message = getOption("gradethis.pass", "Correct!"))
+pass(message = getOption("gradethis.pass", "Correct!"), env = parent.frame())
 
-fail(message = getOption("gradethis.fail", "Incorrect"))
+fail(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame())
 }
 \arguments{
 \item{...}{\code{pass_if()}/\code{fail_if()} \code{condition()}s to check.}

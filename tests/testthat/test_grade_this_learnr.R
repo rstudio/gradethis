@@ -73,6 +73,20 @@ test_that("prep environment is used", {
   )
 })
 
+test_that("check environment is used", {
+  test_grade_this_learnr(
+    correct = TRUE,
+    msg = "yes. you did it. Extra!",
+    user_code = "4",
+    check_code = "
+      extra <- 'Extra!'
+      grade_this({
+        pass_if_equal(4, 'yes. you did it. {extra}')
+      })
+    "
+  )
+})
+
 test_that("parser error is used", {
   with_options(
     list(
