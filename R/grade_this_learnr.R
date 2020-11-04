@@ -101,8 +101,10 @@ grade_this_learnr_ <- function(
           ))
         }
       )
-      # check that parse_checker is a function with proper args
-      do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
+      # TODO? check that parse_checker is a function with proper args
+      eval_gradethis_expr({
+        do.call(parse_checker, append(list(parse_error = e), learnr_args))
+      })
     }
   )
 
