@@ -33,12 +33,12 @@ is_graded <- function(x) {
 
 #' @rdname grade_result
 #' @export
-pass <- function(message = "Correct!") {
+pass <- function(message = getOption("gradethis.pass", "Correct!")) {
   graded(message = glue_with_env(parent.frame(1), message), correct = TRUE)
 }
 #' @rdname grade_result
 #' @export
-fail <- function(message = "Booooo!") {
+fail <- function(message = getOption("gradethis.fail", "Incorrect")) {
   graded(message = glue_with_env(parent.frame(1), message), correct = FALSE)
 }
 
