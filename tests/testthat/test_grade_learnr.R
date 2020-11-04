@@ -95,13 +95,7 @@ test_that("Grade learnr check_code", {
   }
   opts <- options(exercise.parse.error = parse_error_func)
   on.exit(options(opts), add = TRUE)
-  expect_equal(
-    grade_learnr(user_code = "function("),
-    grade_feedback(
-      graded(
-        correct = FALSE,
-        message = "The user code of \"function(\" produced an parsing error: <text>:2:0: unexpected end of input\n1: function(\n   ^"
-      )
-    )
-  )
+  test <- grade_learnr(user_code = "function(")
+  expect_false(test$correct)
+  expect_match(test$message,'The user code of .*function\\(.* produced an parsing error: <text>:2:0: unexpected end of input\n1: function')
 })
