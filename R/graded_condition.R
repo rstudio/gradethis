@@ -25,6 +25,7 @@ capture_errors <- function(expr, on_error = NULL) {
       # TODO DELETE
       print("turning error into failure")
       utils::str(e)
+      lobstr::cst()
       # END TODO DELETE
       # must wrap in ignore statement to retrieve fail object
       ret <- capture_graded({
@@ -69,11 +70,11 @@ capture_graded <- function(expr, on_graded = NULL) {
   )
 }
 ignore_graded <- function(expr) {
-  withCallingHandlers(
-    gradethis_graded = function(gc_obj) {
+  capture_graded(
+    expr,
+    on_graded = function(gc_obj, that_env) {
       # do nothing
-    },
-    expr
+    }
   )
 }
 
