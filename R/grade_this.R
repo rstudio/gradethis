@@ -1,10 +1,10 @@
 
 # #' @export
-# last_result <- function(
+# last_value <- function(
 #   env = parent.frame()
 # ) {
 #   if (!exists(".result", envir = env, inherits = TRUE)) {
-#     stop("Could not find `.result`. Be sure to only use `last_result()` inside `grade_this()`")
+#     stop("Could not find `.result`. Be sure to only use `last_value()` inside `grade_this()`")
 #   }
 #   get(".result", envir = env, inherits = TRUE)
 # }
@@ -62,9 +62,20 @@ code_feedback <- function(
   chkm8_single_character(solution_code, null.ok = FALSE)
   checkmate::assert_environment(env, null.ok = FALSE, .var.name = "env")
 
+  user_expr = str2expression(user_code)
+  solution_expr = str2expression(solution_code)
+
+  # if (length(solution_expr) == 0) {
+  #   stop("An empty solution was used to check")
+  # }
+
+  if (identical(user_expr, solution_expr)) {
+    return(NULL)
+  }
+
   detect_mistakes(
-    user = str2expression(user_code),
-    solution = str2expression(solution_code),
+    user = user_expr,
+    solution = solution_expr,
     env = learnr::duplicate_env(envir_prep)
   )
 }
