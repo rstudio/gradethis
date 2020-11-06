@@ -102,7 +102,7 @@ grade_learnr_ <- function(
         }
       )
       # TODO? check that parse_checker is a function with proper args
-      eval_gradethis_expr({
+      eval_gradethis({
         do.call(parse_checker, append(list(parse_error = e), learnr_args))
       })
     }
@@ -236,8 +236,8 @@ grade_learnr_ <- function(
   }
 
   # evaluate the function with the check envir passed in. (Passing an environment allows for `.solution` to be calculated on demand)
-  # evaluation should handle errors themselves, but wrap in eval_gradethis_expr to be sure
-  graded_result <- eval_gradethis_expr(
+  # evaluation should handle errors themselves, but wrap in eval_gradethis to be sure
+  graded_result <- eval_gradethis(
     to_check_fn(check_obj_envir)
   )
 

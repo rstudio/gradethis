@@ -15,7 +15,7 @@ grade_this <- function(expr) {
   express <- rlang::get_expr(rlang::enquo(expr))
 
   function(checking_env) {
-    eval_gradethis_expr({
+    eval_gradethis({
       rlang::eval_tidy(
         express,
         env = checking_env

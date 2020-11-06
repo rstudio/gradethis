@@ -82,7 +82,7 @@ ignore_graded <- function(expr) {
 # will capture errors and turn them into `failure("message")`
 #
 #' @export
-eval_gradethis_expr <- function(expr, on_error = NULL) {
+eval_gradethis <- function(expr, on_error = NULL) {
   capture_graded({
     capture_errors(expr, on_error = on_error)
   })
