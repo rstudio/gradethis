@@ -92,7 +92,7 @@ grade_learnr_ <- function(
         "exercise.parse.error",
         function(...) {
           fail(paste(
-            "Uh oh, the R code produced a syntax error:",
+            "It looks like this might not be valid R code:",
             conditionMessage(e),
             "\nCheck that you have closed every \", ', (, and { ",
             "with a matching \", ', ), and }. Also look for missing ",
@@ -190,7 +190,8 @@ grade_learnr_ <- function(
           )
           # return from main function (even though in a inner function! voodoo!)
           rlang::return_from(checking_envir, feedback(
-            fail("Uh Oh! Submission prematurely graded. Marking as _incorrect_"),
+            It looks like this might not be valid R code
+            fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
             type = "error"
           ))
         }
@@ -202,7 +203,7 @@ grade_learnr_ <- function(
       message("Error while executing checking `", check_label, "` chunk: ", e)
       # return from main function (even though in a inner function! voodoo!)
       rlang::return_from(checking_envir, feedback(
-        fail("Uh Oh! Error executing grading code. Marking as _incorrect_"),
+        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
         type = "error"
       ))
     }
@@ -229,7 +230,7 @@ grade_learnr_ <- function(
     )
     return(
       feedback(
-        fail("Uh Oh! Unexpected grading behavior. Marking as _incorrect_"),
+        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
         type = "error"
       )
     )
@@ -246,7 +247,7 @@ grade_learnr_ <- function(
     message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
     return(
       feedback(
-        fail("Uh Oh! No feedback given. Marking as _incorrect_"),
+        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
         type = "error"
       )
     )
