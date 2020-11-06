@@ -10,9 +10,11 @@
 #' Note that "custom" implies that the "message" field is custom HTML rather than a character vector.
 #' @param location Location for feedback ("append", "prepend", or "replace").
 #' @noRd
-feedback <- function(grade,
-                           type = c("auto", "success", "info", "warning", "error", "custom"),
-                           location = c("append", "prepend", "replace")) {
+feedback <- function(
+  grade,
+  type = c("auto", "success", "info", "warning", "error", "custom"),
+  location = c("append", "prepend", "replace")
+) {
   # do not allow grade objects to throw
   grade <- capture_graded(grade)
 

@@ -18,8 +18,7 @@ graded <- function(correct, message = NULL) {
     class = c("gradethis_graded", "condition")
   )
 
-  # _throw_ condition object
-  # also pretty prints the condition
+  # Signal to parent function calls that a grade has been made
   signalCondition(obj)
 
   # return the object
@@ -60,11 +59,19 @@ fail_if_equal <- function(
   grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env)
 }
 grade_if_equal <- function(x, y, message, correct, env) {
-  if (!identical(x, y)) {
+  compare_info <- testthat::compare(x, y)
+  if (!compare_info$equal) {
     # not equal! quit early
     return()
   }
 
   # equal!
   graded(message = glue_with_env(env, message), correct = correct)
+}
+
+
+legacy_graded <- function(...) {
+  capture_graded(
+    graded(...)
+  )
 }

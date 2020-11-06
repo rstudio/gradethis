@@ -200,3 +200,11 @@ pass_if <- function(x, message = NULL) {
 fail_if <- function(x, message = NULL) {
   condition(x, message, correct = FALSE)
 }
+
+
+
+learnr_env <- function(envir_prep, envir_result) {
+  envir_result %||%
+    envir_prep %||%
+    stop("Internal error. learnr did not pass a relevant environment")
+}

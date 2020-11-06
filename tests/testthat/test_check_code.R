@@ -30,7 +30,7 @@ test_that("Spots differences in calls", {
     a, c,
     is_correct = FALSE,
     msg = surplus_argument(
-      this_call = "vapply()",
+      this_call = quote(vapply()),
       this_name = "na.rm",
       this = quote(TRUE)
     )
@@ -40,7 +40,7 @@ test_that("Spots differences in calls", {
     c, a,
     is_correct = FALSE,
     msg = missing_argument(
-      this_call = "vapply()",
+      this_call = quote(vapply()),
       that_name = "na.rm"
     )
   )
@@ -55,7 +55,7 @@ test_that("Mentions only first non-matching element", {
   expect_this_code(w, w, is_correct = TRUE)
   expect_this_code(w, z, is_correct = FALSE, msg = wrong_value(this = quote(1), that = quote(sqrt())))
   expect_this_code(x, z, is_correct = FALSE, msg = wrong_call(this = quote(log()), that = quote(sqrt())))
-  expect_this_code(y, z, is_correct = FALSE, msg = wrong_value(this = "2", that = quote(1)))
+  expect_this_code(y, z, is_correct = FALSE, msg = wrong_value(this = quote(2), that = quote(1)))
 
 })
 

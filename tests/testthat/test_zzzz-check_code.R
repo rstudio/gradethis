@@ -66,7 +66,7 @@ test_that("Spots differences in calls", {
     solution_code = c,
     is_correct = FALSE,
     msg = surplus_argument(
-      this_call = "vapply()",
+      this_call = quote(vapply()),
       this_name = "na.rm",
       this = quote(TRUE)
     )
@@ -77,7 +77,7 @@ test_that("Spots differences in calls", {
     solution_code = a,
     is_correct = FALSE,
     msg = missing_argument(
-      this_call = "vapply()",
+      this_call = quote(vapply()),
       that_name = "na.rm"
     )
   )
@@ -114,7 +114,7 @@ test_that("Mentions only first non-matching element", {
     user_code = y,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_value(this = "2", that = quote(1))
+    msg = wrong_value(this = quote(2), that = quote(1))
   )
 })
 

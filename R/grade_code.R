@@ -82,8 +82,8 @@ grade_code <- function(
   learnr_args = deprecated()
 ) {
   ellipsis::check_dots_empty()
-  if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_result(grader_args = )")
-  if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_result(learnr_args = )")
+  if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_code(grader_args = )")
+  if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_code(learnr_args = )")
 
 
   # return script style function
@@ -105,23 +105,19 @@ grade_code <- function(
       ))
     }
 
-    message <- code_feedback(
-      env = check_env
-    )
+    message <- code_feedback(env = check_env)
 
     if (is.null(message)) {
       # correct!
-      return(
-        legacy_graded(
-          correct = TRUE,
-          message = glue_message(
-            glue_correct,
-            .is_correct = TRUE,
-            .message = NULL,
-            .correct = correct
-          )
+      return(legacy_graded(
+        correct = TRUE,
+        message = glue_message(
+          glue_correct,
+          .is_correct = TRUE,
+          .message = NULL,
+          .correct = correct
         )
-      )
+      ))
     }
 
     # is incorrect

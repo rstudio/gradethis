@@ -51,7 +51,7 @@ grade_this_code <- function(
 
 get_from <- function(name, envir, default = "") {
   if (!exists(name, envir = envir, inherits = TRUE)) {
-    return(ifnotfound)
+    return(default)
   }
   get(name, envir = envir, inherits = TRUE)
 }
@@ -71,12 +71,13 @@ code_feedback <- function(
   solution_expr = str2expression(solution_code)
 
   if (identical(user_expr, solution_expr)) {
+    # identical! return early
     return(NULL)
   }
 
   detect_mistakes(
     user = user_expr,
     solution = solution_expr,
-    env = learnr::duplicate_env(envir_prep)
+    env = new.env(parent = envir_prep)
   )
 }

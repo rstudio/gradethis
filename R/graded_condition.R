@@ -22,11 +22,11 @@ conditionMessage.gradethis_graded <- function(c) {
 capture_errors <- function(expr, on_error = NULL) {
   if (is.null(on_error)) {
     on_error <- function(e, that_env) {
-      # TODO DELETE
-      print("turning error into failure")
-      utils::str(e)
-      lobstr::cst()
-      # END TODO DELETE
+      # # TODO DELETE
+      # print("turning error into failure")
+      # utils::str(e)
+      # lobstr::cst()
+      # # END TODO DELETE
       # must wrap in ignore statement to retrieve fail object
       ret <- capture_graded({
         fail(conditionMessage(e))

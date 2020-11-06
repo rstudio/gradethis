@@ -86,17 +86,3 @@ evaluate_condi_function <- function(fxn, user_answer) {
 evaluate_condi_value <- function(val, user_answer) {
   identical(val, user_answer)
 }
-
-
-legacy_graded <- function(...) {
-  capture_graded(
-    graded(...)
-  )
-}
-
-
-learnr_env <- function(envir_prep, envir_result) {
-  envir_result %||%
-    envir_prep %||%
-    stop("Internal error. learnr did not pass a relevant environment")
-}
