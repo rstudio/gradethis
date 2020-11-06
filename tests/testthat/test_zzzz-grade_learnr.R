@@ -89,14 +89,14 @@ test_that("Grade learnr check_code", {
     legacy_graded(
       correct = FALSE,
       message = paste(
-        "The user code of", shQuote(args$user_code),
+        "The user code of", sQuote(learnr_args$user_code,q = FALSE),
         "produced an parsing error:", conditionMessage(parse_error)
       )
     )
   }
   opts <- options(exercise.parse.error = parse_error_func)
   on.exit(options(opts), add = TRUE)
-  expect_equal(
+  testthat::expect_equal(
     grade_learnr(user_code = "function("),
     feedback(
       legacy_graded(
@@ -105,4 +105,7 @@ test_that("Grade learnr check_code", {
       )
     )
   )
-})
+
+
+
+  })
