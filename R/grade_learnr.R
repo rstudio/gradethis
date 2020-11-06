@@ -156,7 +156,7 @@ grade_learnr_ <- function(
       } else {
         # solution code exists...
         rlang::eval_tidy(
-          rlang::as_quosure(solution_expr, learnr::duplciate_env(envir_prep))
+          rlang::as_quosure(solution_expr, new.env(parent = envir_prep))
         )
       }
     }
