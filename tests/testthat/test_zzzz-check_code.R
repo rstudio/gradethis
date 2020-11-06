@@ -190,15 +190,16 @@ test_that("Ignore differences in argument positions (for non ... arguments)", {
 
 test_that("Returns nothing when no solution code is provided", {
 
-  expect_equal(
-    grade_code()(list(.user_code = "1")),
-    NULL
+  expect_graded(
+    grade_code()(list2env(list(.user_code = "1"))),
+    is_correct = FALSE,
+    msg = "No exercise solution provided. Defaulting to _incorrect_"
   )
 })
 
 test_that("Returns intelligent error when no user code", {
   expect_graded(
-    grade_code()(list()),
+    grade_code()(emptyenv()),
     is_correct = FALSE,
     msg = "I didn't receive your code. Did you write any?"
   )

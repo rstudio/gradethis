@@ -93,8 +93,8 @@ test_that("length 0 user code", {
 test_that("length 0 solution code", {
   expect_grade_learnr(
     is_correct = FALSE,
-    msg = "No solution is provided for this exercise.",
-    msg_type = "info",
+    msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+    msg_type = "error",
     user_code = "1",
     solution_code = ""
   )
@@ -105,7 +105,7 @@ test_that("pass / fail in check chunk are caught", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "Uh Oh! Submission prematurely graded. Marking as _incorrect_",
+      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
       user_code = "1",
       solution_code = "1",
       check_code = "pass()"
@@ -115,7 +115,7 @@ test_that("pass / fail in check chunk are caught", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "Uh Oh! Submission prematurely graded. Marking as _incorrect_",
+      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
       user_code = "1",
       solution_code = "1",
       check_code = "fail()"
@@ -128,7 +128,7 @@ test_that("check parsing error is caught", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "Uh Oh! Error executing grading code. Marking as _incorrect_",
+      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
       user_code = "1",
       solution_code = "1",
       check_code = "4 +"
@@ -141,7 +141,7 @@ test_that("return value is a function of 1 argument", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "Uh Oh! Unexpected grading behavior. Marking as _incorrect_",
+      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
       user_code = "1",
       solution_code = "1",
       check_code = "1"
@@ -151,7 +151,7 @@ test_that("return value is a function of 1 argument", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "Uh Oh! Unexpected grading behavior. Marking as _incorrect_",
+      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
       user_code = "1",
       solution_code = "1",
       check_code = "Sys.time"
@@ -172,7 +172,7 @@ test_that("a grade is given", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "Uh Oh! No feedback given. Marking as _incorrect_",
+      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
       user_code = "1",
       solution_code = "1",
       check_code = "function(...) NULL"

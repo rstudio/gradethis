@@ -96,12 +96,15 @@ grade_code <- function(
         message = "I didn't receive your code. Did you write any?"
       ))
     }
-    if (is.null(check_env$.solution_code)) {
-      # If no solution is provided, then don't provide a grade!
-      return(NULL)
+
+    solution_code <- check_env$.solution_code
+    if (is.null(solution_code) || length(str2expression(solution_code)) == 0) {
+      return(legacy_graded(
+        correct = FALSE,
+        message = "No exercise solution provided. Defaulting to _incorrect_"
+      ))
     }
 
-    # message of code differences (or NULL)
     message <- code_feedback(
       env = check_env
     )

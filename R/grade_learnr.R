@@ -182,7 +182,6 @@ grade_learnr_ <- function(
           )
           # return from main function (even though in a inner function! voodoo!)
           rlang::return_from(checking_envir, feedback(
-            It looks like this might not be valid R code
             fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
             type = "error"
           ))

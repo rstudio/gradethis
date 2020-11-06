@@ -49,25 +49,26 @@ grade_this_code <- function(
   }
 }
 
-
+get_from <- function(name, envir, default = "") {
+  if (!exists(name, envir = envir, inherits = TRUE)) {
+    return(ifnotfound)
+  }
+  get(name, envir = envir, inherits = TRUE)
+}
 #' @export
 code_feedback <- function(
-  user_code = get(".user_code", envir = env, inherits = TRUE),
-  solution_code = get(".solution_code", envir = env, inherits = TRUE),
-  envir_prep = get(".envir_prep", envir = env, inherits = TRUE),
+  user_code = get_from(".user_code", envir = env, default = ""),
+  solution_code = get_from(".solution_code", envir = env, default = ""),
+  envir_prep = get_from(".envir_prep", envir = env, default = new.env(parent = globalenv())),
   env = parent.frame()
 ) {
 
   chkm8_single_character(user_code, null.ok = FALSE)
   chkm8_single_character(solution_code, null.ok = FALSE)
-  checkmate::assert_environment(env, null.ok = FALSE, .var.name = "env")
+  checkmate::assert_environment(envir_prep, null.ok = FALSE, .var.name = "envir_prep")
 
   user_expr = str2expression(user_code)
   solution_expr = str2expression(solution_code)
-
-  # if (length(solution_expr) == 0) {
-  #   stop("An empty solution was used to check")
-  # }
 
   if (identical(user_expr, solution_expr)) {
     return(NULL)
