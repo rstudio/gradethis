@@ -7,11 +7,12 @@
 grade_code(
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
+  ...,
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe")
+  glue_pipe = getOption("gradethis_glue_pipe"),
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 )
 }
 \arguments{
@@ -20,6 +21,18 @@ known correct answer.}
 
 \item{incorrect}{A character string to display if the student answer matches
 a known incorrect answer.}
+
+\item{...}{ignored. Should be empty}
+
+\item{glue_correct}{A glue string that returns the final correct message
+displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message
+displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
+
+\item{glue_pipe}{A glue string that returns the final message displayed when
+the student uses a pipe, \verb{$>$}. Defaults to
+\code{getOption("gradethis_glue_pipe")}.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
@@ -34,16 +47,6 @@ a known incorrect answer.}
 \code{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
 more details.}
-
-\item{glue_correct}{A glue string that returns the final correct message
-displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
-
-\item{glue_incorrect}{A glue string that returns the final incorrect message
-displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
-
-\item{glue_pipe}{A glue string that returns the final message displayed when
-the student uses a pipe, \verb{$>$}. Defaults to
-\code{getOption("gradethis_glue_pipe")}.}
 }
 \value{
 a \code{\link[=graded]{graded()}} object. An incorrect message will describe the first way

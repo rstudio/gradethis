@@ -3,9 +3,20 @@
 \name{gradethis-deprecated}
 \alias{gradethis-deprecated}
 \alias{grade_feedback}
+\alias{grade_conditions}
 \title{Deprecated}
 \usage{
 grade_feedback(...)
+
+grade_conditions(
+  ...,
+  correct = NULL,
+  incorrect = NULL,
+  grader_args = deprecated(),
+  learnr_args = deprecated(),
+  glue_correct = getOption("gradethis_glue_correct_test"),
+  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+)
 }
 \description{
 Deprecated
@@ -13,6 +24,8 @@ Deprecated
 \section{Functions}{
 \itemize{
 \item \code{grade_feedback}: Removed from package
+
+\item \code{grade_conditions}: Use \code{\link[=grade_result_strict]{grade_result_strict()}}
 }}
 
 \keyword{internal}

@@ -4,14 +4,16 @@
 \alias{evaluate_condition}
 \title{Evaluates a condition}
 \usage{
-evaluate_condition(condition, grader_args, learnr_args)
+evaluate_condition(condition, ..., last_value, env)
 }
 \arguments{
 \item{condition}{a \code{\link[=condition]{condition()}} object}
 
-\item{grader_args}{at minimum, a list that just contains the value for \code{solution_quo}}
+\item{...}{ignored}
 
-\item{learnr_args}{at minimum, a list that just contains the value for \code{envir_prep}}
+\item{last_value}{The last value from evaluating the user's exercise submission.}
+
+\item{env}{environment to evaluate the condition}
 }
 \value{
 a \code{\link[=graded]{graded()}} value if \code{condi$x} is \code{TRUE} or
@@ -21,10 +23,14 @@ a \code{\link[=graded]{graded()}} value if \code{condi$x} is \code{TRUE} or
 Evaluates the \code{\link[=condition]{condition()}} object to return a \code{\link[=graded]{graded()}} value.
 }
 \examples{
- condi_formula_t <- condition(~ identical(.result, 5),
-                              message = "my correct message",
-                              correct = TRUE)
- grader_args <- list()
- learnr_args <- list(last_value = quote(5), envir_prep = new.env())
- evaluate_condition(condi_formula_t, grader_args, learnr_args)
+condi_formula_t <- condition(
+  ~ identical(.result, 5),
+  message = "my correct message",
+  correct = TRUE
+)
+evaluate_condition(
+  condi_formula_t,
+  last_value = 5,
+  env = new.env()
+)
 }
