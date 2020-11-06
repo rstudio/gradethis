@@ -56,6 +56,7 @@
 #' @param glue_pipe A glue string that returns the final message displayed when
 #'   the student uses a pipe, `$>$`. Defaults to
 #'   `getOption("gradethis_glue_pipe")`.
+#' @param ... ignored. Should be empty
 #'
 #' @return a [graded()] object. An incorrect message will describe the first way
 #'   that the answer differs, the message will be the content of the `glue_pipe`
@@ -73,95 +74,74 @@
 grade_code <- function(
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
+  ...,
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe")
+  glue_pipe = getOption("gradethis_glue_pipe"),
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 ) {
+  ellipsis::check_dots_empty()
+  if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_result(grader_args = )")
+  if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_result(learnr_args = )")
 
-  user <- rlang::as_quosure(grader_args$user_quo)
-  solution <- rlang::as_quosure(grader_args$solution_quo)
 
-  user <- rlang::get_expr(user)
-  solution <- rlang::get_expr(solution)
+  # return script style function
+  function(check_env) {
 
-  if (!is.null(user)) {
-    stopifnot(is.expression(user))
-  }
-  if (!is.null(solution)) {
-    stopifnot(is.expression(solution))
-  } else {
-    # If no solution is provided, then don't provide a grade!
-    return(NULL)
-  }
+    user_code <- check_env$.user_code
+    if (is.null(user_code)) {
+      return(legacy_graded(
+        correct = FALSE,
+        message = "I didn't receive your code. Did you write any?"
+      ))
+    }
+    if (is.null(check_env$.solution_code)) {
+      # If no solution is provided, then don't provide a grade!
+      return(NULL)
+    }
 
-  if (is_code_identical(user, solution)) {
-    is_same_info <- legacy_graded(correct = TRUE)
-  } else {
-    message <- detect_mistakes(user, solution)
-    is_same_info <- legacy_graded(correct = is.null(message), message = message)
-  }
+    # message of code differences (or NULL)
+    message <- code_feedback(
+      env = check_env
+    )
 
-  if (is_same_info$correct) {
-    return(
-      legacy_graded(
-        correct = TRUE,
-        message = glue_message(
-          glue_correct,
-          .is_correct = TRUE,
-          .message = NULL,
-          .correct = correct
+    if (is.null(message)) {
+      # correct!
+      return(
+        legacy_graded(
+          correct = TRUE,
+          message = glue_message(
+            glue_correct,
+            .is_correct = TRUE,
+            .message = NULL,
+            .correct = correct
+          )
         )
       )
-    )
-  }
+    }
 
-  message <- glue_message(
-    glue_incorrect,
-    .is_correct = FALSE,
-    .message = is_same_info$message,
-    .incorrect = incorrect
-  )
-
-  if (uses_pipe(user)) {
+    # is incorrect
     message <- glue_message(
-      glue_pipe,
-      .user = as.character(user),
+      glue_incorrect,
+      .is_correct = FALSE,
       .message = message,
       .incorrect = incorrect
     )
+
+    # add pipe message
+    if (uses_pipe(user_code)) {
+      message <- glue_message(
+        glue_pipe,
+        # convert forwards and backwards to apply consistent formatting
+        .user = as.character(str2expression(user_code)),
+        .message = message,
+        .incorrect = incorrect
+      )
+    }
+
+    # final grade
+    legacy_graded(correct = FALSE, message = message)
   }
 
-  legacy_graded(correct = FALSE, message = message)
-}
-
-
-
-is_code_identical <- function(user = NULL, solution = NULL) {
-
-  # Sometimes no solution is provided, but that
-  # means there is nothing to check against
-  if (is.null(solution)) {
-    stop("No solution is provided for this exercise.")
-  }
-
-  # Sometimes no user code is provided,
-  # that means there is nothing to check
-  if (is.null(user)) {
-    stop("I didn't receive your code. Did you write any?")
-  }
-
-  # user and solution are expressions with `srcref`s. Must compare each element. Can not compare as a whole unit
-  if (!identical(class(user), class(solution))) {
-    return(FALSE)
-  }
-  if (length(user) != length(solution)) {
-    return(FALSE)
-  }
-  # Correct answers are all alike
-  lines_are_identical <- vapply(seq_along(user), function(i) {
-    identical(user[[i]], solution[[i]])
-  }, logical(1))
-  all(lines_are_identical)
 }

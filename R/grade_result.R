@@ -25,21 +25,18 @@
 #' grade_result(
 #'   fail_if(~ identical(.result, 4), "Try adding 1"),
 #'   pass_if(~ identical(.result, 5), "You got 5, great!"),
-#'   fail_if(~ TRUE, "Some generic failing message."),
-#'   learnr_args = list(last_value = 5)
-#' )
+#'   fail_if(~ TRUE, "Some generic failing message.")
+#' )(list(.last_value = 5, .envir_result = new.env()))
 #'
 #' grade_result_strict(
 #'   pass_if(~ identical(.result, 5), "You got 5, great!"),
-#'   fail_if(~ !is.integer(.result), "I expected an integer"),
-#'   learnr_args = list(last_value = 5)
-#' )
+#'   fail_if(~ !is.integer(.result), "I expected an integer")
+#' )(list(.last_value = 5, .envir_result = new.env()))
 #'
 #' grade_result(
 #'   fail_if(~ !is.function(.result), "I expected a function."),
-#'   fail_if(~ .result(1) != 2, "Your function should add one."),
-#'   learnr_args = list(last_value = function(x) x + 2)
-#' )
+#'   fail_if(~ .result(1) != 2, "Your function should add one.")
+#' )(list(.last_value = function(x) {x + 2}, .envir_result = new.env()))
 #'
 #' # To learn more about using grade_result() and grade_code() with learnr, see:
 #' \dontrun{gradethis_demo()}
@@ -47,13 +44,16 @@ grade_result <- function(
   ...,
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   default_correct = "auto",
-  default_message = NULL
+  default_message = NULL,
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 ) {
+
+  if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_result(grader_args = )")
+  if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_result(learnr_args = )")
 
   conditions <- list(...)
   if (!length(conditions)) {
@@ -68,28 +68,39 @@ grade_result <- function(
   }
   chkm8_class(default_correct, "logical")
 
-  final_grade <- legacy_graded(correct = default_correct, message = default_message)
-  found_grade <- FALSE
-  for (cond in conditions) {
-    grade <- evaluate_condition(cond, grader_args, learnr_args)
-    if (length(grade)) {
-      final_grade <- grade
-      found_grade <- TRUE
-      break
+  # return a script style function
+  function(check_env) {
+    last_value <- check_env$.last_value
+    env <- learnr_env(envir_prep = check_env$.envir_prep, envir_result = check_env$.envir_result)
+
+    final_grade <- legacy_graded(correct = default_correct, message = default_message)
+    found_grade <- FALSE
+    for (cond in conditions) {
+      grade <- evaluate_condition(
+        cond,
+        last_value = last_value,
+        env = env
+      )
+      if (length(grade)) {
+        final_grade <- grade
+        found_grade <- TRUE
+        break
+      }
     }
+
+    legacy_graded(
+      correct = final_grade$correct,
+      message = glue_message(
+        if (final_grade$correct) glue_correct else glue_incorrect, # nolint
+        .is_match = found_grade,
+        .is_correct = final_grade$correct,
+        .message = final_grade$message,
+        .correct = correct,
+        .incorrect = incorrect
+      )
+    )
   }
 
-  legacy_graded(
-    correct = final_grade$correct,
-    message = glue_message(
-      if (final_grade$correct) glue_correct else glue_incorrect, # nolint
-      .is_match = found_grade,
-      .is_correct = final_grade$correct,
-      .message = final_grade$message,
-      .correct = correct,
-      .incorrect = incorrect
-    )
-  )
 }
 
 
@@ -100,37 +111,46 @@ grade_result_strict <- function(
   ...,
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+  glue_incorrect = getOption("gradethis_glue_incorrect_test"),
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 ) {
+  if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_result_strict(grader_args = )")
+  if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_result_strict(learnr_args = )")
 
   conditions <- list(...)
   chkm8_item_class(conditions, "gradethis_condition")
 
-  grades <- lapply(conditions, function(x) {
-    res <- evaluate_condition(x, grader_args, learnr_args)
-    # If a pass_if() condition isn't matched (i.e. res is NULL), then
-    # it should be considered an incorrect result.
-    res %||% legacy_graded(correct = !x$correct)
-  })
+  # return a script style function
+  function(check_env) {
+    last_value <- check_env$.last_value
+    env <- learnr_env(envir_prep = check_env$.envir_prep, envir_result = check_env$.envir_result)
 
-  num_correct <- sum(vapply(grades, function(x) x$correct, logical(1)))
-  is_correct <- num_correct == length(conditions)
+    grades <- lapply(conditions, function(x) {
+      res <- evaluate_condition(x, last_value = last_value, env = env)
+      # If a pass_if() condition isn't matched (i.e. res is NULL), then
+      # it should be considered an incorrect result.
+      res %||% legacy_graded(correct = !x$correct)
+    })
 
-  legacy_graded(
-    correct = is_correct,
-    message = glue_message(
-      if (is_correct) glue_correct else glue_incorrect, # nolint
-      .is_correct = is_correct,
-      .message = NULL,
-      .correct = correct,
-      .incorrect = incorrect,
-      .num_correct = as.character(num_correct),
-      .num_total = as.character(length(conditions))
+    num_correct <- sum(vapply(grades, function(x) x$correct, logical(1)))
+    is_correct <- num_correct == length(conditions)
+
+    legacy_graded(
+      correct = is_correct,
+      message = glue_message(
+        if (is_correct) glue_correct else glue_incorrect, # nolint
+        .is_correct = is_correct,
+        .message = NULL,
+        .correct = correct,
+        .incorrect = incorrect,
+        .num_correct = as.character(num_correct),
+        .num_total = as.character(length(conditions))
+      )
     )
-  )
+  }
+
 }
 
 
