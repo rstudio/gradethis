@@ -4,16 +4,17 @@ context("Check Code")
 
 test_that("Spots differences in atomics", {
 
-  expect_correct_code("1", "1")
+  expect_this_code("1", "1", is_correct = TRUE)
 
-  expect_wrong_code("1", "2", msg = wrong_value(this = quote(1), that = quote(2)))
+  expect_this_code("1", "2", is_correct = FALSE, msg = wrong_value(this = quote(1), that = quote(2)))
 })
 
 test_that("Spots differences in names", {
   x <- 1
-  expect_correct_code("x", "x")
-  expect_wrong_code("x", "y", msg = wrong_value(this = quote(x), that = quote(y)))
-  expect_wrong_code("5", "y", msg = wrong_value(this = quote(5), that = quote(y)))
+  y <- 2
+  expect_this_code("x", "x", is_correct = TRUE)
+  expect_this_code("x", "y", is_correct = FALSE, msg = wrong_value(this = quote(x), that = quote(y)))
+  expect_this_code("5", "y", is_correct = FALSE, msg = wrong_value(this = quote(5), that = quote(y)))
 })
 
 test_that("Spots differences in calls", {
@@ -22,11 +23,12 @@ test_that("Spots differences in calls", {
   c <- "vapply(lists, mean, numeric(1))"
   d <- "vapply(vecs, mean, numeric(1))"
 
-  expect_correct_code(a, a)
-  expect_wrong_code(a, b, msg = wrong_value(this = quote(lists), that = quote(vecs)))
+  expect_this_code(a, a, is_correct = TRUE)
+  expect_this_code(a, b, is_correct = FALSE, msg = wrong_value(this = quote(lists), that = quote(vecs)))
 
-  expect_wrong_code(
+  expect_this_code(
     a, c,
+    is_correct = FALSE,
     msg = surplus_argument(
       this_call = "vapply()",
       this_name = "na.rm",
@@ -34,8 +36,9 @@ test_that("Spots differences in calls", {
     )
   )
 
-  expect_wrong_code(
+  expect_this_code(
     c, a,
+    is_correct = FALSE,
     msg = missing_argument(
       this_call = "vapply()",
       that_name = "na.rm"
@@ -49,10 +52,10 @@ test_that("Mentions only first non-matching element", {
   y <- "sqrt(log(2))"
   z <- "sqrt(log(1))"
 
-  expect_correct_code(w, w)
-  expect_wrong_code(w, z, msg = wrong_value(this = quote(1), that = quote(sqrt())))
-  expect_wrong_code(x, z, msg = wrong_call(this = quote(log()), that = quote(sqrt())))
-  expect_wrong_code(y, z, msg = wrong_value(this = "2", that = quote(1)))
+  expect_this_code(w, w, is_correct = TRUE)
+  expect_this_code(w, z, is_correct = FALSE, msg = wrong_value(this = quote(1), that = quote(sqrt())))
+  expect_this_code(x, z, is_correct = FALSE, msg = wrong_call(this = quote(log()), that = quote(sqrt())))
+  expect_this_code(y, z, is_correct = FALSE, msg = wrong_value(this = "2", that = quote(1)))
 
 })
 
@@ -63,10 +66,11 @@ test_that("Spots differences in argument names", {
   b <- "test_fn(10, 1, TRUE)"
   c <- "test_fn(10, w = 1, z = TRUE)"
 
-  expect_correct_code(a, a)
-  expect_correct_code(b, a)
-  expect_wrong_code(
+  expect_this_code(a, a, is_correct = TRUE)
+  expect_this_code(b, a, is_correct = TRUE)
+  expect_this_code(
     c, a,
+    is_correct = FALSE,
     msg = surplus_argument(
       this_call = quote(test_fn()),
       this = 1,
@@ -83,10 +87,10 @@ test_that("Ignore differences in argument positions (for non ... arguments)", {
   c <- "test_fn2(2, x = pi)"
   d <- "test_fn2(digits = 2, x = pi)"
 
-  expect_correct_code(b, a)
-  expect_correct_code(c, a)
-  expect_correct_code(d, a)
-  expect_correct_code(a, d)
+  expect_this_code(b, a, is_correct = TRUE)
+  expect_this_code(c, a, is_correct = TRUE)
+  expect_this_code(d, a, is_correct = TRUE)
+  expect_this_code(a, d, is_correct = TRUE)
 
 })
 
@@ -118,16 +122,16 @@ test_that("Spot differences when pipes are involved", {
   pipe3 <- "iris %>% lm(Sepal.Length ~ Sepal.Width, data = .)"
   func3 <- "lm(Sepal.Length ~ Sepal.Width, data = iris)"
 
-  expect_correct_code(func,  pipe)
-  expect_correct_code(func1, pipe)
-  expect_correct_code(pipe,  func)
-  expect_correct_code(pipe,  func1)
-  expect_correct_code(pipe,  pipe)
-  expect_correct_code(func,  func1)
-  expect_correct_code(func1, func1)
-  expect_correct_code(func3, pipe3)
-  expect_correct_code(pipe3, func3)
-  expect_correct_code(pipe3, pipe3)
+  expect_this_code(func,  pipe, is_correct = TRUE)
+  expect_this_code(func1, pipe, is_correct = TRUE)
+  expect_this_code(pipe,  func, is_correct = TRUE)
+  expect_this_code(pipe,  func1, is_correct = TRUE)
+  expect_this_code(pipe,  pipe, is_correct = TRUE)
+  expect_this_code(func,  func1, is_correct = TRUE)
+  expect_this_code(func1, func1, is_correct = TRUE)
+  expect_this_code(func3, pipe3, is_correct = TRUE)
+  expect_this_code(pipe3, func3, is_correct = TRUE)
+  expect_this_code(pipe3, pipe3, is_correct = TRUE)
 
 })
 
@@ -140,13 +144,14 @@ test_that("Spots differences in long calls", {
   user <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
   solution <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)" # nolint
 
-  expect_wrong_code(
+  expect_this_code(
     user, solution,
+    is_correct = FALSE,
     msg = wrong_value(quote(TRUE), that = quote(FALSE), this_name = quote(na.rm))
   )
 
   user <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
   solution <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
-  expect_correct_code(user, solution)
+  expect_this_code(user, solution, is_correct = TRUE)
 
 })

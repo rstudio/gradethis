@@ -84,11 +84,12 @@ test_that("Grade learnr check_code", {
   expect_true(parse_error$type == "error")
 
   # Can customize the feedback through an exercise.parse.error function
-  parse_error_func <- function(parse_error, learnr_args) {
+  parse_error_func <- function(parse_error, ...) {
+    args <- list(...)
     legacy_graded(
       correct = FALSE,
       message = paste(
-        "The user code of", shQuote(learnr_args$user_code),
+        "The user code of", shQuote(args$user_code),
         "produced an parsing error:", conditionMessage(parse_error)
       )
     )

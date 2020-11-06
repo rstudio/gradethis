@@ -3,33 +3,47 @@
 #' Evaluates the [condition()] object to return a [graded()] value.
 #'
 #' @param condition a [condition()] object
-#' @param grader_args at minimum, a list that just contains the value for `solution_quo`
-#' @param learnr_args at minimum, a list that just contains the value for `envir_prep`
+#' @param ... ignored
+#' @inheritParams grade_learnr
+#' @param env environment to evaluate the condition
 #'
 #' @return a [graded()] value if `condi$x` is `TRUE` or
 #'   `NULL` if `condi$x` is `FALSE`
 #' @export
 #'
 #' @examples
-#'  condi_formula_t <- condition(~ identical(.result, 5),
-#'                               message = "my correct message",
-#'                               correct = TRUE)
-#'  grader_args <- list()
-#'  learnr_args <- list(last_value = quote(5), envir_prep = new.env())
-#'  evaluate_condition(condi_formula_t, grader_args, learnr_args)
-evaluate_condition <- function(condition, grader_args, learnr_args) {
+#' condi_formula_t <- condition(
+#'   ~ identical(.result, 5),
+#'   message = "my correct message",
+#'   correct = TRUE
+#' )
+#' evaluate_condition(
+#'   condi_formula_t,
+#'   last_value = 5,
+#'   env = new.env()
+#' )
+evaluate_condition <- function(condition, ..., last_value, env) {
   checkmate::assert_class(condition, "gradethis_condition")
+  ellipsis::check_dots_empty()
 
   err_msg <- NULL
-  res <- tryCatch({
-    switch(condition$type,
-           "formula" = evaluate_condi_formula(condition$x, learnr_args$last_value, env = learnr_env(learnr_args)), # nolint
-           "function" = evaluate_condi_function(condition$x, learnr_args$last_value),
-           "value" = evaluate_condi_value(condition$x, learnr_args$last_value)
-         )
-  }, error = function(e) { # nolint
-    err_msg <<- e$message
-  })
+  res <- tryCatch(
+    {
+      switch(
+        condition$type,
+        "formula" = evaluate_condi_formula(
+          condition$x,
+          last_value,
+          env = env
+        ),
+        "function" = evaluate_condi_function(condition$x, last_value),
+        "value" = evaluate_condi_value(condition$x, last_value)
+      )
+    },
+    error = function(e) {
+      err_msg <<- conditionMessage(e)
+    }
+  )
 
   if (!is.null(err_msg)) {
     return(legacy_graded(correct = FALSE, message = err_msg))
@@ -78,4 +92,11 @@ legacy_graded <- function(...) {
   capture_graded(
     graded(...)
   )
+}
+
+
+learnr_env <- function(envir_prep, envir_result) {
+  envir_result %||%
+    envir_prep %||%
+    stop("Internal error. learnr did not pass a relevant environment")
 }

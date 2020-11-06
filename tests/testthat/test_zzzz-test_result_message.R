@@ -12,17 +12,15 @@ test_that("Correct messages without random praise", {
     return(x + 1)
   }
 
-  expect_message(
-    grade_result_strict(
-        pass_if(~ .result(3) == 4),
-        pass_if(~ .result(10) == 11),
-        grader_args = list(),
-        learnr_args = list(last_value = example_function, envir_prep = new.env()),
-        glue_correct = glue_correct_no_praise
-    ),
-    message = "2/2 correct!",
-    correct = TRUE
+  expect_grade_result_strict(
+    last_value = example_function,
+    is_correct = TRUE,
+    msg = "2/2 correct!",
+    glue_correct = glue_correct_no_praise,
+    pass_if(~ .result(3) == 4),
+    pass_if(~ .result(10) == 11)
   )
+
 })
 
 test_that("Incorrect mesages without random praise", {
@@ -31,16 +29,12 @@ test_that("Incorrect mesages without random praise", {
     return(x + 1)
   }
 
-  expect_message(
-    grade_result_strict(
-      pass_if(~ .result(3) == 4),
-      fail_if(~ .result(10) == 11),
-      grader_args = list(),
-      learnr_args = list(last_value = example_function, envir_prep = new.env()),
-      glue_incorrect = glue_incorrect_no_praise
-    ),
-    message = "1/2 correct!",
-    correct = FALSE
+  expect_grade_result_strict(
+    last_value = example_function,
+    is_correct = FALSE,
+    msg = "1/2 correct!",
+    pass_if(~ .result(3) == 4),
+    fail_if(~ .result(10) == 11),
+    glue_incorrect = glue_incorrect_no_praise
   )
-
 })
