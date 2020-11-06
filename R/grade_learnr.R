@@ -141,9 +141,7 @@ grade_learnr_ <- function(
 
   # Add gradethis specific check objects
   check_obj_envir[[".result"]] <- last_value
-  # check_obj_envir[["."]] <- last_value # keep this one? No
-  # check_obj_envir[[".user"]] <- last_value
-  # check_obj_envir[[".user"]] <- rlang::as_quosure(user_code, envir_result)
+  check_obj_envir[[".user"]] <- last_value
   delayedAssign(
     assign.env = check_obj_envir,
     x = ".solution",
