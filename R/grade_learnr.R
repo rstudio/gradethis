@@ -121,19 +121,6 @@ grade_learnr_ <- function(
     ))
   }
 
-  # Sometimes no solution is provided, but that
-  # means there is nothing to check against. Also,
-  # you do not want to parse NULL
-  if (!is.null(solution_code)) {
-    solution_code <- parse(text = solution_code)
-    if (length(solution_code) == 0) {
-      return(feedback(
-        fail("No solution is provided for this exercise."),
-        type = "info"
-      ))
-    }
-  }
-
   check_label <-
     if (is.null(envir_result)) {
       paste0(label, "-code-check")
@@ -161,12 +148,19 @@ grade_learnr_ <- function(
     assign.env = check_obj_envir,
     x = ".solution",
     {
-      message("Delayed evaluation of `.solution!`")
-      # (empty solutioncode is checked above)
-      # solution code exists...
-      rlang::eval_tidy(
-        rlang::as_quosure(solution_code, envir_result)
-      )
+      # Delayed evaluation of `.solution!`
+      solution_expr <- parse(text = solution_code)
+      if (length(solution_expr) == 0) {
+        rlang::return_from(checking_envir, feedback(
+          fail("No solution is provided for this exercise."),
+          type = "info"
+        ))
+      } else {
+        # solution code exists...
+        rlang::eval_tidy(
+          rlang::as_quosure(solution_expr, learnr::duplciate_env(envir_prep))
+        )
+      }
     }
   )
 
