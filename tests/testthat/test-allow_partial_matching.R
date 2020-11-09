@@ -205,23 +205,28 @@ test_that("allow_partial_matching works with multiple matches", {
   solution_quo <- as.expression(quote(ff(abc=3)))
   user_quo <- as.expression(quote(ff(ab = 1,abc = 1)))
   
-  set.seed(1)
-  pmatch_FALSE <- grade_code(allow_partial_matching = FALSE,
-                             grader_args = list(
-                               user_quo = user_quo, 
-                               solution_quo = solution_quo
-                             ))
-  set.seed(1)
-  pmatch_TRUE <- grade_code(allow_partial_matching = TRUE,
-                             grader_args = list(
-                               user_quo = user_quo, 
-                               solution_quo = solution_quo
-                             ))
+  pmatch_FALSE <- grade_code(
+    glue_correct = '{ .message } { .correct }',
+    glue_incorrect = '{ .message } { .incorrect }',
+    allow_partial_matching = FALSE,
+    grader_args = list(
+      user_quo = user_quo, 
+      solution_quo = solution_quo
+    )
+  )
+  pmatch_TRUE <- grade_code(
+    glue_correct = '{ .message } { .correct }',
+    glue_incorrect = '{ .message } { .incorrect }',
+    allow_partial_matching = TRUE,
+    grader_args = list(
+      user_quo = user_quo, 
+      solution_quo = solution_quo
+    )
+  )
 
-  
   expect_false(pmatch_FALSE$correct)
   expect_false(pmatch_TRUE$correct)
-  expect_equal(pmatch_FALSE,pmatch_TRUE)
+  expect_equal(pmatch_FALSE, pmatch_TRUE)
   
   solution_quo <- as.expression(quote(ff(ab = 1,abc = 1)))
   user_quo <- as.expression(quote(ff(ab = 1,abc = 1)))
