@@ -7,7 +7,7 @@
 NULL
 
 
-#' @describeIn gradethis-deprecated Removed from package
+#' @describeIn gradethis-deprecated \lifecycle{deprecated} Removed from package
 #' @export
 grade_feedback <- function(...) {
   deprecate_warn("0.2.0", "grade_feedback()")
@@ -18,7 +18,7 @@ grade_feedback <- function(...) {
 }
 
 
-#' @describeIn gradethis-deprecated Use [grade_result_strict()]
+#' @describeIn gradethis-deprecated \lifecycle{superseded} Use [grade_result_strict()]
 #' @export
 grade_conditions <- function(
   ...,

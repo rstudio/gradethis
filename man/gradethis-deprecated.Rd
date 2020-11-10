@@ -23,9 +23,9 @@ Deprecated
 }
 \section{Functions}{
 \itemize{
-\item \code{grade_feedback}: Removed from package
+\item \code{grade_feedback}: \lifecycle{deprecated} Removed from package
 
-\item \code{grade_conditions}: Use \code{\link[=grade_result_strict]{grade_result_strict()}}
+\item \code{grade_conditions}: \lifecycle{superseded} Use \code{\link[=grade_result_strict]{grade_result_strict()}}
 }}
 
 \keyword{internal}
