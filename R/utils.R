@@ -12,8 +12,7 @@ is_infix <- function(x, infix_vals = .infixes) {
 
   tryCatch({
     if (is.character(x)) {
-      # if str2lang throws, x is not an infix
-      out <- str2lang(x)
+      out <- call(x)
     } else {
       out <- x
     }
