@@ -155,8 +155,10 @@ grade_learnr_ <- function(
         ))
       } else {
         # solution code exists...
-        rlang::eval_tidy(
-          rlang::as_quosure(solution_expr, new.env(parent = envir_prep))
+        # Using eval_tidy does not evaluate the expression. Using eval() instead
+        eval(
+          solution_expr,
+          envir = new.env(parent = envir_prep)
         )
       }
     }
