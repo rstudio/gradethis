@@ -76,7 +76,7 @@ fail_if_equal <- function(
 }
 grade_if_equal <- function(x, y, message, correct, env) {
   compare_msg <- waldo::compare(x, y)
-  if (nzchar(compare_msg)) {
+  if (length(compare_msg) > 0) {
     # not equal! quit early
     return()
   }
