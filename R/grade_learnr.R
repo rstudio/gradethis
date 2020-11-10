@@ -174,8 +174,8 @@ grade_learnr_ <- function(
           eval(parsed_check_code, envir = chunk_envir)
         },
         # if a `pass()`/`fail()` is used in the regular check chunk with no user submission context, it should be an error
-        on_graded = function(gc_obj, ignore) {
-          fn_used <- if (isTRUE(gc_obj$correct)) "`pass()`" else "`fail()`"
+        on_graded = function(grade, ignore) {
+          fn_used <- if (isTRUE(grade$correct)) "`pass()`" else "`fail()`"
 
           # notify author of their mistake
           message(

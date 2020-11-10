@@ -50,16 +50,16 @@ capture_errors <- function(expr, on_error = NULL) {
 # }
 capture_graded <- function(expr, on_graded = NULL) {
   if (is.null(on_graded)) {
-    on_graded <- function(gc_obj, that_env) {
-      rlang::return_from(that_env, gc_obj)
+    on_graded <- function(grade, that_env) {
+      rlang::return_from(that_env, grade)
     }
   }
   stopifnot(is.function(on_graded))
 
   this_env <- rlang::current_env()
   withCallingHandlers(
-    gradethis_graded = function(gc_obj) {
-      on_graded(gc_obj, this_env)
+    gradethis_graded = function(grade) {
+      on_graded(grade, this_env)
     },
     expr
   )
@@ -67,7 +67,7 @@ capture_graded <- function(expr, on_graded = NULL) {
 ignore_graded <- function(expr) {
   capture_graded(
     expr,
-    on_graded = function(gc_obj, ignore) {
+    on_graded = function(grade, ignore) {
       # do nothing
     }
   )
