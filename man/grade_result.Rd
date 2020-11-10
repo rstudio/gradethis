@@ -88,7 +88,7 @@ all necessary information to compare the user's result.  The result of the retur
 will be a \code{\link[=graded]{graded()}} object containing a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
-It is \strong{strongly} recommended to upgrade code to use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}.
+\lifecycle{superseded} Please use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}.
 }
 \details{
 \code{grade_result()} and \code{grade_result_strict()} both take a set of \code{pass_if()}/\code{fail_if()}

@@ -34,7 +34,7 @@ displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
 displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 
 \item{glue_pipe}{A glue string that returns the final message displayed when
-the student uses a pipe, \verb{$>$}. Defaults to
+the student uses a pipe, \verb{\%>\%}. Defaults to
 \code{getOption("gradethis_glue_pipe")}.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
@@ -59,7 +59,7 @@ first way that the answer differs, the message will be the content of the \code{
 argument.
 }
 \description{
-It is \strong{strongly} recommended to upgrading checking code to use \code{\link[=grade_this_code]{grade_this_code()}}.
+\lifecycle{superseded} Please use \code{\link[=grade_this_code]{grade_this_code()}}.
 }
 \details{
 Checks the code expression or the code result against a solution.

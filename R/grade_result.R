@@ -1,6 +1,6 @@
 #' Grade result of exercise code (Legacy)
 #'
-#' It is **strongly** recommended to upgrade code to use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
+#' \lifecycle{superseded} Please use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
 #'
 #' `grade_result()` and `grade_result_strict()` both take a set of `pass_if()`/`fail_if()`
 #' conditions, evaluate them, and return a final [graded()] object. For `grade_result_strict()`

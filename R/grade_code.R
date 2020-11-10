@@ -1,6 +1,6 @@
 #' Grade student code against a solution (Legacy)
 #'
-#' It is **strongly** recommended to upgrading checking code to use [grade_this_code()].
+#' \lifecycle{superseded} Please use [grade_this_code()].
 #'
 #' Checks the code expression or the code result against a solution.
 #'
