@@ -158,7 +158,7 @@ grade_learnr_ <- function(
         # Using eval_tidy does not evaluate the expression. Using eval() instead
         eval(
           solution_expr,
-          envir = new.env(parent = envir_prep)
+          envir = learnr::duplicate_env(envir_prep)
         )
       }
     }
