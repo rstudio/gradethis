@@ -35,6 +35,8 @@
 #' @param incorrect A character string to display if the student answer matches
 #'   a known incorrect answer.
 #'
+#' @param allow_partial_matching A boolean if `FALSE` don't allow partial matching
+#'
 #' @param grader_args A list of parameters passed to `grader` functions
 #'   (provided by [grade_learnr()]). This contains:
 #'
@@ -80,6 +82,7 @@ grade_code <- function(
   correct = NULL,
   incorrect = NULL,
   ...,
+  allow_partial_matching = TRUE,
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe"),

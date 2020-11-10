@@ -8,6 +8,7 @@ grade_code(
   correct = NULL,
   incorrect = NULL,
   ...,
+  allow_partial_matching = TRUE,
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe"),
@@ -23,6 +24,8 @@ known correct answer.}
 a known incorrect answer.}
 
 \item{...}{ignored. Should be empty}
+
+\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
 
 \item{glue_correct}{A glue string that returns the final correct message
 displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
