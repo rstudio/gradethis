@@ -40,7 +40,8 @@ Imports:
     testthat,
     learnr,
     lifecycle,
-    ellipsis
+    ellipsis,
+    waldo
 Suggests:
     tidyr
 Remotes:
