@@ -56,7 +56,7 @@
 #'   displayed. Defaults to `getOption("gradethis_glue_incorrect")`.
 #'
 #' @param glue_pipe A glue string that returns the final message displayed when
-#'   the student uses a pipe, `$>$`. Defaults to
+#'   the student uses a pipe, `%>%`. Defaults to
 #'   `getOption("gradethis_glue_pipe")`.
 #' @param ... ignored. Should be empty
 #'

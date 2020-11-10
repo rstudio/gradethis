@@ -37,7 +37,7 @@
 #' @inheritParams code_feedback
 #'
 # ' @param glue_pipe A glue string that returns the final message displayed when
-# '   the student uses a pipe, `$>$`. Defaults to
+# '   the student uses a pipe, `%>%`. Defaults to
 # '   `getOption("gradethis_glue_pipe")`.
 #'
 #' @return a function whose first parameter should be an environment that contains
