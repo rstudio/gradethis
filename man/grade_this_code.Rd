@@ -8,7 +8,8 @@ grade_this_code(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass",
     "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail",
-    "Incorrect"))
+    "Incorrect")),
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 )
 }
 \arguments{
@@ -17,6 +18,8 @@ known correct answer.}
 
 \item{incorrect}{A character string to display if the student answer matches
 a known incorrect answer.}
+
+\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
 }
 \value{
 a function whose first parameter should be an environment that contains

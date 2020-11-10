@@ -8,7 +8,7 @@ grade_code(
   correct = NULL,
   incorrect = NULL,
   ...,
-  allow_partial_matching = TRUE,
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe"),

@@ -203,33 +203,32 @@ detect_mistakes <- function(user,
       )
     }
 
-    
-    if (length(well_matched > 0)){
-      matched_user_names <- sort(rlang::names2(well_matched))
-      
-    if ( !allow_partial_matching ){
-      ## where does partial matching occur ?
-      where_pmatches <- function(user_name) {
-        which(startsWith(remaining_solution_names, user_name))
-      }
-      
-      matches <- vapply(remaining_user_names, where_pmatches, 1)
-      matched_solution_name <- sort(remaining_solution_names[matches])
 
-      return( 
-        pmatches_argument_name(
-          this_call = user,
-          this = unname(as.list(user)[matched_user_names]),
-          this_name = matched_user_names,
-          correct_name = matched_solution_name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
+    if (length(well_matched > 0)) {
+      matched_user_names <- rlang::names2(well_matched)
+
+      if ( !allow_partial_matching ) {
+        ## where does partial matching occur ?
+        where_pmatches <- function(user_name) {
+          which(startsWith(remaining_solution_names, user_name))
+        }
+
+        matches <- vapply(remaining_user_names, where_pmatches, 1)
+        matched_solution_name <- remaining_solution_names[matches]
+
+        return(
+          pmatches_argument_name(
+            this_call = user,
+            this = unname(as.list(user)[matched_user_names]),
+            this_name = matched_user_names,
+            correct_name = matched_solution_name,
+            enclosing_call = enclosing_call,
+            enclosing_arg = enclosing_arg
+          )
         )
-      )
-    }
-    
-    # Remove partially matched arguments from further consideration
+      }
 
+      # Remove partially matched arguments from further consideration
       for (name in matched_user_names) {
         # which solution name does it match?
         match <- which(startsWith(remaining_solution_names, name))
@@ -264,13 +263,13 @@ detect_mistakes <- function(user,
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
 
-  explicit_solution <- call_standardise_formals(
-    unpipe_all(solution_original),
+  explicit_user <- suppressWarnings(call_standardise_formals(
+    unpipe_all(submitted),
     env = env,
     include_defaults = FALSE
-  )
-  explicit_user <- call_standardise_formals(
-    unpipe_all(submitted),
+  ))
+  explicit_solution <- call_standardise_formals(
+    unpipe_all(solution_original),
     env = env,
     include_defaults = FALSE
   )
@@ -291,7 +290,7 @@ detect_mistakes <- function(user,
   }
 
   # It is now safe to call call_standardise_formals on student code
-  user <- call_standardise_formals(user, env = env)
+  user <- suppressWarnings(call_standardise_formals(user, env = env))
   user_names <- real_names(user)
   solution_names <-  real_names(solution) # original solution_names was modified above
 

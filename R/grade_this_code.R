@@ -34,6 +34,7 @@
 #'
 #' @param incorrect A character string to display if the student answer matches
 #'   a known incorrect answer.
+#' @inheritParams code_feedback
 #'
 # ' @param glue_pipe A glue string that returns the final message displayed when
 # '   the student uses a pipe, `$>$`. Defaults to
@@ -63,7 +64,8 @@
 #' @export
 grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
-  incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect"))
+  incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
@@ -73,7 +75,7 @@ grade_this_code <- function(
 
     grade_this({
       # create variable `.message` for glue to find
-      .message <- code_feedback()
+      .message <- code_feedback(allow_partial_matching = allow_partial_matching)
       # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
       if (is.null(.message)) {
         # need to use `get()` to avoid using `utils::globalVariables`
@@ -108,6 +110,7 @@ grade_this_code <- function(
 #' @param user_code String containing user code. Defaults to retrieving `.user_code` from the calling environment. (Required)
 #' @param solution_code String containing solution code. Defaults to retrieving `.solution_code` from the calling environment. (Required)
 #' @param env Environment used to standardise formals of the user and solution code. Defaults to retrieving `.envir_prep` from the calling environment. If not found, the [parent.frame()] will be used
+#' @param allow_partial_matching A boolean if `FALSE` don't allow partial matching
 #' @return If no discrepencies are found, `NULL`. If a code difference is found, a character value describing the difference.
 #' @examples
 #' # Values are same
@@ -137,7 +140,8 @@ grade_this_code <- function(
 code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
-  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame())
+  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
 
   user_expr <-
@@ -165,6 +169,7 @@ code_feedback <- function(
   detect_mistakes(
     user = user_expr,
     solution = solution_expr,
-    env = new.env(parent = env)
+    env = new.env(parent = env),
+    allow_partial_matching = allow_partial_matching
   )
 }
