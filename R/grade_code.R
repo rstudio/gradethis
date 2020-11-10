@@ -1,4 +1,6 @@
-#' Grade code against a solution
+#' Grade student code against a solution (Legacy)
+#'
+#' It is **strongly** recommended to upgrading checking code to use [grade_this_code()].
 #'
 #' Checks the code expression or the code result against a solution.
 #'
@@ -58,11 +60,14 @@
 #'   `getOption("gradethis_glue_pipe")`.
 #' @param ... ignored. Should be empty
 #'
-#' @return a [graded()] object. An incorrect message will describe the first way
-#'   that the answer differs, the message will be the content of the `glue_pipe`
-#'   argument.
+#' @return a function whose first parameter should be an environment that contains
+#' all necessary information to compare the code.  The result of the returned
+#' function will be a [graded()] object. An incorrect message will describe the
+#' first way that the answer differs, the message will be the content of the `glue_pipe`
+#' argument.
 #'
-#' @seealso [grade_result()]
+#' @seealso [grade_this_code()], [grade_code()]
+#' @keywords internal
 #' @export
 #' @examples
 #' \dontrun{gradethis_demo()}
@@ -105,7 +110,11 @@ grade_code <- function(
       ))
     }
 
-    message <- code_feedback(env = check_env)
+    message <- code_feedback(
+      user_code = user_code,
+      solution_code = solution_code,
+      env = check_env
+    )
 
     if (is.null(message)) {
       # correct!

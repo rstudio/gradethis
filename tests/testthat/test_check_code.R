@@ -96,13 +96,13 @@ test_that("Ignore differences in argument positions (for non ... arguments)", {
 
 test_that("Error is when trying to call code_feedback with no solution", {
   testthat::expect_error(
-    code_feedback(user_code = "5", solution_code = NULL, envir_prep = environment())
+    code_feedback(user_code = "5", solution_code = NULL)
   )
 })
 
 test_that("Returns intelligent error when no user code", {
   testthat::expect_error(
-    code_feedback(user_code = NULL, solution_code = "5", envir_prep = environment())
+    code_feedback(user_code = NULL, solution_code = "5")
   )
 })
 

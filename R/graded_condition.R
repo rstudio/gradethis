@@ -72,7 +72,7 @@ capture_graded <- function(expr, on_graded = NULL) {
 ignore_graded <- function(expr) {
   capture_graded(
     expr,
-    on_graded = function(gc_obj, that_env) {
+    on_graded = function(gc_obj, ignore) {
       # do nothing
     }
   )
@@ -81,9 +81,41 @@ ignore_graded <- function(expr) {
 # helper method to evaluate an expr
 # will capture errors and turn them into `failure("message")`
 #
+
+#' Capture grades and errors
+#'
+#' Capture the first [graded()] signal or error thrown when evaluating the `expr`.
+#' @param expr Code block to evaluate
+#' @param on_error A [withCallingHandlers()] handler for class `error` with signature `function(error, this_env)` that receives the error object and calling environment of the error handler. `on_error` should use [rlang::return_from()] using `this_env` to immediately return the value and not continue evaluation.
+#' @param on_graded A [withCallingHandlers()] handler for class `graded` with signature `function(grade, this_env)` that receives the error object and calling environment of the error handler. `on_graded` should use [rlang::return_from()] using `this_env` to immediately return the value and not continue evaluation.
 #' @export
-eval_gradethis <- function(expr, on_error = NULL) {
-  capture_graded({
-    capture_errors(expr, on_error = on_error)
-  })
+#' @examples
+#' ans1 <- eval_gradethis({
+#'   pass("message 1")
+#'   pass("message 2")
+#'   pass("message 3")
+#' })
+#' ans1 # passing - message 1
+#'
+#' ans2 <- eval_gradethis({
+#'   testthat::expect_true(FALSE)
+#'   pass("message 2")
+#'   pass("message 3")
+#' })
+#' ans2 # failing - FALSE isn't true.
+#'
+#' ans3 <- eval_gradethis({
+#'   stop("boom")
+#'   pass("message 2")
+#'   pass("message 3")
+#' })
+#' ans3 # failing - boom
+eval_gradethis <- function(expr, on_error = NULL, on_graded = NULL) {
+  capture_graded(
+    on_graded = on_graded,
+    capture_errors(
+      on_error = on_error,
+      expr
+    )
+  )
 }

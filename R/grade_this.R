@@ -1,15 +1,63 @@
-
-# #' @export
-# last_value <- function(
-#   env = parent.frame()
-# ) {
-#   if (!exists(".result", envir = env, inherits = TRUE)) {
-#     stop("Could not find `.result`. Be sure to only use `last_value()` inside `grade_this()`")
-#   }
-#   get(".result", envir = env, inherits = TRUE)
-# }
-
+#' Grade expression
+#'
+#' @section Available variables:
+#'
+#' `grade_this()` allows instructors to create an expression to grade. Within the expression,
+#' all `learnr` tutorial variables variables are available for inspection with a `.` prepended to the name:
+#'
+#' * `.label`: Label for exercise chunk
+#' * `.solution_code`: Code provided within the "-solution" chunk for the exercise
+#' * `.user_code`: R code submitted by the user
+#' * `.check_code`: Code provided within the "-check" (or "-code-check") chunk for the exercise.
+#' * `.envir_prep`: A copy of the R environment before the execution of the chunk.
+#' * `.envir_result`: The R environment after the execution of the chunk.
+#' * `.evaluate_result`: The return value from the `evaluate::evaluate` function.
+#' * `.last_value The last value from evaluating the user's exercise submission.
+#' In addition, gradethis has provided some extra variables:
+#' * `.user`, `.result`: A direct copy of `.last_value` for friendlier naming
+#' * `.solution`: When accessed, will be the result of evaluating the `.solution_code` in a child environment of `.envir_prep`
+#'
+#' As the instructor, you are free to use any logic to determine a student's grade as long as a [graded()] object is signaled.
+#' The check code can also contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations will be turned into [fail()]ed grades
+#' with the corresponding message.
+#'
+#' @param expr Expression to be evaluated. MUST either signal a grade via [pass()] or [fail()] like \pkg{gradethis} functions or throw an error (via \pkg{testthat} or [stop()]). Errors will be converted to [fail()] calls with the corresponding error message.
+#' @return a function whose first parameter should be an environment that contains all necessary information to execute the expression.  The evaluation of the expression should return a [graded()] object.
+#'
+#' @seealso [grade_this_code()], [eval_gradethis()]
 #' @export
+#' @examples
+#'
+#' # These are manual examples, see grading demo for `learnr` tutorial usage
+#'
+#' grade_this({
+#'   fail_if_equal(4, "Try adding 1")
+#'   pass_if_equal(5, "You got 5, great!")
+#'   fail()
+#' })(list(
+#'   .last_value = 4
+#' ))
+#'
+#' grade_this({
+#'   testthat::expect_type(.result, "integer") # will `fail()` if not an integer
+#'   testthat::expect_equal(.result, 5L)        # will `fail()` if not equal to 5
+#'   pass() # returns default message
+#' })(list(
+#'   .last_value = 5L
+#' ))
+#'
+#' grade_this({
+#'   testthat::expect_true(is.function(.result))
+#'   testthat::expect_equal(.result(1), 3)
+#'   pass()
+#' })(list(
+#'   .last_value = function(x) {x + 2}
+#' ))
+#'
+#' # Remember, only `grade_this(expr)` should be used.
+#' # The followup `list()` and values will be called by `grade_learnr()`
+#' # To learn more about using `grade_this()` with learnr, see:
+#' \dontrun{gradethis_demo()}
 grade_this <- function(expr) {
   # sometimes expr is a quosure already, so squash all quosures to a single expression
   express <- rlang::get_expr(rlang::enquo(expr))
@@ -22,62 +70,4 @@ grade_this <- function(expr) {
       )
     })
   }
-}
-
-#' @export
-grade_this_code <- function(
-  correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
-  incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect"))
-) {
-
-  # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
-  function(checking_env) {
-    checking_env[[".__correct"]] <- correct
-    checking_env[[".__incorrect"]] <- incorrect
-
-    grade_this({
-      # create variable `.message` for glue to find
-      .message <- code_feedback()
-      # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
-      if (is.null(.message)) {
-        # need to use `get()` to avoid using `utils::globalVariables`
-        pass(get(".__correct"))
-      } else {
-        fail(get(".__incorrect"))
-      }
-    })(checking_env)
-  }
-}
-
-get_from <- function(name, envir, default = "") {
-  if (!exists(name, envir = envir, inherits = TRUE)) {
-    return(default)
-  }
-  get(name, envir = envir, inherits = TRUE)
-}
-#' @export
-code_feedback <- function(
-  user_code = get_from(".user_code", envir = env, default = ""),
-  solution_code = get_from(".solution_code", envir = env, default = ""),
-  envir_prep = get_from(".envir_prep", envir = env, default = new.env(parent = globalenv())),
-  env = parent.frame()
-) {
-
-  chkm8_single_character(user_code, null.ok = FALSE)
-  chkm8_single_character(solution_code, null.ok = FALSE)
-  checkmate::assert_environment(envir_prep, null.ok = FALSE, .var.name = "envir_prep")
-
-  user_expr = str2expression(user_code)
-  solution_expr = str2expression(solution_code)
-
-  if (identical(user_expr, solution_expr)) {
-    # identical! return early
-    return(NULL)
-  }
-
-  detect_mistakes(
-    user = user_expr,
-    solution = solution_expr,
-    env = new.env(parent = envir_prep)
-  )
 }

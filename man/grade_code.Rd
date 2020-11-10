@@ -2,7 +2,7 @@
 % Please edit documentation in R/grade_code.R
 \name{grade_code}
 \alias{grade_code}
-\title{Grade code against a solution}
+\title{Grade student code against a solution (Legacy)}
 \usage{
 grade_code(
   correct = NULL,
@@ -49,14 +49,18 @@ the student uses a pipe, \verb{$>$}. Defaults to
 more details.}
 }
 \value{
-a \code{\link[=graded]{graded()}} object. An incorrect message will describe the first way
-that the answer differs, the message will be the content of the \code{glue_pipe}
+a function whose first parameter should be an environment that contains
+all necessary information to compare the code.  The result of the returned
+function will be a \code{\link[=graded]{graded()}} object. An incorrect message will describe the
+first way that the answer differs, the message will be the content of the \code{glue_pipe}
 argument.
 }
 \description{
-Checks the code expression or the code result against a solution.
+It is \strong{strongly} recommended to upgrading checking code to use \code{\link[=grade_this_code]{grade_this_code()}}.
 }
 \details{
+Checks the code expression or the code result against a solution.
+
 \code{grade_code()} compares student code to a solution (i.e. model code) and
 describes the first way that the student code differs. If the student code
 exactly matches the solution, \code{grade_code()} returns a customizable success
@@ -91,5 +95,6 @@ z <- expression(sqrt(log(1)))
 grade_code(grader_args = list(user_quo = y, solution_quo = z))
 }
 \seealso{
-\code{\link[=grade_result]{grade_result()}}
+\code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=grade_code]{grade_code()}}
 }
+\keyword{internal}

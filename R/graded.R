@@ -1,10 +1,19 @@
 #' Graded object for submission value
 #'
-#'The return value from `graded` should be returned by every
-#'`*-check` chunk when used with [grade_learnr()].
+#' The return value from `graded` should be returned by every
+#' `*-check` chunk when used with [grade_learnr()].
+#'
+#' `graded()` objects are signaled to the calling functions.
+#'
+#'   * [grade_result()] ignores when grades are created. `graded()` objects must be returned
+#'   * [grade_code()] handles `graded()` objects internally
+#'   * [grade_this()] will stop execution once a `pass()`, `pass_if_equal()`,
+#'     `fail()`, `fail_if_equal()`, or `grade()` is called. To generate programmatic grades,
+#'     use `graded()` or if statements around `pass*()` and `fail*()`
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A boolean value of whether or not the checked code is correct.
+#' @describeIn graded Programatic function to produce a graded a result.
 #' @export
 graded <- function(correct, message = NULL) {
   chkm8_single_character(message)
@@ -30,16 +39,22 @@ is_graded <- function(x) {
 }
 
 
+#' @describeIn graded Produce a _passing_ grade
+#' @param env environment to evaluate the glue `message`
 #' @export
 pass <- function(message = getOption("gradethis.pass", "Correct!"), env = parent.frame()) {
   graded(message = glue_with_env(env, message), correct = TRUE)
 }
+#' @describeIn graded Produce a _failing_ grade
 #' @export
 fail <- function(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame()) {
   graded(message = glue_with_env(env, message), correct = FALSE)
 }
 
 
+#' @describeIn graded Produce a _passing_ grade only if [testthat::compare()] passes on `x` and `y`
+#' @param x First item in the comparison. Typically, this will be the user result
+#' @param y Required value in which to compare `x`. Comparison is done using `testthat::compare(x, y)`
 #' @export
 pass_if_equal <- function(
   y,
@@ -49,6 +64,7 @@ pass_if_equal <- function(
 ) {
   grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env)
 }
+#' @describeIn graded Produce a _failing_ grade only if [testthat::compare()] passes on `x` and `y`
 #' @export
 fail_if_equal <- function(
   y,

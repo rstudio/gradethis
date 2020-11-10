@@ -1,9 +1,11 @@
-#' Grade result of exercise code
+#' Grade result of exercise code (Legacy)
+#'
+#' It is **strongly** recommended to upgrade code to use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
 #'
 #' `grade_result()` and `grade_result_strict()` both take a set of `pass_if()`/`fail_if()`
 #' conditions, evaluate them, and return a final [graded()] object. For `grade_result_strict()`
 #' to return a correct grade, every `pass_if()` condition must be met, and every `fail_if()` condition
-#' must not be met. On the other hand, [grade_result()]'s final grade reflects the first satisfied
+#' must not be met. On the other hand, `grade_result()`'s final grade reflects the first satisfied
 #' condition (if no conditions are met, the final grade can be controlled by `default_correct` and
 #' `default_message`).
 #'
@@ -15,10 +17,12 @@
 #' @param default_message In the event that no [condition()]s are met, what message should be
 #'   included with the returned [graded()] object?
 #'
-#' @return a [graded()] object from either [pass_if()] or [fail_if()] containing
-#'   a formatted `correct` or `incorrect` message.
+#' @return a function whose first parameter should be an environment that contains
+#' all necessary information to compare the user's result.  The result of the returned function
+#' will be a [graded()] object containing a formatted `correct` or `incorrect` message.
 #'
 #' @seealso [grade_code()]
+#' @keywords internal
 #' @export
 #' @examples
 #'

@@ -2,16 +2,67 @@
 % Please edit documentation in R/graded.R
 \name{graded}
 \alias{graded}
+\alias{pass}
+\alias{fail}
+\alias{pass_if_equal}
+\alias{fail_if_equal}
 \title{Graded object for submission value}
 \usage{
 graded(correct, message = NULL)
+
+pass(message = getOption("gradethis.pass", "Correct!"), env = parent.frame())
+
+fail(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame())
+
+pass_if_equal(
+  y,
+  message = getOption("gradethis.pass", "Correct!"),
+  x = get(".result", envir = env),
+  env = parent.frame()
+)
+
+fail_if_equal(
+  y,
+  message = getOption("gradethis.fail", "Incorrect"),
+  x = get(".result", envir = env),
+  env = parent.frame()
+)
 }
 \arguments{
 \item{correct}{A boolean value of whether or not the checked code is correct.}
 
 \item{message}{A character string of the message to be displayed.}
+
+\item{env}{environment to evaluate the glue \code{message}}
+
+\item{y}{Required value in which to compare \code{x}. Comparison is done using \code{testthat::compare(x, y)}}
+
+\item{x}{First item in the comparison. Typically, this will be the user result}
 }
 \description{
 The return value from \code{graded} should be returned by every
 \verb{*-check} chunk when used with \code{\link[=grade_learnr]{grade_learnr()}}.
 }
+\details{
+\code{graded()} objects are signaled to the calling functions.
+\itemize{
+\item \code{\link[=grade_result]{grade_result()}} ignores when grades are created. \code{graded()} objects must be returned
+\item \code{\link[=grade_code]{grade_code()}} handles \code{graded()} objects internally
+\item \code{\link[=grade_this]{grade_this()}} will stop execution once a \code{pass()}, \code{pass_if_equal()},
+\code{fail()}, \code{fail_if_equal()}, or \code{grade()} is called. To generate programmatic grades,
+use \code{graded()} or if statements around \verb{pass*()} and \verb{fail*()}
+}
+}
+\section{Functions}{
+\itemize{
+\item \code{graded}: Programatic function to produce a graded a result.
+
+\item \code{pass}: Produce a \emph{passing} grade
+
+\item \code{fail}: Produce a \emph{failing} grade
+
+\item \code{pass_if_equal}: Produce a \emph{passing} grade only if \code{\link[testthat:compare]{testthat::compare()}} passes on \code{x} and \code{y}
+
+\item \code{fail_if_equal}: Produce a \emph{failing} grade only if \code{\link[testthat:compare]{testthat::compare()}} passes on \code{x} and \code{y}
+}}
+

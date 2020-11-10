@@ -6,7 +6,7 @@
 \alias{condition}
 \alias{pass_if}
 \alias{fail_if}
-\title{Grade result of exercise code}
+\title{Grade result of exercise code (Legacy)}
 \usage{
 grade_result(
   ...,
@@ -83,14 +83,18 @@ It is advised that the user use \code{identical()} instead of \code{==} in this 
 \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}}.}
 }
 \value{
-a \code{\link[=graded]{graded()}} object from either \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} containing
-a formatted \code{correct} or \code{incorrect} message.
+a function whose first parameter should be an environment that contains
+all necessary information to compare the user's result.  The result of the returned function
+will be a \code{\link[=graded]{graded()}} object containing a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
+It is \strong{strongly} recommended to upgrade code to use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}.
+}
+\details{
 \code{grade_result()} and \code{grade_result_strict()} both take a set of \code{pass_if()}/\code{fail_if()}
 conditions, evaluate them, and return a final \code{\link[=graded]{graded()}} object. For \code{grade_result_strict()}
 to return a correct grade, every \code{pass_if()} condition must be met, and every \code{fail_if()} condition
-must not be met. On the other hand, \code{\link[=grade_result]{grade_result()}}'s final grade reflects the first satisfied
+must not be met. On the other hand, \code{grade_result()}'s final grade reflects the first satisfied
 condition (if no conditions are met, the final grade can be controlled by \code{default_correct} and
 \code{default_message}).
 }
@@ -118,3 +122,4 @@ grade_result(
 \seealso{
 \code{\link[=grade_code]{grade_code()}}
 }
+\keyword{internal}
