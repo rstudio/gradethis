@@ -2,6 +2,7 @@
 % Please edit documentation in R/grade_this_code.R
 \name{code_feedback}
 \alias{code_feedback}
+\alias{maybe_code_feedback}
 \title{Code Feedback}
 \usage{
 code_feedback(
@@ -9,6 +10,16 @@ code_feedback(
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+)
+
+maybe_code_feedback(
+  user_code = get0(".user_code", parent.frame()),
+  solution_code = get0(".solution_code", parent.frame()),
+  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  ...,
+  space_before = TRUE,
+  space_after = FALSE
 )
 }
 \arguments{
@@ -19,6 +30,10 @@ code_feedback(
 \item{env}{Environment used to standardise formals of the user and solution code. Defaults to retrieving \code{.envir_prep} from the calling environment. If not found, the \code{\link[=parent.frame]{parent.frame()}} will be used}
 
 \item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
+
+\item{...}{Ignored}
+
+\item{space_before, space_after}{Logical value to determine if a space should be included before (\link{TRUE}) or after (\link{FALSE})}
 }
 \value{
 If no discrepencies are found, \code{NULL}. If a code difference is found, a character value describing the difference.
@@ -27,6 +42,13 @@ If no discrepencies are found, \code{NULL}. If a code difference is found, a cha
 Generate a message describing the first instance of a code mismatch. This function is built to be used within \code{\link[=grade_this]{grade_this()}} without using arguments.
 Manual calling of \code{code_feedback()} is also encouraged!
 }
+\section{Functions}{
+\itemize{
+\item \code{code_feedback}: Determine code feedback
+
+\item \code{maybe_code_feedback}: Return \code{code_feedback()} result when possible. Useful when setting default \code{\link[=fail]{fail()}} glue messages. For example, if there is no solution, no code feedback will be given.
+}}
+
 \section{Code differences}{
 
 

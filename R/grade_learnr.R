@@ -262,13 +262,26 @@ grade_learnr_ <- function(
 #'
 #' @inheritParams learnr::tutorial_options
 #' @param ... arguments passed to [learnr::tutorial_options()]
+#' @param pass Default message for [pass()]. Sets `options("gradethis.pass")`
+#' @param fail Default message for [fail()]. Sets `options("gradethis.fail")`
+#' @param code_correct Sets `options("gradethis.code.correct")` which read before `options("gradethis.pass")` for the default correct message in [grade_this_code()]
+#' @param code_incorrect Sets `options("gradethis.code.incorrect")` which read before `options("gradethis.fail")` for the default incorrect message in [grade_this_code()]
+#' @param fail_code_feedback Allows for [maybe_code_feedback()] to return code feedback. (To be paired with a [pass()] or [fail()] message.)
+#' @param allow_partial_matching Allows for partial matching in `grade_this_code()`. Sets `options("gradethis.code.partial_matching")`
 #' @export
 #' @seealso [grade_learnr()]
 gradethis_setup <- function(
+  # remember to set these global options or tutorial options in `zzz.R`
   exercise.timelimit = 60,
   exercise.checker = grade_learnr,
-  exercise.error.check.code = "grade_code()",
-  ...
+  exercise.error.check.code = "grade_this_code()",
+  ...,
+  pass = "{ random_praise() } Correct!",
+  fail = "Incorrect.{ maybe_code_feedback() } { random_encourage() }",
+  code_correct = NULL,
+  code_incorrect = "{ .message } { random_encouragement() }",
+  fail_code_feedback = TRUE,
+  allow_partial_matching = NULL
 ) {
   require(gradethis)
   learnr::tutorial_options(
@@ -276,5 +289,13 @@ gradethis_setup <- function(
     exercise.checker = exercise.checker,
     exercise.error.check.code = exercise.error.check.code,
     ...
+  )
+  options(
+    gradethis.pass = pass,
+    gradethis.fail = fail,
+    gradethis.code.correct = code_correct,
+    gradethis.code.incorrect = code_incorrect,
+    gradethis.code.feedback = fail_code_feedback,
+    gradethis.code.partial_matching = allow_partial_matching
   )
 }

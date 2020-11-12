@@ -43,7 +43,8 @@ Imports:
     ellipsis,
     waldo
 Suggests:
-    tidyr
+    tidyr,
+    knitr
 Remotes:
     rstudio/learnr
 URL: https://rstudio-education.github.io/gradethis/,

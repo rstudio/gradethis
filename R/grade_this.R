@@ -22,6 +22,8 @@
 #' with the corresponding message.
 #'
 #' @param expr Expression to be evaluated. MUST either signal a grade via [pass()] or [fail()] like \pkg{gradethis} functions or throw an error (via \pkg{testthat} or [stop()]). Errors will be converted to [fail()] calls with the corresponding error message.
+#' @param ... ignored
+#' @param fail_code_feedback Logical that determines if code feedback should be appended to the default failure message. Can also use [maybe_code_feedback()] in your custom [fail()] glue message.
 #' @return a function whose first parameter should be an environment that contains all necessary information to execute the expression.  The evaluation of the expression should return a [graded()] object.
 #'
 #' @seealso [grade_this_code()], [eval_gradethis()]
@@ -58,15 +60,22 @@
 #' # The followup `list()` and values will be called by `grade_learnr()`
 #' # To learn more about using `grade_this()` with learnr, see:
 #' \dontrun{gradethis_demo()}
-grade_this <- function(expr) {
+grade_this <- function(
+  expr,
+  ...,
+  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
+) {
   # sometimes expr is a quosure already, so squash all quosures to a single expression
   express <- rlang::get_expr(rlang::enquo(expr))
 
   function(checking_env) {
     eval_gradethis({
-      rlang::eval_tidy(
-        express,
-        env = checking_env
+      with_code_feedback(
+        fail_code_feedback,
+        rlang::eval_tidy(
+          express,
+          env = checking_env
+        )
       )
     })
   }

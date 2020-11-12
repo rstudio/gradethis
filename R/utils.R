@@ -30,6 +30,14 @@ is_infix <- function(x, infix_vals = .infixes) {
 
 
 
+with_options <- function(opts, expr) {
+  old_opts <- options(opts)
+  on.exit(options(old_opts), add = TRUE)
+  force(expr)
+}
+
+
+
 
 is_infix_assign <- function(x) {
   is_infix(x, infix_vals = .infixes_assign)

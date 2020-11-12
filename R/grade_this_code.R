@@ -29,12 +29,14 @@
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
-#' @param correct A character string to display if the student answer matches a
+#' @param correct A `glue`-able character string to display if the student answer matches a
 #'   known correct answer.
 #'
-#' @param incorrect A character string to display if the student answer matches
-#'   a known incorrect answer.
+#' @param incorrect A `glue`-able character string to display if the student answer matches
+#'   a known incorrect answer. `.message` is available in the calling environment.
+#' @param ... Ignored
 #' @inheritParams code_feedback
+#' @inheritParams grade_this
 #'
 # ' @param glue_pipe A glue string that returns the final message displayed when
 # '   the student uses a pipe, `%>%`. Defaults to
@@ -65,6 +67,8 @@
 grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
+  ...,
+  fail_code_feedback = getOption("gradethis.code.feedback", TRUE),
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
 
@@ -72,6 +76,7 @@ grade_this_code <- function(
   function(checking_env) {
     checking_env[[".__correct"]] <- correct
     checking_env[[".__incorrect"]] <- incorrect
+    checking_env[[".__fail_code_feedback"]] <- isTRUE(fail_code_feedback)
 
     grade_this({
       # create variable `.message` for glue to find
@@ -112,6 +117,8 @@ grade_this_code <- function(
 #' @param env Environment used to standardise formals of the user and solution code. Defaults to retrieving `.envir_prep` from the calling environment. If not found, the [parent.frame()] will be used
 #' @param allow_partial_matching A boolean if `FALSE` don't allow partial matching
 #' @return If no discrepencies are found, `NULL`. If a code difference is found, a character value describing the difference.
+#' @describeIn code_feedback Determine code feedback
+#' @export
 #' @examples
 #' # Values are same
 #' code_feedback("log(2)", "log(2)") # NULL
@@ -136,7 +143,6 @@ grade_this_code <- function(
 #'
 #' # Unstandardised arguments match in order and value
 #' code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
-#' @export
 code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
@@ -144,20 +150,8 @@ code_feedback <- function(
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
 
-  user_expr <-
-    if (rlang::is_quosure(user_code)) {
-      rlang::get_expr(user_code)
-    } else {
-      chkm8_single_character(user_code, null.ok = FALSE)
-      str2expression(user_code)
-    }
-  solution_expr <-
-    if (rlang::is_quosure(solution_code)) {
-      rlang::get_expr(solution_code)
-    } else {
-      chkm8_single_character(solution_code, null.ok = FALSE)
-      str2expression(solution_code)
-    }
+  user_expr <- to_expr(user_code, "user_code")
+  solution_expr <- to_expr(solution_code, "solution_code")
   checkmate::assert_environment(env, null.ok = FALSE, .var.name = "env")
 
   if (identical(user_expr, solution_expr)) {
@@ -165,11 +159,67 @@ code_feedback <- function(
     return(NULL)
   }
 
-
   detect_mistakes(
     user = user_expr,
     solution = solution_expr,
     env = new.env(parent = env),
-    allow_partial_matching = allow_partial_matching
+    allow_partial_matching = isTRUE(allow_partial_matching)
+  )
+}
+
+to_expr <- function(x, name) {
+  if (rlang::is_quosure(x)) {
+    rlang::get_expr(x)
+  } else {
+    chkm8_single_character(x, null.ok = FALSE, name = name)
+    str2expression(x)
+  }
+}
+
+
+should_display_code_feedback <- function() {
+  isTRUE(getOption("gradethis.code.feedback.set", FALSE))
+}
+with_code_feedback <- function(val, expr) {
+  with_options(
+    list("gradethis.code.feedback.set" = val),
+    expr
+  )
+}
+
+#' @describeIn code_feedback Return `code_feedback()` result when possible. Useful when setting default [fail()] glue messages. For example, if there is no solution, no code feedback will be given.
+#' @param ... Ignored
+#' @param space_before,space_after Logical value to determine if a space should be included before ([TRUE]) or after ([FALSE])
+#' @export
+maybe_code_feedback <- function(
+  user_code = get0(".user_code", parent.frame()),
+  solution_code = get0(".solution_code", parent.frame()),
+  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  ...,
+  space_before = TRUE,
+  space_after = FALSE
+) {
+  no_feedback_val <- ""
+  # if feedback is not enabled, return
+  if (!should_display_code_feedback()) {
+    return(no_feedback_val)
+  }
+
+  tryCatch(
+    paste0(
+      if (isTRUE(space_before)) " ",
+      code_feedback(
+        user_code = user_code,
+        solution_code = solution_code,
+        env = env,
+        allow_partial_matching = allow_partial_matching
+      ),
+      if (isTRUE(space_after)) " "
+    ),
+    error = function(e) {
+      # something bad happened. Return empty string
+      no_feedback_val
+    }
   )
 }
