@@ -6,28 +6,28 @@
 \alias{condition}
 \alias{pass_if}
 \alias{fail_if}
-\title{Grade result of exercise code}
+\title{Grade result of exercise code (Legacy)}
 \usage{
 grade_result(
   ...,
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   default_correct = "auto",
-  default_message = NULL
+  default_message = NULL,
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 )
 
 grade_result_strict(
   ...,
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
   glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+  glue_incorrect = getOption("gradethis_glue_incorrect_test"),
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 )
 
 condition(x, message, correct)
@@ -44,6 +44,19 @@ fail_if(x, message = NULL)
 \item{incorrect}{A character string to display if the student answer matches
 a known incorrect answer.}
 
+\item{glue_correct}{A glue string that returns the final correct message
+displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message
+displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
+
+\item{default_correct}{In the event that no \code{\link[=condition]{condition()}}s are met, should the end result
+be correct? When \code{"auto"}, this will be \code{TRUE} when all the \code{\link[=conditions]{conditions()}} are \code{\link[=fail_if]{fail_if()}}
+(and \code{FALSE} otherwise).}
+
+\item{default_message}{In the event that no \code{\link[=condition]{condition()}}s are met, what message should be
+included with the returned \code{\link[=graded]{graded()}} object?}
+
 \item{grader_args}{A list of parameters passed to \code{grader} functions
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
 \itemize{
@@ -58,19 +71,6 @@ a known incorrect answer.}
 \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
 more details.}
 
-\item{glue_correct}{A glue string that returns the final correct message
-displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
-
-\item{glue_incorrect}{A glue string that returns the final incorrect message
-displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
-
-\item{default_correct}{In the event that no \code{\link[=condition]{condition()}}s are met, should the end result
-be correct? When \code{"auto"}, this will be \code{TRUE} when all the \code{\link[=conditions]{conditions()}} are \code{\link[=fail_if]{fail_if()}}
-(and \code{FALSE} otherwise).}
-
-\item{default_message}{In the event that no \code{\link[=condition]{condition()}}s are met, what message should be
-included with the returned \code{\link[=graded]{graded()}} object?}
-
 \item{x}{A formula, function, or value, that returns \code{TRUE} or \code{FALSE}.
 When comparing objects that are greater than length 1
 (e.g., vectors, dataframes, matricies, etc)
@@ -83,14 +83,18 @@ It is advised that the user use \code{identical()} instead of \code{==} in this 
 \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}}.}
 }
 \value{
-a \code{\link[=graded]{graded()}} object from either \code{\link[=pass_if]{pass_if()}} or \code{\link[=fail_if]{fail_if()}} containing
-a formatted \code{correct} or \code{incorrect} message.
+a function whose first parameter should be an environment that contains
+all necessary information to compare the user's result.  The result of the returned function
+will be a \code{\link[=graded]{graded()}} object containing a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
+\lifecycle{superseded} Please use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}.
+}
+\details{
 \code{grade_result()} and \code{grade_result_strict()} both take a set of \code{pass_if()}/\code{fail_if()}
 conditions, evaluate them, and return a final \code{\link[=graded]{graded()}} object. For \code{grade_result_strict()}
 to return a correct grade, every \code{pass_if()} condition must be met, and every \code{fail_if()} condition
-must not be met. On the other hand, \code{\link[=grade_result]{grade_result()}}'s final grade reflects the first satisfied
+must not be met. On the other hand, \code{grade_result()}'s final grade reflects the first satisfied
 condition (if no conditions are met, the final grade can be controlled by \code{default_correct} and
 \code{default_message}).
 }
@@ -99,21 +103,18 @@ condition (if no conditions are met, the final grade can be controlled by \code{
 grade_result(
   fail_if(~ identical(.result, 4), "Try adding 1"),
   pass_if(~ identical(.result, 5), "You got 5, great!"),
-  fail_if(~ TRUE, "Some generic failing message."),
-  learnr_args = list(last_value = 5)
-)
+  fail_if(~ TRUE, "Some generic failing message.")
+)(list(.last_value = 5, .envir_result = new.env()))
 
 grade_result_strict(
   pass_if(~ identical(.result, 5), "You got 5, great!"),
-  fail_if(~ !is.integer(.result), "I expected an integer"),
-  learnr_args = list(last_value = 5)
-)
+  fail_if(~ !is.integer(.result), "I expected an integer")
+)(list(.last_value = 5, .envir_result = new.env()))
 
 grade_result(
   fail_if(~ !is.function(.result), "I expected a function."),
-  fail_if(~ .result(1) != 2, "Your function should add one."),
-  learnr_args = list(last_value = function(x) x + 2)
-)
+  fail_if(~ .result(1) != 2, "Your function should add one.")
+)(list(.last_value = function(x) {x + 2}, .envir_result = new.env()))
 
 # To learn more about using grade_result() and grade_code() with learnr, see:
 \dontrun{gradethis_demo()}
@@ -121,3 +122,4 @@ grade_result(
 \seealso{
 \code{\link[=grade_code]{grade_code()}}
 }
+\keyword{internal}

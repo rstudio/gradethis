@@ -11,3 +11,5 @@
 ^\.vscode$
 ^scripts/
 ^archive/
+^\.github$
+^sandbox$

@@ -2,17 +2,18 @@
 % Please edit documentation in R/grade_code.R
 \name{grade_code}
 \alias{grade_code}
-\title{Grade code against a solution}
+\title{Grade student code against a solution (Legacy)}
 \usage{
 grade_code(
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
+  ...,
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe"),
-  allow_partial_matching = TRUE
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 )
 }
 \arguments{
@@ -21,6 +22,20 @@ known correct answer.}
 
 \item{incorrect}{A character string to display if the student answer matches
 a known incorrect answer.}
+
+\item{...}{ignored. Should be empty}
+
+\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
+
+\item{glue_correct}{A glue string that returns the final correct message
+displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
+
+\item{glue_incorrect}{A glue string that returns the final incorrect message
+displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
+
+\item{glue_pipe}{A glue string that returns the final message displayed when
+the student uses a pipe, \verb{\%>\%}. Defaults to
+\code{getOption("gradethis_glue_pipe")}.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
@@ -35,28 +50,20 @@ a known incorrect answer.}
 \code{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
 more details.}
-
-\item{glue_correct}{A glue string that returns the final correct message
-displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
-
-\item{glue_incorrect}{A glue string that returns the final incorrect message
-displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
-
-\item{glue_pipe}{A glue string that returns the final message displayed when
-the student uses a pipe, \verb{$>$}. Defaults to
-\code{getOption("gradethis_glue_pipe")}.}
-
-\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
 }
 \value{
-a \code{\link[=graded]{graded()}} object. An incorrect message will describe the first way
-that the answer differs, the message will be the content of the \code{glue_pipe}
+a function whose first parameter should be an environment that contains
+all necessary information to compare the code.  The result of the returned
+function will be a \code{\link[=graded]{graded()}} object. An incorrect message will describe the
+first way that the answer differs, the message will be the content of the \code{glue_pipe}
 argument.
 }
 \description{
-Checks the code expression or the code result against a solution.
+\lifecycle{superseded} Please use \code{\link[=grade_this_code]{grade_this_code()}}.
 }
 \details{
+Checks the code expression or the code result against a solution.
+
 \code{grade_code()} compares student code to a solution (i.e. model code) and
 describes the first way that the student code differs. If the student code
 exactly matches the solution, \code{grade_code()} returns a customizable success
@@ -91,5 +98,6 @@ z <- expression(sqrt(log(1)))
 grade_code(grader_args = list(user_quo = y, solution_quo = z))
 }
 \seealso{
-\code{\link[=grade_result]{grade_result()}}
+\code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=grade_code]{grade_code()}}
 }
+\keyword{internal}

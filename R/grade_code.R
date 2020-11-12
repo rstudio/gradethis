@@ -1,4 +1,6 @@
-#' Grade code against a solution
+#' Grade student code against a solution (Legacy)
+#'
+#' \lifecycle{superseded} Please use [grade_this_code()].
 #'
 #' Checks the code expression or the code result against a solution.
 #'
@@ -32,7 +34,7 @@
 #'
 #' @param incorrect A character string to display if the student answer matches
 #'   a known incorrect answer.
-#'
+#' @inheritParams code_feedback
 #' @param grader_args A list of parameters passed to `grader` functions
 #'   (provided by [grade_learnr()]). This contains:
 #'
@@ -54,16 +56,18 @@
 #'   displayed. Defaults to `getOption("gradethis_glue_incorrect")`.
 #'
 #' @param glue_pipe A glue string that returns the final message displayed when
-#'   the student uses a pipe, `$>$`. Defaults to
+#'   the student uses a pipe, `%>%`. Defaults to
 #'   `getOption("gradethis_glue_pipe")`.
-#'   
-#' @param allow_partial_matching A boolean if `FALSE` don't allow partial matching
+#' @param ... ignored. Should be empty
 #'
-#' @return a [graded()] object. An incorrect message will describe the first way
-#'   that the answer differs, the message will be the content of the `glue_pipe`
-#'   argument.
+#' @return a function whose first parameter should be an environment that contains
+#' all necessary information to compare the code.  The result of the returned
+#' function will be a [graded()] object. An incorrect message will describe the
+#' first way that the answer differs, the message will be the content of the `glue_pipe`
+#' argument.
 #'
-#' @seealso [grade_result()]
+#' @seealso [grade_this_code()], [grade_code()]
+#' @keywords internal
 #' @export
 #' @examples
 #' \dontrun{gradethis_demo()}
@@ -75,40 +79,48 @@
 grade_code <- function(
   correct = NULL,
   incorrect = NULL,
-  grader_args = list(),
-  learnr_args = list(),
+  ...,
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
   glue_pipe = getOption("gradethis_glue_pipe"),
-  allow_partial_matching = TRUE
+  grader_args = deprecated(),
+  learnr_args = deprecated()
 ) {
-  
-  user <- rlang::as_quosure(grader_args$user_quo)
-  solution <- rlang::as_quosure(grader_args$solution_quo)
+  ellipsis::check_dots_empty()
+  if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_code(grader_args = )")
+  if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_code(learnr_args = )")
 
-  user <- rlang::get_expr(user)
-  solution <- rlang::get_expr(solution)
 
-  if (!is.null(user)) {
-    stopifnot(is.expression(user))
-  }
-  if (!is.null(solution)) {
-    stopifnot(is.expression(solution))
-  } else {
-    # If no solution is provided, then don't provide a grade!
-    return(NULL)
-  }
+  # return script style function
+  function(check_env) {
 
-  if (is_code_identical(user, solution)) {
-    is_same_info <- graded(correct = TRUE)
-  } else {
-    message <- detect_mistakes(user, solution, allow_partial_matching = allow_partial_matching)
-    is_same_info <- graded(correct = is.null(message), message = message)
-  }
+    user_code <- check_env$.user_code
+    if (is.null(user_code)) {
+      return(legacy_graded(
+        correct = FALSE,
+        message = "I didn't receive your code. Did you write any?"
+      ))
+    }
 
-  if (is_same_info$correct) {
-    return(
-      graded(
+    solution_code <- check_env$.solution_code
+    if (is.null(solution_code) || length(str2expression(solution_code)) == 0) {
+      return(legacy_graded(
+        correct = FALSE,
+        message = "No exercise solution provided. Defaulting to _incorrect_"
+      ))
+    }
+
+    message <- code_feedback(
+      user_code = user_code,
+      solution_code = solution_code,
+      env = check_env,
+      allow_partial_matching = allow_partial_matching
+    )
+
+    if (is.null(message)) {
+      # correct!
+      return(legacy_graded(
         correct = TRUE,
         message = glue_message(
           glue_correct,
@@ -116,55 +128,30 @@ grade_code <- function(
           .message = NULL,
           .correct = correct
         )
-      )
-    )
-  }
+      ))
+    }
 
-  message <- glue_message(
-    glue_incorrect,
-    .is_correct = FALSE,
-    .message = is_same_info$message,
-    .incorrect = incorrect
-  )
-  
-  if (uses_pipe(user)) {
+    # is incorrect
     message <- glue_message(
-      glue_pipe,
-      .user = as.character(user),
+      glue_incorrect,
+      .is_correct = FALSE,
       .message = message,
       .incorrect = incorrect
     )
+
+    # add pipe message
+    if (uses_pipe(user_code)) {
+      message <- glue_message(
+        glue_pipe,
+        # convert forwards and backwards to apply consistent formatting
+        .user = as.character(str2expression(user_code)),
+        .message = message,
+        .incorrect = incorrect
+      )
+    }
+
+    # final grade
+    legacy_graded(correct = FALSE, message = message)
   }
 
-  graded(correct = FALSE, message = message)
-}
-
-
-
-is_code_identical <- function(user = NULL, solution = NULL) {
-
-  # Sometimes no solution is provided, but that
-  # means there is nothing to check against
-  if (is.null(solution)) {
-    stop("No solution is provided for this exercise.")
-  }
-
-  # Sometimes no user code is provided,
-  # that means there is nothing to check
-  if (is.null(user)) {
-    stop("I didn't receive your code. Did you write any?")
-  }
-
-  # user and solution are expressions with `srcref`s. Must compare each element. Can not compare as a whole unit
-  if (!identical(class(user), class(solution))) {
-    return(FALSE)
-  }
-  if (length(user) != length(solution)) {
-    return(FALSE)
-  }
-  # Correct answers are all alike
-  lines_are_identical <- vapply(seq_along(user), function(i) {
-    identical(user[[i]], solution[[i]])
-  }, logical(1))
-  all(lines_are_identical)
 }

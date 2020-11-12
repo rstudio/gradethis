@@ -20,7 +20,6 @@
 #' `system.file("extdata", "grading-demo/grading-demo.Rmd", package = "grader")`.
 #'
 #' @export
-#' @importFrom utils browseURL
 gradethis_demo <- function() {
   gradethis_demo_path <- system.file("tutorials", "grading-demo/grading-demo.Rmd",
                                      package = "gradethis")

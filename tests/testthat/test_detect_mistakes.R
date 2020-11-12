@@ -73,7 +73,7 @@ test_that("detect_mistakes detects missing code", {
   # internal atomic - NEEDS TO CATCH UNNAMED ARGUMENT HANDLING
   user <-     quote(a())
   solution <- quote(a(1))
-  
+
   expect_equal(
     detect_mistakes(user, solution),
     missing_argument(this_call = user, that_name = "x")
@@ -189,7 +189,7 @@ test_that("detect_mistakes works with infix operators", {
     detect_mistakes(user, solution),
     wrong_value(this = user, that = solution)
   )
-  
+
   # changing direction of assign should still work
   user <- quote(123)
   solution <- quote(sample(1:6, size = 1) -> x)
@@ -197,23 +197,23 @@ test_that("detect_mistakes works with infix operators", {
     detect_mistakes(user, solution),
     wrong_value(this = user, that = solution)
   )
-  
+
   # other variants of assign like <<- should also work
-  
+
   user <- quote(123)
   solution <- quote(x <<- sample(1:6, size = 1))
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(this = user, that = solution)
   )
-  
+
   user <- quote(123)
   solution <- quote(sample(1:6, size = 1) ->> x)
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(this = user, that = solution)
   )
-  
+
   # call vs assign
   user <- quote(sample(1:6, size = 1))
   solution <- quote(x <- sample(1:6, size = 1))
@@ -221,7 +221,7 @@ test_that("detect_mistakes works with infix operators", {
     detect_mistakes(user, solution),
     wrong_call(this = user, that = solution)
   )
-  
+
 #   # surplus
 #   user <-     quote(b(1 + 2))
 #   solution <- quote(b(1))
@@ -450,7 +450,7 @@ test_that("detect_mistakes works with infix operators", {
 #   # and pipes will not matter if the above tests pass.
 #   # Why? Because checking will stop at the initial call
 #   # because it is not an infix.
-# 
+#
 })
 
 test_that("detect_mistakes works with pipes", {
@@ -806,36 +806,21 @@ test_that("detect_mistakes works with multiple lines", {
 
 
 test_that("detect_mistakes : Differentiate between 'strings' and objects in messages", {
-  
-  
-  quote_as_name <- as.expression(quote(library(purrr)))
-  quote_as_chr <- as.expression(quote(library('purrr')))
 
-  
-  outputA <- grade_code(
-             grader_args = list(
-               user_quo = quote_as_name, 
-               solution_quo = quote_as_chr
-             )
+  as_name <- "library(purrr)"
+  as_chr <- "library('purrr')"
+
+  expect_grade_code(
+    user_code = as_name,
+    solution_code = as_chr,
+    is_correct = FALSE,
+    msg = "In library(purrr), I expected \"purrr\" where you wrote purrr."
   )
-  outputB <- grade_code(
-             grader_args = list(
-               user_quo = quote_as_chr, 
-               solution_quo = quote_as_name
-             )
+  expect_grade_code(
+    user_code = as_chr,
+    solution_code = as_name,
+    is_correct = FALSE,
+    msg = "In library(\"purrr\"), I expected purrr where you wrote \"purrr\"."
   )
-    expect_false(outputA$correct)
-    expect_false(outputB$correct)
-    expect_match(object = outputA$message,
-                 regexp = 'I expected \"purrr\" where you wrote purrr')
-    expect_match(object = outputA$message,
-                 regexp = 'library\\(purrr\\)')
-    expect_match(object = outputB$message,
-                 regexp = 'I expected purrr where you wrote \"purrr\"')
-    expect_match(object = outputB$message,
-                 regexp = 'library\\(\"purrr\"\\)')
 
 })
-
-
-

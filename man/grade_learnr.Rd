@@ -2,7 +2,6 @@
 % Please edit documentation in R/grade_learnr.R
 \name{grade_learnr}
 \alias{grade_learnr}
-\alias{grade_learnr_error}
 \title{A checker function to use with \code{learnr}}
 \usage{
 grade_learnr(
@@ -16,8 +15,6 @@ grade_learnr(
   last_value = NULL,
   ...
 )
-
-grade_learnr_error(solution_code = NULL, check_code = "grade_code()", ...)
 }
 \arguments{
 \item{label}{Label for exercise chunk}
@@ -27,7 +24,7 @@ exercise.}
 
 \item{user_code}{R code submitted by the user}
 
-\item{check_code}{Code provided within the "-check" chunk for the exercise.}
+\item{check_code}{Code provided within the "-check" (or "-code-check") chunk for the exercise.}
 
 \item{envir_result}{The R environment after the execution of the chunk.}
 
@@ -37,7 +34,7 @@ function.}
 \item{envir_prep}{A copy of the R environment before the execution of the
 chunk.}
 
-\item{last_value}{The last value from evaluating the exercise.}
+\item{last_value}{The last value from evaluating the user's exercise submission.}
 
 \item{...}{Extra arguments supplied by learnr}
 }
