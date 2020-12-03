@@ -94,10 +94,11 @@ grade_learnr_ <- function(
           fail(paste(
             "It looks like this might not be valid R code:",
             conditionMessage(e),
-            "\nCheck that you have closed every \", ', (, and { ",
-            "with a matching \", ', ), and }. Also look for missing ",
-            "commas. R cannot determine how to turn your text into ",
-            "a complete command."
+            "\nR cannot determine how to turn your text into ",
+            "a complete command. You may have forgot to fill in a blank, ",
+            "to remove an underscore, to include a comma between arguments, "
+            "or to close an opening \", ', (, or { ",
+            "with a matching \", ', ), and }. "
           ))
         }
       )
