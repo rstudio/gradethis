@@ -33,9 +33,8 @@ test_that("check environment is used", {
 test_that("parser error is used", {
   with_options(
     list(
-      exercise.parse.error = function(...) {
-        args <- list(...)
-        expect_equal(names(args)[1], "parse_error")
+      exercise.parse.error = function(check_obj) {
+        expect_true(".error" %in% names(check_obj))
         fail("test parse error")
       }
     ),
@@ -43,38 +42,6 @@ test_that("parser error is used", {
       expect_grade_learnr(
         is_correct = FALSE,
         msg = "test parse error",
-        user_code = "4 +"
-      )
-    }
-  )
-
-  with_options(
-    list(
-      exercise.parse.error = function(...) {
-        args <- list(...)
-        expect_equal(names(args)[1], "parse_error")
-        feedback(fail("test parse error"))
-      }
-    ),
-    {
-      expect_grade_learnr(
-        is_correct = FALSE,
-        msg = "test parse error",
-        user_code = "4 +"
-      )
-    }
-  )
-
-  with_options(
-    list(
-      exercise.parse.error = function(...) {
-        stop("boom")
-      }
-    ),
-    {
-      expect_grade_learnr(
-        is_correct = FALSE,
-        msg = "boom",
         user_code = "4 +"
       )
     }
@@ -96,6 +63,7 @@ test_that("length 0 solution code", {
     msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
     msg_type = "error",
     user_code = "1",
+    check_code = ".solution; grade_this_code()",
     solution_code = ""
   )
 })
