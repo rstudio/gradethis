@@ -1,4 +1,13 @@
 gradethis_default_options <- list(
+
+  gradethis.pass = "{ random_praise() } Correct!",
+  gradethis.fail = "Incorrect. { random_encourage() }",
+
+  gradethis.code.correct = NULL,
+  gradethis.code.incorrect = "{.message} {random_encouragement()}",
+
+
+  ### legacy ###
   gradethis_glue_correct = "{ random_praise() } { .message } { .correct }",
   gradethis_glue_incorrect = "{ .message } { .incorrect } { random_encourage() }",
 

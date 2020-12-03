@@ -184,6 +184,58 @@ surplus_argument <- function(this_call,
   )
 }
 
+
+# partial matching
+pmatches_argument_name <- function(this_call,
+                                   this,
+                                   this_name = NULL,
+                                   correct_name = NULL,
+                                   enclosing_call = NULL,
+                                   enclosing_arg = NULL) {
+
+
+  # "{intro}I did not expect your call to {this_call} to ",
+  # "include {this}. You ",
+  # "may have included an unnecessary argument, or you ",
+  # "may have left out or misspelled an important ",
+  # "argument name."
+  # intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
+
+
+  # "This code seems correct, but please write with full parameter(s) names."
+  # "You wrote {this} please rewrite with {correct_name} ."
+  # "You wrote {this} please rewrite with {correct_name} ."
+
+
+  this_call <- prep(this_call)
+  this <- lapply(this, prep) #yes devrait etre quoted
+  this_user <- this
+
+  if ( !is.null(this_name) )
+    this_user <- paste(this_name, "=", this)
+
+  if ( !is.null(this_name) )
+    correct_name <- paste(correct_name, "=", this)
+
+  intro  <- "This code seems correct, but please write using full argument(s) names.\n"
+  msg <- glue::glue_data(
+    list(
+      this = this_user,
+      correct_name = correct_name,
+      this_call = this_call
+    ),
+    "You wrote `{this}`. Please provide the full formal name using `{correct_name}`."
+  )
+
+  glue::glue_data(
+    list(
+      intro = intro,
+      msg = msg
+    ),
+    "{intro}{paste0(msg, collapse = '\n')}"
+  )
+}
+
 # too_many_matches
 too_many_matches <- function(this_call,
                              that_name,
@@ -245,13 +297,13 @@ wrong_call <- function(this,
     that <- paste(this_name, "=", that)
     this <- paste(this_name, "=", this)
   }
-  
+
   if (is_infix_assign(that_original)) {
     that <- paste("you to assign something to something else with", that)
   } else {
     that <- paste("you to call", that)
   }
-  
+
   glue::glue_data(
     list(
       this = this,
@@ -286,7 +338,7 @@ wrong_value <- function(this,
     that <- paste(this_name, "=", that)
     this <- paste(this_name, "=", this)
   }
-  
+
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
@@ -308,15 +360,14 @@ wrong_value <- function(this,
 prep <- function(text) {
   # NOTE: `[` does not work well for assign `<-` and would
   # grab whole expression ending up with: NULL <- NULL.
-  # this extra condition to use `[[` works, but requires further 
+  # this extra condition to use `[[` works, but requires further
   # investigation for a cleaner solution.
   if (is_infix(text)) {
     text <- text[[1]]
   } else if (is.call(text)) {
     text <- text[1]
   }
-  if (!is.character(text)) text <- deparse_to_string(text)
-  text
+  deparse_to_string(text)
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {

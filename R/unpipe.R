@@ -7,6 +7,7 @@
 #' contain a top-level call to \code{\link[magrittr]{\%>\%}}, `unpipe()` returns it as is.
 #'
 #' @param code a quoted piece of code
+#' @noRd
 unpipe <- function(code) {
 
   # Ceci n'est pas une pipe
@@ -15,6 +16,13 @@ unpipe <- function(code) {
   # une pipe
   lhs <- code[[2]]
   rhs <- code[[3]]
+
+  if (!is.call(rhs)) {
+    # rhs need to be a call
+    # mainly because some user do `1 %>% print` instead of `1 %>% print()`
+    rhs <-  call(deparse(rhs))
+  }
+
 
   if (length(rhs) == 1) {
     rhs[[2]] <- lhs
@@ -34,18 +42,19 @@ is_dot <- function(name) {
   length(name) == 1 && as.character(name) == "."
 }
 
-unpipe_all <- function(code) {
-  if (length(code) == 1) return(code)
-  if (length(code) == 2 && is.null(code[[2]])) return(code)
-  code <- as.call(purrr::map(as.list(code), unpipe_all))
-  unpipe(code)
+unpipe_all <- function(code_expr) {
+  if (length(code_expr) == 1) return(code_expr)
+  if (length(code_expr) == 2 && is.null(code_expr[[2]])) return(code_expr)
+  code_expr <- as.call(purrr::map(as.list(code_expr), unpipe_all))
+  unpipe(code_expr)
 }
 
-find_pipe <- function(code) {
-  if (length(code) == 1) grepl("%>%", code)
-  else unlist(purrr::map(as.list(code), find_pipe))
+find_pipe <- function(code_expr) {
+  if (length(code_expr) == 1) grepl("%>%", code_expr)
+  else unlist(purrr::map(as.list(code_expr), find_pipe))
 }
 
 uses_pipe <- function(code) {
-  any(find_pipe(code))
+  code_expr <- str2expression(code)
+  any(find_pipe(code_expr))
 }

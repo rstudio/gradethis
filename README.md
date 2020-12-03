@@ -1,7 +1,7 @@
 # gradethis
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/rstudio-education/gradethis.svg?branch=master)](https://travis-ci.org/rstudio-education/gradethis)
+[![R build status](https://github.com/rstudio-education/gradethis/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio-education/gradethis/actions)
 [![Codecov test coverage](https://codecov.io/gh/rstudio-education/gradethis/branch/master/graph/badge.svg)](https://codecov.io/gh/rstudio-education/gradethis?branch=master)
 [![CRAN version](http://www.r-pkg.org/badges/version/gradethis)](https://cran.r-project.org/package=gradethis)
 [![gradethis downloads per month](http://cranlogs.r-pkg.org/badges/gradethis)](http://www.rpackages.io/package/gradethis)
@@ -30,3 +30,5 @@ To view the latest grading demo of the different checking methods:
 library(gradethis)
 gradethis::gradethis_demo()
 ```
+
+You can also view a deployed version of this demo [here](https://minecr.shinyapps.io/gradethis_demo/).

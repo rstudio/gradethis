@@ -1,9 +1,10 @@
 context("Check sanity messages")
 
-a <<- function(x) x
-b <<- function(x) x
-f <<- function(x, y) x + y
-g <<- function(x, y = a(1)) x + y
+a <- function(x) x
+b <- function(x) x
+f <- function(x, y) x + y
+g <- function(x, y = a(1)) x + y
+testing_env <- rlang::current_env()
 
 test_that("detect_mistakes detects wrong calls", {
 
@@ -158,13 +159,13 @@ test_that("detect_mistakes detects wrong calls", {
   solution <- quote(g(1))
   user <-     quote(g(1, y = a(1)))
   expect_null(
-    detect_mistakes(user, solution)
+    detect_mistakes(user, solution, env = testing_env)
   )
 
   solution <- quote(g(1))
   user <-     quote(g(1, y = b(1)))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = testing_env),
     wrong_call(
       this = user[[3]],
       that = formals(g)[[2]],
@@ -176,7 +177,7 @@ test_that("detect_mistakes detects wrong calls", {
   solution <- quote(f(1, y = a(1)))
   user <-     quote(f(1, y = f(1)))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = testing_env),
     wrong_call(
       this = user[[3]],
       that = formals(g)[[2]],
@@ -188,10 +189,9 @@ test_that("detect_mistakes detects wrong calls", {
 })
 
 test_that("detect_mistakes detects wrong values", {
-
-  x <<- 1
-  y <<- 1
-  X <<- 1
+  x <- 1
+  y <- 1
+  X <- 1
 
   solution <- quote(1)
   user <-     quote(2)
@@ -258,7 +258,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]),
+      this = as.name(deparse_to_string(user[[2]])),
       that = solution[[2]],
       enclosing_call = user
     )
@@ -280,7 +280,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]),
+      this = as.name(deparse_to_string(user[[2]])),
       that = solution[[2]],
       enclosing_call = user
     )
@@ -291,7 +291,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]),
+      this = as.name(deparse_to_string(user[[2]])),
       that = solution[[2]],
       enclosing_call = user
     )
@@ -302,7 +302,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]),
+      this = as.name(deparse_to_string(user[[2]])),
       that = solution[[2]],
       enclosing_call = user
     )
@@ -313,7 +313,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[3]]),
+      this = as.name(deparse_to_string(user[[3]])),
       that = solution[[3]],
       enclosing_call = user
     )
@@ -324,7 +324,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]),
+      this = as.name(deparse_to_string(user[[2]])),
       that = solution[[2]],
       enclosing_call = user
     )
@@ -335,7 +335,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[2]]),
+      this = as.name(deparse_to_string(user[[2]])),
       that = solution[[2]],
       enclosing_call = user
     )
@@ -346,7 +346,7 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = deparse_to_string(user[[3]][[2]]),
+      this = as.name(deparse_to_string(user[[3]][[2]])),
       that = solution[[3]][[2]],
       enclosing_call = user
     )
@@ -356,12 +356,13 @@ test_that("detect_mistakes detects wrong values", {
 
 test_that("detect_mistakes detects bad argument names", {
 
-  tricky <<- function(aa = 1, ab = 2, ac = 3) aa
+  tricky <- function(aa = 1, ab = 2, ac = 3) aa
+  tricky_env <- rlang::current_env()
 
   solution <- quote(tricky(ab = 1))
   user <-     quote(tricky(a = 1))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
       this_call = user,
       this = user[[2]],
@@ -372,7 +373,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(tricky(1, 2, a = 1))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
       this_call = user,
       this = user[[4]],
@@ -383,7 +384,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(1 %>% tricky(a = 2))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
       this_call = user[[3]],
       this = user[[3]][[2]],
@@ -394,7 +395,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(1 %>% tricky(a = .))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
       this_call = user[[3]],
       this = user[[2]],
@@ -406,13 +407,14 @@ test_that("detect_mistakes detects bad argument names", {
 
 test_that("detect_mistakes detects too many matches", {
 
-  tricky2 <<- function(ambiguous = 1, ...) ambiguous
-  not_tricky <<- function(a = 1, ambiguous = 2, ...) a
+  tricky2 <- function(ambiguous = 1, ...) ambiguous
+  not_tricky <- function(a = 1, ambiguous = 2, ...) a
+  tricky2_env <- rlang::current_env()
 
   solution <- quote(tricky2(ambiguous = 2))
   user <-     quote(tricky2(a = 2, am = 2))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = tricky2_env),
     too_many_matches(
       this_call = user,
       that_name = names(as.list(solution)[2])
@@ -422,13 +424,13 @@ test_that("detect_mistakes detects too many matches", {
   solution <- quote(not_tricky(ambiguous = 2))
   user <-     quote(not_tricky(a = 1, am = 2))
   expect_null(
-    suppressWarnings(detect_mistakes(user, solution))
+    suppressWarnings(detect_mistakes(user, solution, env = tricky2_env))
   )
 
   solution <- quote(tricky2(ambiguous = 2))
   user <-     quote(2 %>% tricky2(a = ., am = 2))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = tricky2_env),
     too_many_matches(
       this_call = user[[3]],
       that_name = names(as.list(solution)[2])
@@ -439,8 +441,8 @@ test_that("detect_mistakes detects too many matches", {
 
 test_that("detect_mistakes detects surplus arguments", {
 
-  h <<- function(x) x
-  i <<- function(x, ...) x
+  h <- function(x) x
+  i <- function(x, ...) x
 
   solution <- quote(h(x = 1))
   user <-     quote(h(x = 1, y = 2))
@@ -535,7 +537,7 @@ test_that("detect_mistakes detects missing argument", {
   solution <- quote(f(x = 1, y = 1))
   user <-     quote(f(1))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = testing_env),
     missing_argument(
       this_call = user,
       that_name = names(as.list(solution)[3])
@@ -545,7 +547,7 @@ test_that("detect_mistakes detects missing argument", {
   solution <- quote(f(x = 1, y = 1))
   user <-     quote(1 %>% f())
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = testing_env),
     missing_argument(
       this_call = user[[3]],
       that_name = names(as.list(solution)[3])
@@ -555,7 +557,7 @@ test_that("detect_mistakes detects missing argument", {
   solution <- quote(a(f(x = 1, y = 1)))
   user <-     quote(a(1 %>% f()))
   expect_equal(
-    detect_mistakes(user, solution),
+    detect_mistakes(user, solution, env = testing_env),
     missing_argument(
       this_call = user[[2]][[3]],
       that_name = names(as.list(solution[[2]])[3]),

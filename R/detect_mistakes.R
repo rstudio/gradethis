@@ -2,7 +2,8 @@ detect_mistakes <- function(user,
                             solution,
                             env = rlang::env_parent(),
                             enclosing_call = NULL,
-                            enclosing_arg = NULL) {
+                            enclosing_arg = NULL,
+                            allow_partial_matching = TRUE) {
   force(env)
 
   if (rlang::is_quosure(user)) {
@@ -17,7 +18,6 @@ detect_mistakes <- function(user,
     # need to preemptively return after each line if a result is returned
     max_len <- max(c(length(user), length(solution)))
     for (i in seq_len(max_len)) {
-
       if (i > length(user)) {
         return(
           missing_answer(
@@ -37,7 +37,8 @@ detect_mistakes <- function(user,
         solution[[i]],
         env = env,
         enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
+        enclosing_arg = enclosing_arg,
+        allow_partial_matching = allow_partial_matching
       )
       if (!is.null(res)) {
         # found a non-NULL result, return it!
@@ -49,6 +50,7 @@ detect_mistakes <- function(user,
   }
 
   submitted <- user
+  solution_original <- solution
 
   if (is.call(user)) {
     user <- unpipe_all(user) # cannot standardise yet without risking error
@@ -82,7 +84,7 @@ detect_mistakes <- function(user,
 
   # 2. Check that the user and the solution use the same call
   # SHOULD WE HAVE A TARGETED WRONG CALL FUNCTION?
-  if (!identical(user[[1]], solution[[1]])) {
+  if (!identical(as.list(user)[[1]], as.list(solution)[[1]])) {
     return(
       wrong_call(
         this = user,
@@ -123,7 +125,6 @@ detect_mistakes <- function(user,
       }
     }
   }
-
 
   ## Remove exact matches from further scrutiny
   for (name in user_names) {
@@ -202,15 +203,36 @@ detect_mistakes <- function(user,
       )
     }
 
-    # Remove partially matched arguments from further consideration
+
     if (length(well_matched > 0)) {
       matched_user_names <- rlang::names2(well_matched)
 
+      if ( !allow_partial_matching ) {
+        ## where does partial matching occur ?
+        where_pmatches <- function(user_name) {
+          which(startsWith(remaining_solution_names, user_name))
+        }
+
+        matches <- vapply(remaining_user_names, where_pmatches, 1)
+        matched_solution_name <- remaining_solution_names[matches]
+
+        return(
+          pmatches_argument_name(
+            this_call = user,
+            this = unname(as.list(user)[matched_user_names]),
+            this_name = matched_user_names,
+            correct_name = matched_solution_name,
+            enclosing_call = enclosing_call,
+            enclosing_arg = enclosing_arg
+          )
+        )
+      }
+
+      # Remove partially matched arguments from further consideration
       for (name in matched_user_names) {
         # which solution name does it match?
         match <- which(startsWith(remaining_solution_names, name))
         matched_solution_name <- remaining_solution_names[match]
-
         user_args[[name]] <- NULL
         solution_args[[matched_solution_name]] <- NULL
       }
@@ -236,21 +258,30 @@ detect_mistakes <- function(user,
   }
 
 
-  # It is now safe to call call_standardise_formals on student code
-  user <- call_standardise_formals(user, env = env)
-  user_names <- real_names(user)
-
   # 5. Check that every named argument in the solution appears in the user code.
   #    The outcome of this order is that when a user writes na = TRUE, gradethis
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
-  solution_names <-  real_names(solution) # original solution_names was modified above
-  missing_args <- solution_names[!(solution_names %in% user_names)]
+
+  explicit_user <- suppressWarnings(call_standardise_formals(
+    unpipe_all(submitted),
+    env = env,
+    include_defaults = FALSE
+  ))
+  explicit_solution <- call_standardise_formals(
+    unpipe_all(solution_original),
+    env = env,
+    include_defaults = FALSE
+  )
+  explicit_user_names <- real_names(explicit_user)
+  explicit_solution_names <-  real_names(explicit_solution)
+  missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
+
   if (length(missing_args) > 0) {
     missing_name <- missing_args[1]
     return(
       missing_argument(
-        this_call = solution,
+        this_call = explicit_solution,
         that_name = missing_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
@@ -258,11 +289,18 @@ detect_mistakes <- function(user,
     )
   }
 
+  # It is now safe to call call_standardise_formals on student code
+  user <- suppressWarnings(call_standardise_formals(user, env = env))
+  user_names <- real_names(user)
+  solution_names <-  real_names(solution) # original solution_names was modified above
+
+
   # 6. Check that the user code does not contain any named arguments that do not
   #    appear in the solution code. Since both calls have been standardised, these
   #    named arguments can only be being passed to ... and we should not match by
   #    position a named argument that is passed to ... with an unamed argument
   #    passed to ...
+
   unmatched_user_names <- user_names[!(user_names %in% solution_names)]
   if (length(unmatched_user_names) > 0) {
     surplus_name <- unmatched_user_names[1]
@@ -293,7 +331,8 @@ detect_mistakes <- function(user,
         # If too verbose, use user[1]
         enclosing_call = submitted,
         # avoid naming first arguments in messages
-        enclosing_arg = arg_name
+        enclosing_arg = arg_name,
+        allow_partial_matching = allow_partial_matching
       )
       if(!is.null(res)) return(res)
     }
@@ -357,7 +396,8 @@ detect_mistakes <- function(user,
         env = env,
         # If too verbose, use user[1]
         enclosing_call = submitted,
-        enclosing_arg = name
+        enclosing_arg = name,
+        allow_partial_matching = allow_partial_matching
       )
       if(!is.null(res)) return(res)
     }

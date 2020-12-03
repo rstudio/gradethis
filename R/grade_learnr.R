@@ -20,13 +20,13 @@
 #' @param solution_code Code provided within the "-solution" chunk for the
 #'   exercise.
 #' @param user_code R code submitted by the user
-#' @param check_code Code provided within the "-check" chunk for the exercise.
+#' @param check_code Code provided within the "-check" (or "-code-check") chunk for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the `evaluate::evaluate`
 #'   function.
 #' @param envir_prep A copy of the R environment before the execution of the
 #'   chunk.
-#' @param last_value The last value from evaluating the exercise.
+#' @param last_value The last value from evaluating the user's exercise submission.
 #' @param ... Extra arguments supplied by learnr
 #'
 #' @return An R list which contains several fields indicating the result of the
@@ -61,121 +61,191 @@ grade_learnr <- function(label = NULL,
 }
 
 
-grade_learnr_ <- function(label = NULL,
-                         solution_code = NULL,
-                         user_code = NULL,
-                         check_code = NULL,
-                         envir_result = NULL,
-                         evaluate_result = NULL,
-                         envir_prep = NULL,
-                         last_value = NULL,
-                         ...) {
+grade_learnr_ <- function(
+  label = NULL,
+  solution_code = NULL,
+  user_code = NULL,
+  check_code = NULL,
+  envir_result = NULL,
+  evaluate_result = NULL,
+  envir_prep = NULL,
+  last_value = NULL,
+  ...
+) {
 
   learnr_args <- list(
-    ..., label = label,
+    label = label,
     solution_code = solution_code,
     user_code = user_code,
     check_code = check_code,
     envir_result = envir_result,
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
-    last_value = last_value
+    last_value = last_value,
+    ...
   )
 
   user_code <- tryCatch(
     parse(text = user_code %||% ""),
     error = function(e) {
       parse_checker <- getOption("exercise.parse.error", grade_learnr_parse_error)
-      # check that parse_checker is a function with proper args
-      do.call(parse_checker, list(parse_error = e, learnr_args = learnr_args))
+      # TODO? check that parse_checker is a function with proper args
+      eval_gradethis({
+        do.call("parse_checker", append(list(parse_error = e), learnr_args))
+      })
     }
   )
 
-  if (is_grade(user_code)) {
-    user_code <- grade_feedback(user_code)
+  if (is_graded(user_code)) {
+    user_code <- feedback(user_code)
   }
   if (is_feedback(user_code)) {
     return(user_code)
   }
   if (length(user_code) == 0) {
-    return(grade_feedback(graded(
-        message = "I didn't receive your code. Did you write any?",
-        correct = FALSE
-    )))
+    return(feedback(
+      fail("I didn't receive your code. Did you write any?"),
+      type = "info"
+    ))
   }
 
-  # Sometimes no solution is provided, but that
-  # means there is nothing to check against. Also,
-  # you do not want to parse NULL
-  if (!is.null(solution_code)) {
-    solution_code <- parse(text = solution_code)
-    if (length(solution_code) == 0) {
-      grade <- graded(
-        message = "No solution is provided for this exercise.",
-        correct = TRUE
-      )
-      return(grade_feedback(grade, type = "info"))
+  check_label <-
+    if (is.null(envir_result)) {
+      paste0(label, "-code-check")
+    } else {
+      paste0(label, "-check")
     }
+
+  ## setup an environment for checking
+  # envir for function call
+  chunk_envir <- learnr::duplicate_env(envir_prep)
+  # object to pass to checking function that should contain all of the information
+  check_obj_envir <- new.env(parent = chunk_envir)
+
+  # Copy over all learnr args into the checking environment
+  for (name in names(learnr_args)) {
+    check_obj_envir[[paste0(".", name)]] <- learnr_args[[name]]
   }
 
-  had_error_checking <- FALSE
-  checked_result <- tryCatch(
-    { # nolint
-      # Run checking code to get feedback
-      parsed_check_code <- parse(text = check_code %||% "")
-
-      if (length(parsed_check_code) > 1) {
-        # don't eval the last one to avoid bad check calls
-        for (i in 1:(length(parsed_check_code) - 1)) {
-          eval(parsed_check_code[[i]], envir_prep)
-        }
+  # Add gradethis specific check objects
+  check_obj_envir[[".result"]] <- last_value
+  check_obj_envir[[".user"]] <- last_value
+  delayedAssign(
+    assign.env = check_obj_envir,
+    x = ".solution",
+    {
+      # Delayed evaluation of `.solution!`
+      solution_expr <- parse(text = solution_code)
+      if (length(solution_expr) == 0) {
+        rlang::return_from(checking_envir, feedback(
+          fail("No solution is provided for this exercise."),
+          type = "info"
+        ))
+      } else {
+        # solution code exists...
+        # Using eval_tidy does not evaluate the expression. Using eval() instead
+        eval(
+          solution_expr,
+          envir = learnr::duplicate_env(envir_prep)
+        )
       }
-      grading_code <- rlang::call_standardise(parsed_check_code[[length(parsed_check_code)]],
-                                             envir_prep)
-
-      # get all grader args
-      grader_args <- list(
-        user_quo = rlang::as_quosure(user_code, envir_result)
-      )
-
-      if (!is.null(solution_code)) {
-        grader_args$solution_quo <- rlang::as_quosure(solution_code,
-                                                      envir_prep)
-      }
-
-      # copy in all grader arguments
-      grading_code$grader_args <- grader_args
-      grading_code$learnr_args <- learnr_args
-
-      # eval code in a copy of the chunk's prepped environment
-      eval(grading_code, envir_prep)
-    },
-    error = function(e) {
-      # prevent the error from being re-thrown
-      message("", e)
-      had_error_checking <<- TRUE
-      graded(
-        correct = FALSE,
-        message = "Error occured while checking the submission"
-      )
     }
   )
 
-  if (!checkmate::test_class(checked_result, "grader_graded")) {
-    stop("`grade_learnr` should receive a `graded` value from every `-check` chunk")
+  # evaluate all checking code
+  checking_envir <- rlang::current_env()
+  to_check_fn <- capture_errors(
+    {
+      parsed_check_code <- parse(text = check_code %||% "")
+      capture_graded(
+        {
+          eval(parsed_check_code, envir = chunk_envir)
+        },
+        # if a `pass()`/`fail()` is used in the regular check chunk with no user submission context, it should be an error
+        on_graded = function(grade, ignore) {
+          fn_used <- if (isTRUE(grade$correct)) "`pass()`" else "`fail()`"
+
+          # notify author of their mistake
+          message(
+            "A ", fn_used, " statement was executed without access to student feedback. (Prematurely graded)\n",
+            "Remember to only call ", fn_used, " inside your checking function (ex: `grade_this({})`"
+          )
+          # return from main function (even though in a inner function! voodoo!)
+          rlang::return_from(checking_envir, feedback(
+            fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
+            type = "error"
+          ))
+        }
+      )
+    },
+    # if an unhandled error occurs while checking...
+    on_error = function(e, ignore) {
+      # notify author of their mistake
+      message("Error while executing checking `", check_label, "` chunk: ", e)
+      # return from main function (even though in a inner function! voodoo!)
+      rlang::return_from(checking_envir, feedback(
+        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
+        type = "error"
+      ))
+    }
+  )
+
+  if (
+    !(
+      # make sure the returned value from check chunk evaluation is a function
+      checkmate::test_function(to_check_fn) &&
+      # ...that accepts at least 1 argument
+      checkmate::test_number(length(formals(to_check_fn)), lower = 1)
+    )
+  ) {
+    # notify author of their mistake
+    message(
+      "`", check_label, "` chunk did not return a function (such as `grade_this`) that accepts 1 argument containing the checking object",
+      "\nObject returned:\n",
+      paste0(
+        utils::capture.output(
+          utils::str(to_check_fn)
+        ),
+        collapse = "\n"
+      )
+    )
+    return(
+      feedback(
+        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
+        type = "error"
+      )
+    )
   }
 
-  grade_feedback(
-    checked_result,
-    type = if (had_error_checking) "warning" else "auto"
+  # evaluate the function with the check envir passed in. (Passing an environment allows for `.solution` to be calculated on demand)
+  # evaluation should handle errors themselves, but wrap in eval_gradethis to be sure
+  graded_result <- eval_gradethis(
+    to_check_fn(check_obj_envir)
+  )
+
+  # make sure the result is a pass or fail
+  if (!is_graded(graded_result)) {
+    message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
+    return(
+      feedback(
+        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
+        type = "error"
+      )
+    )
+  }
+
+  # return result like normal
+  feedback(
+    graded_result,
+    type = "auto"
   )
 }
 
-grade_learnr_parse_error <- function(parse_error, learnr_args) {
+grade_learnr_parse_error <- function(parse_error, user_code, ...) {
   # Code scaffolding in exercise code will cause parse errors, so first check
   # for blanks. We consider a blank to be 3+ "_" characters.
   n_blanks <- sum(vapply(
-    gregexpr("_{3,}", learnr_args$user_code),
+    gregexpr("_{3,}", user_code),
     function(x) sum(x > 0),
     integer(1)
   ))
@@ -204,24 +274,6 @@ grade_learnr_parse_error <- function(parse_error, learnr_args) {
 }
 
 
-#' @rdname grade_learnr
-#' @export
-grade_learnr_error <- function(solution_code = NULL, check_code = "grade_code()", ...) {
-  if (is.null(solution_code)) {
-    return(NULL)
-  }
-  utils::getFromNamespace("grade_learnr", "gradethis")(
-    solution_code = solution_code, check_code = check_code, ...
-  )
-}
-
-learnr_env <- function(learnr_args) {
-  learnr_args$envir_result %||%
-    learnr_args$envir_prep %||%
-    stop("Internal error. learnr did not pass a relevant environment")
-}
-
-
 #' Setup gradethis for use within learnr
 #'
 #' Call this function inside a learnr document's setup chunk in order to use
@@ -231,8 +283,12 @@ learnr_env <- function(learnr_args) {
 #' @param ... arguments passed to [learnr::tutorial_options()]
 #' @export
 #' @seealso [grade_learnr()]
-gradethis_setup <- function(exercise.timelimit = 60, exercise.checker = grade_learnr,
-                            exercise.error.check.code = "grade_code()", ...) {
+gradethis_setup <- function(
+  exercise.timelimit = 60,
+  exercise.checker = grade_learnr,
+  exercise.error.check.code = "grade_code()",
+  ...
+) {
   require(gradethis)
   learnr::tutorial_options(
     exercise.timelimit = exercise.timelimit,
