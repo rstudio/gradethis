@@ -57,7 +57,7 @@ test_that("Grade learnr check_code", {
     graded(
       correct = FALSE,
       message = paste(
-        "The user code of", shQuote(x$.user_code),
+        "The user code of", sQuote(x$.user_code, q = FALSE),
         "produced a parsing error."
       )
     )
