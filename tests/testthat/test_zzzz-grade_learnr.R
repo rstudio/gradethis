@@ -36,7 +36,7 @@ test_that("Grade learnr check_code", {
     check_code = 'function(...) stop("boom")',
     solution_code = "4",
     is_correct = FALSE,
-    msg = "syntax error" # from default parse error in grade_learnr_parse_error()
+    msg = "might not be valid R code" # from default parse error in grade_learnr_parse_error()
   )
   
   # Code scaffolding produces informative parsing error message

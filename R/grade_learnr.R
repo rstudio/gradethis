@@ -259,12 +259,13 @@ grade_learnr_parse_error <- function(check_obj) {
       )
     } else {
       paste(
-        "Uh oh, the R code produced a syntax error:",
+        "It looks like this might not be valid R code:",
         conditionMessage(check_obj$.error),
-        "\nCheck that you have closed every \", ', (, and { ",
-        "with a matching \", ', ), and }. Also look for missing ",
-        "commas. R cannot determine how to turn your text into ",
-        "a complete command."
+        "\nR cannot determine how to turn your text into ",
+        "a complete command. You may have forgot to fill in a blank, ",
+        "to remove an underscore, to include a comma between arguments, ",
+        "or to close an opening \", ', (, or { ",
+        "with a matching \", ', ), and }. "
       )
     }
   fail(message = msg)
