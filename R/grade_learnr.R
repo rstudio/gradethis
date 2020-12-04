@@ -176,7 +176,9 @@ grade_learnr_ <- function(
   tryCatch(
     parse(text = user_code %||% ""),
     error = function(e) {
+      # Add the error object to the checking object
       check_obj_envir$.error <- e
+      # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
       to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
     }
   )
