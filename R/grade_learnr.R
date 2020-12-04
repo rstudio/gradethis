@@ -177,7 +177,7 @@ grade_learnr_ <- function(
     parse(text = user_code %||% ""),
     error = function(e) {
       check_obj_envir$.error <- e
-      to_check_fn <<- getOption("exercise.parse.error", grade_learnr_parse_error)
+      to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
     }
   )
   
@@ -232,7 +232,7 @@ grade_learnr_ <- function(
   )
 }
 
-grade_learnr_parse_error <- function(check_obj) {
+grade_parse_error <- function(check_obj) {
   # check_obj contains everything in learnr_args plus...
   #   - .error (parse error condition)
   #   - .solution (evaluated .solution_code)
