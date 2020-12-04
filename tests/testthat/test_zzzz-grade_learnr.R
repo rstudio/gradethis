@@ -56,9 +56,8 @@ test_that("Grade learnr check_code", {
   parse_error_func <- function(x) {
     graded(
       correct = FALSE,
-      message = paste(
-        "The user code of", sQuote(x$.user_code, q = FALSE),
-        "produced a parsing error."
+      message = paste0(
+        "The user code of '", x$.user_code, "' produced a parsing error."
       )
     )
   }
