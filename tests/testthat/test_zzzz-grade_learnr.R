@@ -4,12 +4,12 @@ test_that("Grade learnr grade_result", {
   expect_grade_learnr(
     user_code = "4",
     check_code = "grade_result(
-          pass_if(~ .result == 4, 'yes. you did it.'),
-          correct = 'this other correct message.',
-          glue_correct = '{ .message } { .correct }'
-        )",
-  is_correct = TRUE,
-  msg = "yes. you did it. this other correct message."
+      pass_if(~ .result == 4, 'yes. you did it.'),
+      correct = 'this other correct message.',
+      glue_correct = '{ .message } { .correct }'
+    )",
+    is_correct = TRUE,
+    msg = "yes. you did it. this other correct message."
   )
 })
 
