@@ -366,20 +366,36 @@ prep <- function(text) {
     text <- text[[1]]
   } else if (is.call(text)) {
     text <- text[1]
+  } else if (is.pairlist(text)) {
+    return(prep_function_arguments(text))
   }
   deparse_to_string(text)
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {
+  is_call_fn_def <- is_function_definition(.call)
 
   if(!is.null(.call)) {
     .call <- deparse_to_string(.call)
     if (!is.null(.arg) && !identical(.arg, "")) {
       .call <- paste(.arg, "=", .call)
+    } 
+    if (is_call_fn_def) {
+      # strip function body
+      .call <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call)
     }
     intro <- glue::glue("In {.call}, ")
   } else {
     intro <- ""
   }
   intro
+}
+
+prep_function_arguments <- function(arg_list) {
+  args <- names(arg_list)
+  values <- purrr::map_chr(arg_list, function(arg_value) {
+    if (arg_value == quote("")) return("")
+    paste(" =", deparse(arg_value))
+  })
+  paste("arguments", paste0(args, values, collapse = ", "))
 }

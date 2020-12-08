@@ -37,3 +37,11 @@ test_that("unpipe_all() can deal with missing parenthesis", {
   expect_equal(unpipe_all(pipe3), func3)
   
 })
+
+test_that("unpipe_all() can deal with function definitions", {
+  function1 <- quote(function(x, y) x + y)
+  function2 <- quote(add <- function(x, y) x + y)
+  
+  expect_equal(unpipe_all(function1), function1)
+  expect_equal(unpipe_all(function2), function2)
+})
