@@ -138,7 +138,19 @@ Manual calling of <code>code_feedback()</code> is also encouraged!</p>
   user_code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/exists.html'>get0</a></span><span class='op'>(</span><span class='st'>".user_code"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
   solution_code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/exists.html'>get0</a></span><span class='op'>(</span><span class='st'>".solution_code"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/exists.html'>get0</a></span><span class='op'>(</span><span class='st'>".envir_prep"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>, ifnotfound <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  <span class='va'>...</span>,
   allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+<span class='op'>)</span>
+
+<span class='fu'>maybe_code_feedback</span><span class='op'>(</span>
+  user_code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/exists.html'>get0</a></span><span class='op'>(</span><span class='st'>".user_code"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  solution_code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/exists.html'>get0</a></span><span class='op'>(</span><span class='st'>".solution_code"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/exists.html'>get0</a></span><span class='op'>(</span><span class='st'>".envir_prep"</span>, <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>, ifnotfound <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
+  <span class='va'>...</span>,
+  allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>,
+  default <span class='op'>=</span> <span class='st'>""</span>,
+  space_before <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  space_after <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -157,14 +169,33 @@ Manual calling of <code>code_feedback()</code> is also encouraged!</p>
       <td><p>Environment used to standardise formals of the user and solution code. Defaults to retrieving <code>.envir_prep</code> from the calling environment. If not found, the <code><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame()</a></code> will be used</p></td>
     </tr>
     <tr>
+      <th>...</th>
+      <td><p>Ignored</p></td>
+    </tr>
+    <tr>
       <th>allow_partial_matching</th>
-      <td><p>A boolean if <code>FALSE</code> don't allow partial matching</p></td>
+      <td><p>A logical if <code>FALSE</code> don't allow partial matching</p></td>
+    </tr>
+    <tr>
+      <th>default</th>
+      <td><p>Default value to return if no code feedback is found or code feedback can be provided</p></td>
+    </tr>
+    <tr>
+      <th>space_before, space_after</th>
+      <td><p>Logical value to determine if a space should be included before (<a href='https://rdrr.io/r/base/logical.html'>TRUE</a>) or after (<a href='https://rdrr.io/r/base/logical.html'>FALSE</a>)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If no discrepencies are found, <code>NULL</code>. If a code difference is found, a character value describing the difference.</p>
+    <p>If no discrepencies are found, a <code>NULL</code> value is returned. If a code difference is found, a character value describing the difference.</p>
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    
+<ul>
+<li><p><code>code_feedback</code>: Determine code feedback</p></li>
+<li><p><code>maybe_code_feedback</code>: Return <code>code_feedback()</code> result when possible. Useful when setting default <code><a href='graded.html'>fail()</a></code> glue messages. For example, if there is no solution, no code feedback will be given.</p></li>
+</ul>
     <h2 class="hasAnchor" id="code-differences"><a class="anchor" href="#code-differences"></a>Code differences</h2>
 
     
@@ -184,7 +215,7 @@ Manual calling of <code>code_feedback()</code> is also encouraged!</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Values are same</span>
-<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"log(2)"</span><span class='op'>)</span> <span class='co'># NULL</span>
+<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"log(2)"</span><span class='op'>)</span> <span class='co'># NULL # no differences found</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'># Functions are different</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"sqrt(2)"</span><span class='op'>)</span>

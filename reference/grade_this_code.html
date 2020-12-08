@@ -137,7 +137,9 @@
     <span class='st'>"Correct!"</span><span class='op'>)</span><span class='op'>)</span>,
   incorrect <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.incorrect"</span>, <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail"</span>,
     <span class='st'>"Incorrect"</span><span class='op'>)</span><span class='op'>)</span>,
-  allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
+  <span class='va'>...</span>,
+  allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>,
+  fail_code_feedback <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.feedback"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -145,17 +147,25 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>correct</th>
-      <td><p>A character string to display if the student answer matches a
+      <td><p>A <code>glue</code>-able character string to display if the student answer matches a
 known correct answer.</p></td>
     </tr>
     <tr>
       <th>incorrect</th>
-      <td><p>A character string to display if the student answer matches
-a known incorrect answer.</p></td>
+      <td><p>A <code>glue</code>-able character string to display if the student answer matches
+a known incorrect answer. <code>.message</code> is available in the calling environment.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Ignored</p></td>
     </tr>
     <tr>
       <th>allow_partial_matching</th>
-      <td><p>A boolean if <code>FALSE</code> don't allow partial matching</p></td>
+      <td><p>A logical if <code>FALSE</code> don't allow partial matching</p></td>
+    </tr>
+    <tr>
+      <th>fail_code_feedback</th>
+      <td><p>Logical that determines if code feedback should be appended to the default failure message. Can also use <code><a href='code_feedback.html'>maybe_code_feedback()</a></code> in your custom <code><a href='graded.html'>fail()</a></code> glue message.</p></td>
     </tr>
     </table>
 
