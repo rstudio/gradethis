@@ -23,7 +23,7 @@ a known incorrect answer. \code{.message} is available in the calling environmen
 
 \item{...}{Ignored}
 
-\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
+\item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
 
 \item{fail_code_feedback}{Logical that determines if code feedback should be appended to the default failure message. Can also use \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} in your custom \code{\link[=fail]{fail()}} glue message.}
 }

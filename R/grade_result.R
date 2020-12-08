@@ -165,9 +165,9 @@ grade_result_strict <- function(
 #' @param x A formula, function, or value, that returns `TRUE` or `FALSE`.
 #'    When comparing objects that are greater than length 1
 #'    (e.g., vectors, dataframes, matricies, etc)
-#'    A boolean vector will be returned if the user uses `==`, not a single boolean value.
+#'    A logical vector will be returned if the user uses `==`, not a single logical value.
 #'    `gradethis` will run the vector through
-#'     `all(..., na.rm = TRUE)` to check for the boolean value.
+#'     `all(..., na.rm = TRUE)` to check for the logical value.
 #'    It is advised that the user use `identical()` instead of `==` in this case.
 #' @param message character string for message returned (usually passed in from
 #'    [pass_if()] or [fail_if()].

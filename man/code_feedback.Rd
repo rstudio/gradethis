@@ -9,6 +9,7 @@ code_feedback(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  ...,
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 )
 
@@ -16,8 +17,9 @@ maybe_code_feedback(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   ...,
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  default = "",
   space_before = TRUE,
   space_after = FALSE
 )
@@ -29,14 +31,14 @@ maybe_code_feedback(
 
 \item{env}{Environment used to standardise formals of the user and solution code. Defaults to retrieving \code{.envir_prep} from the calling environment. If not found, the \code{\link[=parent.frame]{parent.frame()}} will be used}
 
-\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
-
 \item{...}{Ignored}
+
+\item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
 
 \item{space_before, space_after}{Logical value to determine if a space should be included before (\link{TRUE}) or after (\link{FALSE})}
 }
 \value{
-If no discrepencies are found, \code{NULL}. If a code difference is found, a character value describing the difference.
+If no discrepencies are found, a \code{NULL} value is returned. If a code difference is found, a character value describing the difference.
 }
 \description{
 Generate a message describing the first instance of a code mismatch. This function is built to be used within \code{\link[=grade_this]{grade_this()}} without using arguments.
@@ -67,7 +69,7 @@ There are many different ways that code can be different, yet still the same. He
 
 \examples{
 # Values are same
-code_feedback("log(2)", "log(2)") # NULL
+code_feedback("log(2)", "log(2)") # NULL # no differences found
 
 # Functions are different
 code_feedback("log(2)", "sqrt(2)")

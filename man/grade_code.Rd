@@ -25,7 +25,7 @@ a known incorrect answer.}
 
 \item{...}{ignored. Should be empty}
 
-\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
+\item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
 
 \item{glue_correct}{A glue string that returns the final correct message
 displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}

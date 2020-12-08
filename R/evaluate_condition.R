@@ -52,7 +52,7 @@ evaluate_condition <- function(condition, ..., last_value, env) {
   }
 
   # if we compare something like a vector or dataframes to one another
-  # we need to collapse the result down to a single boolean value
+  # we need to collapse the result down to a single logical value
   if (length(res) > 1) {
     ## this isn't the best way to handle NA values so we raise a warning.
     ## https://github.com/rstudio-education/grader/issues/46 # nolint

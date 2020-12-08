@@ -12,7 +12,7 @@
 #'     use `graded()` or if statements around `pass*()` and `fail*()`
 #'
 #' @param message A character string of the message to be displayed.
-#' @param correct A boolean value of whether or not the checked code is correct.
+#' @param correct A logical value of whether or not the checked code is correct.
 #' @describeIn graded Programatic function to produce a graded a result.
 #' @export
 graded <- function(correct, message = NULL) {
