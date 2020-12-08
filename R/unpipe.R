@@ -47,8 +47,12 @@ unpipe_all <- function(code_expr) {
   if (code_expr_len == 0) return(code_expr)
   if (code_expr_len == 1) return(code_expr)
   if (code_expr_len == 2 && is.null(code_expr[[2]])) return(code_expr)
-  if (length(code_expr) == 4 && code_expr[[1]] == "function") return(code_expr)
-  code_expr <- as.call(purrr::map(as.list(code_expr), unpipe_all))
+  if (is_function_definition(code_expr)) {
+    # Remove source ref information to be safe
+    code_expr <- code_expr[-4]
+  }
+  re_call <- if (is.pairlist(code_expr)) as.pairlist else as.call
+  code_expr <- re_call(purrr::map(as.list(code_expr), unpipe_all))
   unpipe(code_expr)
 }
 
@@ -60,4 +64,16 @@ find_pipe <- function(code_expr) {
 uses_pipe <- function(code) {
   code_expr <- str2expression(code)
   any(find_pipe(code_expr))
+}
+
+is_function_definition <- function(code_expr) {
+  # `code_expr` positions: 
+  # * 1: as.symbol("function")
+  # * 2: list of arguments
+  # * 3: body
+  # * 4: srcref (or NULL after unpipe_all() removes the srcref)
+  length(code_expr) == 4 && 
+    identical(code_expr[[1]], as.symbol("function")) &&
+    is.pairlist(code_expr[[2]]) &&
+    (is.null(code_expr[[4]]) || inherits(code_expr[[4]], "srcref"))
 }
