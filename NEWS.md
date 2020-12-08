@@ -5,6 +5,7 @@
 * New function: `code_feedback()`. Compares the user code against the solution code.
 * Checking exercise code with blanks, e.g. `____`, now returns clear feedback that students should replace the `____` with code. (#153)
 * The `exercise.parse.error` global option now accepts a function with one argument. The function is given the gradethis check environment with an additional `.error` object containing the parse error condition. (#153)
+* Improved code feedback for function definitions will detect mistakes in function arguments (#178)
 
 ### Breaking changes
 
