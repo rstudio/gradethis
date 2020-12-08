@@ -7,8 +7,14 @@
 gradethis_setup(
   exercise.timelimit = 60,
   exercise.checker = grade_learnr,
-  exercise.error.check.code = "grade_code()",
-  ...
+  exercise.error.check.code = "grade_this_code()",
+  ...,
+  pass = "{ random_praise() } Correct!",
+  fail = "Incorrect.{ maybe_code_feedback() } { random_encourage() }",
+  code_correct = NULL,
+  code_incorrect = "{ .message } { random_encouragement() }",
+  fail_code_feedback = TRUE,
+  allow_partial_matching = NULL
 )
 }
 \arguments{
@@ -22,6 +28,18 @@ gradethis_setup(
 code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
 
 \item{...}{arguments passed to \code{\link[learnr:tutorial_options]{learnr::tutorial_options()}}}
+
+\item{pass}{Default message for \code{\link[=pass]{pass()}}. Sets \code{options("gradethis.pass")}}
+
+\item{fail}{Default message for \code{\link[=fail]{fail()}}. Sets \code{options("gradethis.fail")}}
+
+\item{code_correct}{Sets \code{options("gradethis.code.correct")} which read before \code{options("gradethis.pass")} for the default correct message in \code{\link[=grade_this_code]{grade_this_code()}}}
+
+\item{code_incorrect}{Sets \code{options("gradethis.code.incorrect")} which read before \code{options("gradethis.fail")} for the default incorrect message in \code{\link[=grade_this_code]{grade_this_code()}}}
+
+\item{fail_code_feedback}{Allows for \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} to return code feedback. (To be paired with a \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} message.)}
+
+\item{allow_partial_matching}{Allows for partial matching in \code{grade_this_code()}. Sets \code{options("gradethis.code.partial_matching")}}
 }
 \description{
 Call this function inside a learnr document's setup chunk in order to use

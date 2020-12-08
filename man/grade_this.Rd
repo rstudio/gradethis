@@ -4,10 +4,18 @@
 \alias{grade_this}
 \title{Grade expression}
 \usage{
-grade_this(expr)
+grade_this(
+  expr,
+  ...,
+  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
+)
 }
 \arguments{
 \item{expr}{Expression to be evaluated. MUST either signal a grade via \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} like \pkg{gradethis} functions or throw an error (via \pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to \code{\link[=fail]{fail()}} calls with the corresponding error message.}
+
+\item{...}{ignored}
+
+\item{fail_code_feedback}{Logical that determines if code feedback should be appended to the default failure message. Can also use \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} in your custom \code{\link[=fail]{fail()}} glue message.}
 }
 \value{
 a function whose first parameter should be an environment that contains all necessary information to execute the expression.  The evaluation of the expression should return a \code{\link[=graded]{graded()}} object.

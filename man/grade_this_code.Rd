@@ -9,17 +9,23 @@ grade_this_code(
     "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail",
     "Incorrect")),
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+  ...,
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
 )
 }
 \arguments{
-\item{correct}{A character string to display if the student answer matches a
+\item{correct}{A \code{glue}-able character string to display if the student answer matches a
 known correct answer.}
 
-\item{incorrect}{A character string to display if the student answer matches
-a known incorrect answer.}
+\item{incorrect}{A \code{glue}-able character string to display if the student answer matches
+a known incorrect answer. \code{.message} is available in the calling environment.}
 
-\item{allow_partial_matching}{A boolean if \code{FALSE} don't allow partial matching}
+\item{...}{Ignored}
+
+\item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
+
+\item{fail_code_feedback}{Logical that determines if code feedback should be appended to the default failure message. Can also use \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} in your custom \code{\link[=fail]{fail()}} glue message.}
 }
 \value{
 a function whose first parameter should be an environment that contains

@@ -29,7 +29,7 @@ fail_if_equal(
 )
 }
 \arguments{
-\item{correct}{A boolean value of whether or not the checked code is correct.}
+\item{correct}{A logical value of whether or not the checked code is correct.}
 
 \item{message}{A character string of the message to be displayed.}
 
