@@ -68,26 +68,29 @@ grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
 ) {
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
   function(checking_env) {
     checking_env[[".__correct"]] <- correct
     checking_env[[".__incorrect"]] <- incorrect
-    checking_env[[".__fail_code_feedback"]] <- isTRUE(fail_code_feedback)
 
-    grade_this({
-      # create variable `.message` for glue to find
-      .message <- code_feedback(allow_partial_matching = allow_partial_matching)
-      # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
-      if (is.null(.message)) {
-        # need to use `get()` to avoid using `utils::globalVariables`
-        pass(get(".__correct"))
-      } else {
-        fail(get(".__incorrect"))
+    grade_this(
+      fail_code_feedback = fail_code_feedback,
+      expr = {
+        # create variable `.message` for glue to find
+        .message <- code_feedback(allow_partial_matching = allow_partial_matching)
+        # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
+        if (is.null(.message)) {
+          # need to use `get()` to avoid using `utils::globalVariables`
+          pass(get(".__correct"))
+        } else {
+          fail(get(".__incorrect"))
+        }
       }
-    })(checking_env)
+    )(checking_env)
   }
 }
 
