@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Random praise and encouragement — random_praise • gradethis</title>
+<title>Capture grades and errors — eval_gradethis • gradethis</title>
 
 
 <!-- jquery -->
@@ -45,10 +45,8 @@
 
 
 
-<meta property="og:title" content="Random praise and encouragement — random_praise" />
-<meta property="og:description" content="Generate a random praise or encouragement phrase.
-This can be used in conjunction with
-glue::[glue][glue::glue()] to generate praise or encouragement within feedback to users." />
+<meta property="og:title" content="Capture grades and errors — eval_gradethis" />
+<meta property="og:description" content="Capture the first graded() signal or error thrown when evaluating the expr." />
 
 
 
@@ -125,40 +123,60 @@ glue::[glue][glue::glue()] to generate praise or encouragement within feedback t
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Random praise and encouragement</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/praise.R'><code>R/praise.R</code></a></small>
-    <div class="hidden name"><code>praise.Rd</code></div>
+    <h1>Capture grades and errors</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/graded_condition.R'><code>R/graded_condition.R</code></a></small>
+    <div class="hidden name"><code>eval_gradethis.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a random praise or encouragement phrase.
-This can be used in conjunction with
-<code>glue::[glue][glue::glue()]</code> to generate praise or encouragement within feedback to users.</p>
+    <p>Capture the first <code><a href='graded.html'>graded()</a></code> signal or error thrown when evaluating the <code>expr</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>random_praise</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>eval_gradethis</span><span class='op'>(</span><span class='va'>expr</span>, on_error <span class='op'>=</span> <span class='cn'>NULL</span>, on_graded <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
-<span class='fu'>random_encourage</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>expr</th>
+      <td><p>Code block to evaluate</p></td>
+    </tr>
+    <tr>
+      <th>on_error</th>
+      <td><p>A <code><a href='https://rdrr.io/r/base/conditions.html'>withCallingHandlers()</a></code> handler for class <code>error</code> with signature <code>function(error, this_env)</code> that receives the error object and calling environment of the error handler. <code>on_error</code> should use <code><a href='https://rlang.r-lib.org/reference/return_from.html'>rlang::return_from()</a></code> using <code>this_env</code> to immediately return the value and not continue evaluation.</p></td>
+    </tr>
+    <tr>
+      <th>on_graded</th>
+      <td><p>A <code><a href='https://rdrr.io/r/base/conditions.html'>withCallingHandlers()</a></code> handler for class <code>graded</code> with signature <code>function(grade, this_env)</code> that receives the error object and calling environment of the error handler. <code>on_graded</code> should use <code><a href='https://rlang.r-lib.org/reference/return_from.html'>rlang::return_from()</a></code> using <code>this_env</code> to immediately return the value and not continue evaluation.</p></td>
+    </tr>
+    </table>
 
-
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
-
-    
-<ul>
-<li><p><code>random_praise</code>: Returns a random praise message</p></li>
-<li><p><code>random_encourage</code>: Returns a random encouragement message</p></li>
-</ul>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random praise: {random_praise()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random praise: Well done!" "Random praise: Beautiful!"
-#&gt; [3] "Random praise: :)"         "Random praise: Fantastic!"
-#&gt; [5] "Random praise: Bravo!"    </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random encouragement: {random_encourage()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random encouragement: Don't give up now, try it one more time."       
-#&gt; [2] "Random encouragement: Try it again. You get better each time."        
-#&gt; [3] "Random encouragement: Give it another try."                           
-#&gt; [4] "Random encouragement: Try it again. I have a good feeling about this."
-#&gt; [5] "Random encouragement: Don't give up now, try it one more time."       </div></pre>
+    <pre class="examples"><div class='input'><span class='va'>ans1</span> <span class='op'>&lt;-</span> <span class='fu'>eval_gradethis</span><span class='op'>(</span><span class='op'>{</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 1"</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 2"</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 3"</span><span class='op'>)</span>
+<span class='op'>}</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='input'><span class='va'>ans1</span> <span class='co'># passing - message 1</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: Correct: message 1&gt;</div><div class='input'>
+<span class='va'>ans2</span> <span class='op'>&lt;-</span> <span class='fu'>eval_gradethis</span><span class='op'>(</span><span class='op'>{</span>
+  <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/logical-expectations.html'>expect_true</a></span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 2"</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 3"</span><span class='op'>)</span>
+<span class='op'>}</span><span class='op'>)</span>
+<span class='va'>ans2</span> <span class='co'># failing - FALSE isn't true.</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: Incorrect: FALSE is not TRUE
+#&gt; 
+#&gt; `actual`:   <span style='color: #00BB00;'>FALSE</span><span>
+#&gt; `expected`: </span><span style='color: #00BB00;'>TRUE</span><span> &gt;</div><div class='input'>
+<span class='va'>ans3</span> <span class='op'>&lt;-</span> <span class='fu'>eval_gradethis</span><span class='op'>(</span><span class='op'>{</span>
+  <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"boom"</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 2"</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 3"</span><span class='op'>)</span>
+<span class='op'>}</span><span class='op'>)</span>
+<span class='va'>ans3</span> <span class='co'># failing - boom</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: Incorrect: boom&gt;</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

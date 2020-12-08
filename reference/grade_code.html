@@ -6,34 +6,49 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Grade code against a solution — grade_code • gradethis</title>
+<title>Grade student code against a solution (Legacy) — grade_code • gradethis</title>
+
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
 
 
+<!-- docsearch -->
+<script src="../docsearch.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link href="../docsearch.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
-<meta property="og:title" content="Grade code against a solution — grade_code" />
 
-<meta property="og:description" content="Checks the code expression or the code result against a solution." />
-<meta name="twitter:card" content="summary" />
+
+<meta property="og:title" content="Grade student code against a solution (Legacy) — grade_code" />
+<meta property="og:description" content="
+ Please use grade_this_code()." />
+
 
 
 
@@ -47,9 +62,10 @@
 <![endif]-->
 
 
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -63,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0.9002</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9000</span>
       </span>
     </div>
 
@@ -71,51 +87,65 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/rstudio-education/gradethis">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/rstudio-education/gradethis/">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
+      
+      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+        <div class="form-group">
+          <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
+        </div>
+      </form>
       
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Grade code against a solution</h1>
+    <h1>Grade student code against a solution (Legacy)</h1>
     <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/grade_code.R'><code>R/grade_code.R</code></a></small>
     <div class="hidden name"><code>grade_code.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    
-    <p>Checks the code expression or the code result against a solution.</p>
-    
+    <p><a href='https://www.tidyverse.org/lifecycle/#superseded'><img src='figures/lifecycle-superseded.svg' alt='Superseded lifecycle'></a>
+ Please use <code><a href='grade_this_code.html'>grade_this_code()</a></code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>grade_code</span>(<span class='kw'>correct</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>incorrect</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>grader_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(),
-  <span class='kw'>learnr_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(),
-  <span class='kw'>glue_correct</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption</a></span>(<span class='st'>"gradethis_glue_correct"</span>),
-  <span class='kw'>glue_incorrect</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption</a></span>(<span class='st'>"gradethis_glue_incorrect"</span>),
-  <span class='kw'>glue_pipe</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption</a></span>(<span class='st'>"gradethis_glue_pipe"</span>))</pre>
-    
+    <pre class="usage"><span class='fu'>grade_code</span><span class='op'>(</span>
+  correct <span class='op'>=</span> <span class='cn'>NULL</span>,
+  incorrect <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>,
+  allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>,
+  glue_correct <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis_glue_correct"</span><span class='op'>)</span>,
+  glue_incorrect <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis_glue_incorrect"</span><span class='op'>)</span>,
+  glue_pipe <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis_glue_pipe"</span><span class='op'>)</span>,
+  grader_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>,
+  learnr_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
@@ -130,49 +160,59 @@ known correct answer.</p></td>
 a known incorrect answer.</p></td>
     </tr>
     <tr>
+      <th>...</th>
+      <td><p>ignored. Should be empty</p></td>
+    </tr>
+    <tr>
+      <th>allow_partial_matching</th>
+      <td><p>A boolean if <code>FALSE</code> don't allow partial matching</p></td>
+    </tr>
+    <tr>
+      <th>glue_correct</th>
+      <td><p>A glue string that returns the final correct message
+displayed. Defaults to <code><a href='https://rdrr.io/r/base/options.html'>getOption("gradethis_glue_correct")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>glue_incorrect</th>
+      <td><p>A glue string that returns the final incorrect message
+displayed. Defaults to <code><a href='https://rdrr.io/r/base/options.html'>getOption("gradethis_glue_incorrect")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>glue_pipe</th>
+      <td><p>A glue string that returns the final message displayed when
+the student uses a pipe, <code>%&gt;%</code>. Defaults to
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("gradethis_glue_pipe")</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>grader_args</th>
       <td><p>A list of parameters passed to <code>grader</code> functions
-(provided by <code>grade_learnr()</code>). This contains:</p><ul>
+(provided by <code><a href='grade_learnr.html'>grade_learnr()</a></code>). This contains:</p><ul>
 <li><p><code>user_quo</code>: Quoted R code submitted by the user. For example
-<code><a href='https://rlang.r-lib.org/reference/quotation.html'>rlang::quo(1)</a></code></p></li>
+<code><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>rlang::quo(1)</a></code></p></li>
 <li><p><code>solution_quo</code>: (Optional) Quoted solution R code provided by the
 <code>*-solution</code> chunk for an exercise.</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>learnr_args</th>
-      <td><p>A list of all parameters passed to <code>grade_learnr()</code> by
+      <td><p>A list of all parameters passed to <code><a href='grade_learnr.html'>grade_learnr()</a></code> by
 <code>learnr</code>. See
 <a href='https://rstudio.github.io/learnr/exercises.html#exercise_checking'>https://rstudio.github.io/learnr/exercises.html#exercise_checking</a> for
 more details.</p></td>
     </tr>
-    <tr>
-      <th>glue_correct</th>
-      <td><p>A glue string that returns the final correct message
-displayed. Defaults to <code><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption("gradethis_glue_correct")</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>glue_incorrect</th>
-      <td><p>A glue string that returns the final incorrect message
-displayed. Defaults to <code><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption("gradethis_glue_incorrect")</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>glue_pipe</th>
-      <td><p>A glue string that returns the final message displayed when
-the student uses a pipe, <code>$&gt;$</code>. Defaults to
-<code><a href='https://www.rdocumentation.org/packages/base/topics/options'>getOption("gradethis_glue_pipe")</a></code>.</p></td>
-    </tr>
     </table>
-    
+
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>graded()</code> object. An incorrect message will describe the first way
-that the answer differs, the message will be the content of the <code>glue_pipe</code>
+    <p>a function whose first parameter should be an environment that contains
+all necessary information to compare the code.  The result of the returned
+function will be a <code><a href='graded.html'>graded()</a></code> object. An incorrect message will describe the
+first way that the answer differs, the message will be the content of the <code>glue_pipe</code>
 argument.</p>
-    
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>grade_code()</code> compares student code to a solution (i.e. model code) and
+    <p>Checks the code expression or the code result against a solution.</p>
+<p><code>grade_code()</code> compares student code to a solution (i.e. model code) and
 describes the first way that the student code differs. If the student code
 exactly matches the solution, <code>grade_code()</code> returns a customizable success
 message (<code>correct</code>). If the student code does not match the solution, a
@@ -191,45 +231,56 @@ is no need to supply a student submitted code argument when you call
 <code>grade_code()</code> from a learnr document (learnr will provide the code that the
 student submits when it runs <code>grade_code()</code>.</p></li>
 </ol>
-    <p>For best results, name all arguments provided in the solution code.</p>
-    
+
+<p>For best results, name all arguments provided in the solution code.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code>grade_code()</code>, <code>grade_result()</code>, and <code>grade_conditions()</code></p></div>
-    
+    <div class='dont-index'><p><code><a href='grade_this_code.html'>grade_this_code()</a></code>, <code>grade_code()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='fu'>gradethis_demo</span>()
-<span class='co'># }</span><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='fu'><a href='gradethis_demo.html'>gradethis_demo</a></span><span class='op'>(</span><span class='op'>)</span>
+
 <span class='co'># This is a manual example, see grading demo for `learnr` tutorial usage</span>
-<span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/substitute'>quote</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>sqrt</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log</a></span>(<span class='fl'>2</span>)))
-<span class='no'>z</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/substitute'>quote</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/MathFun'>sqrt</a></span>(<span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/Log'>log</a></span>(<span class='fl'>1</span>)))
-<span class='fu'>grade_code</span>(<span class='kw'>grader_args</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/list'>list</a></span>(<span class='kw'>user_quo</span> <span class='kw'>=</span> <span class='no'>y</span>, <span class='kw'>solution_quo</span> <span class='kw'>=</span> <span class='no'>z</span>))</div><div class='output co'>#&gt; $message
-#&gt; I expected 1 where you wrote 2.  Try it again; next time's the charm!
-#&gt; 
-#&gt; $correct
-#&gt; [1] FALSE
-#&gt; 
-#&gt; attr(,"class")
-#&gt; [1] "grader_graded"</div></pre>
+<span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'>grade_code</span><span class='op'>(</span>grader_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>user_quo <span class='op'>=</span> <span class='va'>y</span>, solution_quo <span class='op'>=</span> <span class='va'>z</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The `grader_args` argument of `grade_code()` is deprecated as of gradethis 0.2.0.</span>
+#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
+#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; function (check_env) 
+#&gt; {
+#&gt;     user_code &lt;- check_env$.user_code
+#&gt;     if (is.null(user_code)) {
+#&gt;         return(legacy_graded(correct = FALSE, message = "I didn't receive your code. Did you write any?"))
+#&gt;     }
+#&gt;     solution_code &lt;- check_env$.solution_code
+#&gt;     if (is.null(solution_code) || length(str2expression(solution_code)) == 
+#&gt;         0) {
+#&gt;         return(legacy_graded(correct = FALSE, message = "No exercise solution provided. Defaulting to _incorrect_"))
+#&gt;     }
+#&gt;     message &lt;- code_feedback(user_code = user_code, solution_code = solution_code, 
+#&gt;         env = check_env, allow_partial_matching = allow_partial_matching)
+#&gt;     if (is.null(message)) {
+#&gt;         return(legacy_graded(correct = TRUE, message = glue_message(glue_correct, 
+#&gt;             .is_correct = TRUE, .message = NULL, .correct = correct)))
+#&gt;     }
+#&gt;     message &lt;- glue_message(glue_incorrect, .is_correct = FALSE, 
+#&gt;         .message = message, .incorrect = incorrect)
+#&gt;     if (uses_pipe(user_code)) {
+#&gt;         message &lt;- glue_message(glue_pipe, .user = as.character(str2expression(user_code)), 
+#&gt;             .message = message, .incorrect = incorrect)
+#&gt;     }
+#&gt;     legacy_graded(correct = FALSE, message = message)
+#&gt; }
+#&gt; &lt;bytecode: 0x7fe65adfda98&gt;
+#&gt; &lt;environment: 0x7fe65adfc198&gt;</div></span></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
-
-      <li><a href="#see-also">See also</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -237,13 +288,33 @@ student submits when it runs <code>grade_code()</code>.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
    </div>
 
   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.js" integrity="sha256-GKvGqXDznoRYHCwKXGnuchvKSwmx9SRMrZOTh2g4Sb0=" crossorigin="anonymous"></script>
+<script>
+  docsearch({
+    
+    
+    apiKey: '6e6350018f3204fb7cb6f4e7d3487cce',
+    indexName: 'rstudio-education',
+    inputSelector: 'input#search-input.form-control',
+    transformData: function(hits) {
+      return hits.map(function (hit) {
+        hit.url = updateHitURL(hit);
+        return hit;
+      });
+    }
+  });
+</script>
+
+
 
   </body>
 </html>
+
 
