@@ -84,37 +84,8 @@ grade_learnr_ <- function(
     last_value = last_value,
     ...
   )
-
-  user_code <- tryCatch(
-    parse(text = user_code %||% ""),
-    error = function(e) {
-      parse_checker <- getOption(
-        "exercise.parse.error",
-        function(...) {
-          fail(paste(
-            "It looks like this might not be valid R code:",
-            conditionMessage(e),
-            "\nCheck that you have closed every \", ', (, and { ",
-            "with a matching \", ', ), and }. Also look for missing ",
-            "commas. R cannot determine how to turn your text into ",
-            "a complete command."
-          ))
-        }
-      )
-      # TODO? check that parse_checker is a function with proper args
-      eval_gradethis({
-        do.call(parse_checker, append(list(parse_error = e), learnr_args))
-      })
-    }
-  )
-
-  if (is_graded(user_code)) {
-    user_code <- feedback(user_code)
-  }
-  if (is_feedback(user_code)) {
-    return(user_code)
-  }
-  if (length(user_code) == 0) {
+  
+  if (!(length(user_code) && nzchar(trimws(user_code)))) {
     return(feedback(
       fail("I didn't receive your code. Did you write any?"),
       type = "info"
@@ -202,6 +173,16 @@ grade_learnr_ <- function(
     }
   )
 
+  tryCatch(
+    parse(text = user_code %||% ""),
+    error = function(e) {
+      # Add the error object to the checking object
+      check_obj_envir$.error <- e
+      # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
+      to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
+    }
+  )
+  
   if (
     !(
       # make sure the returned value from check chunk evaluation is a function
@@ -253,6 +234,44 @@ grade_learnr_ <- function(
   )
 }
 
+grade_parse_error <- function(check_obj) {
+  # check_obj contains everything in learnr_args plus...
+  #   - .error (parse error condition)
+  #   - .solution (evaluated .solution_code)
+  #   - .result (.last_value from .user_code)
+  #   - .user (.last_value from .user_code)
+  #   
+  # Code scaffolding in exercise code will cause parse errors, so first check
+  # for blanks. We consider a blank to be 3+ "_" characters.
+  n_blanks <- sum(vapply(
+    gregexpr("_{3,}", check_obj$.user_code),
+    function(x) sum(x > 0),
+    integer(1)
+  ))
+  msg <- 
+    if (n_blanks > 0) {
+      paste0(
+        "The exercise contains ", 
+        if (n_blanks == 1L) {
+          "1 blank"
+        } else {
+          paste(n_blanks, "blanks")
+        },
+        ". Please replace the '____' with valid R code."
+      )
+    } else {
+      paste(
+        "It looks like this might not be valid R code:",
+        conditionMessage(check_obj$.error),
+        "\nR cannot determine how to turn your text into ",
+        "a complete command. You may have forgot to fill in a blank, ",
+        "to remove an underscore, to include a comma between arguments, ",
+        "or to close an opening \", ', (, or { ",
+        "with a matching \", ', ), and }. "
+      )
+    }
+  fail(message = msg)
+}
 
 
 #' Setup gradethis for use within learnr

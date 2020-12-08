@@ -161,7 +161,7 @@ create_learnr_env <- function(user_code, solution_code = NULL, envir_prep, eval 
 
 expect_grade_learnr <- function(
   user_code,
-  check_code = "",
+  check_code = "function(...) stop('boom')",
   prep_code = "",
   solution_code = NULL,
   ...,
