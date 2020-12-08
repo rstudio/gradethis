@@ -373,11 +373,16 @@ prep <- function(text) {
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {
+  is_call_fn_def <- is_function_definition(.call)
 
   if(!is.null(.call)) {
     .call <- deparse_to_string(.call)
     if (!is.null(.arg) && !identical(.arg, "")) {
       .call <- paste(.arg, "=", .call)
+    } 
+    if (is_call_fn_def) {
+      # strip function body
+      .call <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call)
     }
     intro <- glue::glue("In {.call}, ")
   } else {
