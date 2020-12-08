@@ -196,6 +196,7 @@ with_code_feedback <- function(val, expr) {
 
 #' @describeIn code_feedback Return `code_feedback()` result when possible. Useful when setting default [fail()] glue messages. For example, if there is no solution, no code feedback will be given.
 #' @param ... Ignored
+#' @param default Default value to return if no code feedback is found or code feedback can be provided
 #' @param space_before,space_after Logical value to determine if a space should be included before ([TRUE]) or after ([FALSE])
 #' @export
 maybe_code_feedback <- function(

@@ -35,6 +35,8 @@ maybe_code_feedback(
 
 \item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
 
+\item{default}{Default value to return if no code feedback is found or code feedback can be provided}
+
 \item{space_before, space_after}{Logical value to determine if a space should be included before (\link{TRUE}) or after (\link{FALSE})}
 }
 \value{
