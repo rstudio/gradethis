@@ -71,6 +71,7 @@ grade_this_code <- function(
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
 ) {
+  ellipsis::check_dots_empty()
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
   function(checking_env) {
@@ -117,13 +118,14 @@ grade_this_code <- function(
 #' @param user_code String containing user code. Defaults to retrieving `.user_code` from the calling environment. (Required)
 #' @param solution_code String containing solution code. Defaults to retrieving `.solution_code` from the calling environment. (Required)
 #' @param env Environment used to standardise formals of the user and solution code. Defaults to retrieving `.envir_prep` from the calling environment. If not found, the [parent.frame()] will be used
-#' @param allow_partial_matching A boolean if `FALSE` don't allow partial matching
-#' @return If no discrepencies are found, `NULL`. If a code difference is found, a character value describing the difference.
+#' @param ... Ignored
+#' @param allow_partial_matching A logical if `FALSE` don't allow partial matching
+#' @return If no discrepencies are found, a `NULL` value is returned. If a code difference is found, a character value describing the difference.
 #' @describeIn code_feedback Determine code feedback
 #' @export
 #' @examples
 #' # Values are same
-#' code_feedback("log(2)", "log(2)") # NULL
+#' code_feedback("log(2)", "log(2)") # NULL # no differences found
 #'
 #' # Functions are different
 #' code_feedback("log(2)", "sqrt(2)")
@@ -149,8 +151,10 @@ code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  ...,
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
+  ellipsis::check_dots_empty()
 
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
@@ -161,6 +165,7 @@ code_feedback <- function(
     return(NULL)
   }
 
+  # returns `NULL` if no mistakes are found
   detect_mistakes(
     user = user_expr,
     solution = solution_expr,
@@ -197,12 +202,14 @@ maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   ...,
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   space_before = TRUE,
   space_after = FALSE
 ) {
   no_feedback_val <- ""
+  ellipsis::check_dots_empty()
+
   # if feedback is not enabled, return
   if (!should_display_code_feedback()) {
     return(no_feedback_val)
