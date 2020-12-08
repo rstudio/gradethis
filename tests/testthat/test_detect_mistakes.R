@@ -824,3 +824,39 @@ test_that("detect_mistakes : Differentiate between 'strings' and objects in mess
   )
 
 })
+
+
+test_that("detect_mistakes works with function arguments", {
+  expect_equal(
+    detect_mistakes(as.pairlist(alist(x = , y = )), as.pairlist(alist(x = , y = , z =))),
+    "I expected arguments x, y, z where you wrote arguments x, y." 
+  )
+  
+  expect_grade_code(
+    user_code = "function(x, y, z) x + y",
+    solution_code = "function(x, y) x + y",
+    is_correct = FALSE,
+    msg = "In function(x, y, z) x + y, I expected arguments x, y where you wrote arguments x, y, z."
+  )
+  
+  expect_grade_code(
+    user_code = "function(x, y) x + y", 
+    solution_code = "function(y, x) x + y",
+    is_correct = FALSE,
+    msg = "In function(x, y) x + y, I expected arguments y, x where you wrote arguments x, y."
+  )
+  
+  expect_grade_code(
+    user_code = "function(x, y) x + y", 
+    solution_code = "function(x, y = 1) x + y",
+    is_correct = FALSE,
+    msg = "In function(x, y) x + y, I expected arguments x, y = 1 where you wrote arguments x, y."
+  )
+  
+  expect_grade_code(
+    user_code = "function(x = 1, y = 2) x + y", 
+    solution_code = "function(x, y = 1) x + y",
+    is_correct = FALSE,
+    msg = "In function(x = 1, y = 2) x + y, I expected arguments x, y = 1 where you wrote arguments x = 1, y = 2."
+  )
+})

@@ -366,6 +366,8 @@ prep <- function(text) {
     text <- text[[1]]
   } else if (is.call(text)) {
     text <- text[1]
+  } else if (is.pairlist(text)) {
+    return(prep_function_arguments(text))
   }
   deparse_to_string(text)
 }
@@ -382,4 +384,13 @@ build_intro <- function(.call = NULL, .arg = NULL) {
     intro <- ""
   }
   intro
+}
+
+prep_function_arguments <- function(arg_list) {
+  args <- names(arg_list)
+  values <- purrr::map_chr(arg_list, function(arg_value) {
+    if (arg_value == quote("")) return("")
+    paste(" =", deparse(arg_value))
+  })
+  paste("arguments", paste0(args, values, collapse = ", "))
 }
