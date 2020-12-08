@@ -204,31 +204,41 @@ maybe_code_feedback <- function(
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  default = "",
   space_before = TRUE,
   space_after = FALSE
 ) {
-  no_feedback_val <- ""
   ellipsis::check_dots_empty()
 
   # if feedback is not enabled, return
   if (!should_display_code_feedback()) {
-    return(no_feedback_val)
+    return(default)
   }
 
-  tryCatch(
-    paste0(
-      if (isTRUE(space_before)) " ",
-      code_feedback(
+  # if an error occurs, return the default value
+  # if no differences are found, return the default value
+  # if any difference is found, maybe add space before and after
+  capture_errors(
+    {
+      code_feedback_val <- code_feedback(
         user_code = user_code,
         solution_code = solution_code,
         env = env,
         allow_partial_matching = allow_partial_matching
-      ),
-      if (isTRUE(space_after)) " "
-    ),
-    error = function(e) {
-      # something bad happened. Return empty string
-      no_feedback_val
+      )
+      if (is.null(code_feedback_val)) {
+        return(default)
+      }
+      # return upgraded value
+      paste0(
+        if (isTRUE(space_before)) " ",
+        code_feedback_val,
+        if (isTRUE(space_after)) " "
+      )
+    },
+    on_error = function(e, that_env) {
+      # something bad happened. Return default value
+      rlang::return_from(that_env, default)
     }
   )
 }
