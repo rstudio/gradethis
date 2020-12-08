@@ -1,0 +1,146 @@
+
+---
+title: "script checking"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+library(dplyr)
+
+library(gradethis)
+gradethis::gradethis_setup()
+```
+
+The `gradethis` package provides two main functions to check student code [learnr](https://rstudio.github.io/learnr/) tutorials. You can use:
+
+1. `grade_this()` to run an expression to that should determine if the _result_ is correct by calling `pass()` or `fail()` at some point.
+1. `grade_this_code()` to check that the student's _code_ exactly matches the solution code.
+
+You can also use `grade_this()` to create your own customized checking code.
+
+### Goal
+
+> Note: `gradethis` does not itself calculate a final grade for the student.
+
+
+
+### Environment
+
+`grade_this()` has access to more information than the chunk environment.
+
+Extra objects provided by `gradethis`:
+* **`.result`**: The last value from evaluating the user's exercise. Same as `learnr`'s `.last_value`
+* **`.solution`**: The last value from evaluating the solution code
+
+Extra items of information from `learnr`:
+* **`.label`**: Label for exercise chunk
+* **`.solution_code`**: Code provided within the "-solution" chunk for the exercise
+* **`.user_code`**: Code submitted by the user
+* **`.check_code`**: Code provided within the "-check" (or "-code-check") chunk for the exercise
+* **`.envir_result`**: The R environment after the execution of user's exercise submission
+* **`.evaluate_result`**: The return value from the `evaluate::evaluate` function
+* **`.envir_prep`**: A copy of the R environment before the execution of the exercise submission
+* **`.last_value`**: The last value from evaluating the user's exercise submission
+
+
+### (old) Grade Code
+```{r barret0-old, exercise = TRUE}
+log(sqrt(2))
+```
+```{r barret0-old-solution}
+log(sqrt(3))
+```
+```{r barret0-old-code-check-out, eval = FALSE}
+grade_code()
+```
+```{r barret0-old-code-check}
+grade_code()
+```
+
+
+### (old) Grade Result
+```{r barret1-old, exercise = TRUE}
+log(sqrt(2))
+```
+
+```{r barret1-old-check-out, eval = FALSE}
+grade_result(
+  pass_if(~ identical(.result, log(sqrt(3)))),
+  fail_if(~ identical(.result, log(sqrt(2))), "change the answer"),
+  fail_if(~ TRUE)
+)
+```
+```{r barret1-old-check}
+grade_result(
+  pass_if(~ identical(.result, log(sqrt(3)))),
+  fail_if(~ identical(.result, log(sqrt(2))), "change the answer"),
+  fail_if(~ TRUE)
+)
+```
+
+
+
+####  Grade code
+
+```{r barret0-gc, exercise = TRUE}
+4
+```
+
+```{r barret0-gc-solution}
+42
+```
+
+```{r barret0-gc-check-out, eval = FALSE}
+grade_this_code()
+```
+```{r barret0-gc-check}
+grade_this_code()
+```
+
+
+### Script Style
+
+```{r barret0, exercise = TRUE}
+2
+```
+
+```{r barret0-solution}
+4
+```
+
+```{r barret0-check-out, eval = FALSE}
+expected <- 4
+
+grade_this({
+
+  testthat::expect_type(.result, "double")
+  checkmate::expect_numeric(.result, lower = 0, upper = 10)
+
+  if (identical(.result, expected)) pass("equals 4!")
+  # pass_if_equal(4, MESSAGE)
+  # fail_if_equal(4, MESSAGE)
+
+  # testthat::expect_equal(.result, expected)
+
+  fail("{random_encourage()}{maybe_code_feedback()}")
+})
+```
+```{r barret0-check}
+expected <- 4
+
+grade_this({
+
+  testthat::expect_type(.result, "double")
+  checkmate::expect_numeric(.result, lower = 0, upper = 10)
+
+  if (identical(.result, expected)) pass("equals 4!")
+  # pass_if_equal(4, MESSAGE)
+  # fail_if_equal(4, MESSAGE)
+
+  # testthat::expect_equal(.result, expected)
+
+  fail("{random_encourage()}{maybe_code_feedback()}")
+})
+```
