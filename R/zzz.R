@@ -30,6 +30,7 @@ gradethis_default_options <- list(
   gradethis_glue_incorrect_test = "{ .num_correct }/{ .num_total } correct! { random_encourage() }"
 )
 
+# These values should mimic the values set in gradethis_setup()
 gradethis_learnr_knitr_opts <- list(
   exercise.timelimit = 60,
   exercise.checker = grade_learnr,
@@ -43,7 +44,7 @@ gradethis_learnr_knitr_opts <- list(
   if (any(toset)) options(gradethis_default_options[toset])
 
   # initialize tutorial options
-  if (requireNamespace("knitr")) {
+  if ("knitr" %in% loadedNamespaces()) {
     Map(
       names(gradethis_learnr_knitr_opts),
       gradethis_learnr_knitr_opts,

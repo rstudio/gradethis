@@ -68,7 +68,6 @@ grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
-  fail_code_feedback = getOption("gradethis.code.feedback", TRUE),
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
 
@@ -178,11 +177,11 @@ to_expr <- function(x, name) {
 
 
 should_display_code_feedback <- function() {
-  isTRUE(getOption("gradethis.code.feedback.set", FALSE))
+  isTRUE(getOption("gradethis.code.feedback", FALSE))
 }
 with_code_feedback <- function(val, expr) {
   with_options(
-    list("gradethis.code.feedback.set" = val),
+    list("gradethis.code.feedback" = val),
     expr
   )
 }
