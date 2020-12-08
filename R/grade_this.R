@@ -65,18 +65,23 @@ grade_this <- function(
   ...,
   fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
 ) {
-  # sometimes expr is a quosure already, so squash all quosures to a single expression
   express <- rlang::get_expr(rlang::enquo(expr))
 
   function(checking_env) {
-    eval_gradethis({
-      with_code_feedback(
-        fail_code_feedback,
+
+    # make sure fail calls can get code feed back (or not) if they want
+    with_code_feedback(
+      fail_code_feedback,
+
+      # capture all pass/fail calls and errors thrown
+      eval_gradethis({
+
+        # force the evaluation of the expression in an environment
         rlang::eval_tidy(
           express,
           env = checking_env
         )
-      )
-    })
+      })
+    )
   }
 }
