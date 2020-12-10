@@ -178,7 +178,7 @@ to_expr <- function(x, name) {
   if (rlang::is_quosure(x)) {
     rlang::get_expr(x)
   } else {
-    chkm8_single_character(x, null.ok = FALSE, name = name)
+    checkmate::assert_character(x, null.ok = FALSE, min.len = 1L, .var.name = name)
     str2expression(x)
   }
 }

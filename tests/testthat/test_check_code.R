@@ -106,6 +106,18 @@ test_that("Returns intelligent error when no user code", {
   )
 })
 
+test_that("code_feedback() can handle character vectors", {
+  expect_grade_code(
+    user_code = c("1", "3"),
+    solution_code = c("1", "2"),
+    is_correct = FALSE,
+    msg = "I expected 2 where you wrote 3."
+  )
+  expect_null(code_feedback(c("1", "2"), c("1", "2")))
+  expect_error(code_feedback("1", NULL))
+  expect_error(code_feedback("1", character()))
+})
+
 test_that("Spot differences when pipes are involved", {
 
   select <- function(df, x) {
