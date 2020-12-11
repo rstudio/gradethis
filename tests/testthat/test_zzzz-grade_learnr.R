@@ -70,3 +70,18 @@ test_that("Grade learnr check_code", {
     )
   )
 })
+
+test_that("gradethis_setup", {
+  with_options(gradethis_setup(), {
+    gradethis_pass <- getOption("gradethis.pass", NULL)
+    gradethis_fail <- getOption("gradethis.fail", NULL)
+    gradethis_code_incorrect <- getOption("gradethis.code.incorrect", NULL)
+    expect_type(gradethis_pass, "character")
+    expect_type(gradethis_fail, "character")
+    expect_type(gradethis_code_incorrect, "character")
+    
+    expect_silent(glue::glue(gradethis_pass))
+    expect_silent(glue::glue(gradethis_fail))
+    expect_silent(glue::glue(gradethis_code_incorrect, .message = "Foo"))
+  })
+})

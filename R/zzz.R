@@ -3,7 +3,7 @@ gradethis_default_options <- list(
   # Default message for pass(message)
   gradethis.pass = "{ random_praise() } Correct!",
   # Default message for fail(message)
-  gradethis.fail = "Incorrect.{ maybe_code_feedback() } { random_encourage() }",
+  gradethis.fail = "Incorrect.{ maybe_code_feedback() } { random_encouragement() }",
 
   # Default message for grade_this_code(correct)
   gradethis.code.correct = NULL,
@@ -19,7 +19,7 @@ gradethis_default_options <- list(
 
   ### legacy ###
   gradethis_glue_correct = "{ random_praise() } { .message } { .correct }",
-  gradethis_glue_incorrect = "{ .message } { .incorrect } { random_encourage() }",
+  gradethis_glue_incorrect = "{ .message } { .incorrect } { random_encouragement() }",
 
   gradethis_glue_pipe = paste0(
     "I see that you are using pipe operators (e.g. %>%), ",
@@ -27,7 +27,7 @@ gradethis_default_options <- list(
     "before I check it:\n\n{deparse_to_string(unpipe_all(.user), 60)}\n\n{.message}"),
 
   gradethis_glue_correct_test = "{ .num_correct }/{ .num_total } correct! { random_praise() }",
-  gradethis_glue_incorrect_test = "{ .num_correct }/{ .num_total } correct! { random_encourage() }"
+  gradethis_glue_incorrect_test = "{ .num_correct }/{ .num_total } correct! { random_encouragement() }"
 )
 
 # These values should mimic the values set in gradethis_setup()
