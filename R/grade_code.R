@@ -141,6 +141,9 @@ grade_code <- function(
 
     # add pipe message
     if (uses_pipe(user_code)) {
+      # find first expression containing pipes
+      # user_piped_expr <- filter_pipe_expr(user_code)[[1]]
+      
       message <- glue_message(
         glue_pipe,
         # convert forwards and backwards to apply consistent formatting
