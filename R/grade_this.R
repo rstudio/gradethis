@@ -37,7 +37,7 @@
 #'   pass_if_equal(5, "You got 5, great!")
 #'   fail()
 #' })(list(
-#'   .last_value = 4
+#'   .result = 4
 #' ))
 #'
 #' grade_this({
@@ -45,7 +45,7 @@
 #'   testthat::expect_equal(.result, 5L)        # will `fail()` if not equal to 5
 #'   pass() # returns default message
 #' })(list(
-#'   .last_value = 5L
+#'   .result = 5L
 #' ))
 #'
 #' grade_this({
@@ -53,7 +53,7 @@
 #'   testthat::expect_equal(.result(1), 3)
 #'   pass()
 #' })(list(
-#'   .last_value = function(x) {x + 2}
+#'   .result = function(x) {x + 2}
 #' ))
 #'
 #' # Remember, only `grade_this(expr)` should be used.
@@ -68,6 +68,9 @@ grade_this <- function(
   express <- rlang::get_expr(rlang::enquo(expr))
 
   function(checking_env) {
+    if (is.list(checking_env)) {
+      checking_env <- list2env(checking_env)
+    }
 
     # make sure fail calls can get code feed back (or not) if they want
     with_code_feedback(
