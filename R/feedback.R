@@ -30,7 +30,7 @@ feedback <- function(
 
   structure(
     list(
-      message = grade$message,
+      message = message_md(grade$message),
       correct = grade$correct,
       type = type,
       location = match.arg(location)
@@ -42,4 +42,39 @@ feedback <- function(
 
 is_feedback <- function(x) {
   inherits(x, "gradethis_feedback")
+}
+
+
+message_md <- function(message = NULL) {
+  message <- message %||% ""
+  
+  if (!is.character(message)) {
+    message <- paste(as.character(message), collapse = "")
+  }
+  
+  md <- commonmark::markdown_html(
+    disallow_tags(message),
+    smart = TRUE,
+    normalize = TRUE,
+    extensions = c("tagfilter", "strikethrough", "table", "autolink")
+  )
+  
+  htmltools::HTML(md)
+}
+
+disallow_tags <- function(md) {
+  # In theory, these tags should be filtered by the `tagfilter` cmark-gfm extension
+  # but in practice they were not. The list of tags was taken from the GFM specs:
+  # https://github.com/github/cmark-gfm/blob/85d895289c5ab67f988ca659493a64abb5fec7b4/test/spec.txt#L9661-L9672
+  bad_tags <- c(
+    "title", "textarea", "style", "xmp", "iframe", "noembed", "noframes", 
+    "script", "plaintext"
+  )
+  
+  gsub(
+    pattern = glue::glue("<(/?({tags}))", tags = paste(bad_tags, collapse = "|")),
+    replacement = "&lt;\\1",
+    md,
+    ignore.case = TRUE
+  )
 }

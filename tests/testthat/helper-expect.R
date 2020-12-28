@@ -122,7 +122,11 @@ expect_graded <- function(
     expect_false(grade$correct)
   }
   if (!is.null(msg)) {
-    expect_match(grade$message, msg, fixed = TRUE)
+    if (is.character(msg)) {
+      expect_match(grade$message, msg, fixed = TRUE)
+    } else {
+      expect_equal(grade$message, msg)
+    }
   }
   invisible(grade)
 }
@@ -167,7 +171,8 @@ expect_grade_learnr <- function(
   ...,
   is_correct,
   msg,
-  msg_type = NULL
+  msg_type = NULL,
+  msg_exact = TRUE
 ) {
   envir_prep <- new.env(parent = .GlobalEnv)
   eval(parse(text = prep_code), envir = envir_prep)
@@ -196,5 +201,7 @@ expect_grade_learnr <- function(
   expect_equal(feedback$correct, isTRUE(is_correct))
   msg_type <- msg_type %||% (if (isTRUE(is_correct)) "success" else "error")
   expect_equal(feedback$type, msg_type)
-  expect_match(feedback$message, msg, fixed = TRUE)
+  
+  if (isTRUE(msg_exact)) msg <- message_md(msg)
+  expect_match(feedback$message, msg, fixed = msg_exact)
 }

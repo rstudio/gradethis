@@ -41,7 +41,8 @@ Imports:
     learnr,
     lifecycle,
     ellipsis,
-    waldo
+    waldo,
+    commonmark
 Suggests:
     tidyr,
     knitr

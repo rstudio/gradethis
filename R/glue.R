@@ -28,6 +28,7 @@ glue_message <- function(
 
   params[char_names] <- lapply(params[char_names], function(x){x %||% ""}) # nolint
 
+  params <- purrr::map_chr(params, ~ paste(as.character(.x), collapse = ""))
   purrr::walk(params, chm8_single_atomic, name = param_names)
   purrr::walk(params[char_names], chkm8_single_character, name = char_names)
 
@@ -35,6 +36,15 @@ glue_message <- function(
   return(ret)
 }
 
+glue_message_with_env <- function(env, message) {
+  if (!is.character(message)) {
+    message <- paste(as.character(message), collapse = "")
+  }
+  if (length(message) > 1) {
+    message <- paste(message, collapse = "")
+  }
+  glue_with_env(env, message)
+}
 
 glue_with_env <- function(env, ...) {
   glue::glue_data(.x = env, .envir = env, ...)

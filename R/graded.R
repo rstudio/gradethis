@@ -16,7 +16,6 @@
 #' @describeIn graded Programatic function to produce a graded a result.
 #' @export
 graded <- function(correct, message = NULL) {
-  chkm8_single_character(message)
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
 
   obj <- structure(
@@ -43,12 +42,12 @@ is_graded <- function(x) {
 #' @param env environment to evaluate the glue `message`
 #' @export
 pass <- function(message = getOption("gradethis.pass", "Correct!"), env = parent.frame()) {
-  graded(message = glue_with_env(env, message), correct = TRUE)
+  graded(message = glue_message_with_env(env, message), correct = TRUE)
 }
 #' @describeIn graded Produce a _failing_ grade
 #' @export
 fail <- function(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame()) {
-  graded(message = glue_with_env(env, message), correct = FALSE)
+  graded(message = glue_message_with_env(env, message), correct = FALSE)
 }
 
 
@@ -82,7 +81,7 @@ grade_if_equal <- function(x, y, message, correct, env) {
   }
 
   # equal!
-  graded(message = glue_with_env(env, message), correct = correct)
+  graded(message = glue_message_with_env(env, message), correct = correct)
 }
 
 
