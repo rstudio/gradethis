@@ -46,3 +46,12 @@ is_infix_assign <- function(x) {
 deparse_to_string <- function(x, width.cutoff = 500L, ...) {
   paste0(deparse(x, width.cutoff = width.cutoff, ...), collapse = "\n")
 }
+
+
+is_tag_like <- function(x) {
+  inherits(x, c("shiny.tag", "shiny.tag.list"))
+}
+
+is_AsIs <- function(x) {
+  inherits(x, "AsIs")
+}

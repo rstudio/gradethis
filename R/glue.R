@@ -9,6 +9,10 @@ glue_message <- function(
   glue_expression,
   ...
 ) {
+  if (is_tag_like(glue_expression) || is_AsIs(glue_expression)) {
+    return(glue_expression)
+  }
+  
   params <- list(...)
   param_names <- names(params)
   is_bool <- grepl("^\\.is_", param_names)
@@ -37,11 +41,11 @@ glue_message <- function(
 }
 
 glue_message_with_env <- function(env, message) {
-  if (!is.character(message)) {
-    message <- paste(as.character(message), collapse = "")
+  if (is_tag_like(message) || is_AsIs(message)) {
+    return(message)
   }
   if (length(message) > 1) {
-    message <- paste(message, collapse = "")
+    message <- paste(as.character(message), collapse = "")
   }
   glue_with_env(env, message)
 }

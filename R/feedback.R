@@ -44,22 +44,35 @@ is_feedback <- function(x) {
   inherits(x, "gradethis_feedback")
 }
 
-
+# Process the graded message using {commonmark}
+# 
+# 1. htmltools tags and tagLists are passed through un-touched. Authors should
+#    not use un-escaped user-generated results in graded messages, but 
+#    htmltools escapes text input by default.
+# 2. messages marked "AsIs" by I() are collapsed with new lines and then
+#    HTML escaped and returned without markdown processing.
+# 3. All other messages are processed with commonmark into HTML, stripped of
+#    disallowed tags, and then returned as HTML.
 message_md <- function(message = NULL) {
-  message <- message %||% ""
-  
-  if (!is.character(message)) {
-    message <- paste(as.character(message), collapse = "")
+  if (is_tag_like(message)) {
+    return(message)
+  }
+  if (is_AsIs(message)) {
+    # AsIs messages are collapsed with new lines to match markdown_html()
+    return(htmltools::htmlEscape(paste(message, collapse = "\n")))
+  }
+  if (is.null(message)) {
+    return("")
   }
   
   md <- commonmark::markdown_html(
-    disallow_tags(message),
+    message,
     smart = TRUE,
     normalize = TRUE,
     extensions = c("tagfilter", "strikethrough", "table", "autolink")
   )
   
-  htmltools::HTML(md)
+  htmltools::HTML(disallow_tags(md))
 }
 
 disallow_tags <- function(md) {
