@@ -42,7 +42,8 @@ Imports:
     lifecycle,
     ellipsis,
     waldo,
-    commonmark
+    commonmark,
+    htmltools
 Suggests:
     tidyr,
     knitr
