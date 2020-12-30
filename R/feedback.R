@@ -46,8 +46,8 @@ is_feedback <- function(x) {
 
 # Process the graded message using {commonmark}
 # 
-# 1. htmltools tags and tagLists are passed through un-touched. Authors should
-#    not use un-escaped user-generated results in graded messages, but 
+# 1. htmltools tags and tagLists are passed through untouched. Authors should
+#    not use unescaped user-generated results in graded messages, but 
 #    htmltools escapes text input by default.
 # 2. messages marked "AsIs" by I() are collapsed with new lines and then
 #    HTML escaped and returned without markdown processing.
