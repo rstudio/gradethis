@@ -3,6 +3,7 @@
 \docType{import}
 \name{reexports}
 \alias{reexports}
+\alias{random_praise}
 \alias{random_encouragement}
 \title{Objects exported from other packages}
 \keyword{internal}
@@ -11,6 +12,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{learnr}{\code{\link[learnr:random_praise]{random_encouragement}}}
+  \item{learnr}{\code{\link[learnr:random_praise]{random_encouragement}}, \code{\link[learnr]{random_praise}}}
 }}
 
