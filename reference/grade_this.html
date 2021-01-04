@@ -86,7 +86,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -100,7 +100,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/rstudio-education/gradethis/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -194,25 +194,25 @@ with the corresponding message.</p>
   <span class='fu'><a href='graded.html'>pass_if_equal</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>
   <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .last_value <span class='op'>=</span> <span class='fl'>4</span>
+  .result <span class='op'>=</span> <span class='fl'>4</span>
 <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: Incorrect: 'enclos' must be an environment&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: Incorrect: Try adding 1&gt;</div><div class='input'>
 <span class='fu'>grade_this</span><span class='op'>(</span><span class='op'>{</span>
   <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/inheritance-expectations.html'>expect_type</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='st'>"integer"</span><span class='op'>)</span> <span class='co'># will `fail()` if not an integer</span>
   <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/equality-expectations.html'>expect_equal</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5L</span><span class='op'>)</span>        <span class='co'># will `fail()` if not equal to 5</span>
   <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='op'>)</span> <span class='co'># returns default message</span>
 <span class='op'>}</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .last_value <span class='op'>=</span> <span class='fl'>5L</span>
+  .result <span class='op'>=</span> <span class='fl'>5L</span>
 <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: Incorrect: 'enclos' must be an environment&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: Correct: Well done! Correct!&gt;</div><div class='input'>
 <span class='fu'>grade_this</span><span class='op'>(</span><span class='op'>{</span>
   <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/logical-expectations.html'>expect_true</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/is.function.html'>is.function</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span><span class='op'>)</span>
   <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/equality-expectations.html'>expect_equal</a></span><span class='op'>(</span><span class='fu'>.result</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>
   <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .last_value <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span><span class='va'>x</span> <span class='op'>+</span> <span class='fl'>2</span><span class='op'>}</span>
+  .result <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span><span class='va'>x</span> <span class='op'>+</span> <span class='fl'>2</span><span class='op'>}</span>
 <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: Incorrect: 'enclos' must be an environment&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: Correct: Beautiful! Correct!&gt;</div><div class='input'>
 <span class='co'># Remember, only `grade_this(expr)` should be used.</span>
 <span class='co'># The followup `list()` and values will be called by `grade_learnr()`</span>
 <span class='co'># To learn more about using `grade_this()` with learnr, see:</span>
