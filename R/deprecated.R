@@ -41,3 +41,11 @@ grade_conditions <- function(
     glue_incorrect = glue_incorrect
   )
 }
+
+
+#' @describeIn gradethis-deprecated \lifecycle{superseded} Use [random_encouragement()].
+#' @export
+random_encourage <- function() {
+  lifecycle::deprecate_soft("0.2.1", "random_encourage()", "random_encouragement()")
+  random_encouragement()
+}

@@ -13,13 +13,6 @@ random_praise <- function() {
   sub("^Correct! ", "", learnr::random_praise())
 }
 
-#' @export
-#' @describeIn praise Returns a random encouragement message, included for 
-#'   backwards compatibility. 
-random_encourage <- function() {
-  lifecycle::deprecate_soft("0.2.1", "random_encourage()", "random_encouragement()")
-  random_encouragement()
-}
 
 #' @describeIn praise Returns a random encouragement message
 #' @export

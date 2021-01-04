@@ -4,6 +4,7 @@
 \alias{gradethis-deprecated}
 \alias{grade_feedback}
 \alias{grade_conditions}
+\alias{random_encourage}
 \title{Deprecated}
 \usage{
 grade_feedback(...)
@@ -17,6 +18,8 @@ grade_conditions(
   glue_correct = getOption("gradethis_glue_correct_test"),
   glue_incorrect = getOption("gradethis_glue_incorrect_test")
 )
+
+random_encourage()
 }
 \description{
 Deprecated
@@ -26,6 +29,8 @@ Deprecated
 \item \code{grade_feedback}: \lifecycle{deprecated} Removed from package
 
 \item \code{grade_conditions}: \lifecycle{superseded} Use \code{\link[=grade_result_strict]{grade_result_strict()}}
+
+\item \code{random_encourage}: \lifecycle{superseded} Use \code{\link[=random_encouragement]{random_encouragement()}}.
 }}
 
 \keyword{internal}

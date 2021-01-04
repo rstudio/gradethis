@@ -2,15 +2,9 @@
 % Please edit documentation in R/praise.R
 \name{random_praise}
 \alias{random_praise}
-\alias{random_encourage}
-\alias{random_encouragement}
 \title{Random praise and encouragement}
 \usage{
 random_praise()
-
-random_encourage()
-
-random_encouragement()
 }
 \description{
 Generate a random praise or encouragement phrase.
@@ -20,11 +14,6 @@ This can be used in conjunction with
 \section{Functions}{
 \itemize{
 \item \code{random_praise}: Returns a random praise message
-
-\item \code{random_encourage}: Returns a random encouragement message, included for
-backwards compatibility.
-
-\item \code{random_encouragement}: Returns a random encouragement message
 }}
 
 \examples{
