@@ -21,6 +21,6 @@ random_encourage <- function() {
   random_encouragement()
 }
 
-#' @export
 #' @describeIn praise Returns a random encouragement message
-random_encouragement <- learnr::random_encouragement
+#' @export
+learnr::random_encouragement
