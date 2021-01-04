@@ -47,7 +47,7 @@ is_feedback <- function(x) {
 # Process the graded message using {commonmark}
 # 
 # 1. htmltools tags and tagLists are passed through untouched. Authors should
-#    not use unescaped user-generated results in graded messages, but 
+#    not use unescaped user-generated results in graded messages, but at least
 #    htmltools escapes text input by default.
 # 2. messages marked "AsIs" by I() are collapsed with new lines and then
 #    HTML escaped and returned without markdown processing.
@@ -72,10 +72,10 @@ message_md <- function(message = NULL) {
     extensions = c("tagfilter", "strikethrough", "table", "autolink")
   )
   
-  htmltools::HTML(disallow_tags(md))
+  htmltools::HTML(remove_dangerous_html_tags(md))
 }
 
-disallow_tags <- function(md) {
+remove_dangerous_html_tags <- function(md) {
   # In theory, these tags should be filtered by the `tagfilter` cmark-gfm extension
   # but in practice they were not. The list of tags was taken from the GFM specs:
   # https://github.com/github/cmark-gfm/blob/85d895289c5ab67f988ca659493a64abb5fec7b4/test/spec.txt#L9661-L9672
