@@ -14,7 +14,7 @@ Authors@R:
      person(given = "Garrick",
              family = "Aden-Buie",
              role = "aut",
-             email = "garrick@rstudio.com")
+             email = "garrick@rstudio.com"),
       person(given = "Garrett",
              family = "Grolemund",
              role = c("ccp", "aut", "cre"),
