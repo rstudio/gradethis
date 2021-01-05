@@ -296,7 +296,7 @@ gradethis_setup <- function(
   exercise.error.check.code = "grade_this_code()",
   ...,
   pass = "{ random_praise() } Correct!",
-  fail = "Incorrect.{ maybe_code_feedback() } { random_encourage() }",
+  fail = "Incorrect.{ maybe_code_feedback() } { random_encouragement() }",
   code_correct = NULL,
   code_incorrect = "{ .message } { random_encouragement() }",
   fail_code_feedback = TRUE,

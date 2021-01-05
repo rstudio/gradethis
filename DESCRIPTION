@@ -38,7 +38,7 @@ Imports:
     glue,
     checkmate,
     testthat,
-    learnr,
+    learnr (>= 0.10.1.9007),
     lifecycle,
     ellipsis,
     waldo
