@@ -172,7 +172,7 @@ expect_grade_learnr <- function(
   is_correct,
   msg,
   msg_type = NULL,
-  msg_exact = TRUE
+  msg_fixed = TRUE
 ) {
   envir_prep <- new.env(parent = .GlobalEnv)
   eval(parse(text = prep_code), envir = envir_prep)
@@ -202,6 +202,6 @@ expect_grade_learnr <- function(
   msg_type <- msg_type %||% (if (isTRUE(is_correct)) "success" else "error")
   expect_equal(feedback$type, msg_type)
   
-  if (isTRUE(msg_exact)) msg <- message_md(msg)
-  expect_match(feedback$message, msg, fixed = msg_exact)
+  msg <- message_md(msg)
+  expect_match(feedback$message, msg, fixed = msg_fixed)
 }
