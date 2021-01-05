@@ -9,6 +9,10 @@ glue_message <- function(
   glue_expression,
   ...
 ) {
+  if (is_tag_like(glue_expression) || is_AsIs(glue_expression)) {
+    return(glue_expression)
+  }
+  
   params <- list(...)
   param_names <- names(params)
   is_bool <- grepl("^\\.is_", param_names)
@@ -28,6 +32,7 @@ glue_message <- function(
 
   params[char_names] <- lapply(params[char_names], function(x){x %||% ""}) # nolint
 
+  params <- purrr::map_chr(params, ~ paste(as.character(.x), collapse = ""))
   purrr::walk(params, chm8_single_atomic, name = param_names)
   purrr::walk(params[char_names], chkm8_single_character, name = char_names)
 
@@ -35,6 +40,15 @@ glue_message <- function(
   return(ret)
 }
 
+glue_message_with_env <- function(env, message) {
+  if (is_tag_like(message) || is_AsIs(message)) {
+    return(message)
+  }
+  if (length(message) > 1) {
+    message <- paste(as.character(message), collapse = "")
+  }
+  glue_with_env(env, message)
+}
 
 glue_with_env <- function(env, ...) {
   glue::glue_data(.x = env, .envir = env, ...)

@@ -257,17 +257,17 @@ grade_parse_error <- function(check_obj) {
         } else {
           paste(n_blanks, "blanks")
         },
-        ". Please replace the '____' with valid R code."
+        ". Please replace the `____` with valid R code."
       )
     } else {
-      paste(
-        "It looks like this might not be valid R code:",
+      paste0(
+        "It looks like this might not be valid R code:\n\n```r\n",
         conditionMessage(check_obj$.error),
-        "\nR cannot determine how to turn your text into ",
-        "a complete command. You may have forgot to fill in a blank, ",
+        "\n```\n\nR cannot determine how to turn your text into ",
+        "a complete command. You may have forgotten to fill in a blank, ",
         "to remove an underscore, to include a comma between arguments, ",
-        "or to close an opening \", ', (, or { ",
-        "with a matching \", ', ), and }. "
+        "or to close an opening `\"`, `'`, `(`, or `{{` ",
+        "with a matching `\"`, `'`, `)`, or `}}`. "
       )
     }
   fail(message = msg)

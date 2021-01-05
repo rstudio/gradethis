@@ -41,7 +41,9 @@ Imports:
     learnr (>= 0.10.1.9007),
     lifecycle,
     ellipsis,
-    waldo
+    waldo,
+    commonmark,
+    htmltools
 Suggests:
     tidyr,
     knitr

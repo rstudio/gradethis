@@ -244,7 +244,7 @@ test_that("Spots differences in long calls", {
     user_code = expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
     solution_code = expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)), # nolint
     is_correct = FALSE,
-    msg = "I expected na.rm = FALSE where you wrote na.rm = TRUE"
+    msg = "I expected `na.rm = FALSE` where you wrote `na.rm = TRUE`"
   )
 
   expect_grade_code(

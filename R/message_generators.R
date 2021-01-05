@@ -61,9 +61,9 @@ bad_argument_name <- function(this_call,
       this = this
     ),
     "{intro}{this_call} accepts more than one argument name that begins ",
-    "with {this_name}. As a result, R cannot figure out which ",
+    "with `{this_name}`. As a result, R cannot figure out which ",
     "argument you want to pass {this} to. Check how you spelled ",
-    "{this_name}, or write out the full argument name."
+    "`{this_name}`, or write out the full argument name."
   )
 }
 
@@ -169,7 +169,7 @@ surplus_argument <- function(this_call,
   this      <- prep(this)
 
   if (!is.null(this_name) && this_name != "")
-    this <- paste(this_name, "=", this)
+    this <- md_code_prepend(paste(this_name, "= "), this)
 
   glue::glue_data(
     list(
@@ -211,20 +211,24 @@ pmatches_argument_name <- function(this_call,
   this <- lapply(this, prep) #yes devrait etre quoted
   this_user <- this
 
-  if ( !is.null(this_name) )
-    this_user <- paste(this_name, "=", this)
+  if (!is.null(this_name)) {
+    this_name <- paste(this_name, "= ")
+    this_user <- purrr::map2(this_name, this, md_code_prepend)
+  }
 
-  if ( !is.null(this_name) )
-    correct_name <- paste(correct_name, "=", this)
+  if (!is.null(correct_name)) {
+    correct_name <- paste(correct_name, "= ")
+    correct_name <- purrr::map2(correct_name, this, md_code_prepend)
+  }
 
-  intro  <- "This code seems correct, but please write using full argument(s) names.\n"
+  intro  <- "This code seems correct, but please write using full argument(s) names:\n\n"
   msg <- glue::glue_data(
     list(
       this = this_user,
       correct_name = correct_name,
       this_call = this_call
     ),
-    "You wrote `{this}`. Please provide the full formal name using `{correct_name}`."
+    "- Where you wrote {this}, please use the full formal name {correct_name}."
   )
 
   glue::glue_data(
@@ -285,7 +289,7 @@ wrong_call <- function(this,
 
   # "g(1, h(i(1))), I expected you to call a = j() where you called a = i()."
 
-  # "{intro}I expected you to call {that} where you called {this}."
+  # "{intro}I expected you to {action} {that} where you called {this}."
 
   intro <- build_intro(.call = enclosing_call)
 
@@ -294,22 +298,24 @@ wrong_call <- function(this,
   that <- prep(that)
 
   if (!is.null(this_name) && this_name != "") {
-    that <- paste(this_name, "=", that)
-    this <- paste(this_name, "=", this)
+    that <- md_code_prepend(paste(this_name, "= "), that)
+    this <- md_code_prepend(paste(this_name, "= "), this)
   }
-
-  if (is_infix_assign(that_original)) {
-    that <- paste("you to assign something to something else with", that)
-  } else {
-    that <- paste("you to call", that)
-  }
+  
+  action <- 
+    if (is_infix_assign(that_original)) {
+      "assign something to something else with"
+    } else {
+      "call"
+    }
 
   glue::glue_data(
     list(
       this = this,
-      that = that
+      that = that,
+      action = action
     ),
-    "{intro}I expected {that} where you called {this}."
+    "{intro}I expected you to {action} {that} where you called {this}."
   )
 }
 
@@ -335,25 +341,27 @@ wrong_value <- function(this,
   that <- prep(that)
 
   if (!is.null(this_name) && this_name != "") {
-    that <- paste(this_name, "=", that)
-    this <- paste(this_name, "=", this)
+    that <- md_code_prepend(paste(this_name, "= "), that)
+    this <- md_code_prepend(paste(this_name, "= "), this)
   }
 
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
-  if (is_infix_assign(that_original)) {
-    that <- paste("you to assign something to something else with", that)
-  } else if(grepl("\\(\\)", that)) {
-    that <- paste("you to call", that)
-  }
+  action <- 
+    if (is_infix_assign(that_original)) {
+      "you to assign something to something else with "
+    } else if (grepl("\\(\\)", that)) {
+      "you to "
+    }
 
   glue::glue_data(
     list(
       this = this,
-      that = that
+      that = that,
+      action = action %||% ""
     ),
-    "{intro}I expected {that} where you wrote {this}."
+    "{intro}I expected {action}{that} where you wrote {this}."
   )
 }
 
@@ -369,7 +377,7 @@ prep <- function(text) {
   } else if (is.pairlist(text)) {
     return(prep_function_arguments(text))
   }
-  deparse_to_string(text)
+  paste0("`", deparse_to_string(text), "`")
 }
 
 build_intro <- function(.call = NULL, .arg = NULL) {
@@ -384,7 +392,7 @@ build_intro <- function(.call = NULL, .arg = NULL) {
       # strip function body
       .call <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call)
     }
-    intro <- glue::glue("In {.call}, ")
+    intro <- glue::glue("In `{.call}`, ")
   } else {
     intro <- ""
   }
@@ -397,5 +405,21 @@ prep_function_arguments <- function(arg_list) {
     if (arg_value == quote("")) return("")
     paste(" =", deparse(arg_value))
   })
-  paste("arguments", paste0(args, values, collapse = ", "))
+  paste("arguments", paste0("`", args, values, "`", collapse = ", "))
+}
+
+md_code_prepend <- function(prefix, x) {
+  if (length(x) > 1) {
+    return(purrr::map(x, ~ md_code_prepend(prefix, .x)))
+  }
+  stopifnot(length(prefix) == 1, length(x) == 1)
+  if (grepl("^`", x)) {
+    # remove leading code backtick if present in the string
+    x <- gsub("^`", "", x)
+    # add leading code backtick if _not_ present in the prefix
+    if (!grepl("^`", prefix)) {
+      prefix <- paste0("`", prefix)
+    }
+  }
+  paste0(prefix, x)
 }

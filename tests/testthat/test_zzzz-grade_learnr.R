@@ -27,7 +27,7 @@ test_that("Grade learnr check_code", {
     check_code = "grade_code(glue_incorrect = '{.message}')",
     solution_code = "exp(log(1))",
     is_correct = FALSE,
-    msg = "In log(2), I expected 1 where you wrote 2."
+    msg = "In `log(2)`, I expected `1` where you wrote `2`."
   )
 
   # User code that produces a parsing error should return an incorrect grade (by default)
@@ -36,20 +36,20 @@ test_that("Grade learnr check_code", {
     check_code = 'function(...) stop("boom")',
     solution_code = "4",
     is_correct = FALSE,
-    msg = "might not be valid R code" # from default parse error in grade_learnr_parse_error()
+    msg = I("might not be valid R code") # from default parse error in grade_learnr_parse_error()
   )
   
   # Code scaffolding produces informative parsing error message
   expect_grade_learnr(
     user_code = "____(mtcars, cyl)",
     is_correct = FALSE,
-    msg = "contains 1 blank"
+    msg = I("contains 1 blank")
   )
   
   expect_grade_learnr(
     user_code = "________(___, ____)",
     is_correct = FALSE,
-    msg = "contains 3 blanks"
+    msg = I("contains 3 blanks")
   )
   
   # Can customize the feedback through an exercise.parse.error function

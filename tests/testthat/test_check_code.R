@@ -111,7 +111,7 @@ test_that("code_feedback() can handle character vectors", {
     user_code = c("1", "3"),
     solution_code = c("1", "2"),
     is_correct = FALSE,
-    msg = "I expected 2 where you wrote 3."
+    msg = "I expected `2` where you wrote `3`."
   )
   expect_null(code_feedback(c("1", "2"), c("1", "2")))
   expect_error(code_feedback("1", NULL))

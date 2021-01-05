@@ -11,11 +11,10 @@
 conditionMessage.gradethis_graded <- function(c) {
   condition_obj <- c
 
-  if (condition_obj$correct) {
-    paste0("Correct: ", as.character(condition_obj$message))
-  } else {
-    paste0("Incorrect: ", as.character(condition_obj$message))
-  }
+  paste0(
+    if (condition_obj$correct) "Correct: " else "Incorrect: ",
+    paste(as.character(condition_obj$message), collapse = " ")
+  )
 }
 
 # Turn errors into `fail()`ures

@@ -15,7 +15,7 @@ test_that("spaces", {
       incorrect = "{ maybe_code_feedback() }",
       is_correct = FALSE
     )$message,
-    " In log(2), I expected 3 where you wrote 2."
+    " In `log(2)`, I expected `3` where you wrote `2`."
   )
   expect_equal(
     expect_this_code(
@@ -24,7 +24,7 @@ test_that("spaces", {
       incorrect = "{ maybe_code_feedback(space_before = FALSE, space_after = FALSE) }",
       is_correct = FALSE
     )$message,
-    "In log(2), I expected 3 where you wrote 2."
+    "In `log(2)`, I expected `3` where you wrote `2`."
   )
   expect_equal(
     expect_this_code(
@@ -33,7 +33,7 @@ test_that("spaces", {
       incorrect = "{ maybe_code_feedback(space_before = FALSE, space_after = TRUE) }",
       is_correct = FALSE
     )$message,
-    "In log(2), I expected 3 where you wrote 2. "
+    "In `log(2)`, I expected `3` where you wrote `2`. "
   )
   expect_equal(
     expect_this_code(
@@ -42,7 +42,7 @@ test_that("spaces", {
       incorrect = "{ maybe_code_feedback(space_before = TRUE, space_after = 1) }",
       is_correct = FALSE
     )$message,
-    " In log(2), I expected 3 where you wrote 2."
+    " In `log(2)`, I expected `3` where you wrote `2`."
   )
   expect_equal(
     expect_this_code(
@@ -51,7 +51,7 @@ test_that("spaces", {
       incorrect = "{ maybe_code_feedback(space_before = TRUE, space_after = TRUE) }",
       is_correct = FALSE
     )$message,
-    " In log(2), I expected 3 where you wrote 2. "
+    " In `log(2)`, I expected `3` where you wrote `2`. "
   )
 
 })
@@ -102,7 +102,7 @@ test_that("is used when solution is available", {
           },
           is_correct = FALSE
         )$message,
-        "A fail message. In log(2), I expected 3 where you wrote 2."
+        "A fail message. In `log(2)`, I expected `3` where you wrote `2`."
       )
     }
   )
