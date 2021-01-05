@@ -27,7 +27,7 @@ test_that("Grade learnr check_code", {
     check_code = "grade_code(glue_incorrect = '{.message}')",
     solution_code = "exp(log(1))",
     is_correct = FALSE,
-    msg = "In log(2), I expected 1 where you wrote 2."
+    msg = "In `log(2)`, I expected `1` where you wrote `2`."
   )
 
   # User code that produces a parsing error should return an incorrect grade (by default)

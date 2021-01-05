@@ -107,7 +107,7 @@ grade_code <- function(
     if (is.null(solution_code) || length(str2expression(solution_code)) == 0) {
       return(legacy_graded(
         correct = FALSE,
-        message = "No exercise solution provided. Defaulting to _incorrect_"
+        message = "No exercise solution provided. Defaulting to _incorrect_."
       ))
     }
 
