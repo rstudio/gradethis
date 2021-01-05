@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Random praise and encouragement — praise • gradethis</title>
+<title>Objects exported from other packages — reexports • gradethis</title>
 
 
 <!-- jquery -->
@@ -45,10 +45,13 @@
 
 
 
-<meta property="og:title" content="Random praise and encouragement — praise" />
-<meta property="og:description" content="Generate a random praise or encouragement phrase.
-This can be used in conjunction with
-glue::glue() to generate praise or encouragement within feedback to users." />
+<meta property="og:title" content="Objects exported from other packages — reexports" />
+<meta property="og:description" content="These objects are imported from other packages. Follow the links
+below to see their documentation.
+
+  learnrrandom_encouragement, random_praise
+
+" />
 
 
 
@@ -125,34 +128,23 @@ glue::glue() to generate praise or encouragement within feedback to users." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Random praise and encouragement</h1>
+    <h1>Objects exported from other packages</h1>
     <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/praise.R'><code>R/praise.R</code></a></small>
-    <div class="hidden name"><code>praise.Rd</code></div>
+    <div class="hidden name"><code>reexports.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a random praise or encouragement phrase.
-This can be used in conjunction with
-<code><a href='https://glue.tidyverse.org/reference/glue.html'>glue::glue()</a></code> to generate praise or encouragement within feedback to users.</p>
+    <p>These objects are imported from other packages. Follow the links
+below to see their documentation.</p>
+<dl>
+  <dt>learnr</dt><dd><p><code><a href='https://rdrr.io/pkg/learnr/man/random_praise.html'>random_encouragement</a></code>, <code><a href='https://rdrr.io/pkg/learnr/man/random_praise.html'>random_praise</a></code></p></dd>
+
+</dl>
     </div>
 
 
 
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='https://rdrr.io/pkg/learnr/man/random_praise.html'>learnr::random_praise()</a></code>, <code><a href='https://rdrr.io/pkg/learnr/man/random_praise.html'>learnr::random_encouragement()</a></code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random praise: {random_praise()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random praise: Bravo!"       "Random praise: Bravo!"      
-#&gt; [3] "Random praise: Superb work!" "Random praise: Nice job!"   
-#&gt; [5] "Random praise: Lovely job!" </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random encouragement: {random_encouragement()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random encouragement: Give it another try."                           
-#&gt; [2] "Random encouragement: Try it again. I have a good feeling about this."
-#&gt; [3] "Random encouragement: Don't give up now, try it one more time."       
-#&gt; [4] "Random encouragement: Don't give up now, try it one more time."       
-#&gt; [5] "Random encouragement: Give it another try."                           </div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
