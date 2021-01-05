@@ -219,25 +219,25 @@ Manual calling of <code>code_feedback()</code> is also encouraged!</p>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'># Functions are different</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"sqrt(2)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; I expected you to call sqrt() where you called log().</div><div class='input'>
+</div><div class='output co'>#&gt; I expected you to call `sqrt()` where you called `log()`.</div><div class='input'>
 <span class='co'># Standardise user names</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv')"</span>, <span class='st'>"read.csv(file = 'file.csv')"</span><span class='op'>)</span> <span class='co'># NULL</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'># No partial matching</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv(f = 'file.csv')"</span>, <span class='st'>"read.csv(file = 'file.csv')"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; read.csv() accepts more than one argument name that begins with f. As a result, R cannot figure out which argument you want to pass "file.csv" to. Check how you spelled f, or write out the full argument name.</div><div class='input'>
+</div><div class='output co'>#&gt; `read.csv()` accepts more than one argument name that begins with `f`. As a result, R cannot figure out which argument you want to pass `"file.csv"` to. Check how you spelled `f`, or write out the full argument name.</div><div class='input'>
 <span class='co'># All named arguments are provided (even if they match default value)</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv')"</span>, <span class='st'>"read.csv('file.csv', header = TRUE)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Your call to read.csv() should include "header" as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
+</div><div class='output co'>#&gt; Your call to `read.csv()` should include `"header"` as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
 <span class='co'># All named argument values match</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv', header = FALSE)"</span>, <span class='st'>"read.csv('file.csv', header = TRUE)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; In read.csv("file.csv", header = FALSE), I expected header = TRUE where you wrote header = FALSE.</div><div class='input'>
+</div><div class='output co'>#&gt; In `read.csv("file.csv", header = FALSE)`, I expected `header = TRUE` where you wrote `header = FALSE`.</div><div class='input'>
 <span class='co'># No extra arguments are provided</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"mean(1:10)"</span>, <span class='st'>"mean(1:10, na.rm = TRUE)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Your call to mean() should include "na.rm" as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
+</div><div class='output co'>#&gt; Your call to `mean()` should include `"na.rm"` as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
 <span class='co'># Unstandardised arguments match in order and value</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"mean(1:10, 0.1)"</span>, <span class='st'>"mean(1:10, 0.2)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; In mean(1:10, 0.1), I expected 0.2 where you wrote 0.1.</div></pre>
+</div><div class='output co'>#&gt; In `mean(1:10, 0.1)`, I expected `0.2` where you wrote `0.1`.</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
