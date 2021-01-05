@@ -42,7 +42,15 @@ is_dot <- function(name) {
   length(name) == 1 && as.character(name) == "."
 }
 
-unpipe_all <- function(code_expr) {
+unpipe_all <- function(code_expr, .top_level = TRUE) {
+  if (is.character(code_expr) && .top_level) {
+    code_expr <- str2expression(code_expr)
+    if (length(code_expr) == 1) {
+      return(unpipe_all(code_expr[[1]]))
+    } else {
+      return(purrr::map(as.list(code_expr), unpipe_all, .top_level = FALSE))
+    }
+  }
   code_expr_len <- length(code_expr)
   if (code_expr_len == 0) return(code_expr)
   if (code_expr_len == 1) return(code_expr)
@@ -52,8 +60,17 @@ unpipe_all <- function(code_expr) {
     code_expr <- code_expr[-4]
   }
   re_call <- if (is.pairlist(code_expr)) as.pairlist else as.call
-  code_expr <- re_call(purrr::map(as.list(code_expr), unpipe_all))
+  code_expr <- re_call(purrr::map(as.list(code_expr), unpipe_all, .top_level = FALSE))
   unpipe(code_expr)
+}
+
+unpipe_all_str <- function(code, ..., collapse = "\n") {
+  code_unpiped <- unpipe_all(code)
+  expr_text <- purrr::partial(rlang::expr_text, ...)
+  if (!is.list(code_unpiped)) {
+    return(expr_text(code_unpiped))
+  }
+  paste(purrr::map_chr(as.list(code_unpiped), expr_text), collapse = collapse)
 }
 
 find_pipe <- function(code_expr) {
