@@ -15,6 +15,7 @@
 * `grade_code()` will now throw an error (rather than returning `NULL`) if no solution code is provided
 * `evaluate_condition()` now accepts `last_value` and `env` rather than `grader_args` and `learnr_args`
 * `condition()`s now have a class of `"gradethis_condition"`
+* gradethis now uses learnr for `random_praise()` and `random_encouragement()`. `random_encourage()` has been soft-deprecated (#183).
 
 
 ### Bug fixes

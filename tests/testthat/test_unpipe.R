@@ -45,3 +45,31 @@ test_that("unpipe_all() can deal with function definitions", {
   expect_equal(unpipe_all(function1), function1)
   expect_equal(unpipe_all(function2), function2)
 })
+
+test_that("unpipe_all() accepts code as strings", {
+  pipe_str <- "a %>% b(x = 1) %>% c(y = 2)"
+  pipe_quo <- quote(a %>% b(x = 1) %>% c(y = 2))
+  unpipe_quo <- quote(c(b(a, x = 1), y = 2))
+  
+  expect_equal(unpipe_all(pipe_str), unpipe_all(pipe_quo))
+  expect_equal(unpipe_all_str(pipe_str), unpipe_all_str(pipe_quo))
+  expect_equal(unpipe_all_str(pipe_str), rlang::quo_text(unpipe_quo))
+  
+  # unpipe_all can receive strings with multiple expressions
+  pipe_str2 <- "d %>% e(x = 1) %>% f(y = 2)"
+  pipe_quo2 <- quote(d %>% e(x = 1) %>% f(y = 2))
+  unpipe_quo2 <- quote(f(e(d, x = 1), y = 2))
+  
+  expect_equal(
+    unpipe_all(paste0(pipe_str, "\n", pipe_str2)),
+    purrr::map(list(pipe_quo, pipe_quo2), unpipe_all)
+  )
+  expect_equal(
+    unpipe_all_str(paste0(pipe_str, "\n", pipe_str2), collapse = NULL),
+    purrr::map_chr(list(pipe_quo, pipe_quo2), unpipe_all_str)
+  )
+  expect_equal(
+    unpipe_all_str(paste0(pipe_str, "\n", pipe_str2)),
+    paste(c(rlang::quo_text(unpipe_quo), rlang::quo_text(unpipe_quo2)), collapse = "\n")
+  )
+})
