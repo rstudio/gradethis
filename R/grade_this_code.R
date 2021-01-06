@@ -74,16 +74,16 @@ grade_this_code <- function(
   ellipsis::check_dots_empty()
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
-  function(checking_env) {
-    checking_env[[".__correct"]] <- correct
-    checking_env[[".__incorrect"]] <- incorrect
+  function(check_env) {
+    check_env[[".__correct"]] <- correct
+    check_env[[".__incorrect"]] <- incorrect
 
     grade_this(
       fail_code_feedback = fail_code_feedback,
       expr = {
         # create variable `.message` for glue to find
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
-        # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
+        # call `pass`/`fail` inside `grade_this` to have access to `check_env`
         if (is.null(.message)) {
           # need to use `get()` to avoid using `utils::globalVariables`
           pass(get(".__correct"))
@@ -91,7 +91,7 @@ grade_this_code <- function(
           fail(get(".__incorrect"))
         }
       }
-    )(checking_env)
+    )(check_env)
   }
 }
 
