@@ -82,6 +82,15 @@ grade_this_code <- function(
       expr = {
         # create variable `.message` for glue to find
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
+        
+        # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
+        # but need to use `get()` to avoid using `utils::globalVariables`
+        if (is.null(.message)) {
+          # no code_feedback() message means the code is correct
+          pass(get(".__correct"))
+        }
+        
+        # add pipe message only if incorrect and the pipe was used
         if (uses_pipe(.user_code)) {
           .message <- glue_message_pipe(
             .message,
@@ -90,14 +99,7 @@ grade_this_code <- function(
             .incorrect = .__incorrect
           )
         }
-        
-        # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
-        if (is.null(.message)) {
-          # need to use `get()` to avoid using `utils::globalVariables`
-          pass(get(".__correct"))
-        } else {
-          fail(get(".__incorrect"))
-        }
+        fail(get(".__incorrect"))
       }
     )(checking_env)
   }
