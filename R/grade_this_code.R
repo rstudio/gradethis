@@ -91,12 +91,12 @@ grade_this_code <- function(
         }
         
         # add pipe message only if incorrect and the pipe was used
-        if (uses_pipe(.user_code)) {
+        if (uses_pipe(get(".user_code"))) {
           .message <- glue_message_pipe(
             .message,
-            glue_pipe = .__glue_pipe,
-            .user_code = .user_code,
-            .incorrect = .__incorrect
+            glue_pipe = get(".__glue_pipe"),
+            .user_code = get(".user_code"),
+            .incorrect = get(".__incorrect")
           )
         }
         fail(get(".__incorrect"))
