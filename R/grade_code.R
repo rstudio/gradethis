@@ -141,10 +141,9 @@ grade_code <- function(
 
     # add pipe message
     if (uses_pipe(user_code)) {
-      message <- glue_message(
-        glue_pipe,
-        # convert forwards and backwards to apply consistent formatting
-        .user = as.character(str2expression(user_code)),
+      message <- glue_message_pipe(
+        glue_pipe = glue_pipe,
+        .user_code = user_code,
         .message = message,
         .incorrect = incorrect
       )

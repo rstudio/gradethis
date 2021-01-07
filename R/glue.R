@@ -53,3 +53,30 @@ glue_message_with_env <- function(env, message) {
 glue_with_env <- function(env, ...) {
   glue::glue_data(.x = env, .envir = env, ...)
 }
+
+glue_message_pipe <- function(
+  glue_pipe = getOption("gradethis_glue_pipe"),
+  .user_code = NULL,
+  .message = NULL,
+  .incorrect = NULL
+) {
+  .message   <- .message   %||% ""
+  .incorrect <- .incorrect %||% ""
+  .user_code <- .user_code %||% ""
+  
+  if (is.null(glue_pipe)) {
+    return(.message)
+  }
+  
+  if (!identical(.user_code, "")) {
+    # convert forwards and backwards to apply consistent formatting
+    .user_code <- as.character(str2expression(.user_code))
+  }
+  
+  glue_message(
+    glue_pipe,
+    .user = .user_code,
+    .message = .message,
+    .incorrect = .incorrect
+  )
+}

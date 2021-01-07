@@ -37,10 +37,7 @@
 #' @param ... Ignored
 #' @inheritParams code_feedback
 #' @inheritParams grade_this
-#'
-# ' @param glue_pipe A glue string that returns the final message displayed when
-# '   the student uses a pipe, `%>%`. Defaults to
-# '   `getOption("gradethis_glue_pipe")`.
+#' @inheritParams grade_code
 #'
 #' @return a function whose first parameter should be an environment that contains
 #' all necessary information to compare the code.  The result of the returned function will be a [graded()] object.
@@ -68,6 +65,7 @@ grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
+  glue_pipe = getOption("gradethis_glue_pipe"),
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
 ) {
@@ -77,12 +75,22 @@ grade_this_code <- function(
   function(checking_env) {
     checking_env[[".__correct"]] <- correct
     checking_env[[".__incorrect"]] <- incorrect
+    checking_env[[".__glue_pipe"]] <- glue_pipe
 
     grade_this(
       fail_code_feedback = fail_code_feedback,
       expr = {
         # create variable `.message` for glue to find
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
+        if (uses_pipe(.user_code)) {
+          .message <- glue_message_pipe(
+            glue_pipe = .__glue_pipe,
+            .user_code = .user_code,
+            .message = .message,
+            .incorrect = .__incorrect
+          )
+        }
+        
         # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
         if (is.null(.message)) {
           # need to use `get()` to avoid using `utils::globalVariables`
