@@ -59,7 +59,7 @@ message_md <- function(message = NULL) {
   }
   if (is_AsIs(message)) {
     # AsIs messages are collapsed with new lines to match markdown_html()
-    return(htmltools::htmlEscape(paste(message, collapse = "\n")))
+    return(paste(message, collapse = "\n"))
   }
   if (is.null(message)) {
     return("")
