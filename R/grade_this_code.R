@@ -81,6 +81,7 @@ grade_this_code <- function(
         # check code for mistakes and store error feedback in .message so it
         # can be found by glue in fail(). Will be NULL if code is correct.
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
+        .message_pipe_warning <- ""
         
         # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
         # but need to use `get()` to avoid using `utils::globalVariables`
@@ -89,14 +90,9 @@ grade_this_code <- function(
           pass(get(".__correct"))
         }
         
-        # add pipe message only if incorrect and the pipe was used
+        # construct pipe message if incorrect and the pipe was used
         if (uses_pipe(get(".user_code"))) {
-          .message <- glue_message_pipe(
-            .message,
-            glue_pipe = get(".__glue_pipe"),
-            .user_code = get(".user_code"),
-            .incorrect = get(".__incorrect")
-          )
+          .message_pipe_warning <- glue_pipe_message(get(".__glue_pipe"), get(".user_code"))
         }
         fail(get(".__incorrect"))
       }

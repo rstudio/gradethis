@@ -8,14 +8,14 @@ test_that("glue_pipe in grade_this_code() is equivalent to grade_code()", {
     expect_this_code(
       user_code = user_code,
       solution_code = solution_code,
-      incorrect = "{.message}",
+      incorrect = "{.message_pipe_warning}{.message}",
       is_correct = FALSE,
       msg = "I see that you are using pipe"
     )$message,
     expect_grade_code(
       user_code = user_code,
       solution_code = solution_code,
-      glue_incorrect = "{.message}",
+      glue_incorrect = "{.message_pipe_warning}{.message}",
       is_correct = FALSE,
       msg = "I see that you are using pipe"
     )$message
@@ -38,7 +38,7 @@ test_that("glue_pipe message returns unpiped text", {
       user_code = user_code,
       solution_code = "b(a(x))",
       is_correct = FALSE,
-      msg = glue_message_pipe(gradethis_default_options$gradethis_glue_pipe, .user_code = user_code, .message = "")
+      msg = glue_pipe_message(gradethis_default_options$gradethis_glue_pipe, .user_code = user_code)
     )
   )
 })

@@ -54,14 +54,12 @@ glue_with_env <- function(env, ...) {
   glue::glue_data(.x = env, .envir = env, ...)
 }
 
-glue_message_pipe <- function(
-  .message,
+glue_pipe_message <- function(
   glue_pipe = getOption("gradethis_glue_pipe"),
-  .user_code = NULL,
-  .incorrect = NULL
+  .user_code = NULL
 ) {
   if (is.null(glue_pipe)) {
-    return(.message)
+    return("")
   }
   
   .user_code_unpiped <- NULL
@@ -73,9 +71,7 @@ glue_message_pipe <- function(
   
   glue_message(
     glue_pipe,
-    .message = .message,
     .user_code = .user_code,
-    .user_code_unpiped = .user_code_unpiped,
-    .incorrect = .incorrect
+    .user_code_unpiped = .user_code_unpiped
   )
 }

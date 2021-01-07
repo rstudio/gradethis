@@ -126,28 +126,22 @@ grade_code <- function(
           glue_correct,
           .is_correct = TRUE,
           .message = NULL,
-          .correct = correct
+          .correct = correct,
+          .message_pipe_warning = ""
         )
       ))
     }
-
-    # is incorrect
+    
+   # is incorrect
     message <- glue_message(
       glue_incorrect,
       .is_correct = FALSE,
       .message = message,
-      .incorrect = incorrect
+      .incorrect = incorrect,
+      .message_pipe_warning = if (uses_pipe(user_code)) {
+        glue_pipe_message(glue_pipe, user_code)
+      }
     )
-
-    # add pipe message
-    if (uses_pipe(user_code)) {
-      message <- glue_message_pipe(
-        message,
-        glue_pipe = glue_pipe,
-        .user_code = user_code,
-        .incorrect = incorrect
-      )
-    }
 
     # final grade
     legacy_graded(correct = FALSE, message = message)

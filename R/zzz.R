@@ -8,7 +8,7 @@ gradethis_default_options <- list(
   # Default message for grade_this_code(correct)
   gradethis.code.correct = NULL,
   # Default message for grade_this_code(incorrect)
-  gradethis.code.incorrect = "{ .message } {random_encouragement()}",
+  gradethis.code.incorrect = "{.message_pipe_warning}{.message} {random_encouragement()}",
 
   # Default value for grade_this(fail_code_feedback). Plays with `maybe_code_feedback()`
   gradethis.code.feedback = TRUE,
@@ -19,12 +19,12 @@ gradethis_default_options <- list(
 
   ### legacy ###
   gradethis_glue_correct = "{ random_praise() } { .message } { .correct }",
-  gradethis_glue_incorrect = "{ .message } { .incorrect } { random_encouragement() }",
+  gradethis_glue_incorrect = "{.message_pipe_warning}{ .message } { .incorrect } { random_encouragement() }",
 
   gradethis_glue_pipe = paste0(
     "I see that you are using pipe operators (e.g. %>%), ",
     "so I want to let you know that this is how I am interpretting your code ",
-    "before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n{.message}"
+    "before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n"
   ),
 
   gradethis_glue_correct_test = "{ .num_correct }/{ .num_total } correct! { random_praise() }",
