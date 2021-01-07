@@ -9,46 +9,46 @@ test_that("formals match with code_feedback()", {
 test_that("spaces", {
 
   expect_equal(
-    expect_this_code(
+    expect_grade_this(
+      fail("{maybe_code_feedback()}"),
       "sqrt(log(2))",
       "sqrt(log(3))",
-      incorrect = "{ maybe_code_feedback() }",
       is_correct = FALSE
     )$message,
     " In `log(2)`, I expected `3` where you wrote `2`."
   )
   expect_equal(
-    expect_this_code(
+    expect_grade_this(
+      fail("{ maybe_code_feedback(space_before = FALSE, space_after = FALSE) }"),
       "sqrt(log(2))",
       "sqrt(log(3))",
-      incorrect = "{ maybe_code_feedback(space_before = FALSE, space_after = FALSE) }",
       is_correct = FALSE
     )$message,
     "In `log(2)`, I expected `3` where you wrote `2`."
   )
   expect_equal(
-    expect_this_code(
+    expect_grade_this(
+      fail("{ maybe_code_feedback(space_before = FALSE, space_after = TRUE) }"),
       "sqrt(log(2))",
       "sqrt(log(3))",
-      incorrect = "{ maybe_code_feedback(space_before = FALSE, space_after = TRUE) }",
       is_correct = FALSE
     )$message,
     "In `log(2)`, I expected `3` where you wrote `2`. "
   )
   expect_equal(
-    expect_this_code(
+    expect_grade_this(
+      fail("{ maybe_code_feedback(space_before = TRUE, space_after = 1) }"),
       "sqrt(log(2))",
       "sqrt(log(3))",
-      incorrect = "{ maybe_code_feedback(space_before = TRUE, space_after = 1) }",
       is_correct = FALSE
     )$message,
     " In `log(2)`, I expected `3` where you wrote `2`."
   )
   expect_equal(
-    expect_this_code(
+    expect_grade_this(
+      fail("{ maybe_code_feedback(space_before = TRUE, space_after = TRUE) }"),
       "sqrt(log(2))",
       "sqrt(log(3))",
-      incorrect = "{ maybe_code_feedback(space_before = TRUE, space_after = TRUE) }",
       is_correct = FALSE
     )$message,
     " In `log(2)`, I expected `3` where you wrote `2`. "

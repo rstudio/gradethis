@@ -36,7 +36,6 @@
 #'   a known incorrect answer. `.message` is available in the calling environment.
 #' @param ... Ignored
 #' @inheritParams code_feedback
-#' @inheritParams grade_this
 #' @inheritParams grade_code
 #'
 #' @return a function whose first parameter should be an environment that contains
@@ -57,7 +56,7 @@
 #' ))
 #'
 #' # Remember, only `grade_this_code(correct, incorrect)` should be used.
-#' # The followup `list()`` and values will be called by `grade_learnr()`.
+#' # The followup `list()` and values will be called by `grade_learnr()`.
 #' # To learn more about using `grade_this_code()` with learnr, see:
 #' \dontrun{gradethis_demo()}
 #' @export
@@ -66,8 +65,7 @@ grade_this_code <- function(
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
   glue_pipe = getOption("gradethis_glue_pipe"),
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
-  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
 
@@ -78,9 +76,10 @@ grade_this_code <- function(
     checking_env[[".__glue_pipe"]] <- glue_pipe
 
     grade_this(
-      fail_code_feedback = fail_code_feedback,
+      fail_code_feedback = FALSE,
       expr = {
-        # create variable `.message` for glue to find
+        # check code for mistakes and store error feedback in .message so it
+        # can be found by glue in fail(). Will be NULL if code is correct.
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
         
         # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
