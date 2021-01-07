@@ -1,14 +1,24 @@
 context("glue_pipe option")
 
 test_that("glue_pipe in grade_this_code() is equivalent to grade_code()", {
-  exercise <- list2env(list(
-    .user_code = "penguins %>% pull(year) %>% min(year)",
-    .solution_code = "penguins %>% pull(year) %>% min()"
-  ))
+  user_code <-  "penguins %>% pull(year) %>% min(year)"
+  solution_code <-  "penguins %>% pull(year) %>% min()"
   
   expect_equal(
-    grade_this_code(incorrect = "{.message}")(exercise)$message,
-    grade_code(glue_incorrect = "{.message}")(exercise)$message
+    expect_this_code(
+      user_code = user_code,
+      solution_code = solution_code,
+      incorrect = "{.message}",
+      is_correct = FALSE,
+      msg = "I see that you are using pipe"
+    )$message,
+    expect_grade_code(
+      user_code = user_code,
+      solution_code = solution_code,
+      glue_incorrect = "{.message}",
+      is_correct = FALSE,
+      msg = "I see that you are using pipe"
+    )$message
   )
 })
 
@@ -30,5 +40,37 @@ test_that("glue_pipe message returns unpiped text", {
       is_correct = FALSE,
       msg = glue_message_pipe(gradethis_default_options$gradethis_glue_pipe, .user_code = user_code, .message = "")
     )
+  )
+})
+
+test_that("glue_pipe can be disabled by setting equal to NULL", {
+  user_code = "x %>% b()"
+  solution_code = "x %>% a()"
+  
+  with_options(
+    list(gradethis_glue_pipe = NULL),
+    {
+      expect_equal(
+        expect_grade_code(
+          user_code = user_code,
+          solution_code = solution_code,
+          glue_incorrect = "INCORRECT",
+          is_correct = FALSE,
+          msg = NULL
+        )$message,
+        "INCORRECT"
+      )
+      
+      expect_equal(
+        expect_this_code(
+          user_code = user_code,
+          solution_code = solution_code,
+          incorrect = "INCORRECT",
+          is_correct = FALSE,
+          msg = NULL
+        )$message,
+        "INCORRECT"
+      )
+    }
   )
 })
