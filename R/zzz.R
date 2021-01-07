@@ -24,7 +24,7 @@ gradethis_default_options <- list(
   gradethis_glue_pipe = paste0(
     "I see that you are using pipe operators (e.g. %>%), ",
     "so I want to let you know that this is how I am interpretting your code ",
-    "before I check it:\n\n```r\n{unpipe_all_str(.user, width = 60)}\n```\n\n{.message}"
+    "before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n{.message}"
   ),
 
   gradethis_glue_correct_test = "{ .num_correct }/{ .num_total } correct! { random_praise() }",

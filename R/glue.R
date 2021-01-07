@@ -55,28 +55,27 @@ glue_with_env <- function(env, ...) {
 }
 
 glue_message_pipe <- function(
+  .message,
   glue_pipe = getOption("gradethis_glue_pipe"),
   .user_code = NULL,
-  .message = NULL,
   .incorrect = NULL
 ) {
-  .message   <- .message   %||% ""
-  .incorrect <- .incorrect %||% ""
-  .user_code <- .user_code %||% ""
-  
   if (is.null(glue_pipe)) {
     return(.message)
   }
   
+  .user_code_unpiped <- NULL
   if (!identical(.user_code, "")) {
     # convert forwards and backwards to apply consistent formatting
     .user_code <- as.character(str2expression(.user_code))
+    .user_code_unpiped <- unpipe_all_str(.user_code, width = 60)
   }
   
   glue_message(
     glue_pipe,
-    .user = .user_code,
     .message = .message,
+    .user_code = .user_code,
+    .user_code_unpiped = .user_code_unpiped,
     .incorrect = .incorrect
   )
 }

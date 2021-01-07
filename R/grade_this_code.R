@@ -84,9 +84,9 @@ grade_this_code <- function(
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
         if (uses_pipe(.user_code)) {
           .message <- glue_message_pipe(
+            .message,
             glue_pipe = .__glue_pipe,
             .user_code = .user_code,
-            .message = .message,
             .incorrect = .__incorrect
           )
         }

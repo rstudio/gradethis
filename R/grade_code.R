@@ -142,9 +142,9 @@ grade_code <- function(
     # add pipe message
     if (uses_pipe(user_code)) {
       message <- glue_message_pipe(
+        message,
         glue_pipe = glue_pipe,
         .user_code = user_code,
-        .message = message,
         .incorrect = incorrect
       )
     }
