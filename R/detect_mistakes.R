@@ -324,8 +324,10 @@ detect_mistakes <- function(user,
   for (name in solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
       arg_name <- ifelse(name %in% submitted_names, name, "")
+      # recover the user submission as provided by only unpiping one level
+      user_submitted <- call_standardise_formals(unpipe(submitted))
       res <- detect_mistakes(
-        user = user[[name]],
+        user = user_submitted[[name]],
         solution = solution[[name]],
         env = env,
         # If too verbose, use user[1]
@@ -391,7 +393,8 @@ detect_mistakes <- function(user,
       name <- rlang::names2(user_args[i])
       if (!(name %in% submitted_names)) name <- ""
       res <- detect_mistakes(
-        user = user_args[[i]],
+        # unpipe only one level to detect mistakes in the argument as submitted
+        user = unpipe(submitted)[[i + 1]],
         solution = solution_args[[i]],
         env = env,
         # If too verbose, use user[1]
