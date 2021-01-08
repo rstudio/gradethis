@@ -67,9 +67,9 @@ grade_this <- function(
 ) {
   express <- rlang::get_expr(rlang::enquo(expr))
 
-  function(checking_env) {
-    if (is.list(checking_env)) {
-      checking_env <- list2env(checking_env)
+  function(check_env) {
+    if (is.list(check_env)) {
+      check_env <- list2env(check_env)
     }
 
     # make sure fail calls can get code feed back (or not) if they want
@@ -82,7 +82,7 @@ grade_this <- function(
         # force the evaluation of the expression in an environment
         rlang::eval_tidy(
           express,
-          env = checking_env
+          env = check_env
         )
       })
     )
