@@ -248,6 +248,9 @@ student submits when it runs <code>grade_code()</code>.</p></li>
 #&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
 #&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; function (check_env) 
 #&gt; {
+#&gt;     if (is.list(check_env)) {
+#&gt;         check_env &lt;- list2env(check_env)
+#&gt;     }
 #&gt;     user_code &lt;- check_env$.user_code
 #&gt;     if (is.null(user_code)) {
 #&gt;         return(legacy_graded(correct = FALSE, message = "I didn't receive your code. Did you write any?"))
@@ -271,8 +274,8 @@ student submits when it runs <code>grade_code()</code>.</p></li>
 #&gt;     }
 #&gt;     legacy_graded(correct = FALSE, message = message)
 #&gt; }
-#&gt; &lt;bytecode: 0x7f9898bc2da8&gt;
-#&gt; &lt;environment: 0x7f9898bc4948&gt;</div></span></pre>
+#&gt; &lt;bytecode: 0x7fdd7d87ade8&gt;
+#&gt; &lt;environment: 0x7fdd7d87c640&gt;</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
