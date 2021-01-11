@@ -62,16 +62,31 @@ glue_pipe_message <- function(
     return("")
   }
   
-  .user_code_unpiped <- NULL
+  .user_code <- .user_code %||% ""
+  
+  # for compatibility allow .user and .message but print a warning to the console
+  .user <- function() {
+    message("{.user} was deprecated in `glue_pipe`, please use {.user_code}.")
+    .user_code
+  }
+  
+  .message <- function() {
+    message("{.message} was deprecated in glue_pipe.")
+    ""
+  }
+  
+  .user_code_unpiped <- .user_code
   if (!identical(.user_code, "")) {
     # convert forwards and backwards to apply consistent formatting
     .user_code <- as.character(str2expression(.user_code))
     .user_code_unpiped <- unpipe_all_str(.user_code, width = 60)
   }
   
-  glue_message(
+  glue::glue(
     glue_pipe,
     .user_code = .user_code,
-    .user_code_unpiped = .user_code_unpiped
+    .user_code_unpiped = .user_code_unpiped,
+    .user = .user(),
+    .message = .message()
   )
 }
