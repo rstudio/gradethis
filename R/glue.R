@@ -54,24 +54,38 @@ glue_with_env <- function(env, ...) {
   glue::glue_data(.x = env, .envir = env, ...)
 }
 
-glue_pipe_message <- function(
-  glue_pipe = getOption("gradethis_glue_pipe"),
+#' Pipe Warning Message
+#' 
+#' Creates a warning message when user code contains the `%>%`.
+#' 
+#' @param message A glue string containing the message
+#' @param .user_code The user's submitted code, found in `env` if `NULL`
+#' 
+#' @export
+pipe_warning <- function(
+  message = getOption("gradethis.pipe_warning"),
   .user_code = NULL
 ) {
-  if (is.null(glue_pipe)) {
+  if (is.null(message)) {
     return("")
   }
   
-  .user_code <- .user_code %||% ""
+  if (is.null(.user_code)) {
+    .user_code <- get0(".user_code", parent.frame(), ifnotfound = "")
+  }
+  
+  if (identical(trimws(.user_code), "")) {
+    return("")
+  }
   
   # for compatibility allow .user and .message but print a warning to the console
   .user <- function() {
-    message("{.user} was deprecated in `glue_pipe`, please use {.user_code}.")
+    message("{.user} was deprecated in `pipe_warning()`, please use {.user_code}.")
     .user_code
   }
   
   .message <- function() {
-    message("{.message} was deprecated in glue_pipe.")
+    message("{.message} was deprecated in `pipe_warning()`.")
     ""
   }
   
@@ -83,7 +97,7 @@ glue_pipe_message <- function(
   }
   
   glue::glue(
-    glue_pipe,
+    message,
     .user_code = .user_code,
     .user_code_unpiped = .user_code_unpiped,
     .user = .user(),

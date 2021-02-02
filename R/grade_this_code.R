@@ -36,7 +36,6 @@
 #'   a known incorrect answer. `.message` is available in the calling environment.
 #' @param ... Ignored
 #' @inheritParams code_feedback
-#' @inheritParams grade_code
 #'
 #' @return a function whose first parameter should be an environment that contains
 #' all necessary information to compare the code.  The result of the returned function will be a [graded()] object.
@@ -64,7 +63,6 @@ grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
-  glue_pipe = getOption("gradethis_glue_pipe"),
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
@@ -73,7 +71,6 @@ grade_this_code <- function(
   function(checking_env) {
     checking_env[[".__correct"]] <- correct
     checking_env[[".__incorrect"]] <- incorrect
-    checking_env[[".__glue_pipe"]] <- glue_pipe
 
     grade_this(
       fail_code_feedback = FALSE,
@@ -81,7 +78,6 @@ grade_this_code <- function(
         # check code for mistakes and store error feedback in .message so it
         # can be found by glue in fail(). Will be NULL if code is correct.
         .message <- code_feedback(allow_partial_matching = allow_partial_matching)
-        .message_pipe_warning <- ""
         
         # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
         # but need to use `get()` to avoid using `utils::globalVariables`
@@ -90,10 +86,6 @@ grade_this_code <- function(
           pass(get(".__correct"))
         }
         
-        # construct pipe message if incorrect and the pipe was used
-        if (uses_pipe(get(".user_code"))) {
-          .message_pipe_warning <- glue_pipe_message(get(".__glue_pipe"), get(".user_code"))
-        }
         fail(get(".__incorrect"))
       }
     )(checking_env)

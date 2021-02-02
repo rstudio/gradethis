@@ -10,7 +10,6 @@ grade_this_code(
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,
-  glue_pipe = getOption("gradethis_glue_pipe"),
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 )
 }
@@ -22,10 +21,6 @@ known correct answer.}
 a known incorrect answer. \code{.message} is available in the calling environment.}
 
 \item{...}{Ignored}
-
-\item{glue_pipe}{A glue string that returns the final message displayed when
-the student uses a pipe, \verb{\%>\%}. Defaults to
-\code{getOption("gradethis_glue_pipe")}.}
 
 \item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
 }
