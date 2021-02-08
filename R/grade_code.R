@@ -105,6 +105,9 @@ grade_code <- function(
 
   # return script style function
   function(check_env) {
+    if (is.list(check_env)) {
+      check_env <- list2env(check_env)
+    }
 
     user_code <- check_env$.user_code
     if (is.null(user_code)) {

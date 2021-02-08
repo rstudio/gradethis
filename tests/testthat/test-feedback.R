@@ -46,13 +46,13 @@ test_that("markdown: AsIs text is returned untouched", {
   
   expect_equal(glue_message_with_env(env, txt), txt)
   expect_equal(glue_message(txt, one = "1", two = "2"), txt)
-  expect_equal(message_md(txt), "__{one}__ &lt;em&gt;{two}&lt;/em&gt;")
+  expect_equal(message_md(txt), "__{one}__ <em>{two}</em>")
 })
 
 test_that("markdown: disallowed tags are escaped", {
   expect_match(message_md("<script>alert('boo')</script>"), "&lt;script")
   expect_match(message_md("<style></style>"), "&lt;style")
-  expect_match(message_md(I("<style></style>")), "&lt;style&gt;&lt;/style&gt;")
+  expect_match(message_md(I("<style></style>")), "<style></style>")
 })
 
 test_that("markdown: grading functions handle HTML messages", {

@@ -372,7 +372,7 @@ prep <- function(text) {
   # investigation for a cleaner solution.
   if (is_infix(text)) {
     text <- text[[1]]
-  } else if (is.call(text)) {
+  } else if (is.call(text) && !is_pipe(text)) {
     text <- text[1]
   } else if (is.pairlist(text)) {
     return(prep_function_arguments(text))

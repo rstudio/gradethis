@@ -454,15 +454,16 @@ test_that("detect_mistakes works with infix operators", {
 })
 
 test_that("detect_mistakes works with pipes", {
-
+  
   # internal pipe
   user <-     quote(b(1 %>% abs()))
   solution <- quote(b(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]][[3]], that = solution[[2]], enclosing_call = user)
+    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    # "In `b(1 %>% abs())`, I expected `1` where you wrote `1 %>% abs()`."
   )
-
+  
   user <-     quote(sqrt(1))
   solution <- quote(sqrt(1 %>% log()))
   expect_equal(
@@ -862,11 +863,11 @@ test_that("detect_mistakes works with function arguments", {
   
   expect_equal(
     code_feedback("function(x, y = a1 %>% b) x + y", "function(x, y = b(a)) x + y"),
-    "In `function(x, y = a1 %>% b)`, I expected arguments `x`, `y = b(a)` where you wrote arguments `x`, `y = b(a1)`."
+    "In `function(x, y = a1 %>% b)`, I expected arguments `x`, `y = b(a)` where you wrote arguments `x`, `y = a1 %>% b`."
   )
   
   expect_equal(
     code_feedback("function(x, y) y2 %>% x", "function(x, y) y %>% x"),
-    "In `x(y2)`, I expected `y` where you wrote `y2`."
+    "In `y2 %>% x`, I expected `y` where you wrote `y2`."
   )
 })
