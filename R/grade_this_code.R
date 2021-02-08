@@ -75,9 +75,12 @@ grade_this_code <- function(
     checking_env[[".__incorrect"]] <- incorrect
 
     with_options(
+      # Pass allow_partial_matching to internal code_feedback() calls
       list(gradethis.code.partial_matching = allow_partial_matching),
       grade_this(
-        fail_code_feedback = FALSE,
+        # The point of grade_this_code() is to return code feedback so we set
+        # fail_code_feedback to TRUE in case the user calls maybe_code_feedback()
+        fail_code_feedback = TRUE,
         expr = {
           # check code for mistakes and store error feedback in .message so it
           # can be found by glue in fail(). Will be NULL if code is correct.
