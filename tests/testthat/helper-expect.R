@@ -103,10 +103,11 @@ expect_this_code <- function(
   correct = "valid",
   incorrect = "{.message}",
   is_correct,
-  msg = NULL
+  msg = NULL,
+  allow_partial_matching = TRUE
 ) {
   env <- create_learnr_env(user_code, solution_code, envir_prep, eval = FALSE)
-  grade <- grade_this_code(correct, incorrect)(env)
+  grade <- grade_this_code(correct, incorrect, allow_partial_matching = allow_partial_matching)(env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
 

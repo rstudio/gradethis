@@ -8,7 +8,7 @@ gradethis_default_options <- list(
   # Default message for grade_this_code(correct)
   gradethis.code.correct = NULL,
   # Default message for grade_this_code(incorrect)
-  gradethis.code.incorrect = "{pipe_warning()}{.message} {random_encouragement()}",
+  gradethis.code.incorrect = "{pipe_warning()}{code_feedback()} {random_encouragement()}",
 
   # Default value for grade_this(fail_code_feedback). Plays with `maybe_code_feedback()`
   gradethis.code.feedback = TRUE,

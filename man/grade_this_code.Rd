@@ -14,11 +14,13 @@ grade_this_code(
 )
 }
 \arguments{
-\item{correct}{A \code{glue}-able character string to display if the student answer matches a
-known correct answer.}
+\item{correct}{A \code{glue}-able character string to display if the student
+answer matches a known correct answer.}
 
-\item{incorrect}{A \code{glue}-able character string to display if the student answer matches
-a known incorrect answer. \code{.message} is available in the calling environment.}
+\item{incorrect}{A \code{glue}-able character string to display if the student
+answer does not match the known correct answer. Use \code{code_feedback()} in
+this string to control the placement of the auto-generated feedback message
+produced by comparing the student's submission with the solution.}
 
 \item{...}{Ignored}
 

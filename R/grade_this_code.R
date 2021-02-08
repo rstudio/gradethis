@@ -29,11 +29,13 @@
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
-#' @param correct A `glue`-able character string to display if the student answer matches a
-#'   known correct answer.
+#' @param correct A `glue`-able character string to display if the student 
+#'   answer matches a known correct answer.
 #'
-#' @param incorrect A `glue`-able character string to display if the student answer matches
-#'   a known incorrect answer. `.message` is available in the calling environment.
+#' @param incorrect A `glue`-able character string to display if the student
+#'   answer does not match the known correct answer. Use `code_feedback()` in 
+#'   this string to control the placement of the auto-generated feedback message
+#'   produced by comparing the student's submission with the solution.
 #' @param ... Ignored
 #' @inheritParams code_feedback
 #'
@@ -72,23 +74,26 @@ grade_this_code <- function(
     checking_env[[".__correct"]] <- correct
     checking_env[[".__incorrect"]] <- incorrect
 
-    grade_this(
-      fail_code_feedback = FALSE,
-      expr = {
-        # check code for mistakes and store error feedback in .message so it
-        # can be found by glue in fail(). Will be NULL if code is correct.
-        .message <- code_feedback(allow_partial_matching = allow_partial_matching)
-        
-        # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
-        # but need to use `get()` to avoid using `utils::globalVariables`
-        if (is.null(.message)) {
-          # no code_feedback() message means the code is correct
-          pass(get(".__correct"))
+    with_options(
+      list(gradethis.code.partial_matching = allow_partial_matching),
+      grade_this(
+        fail_code_feedback = FALSE,
+        expr = {
+          # check code for mistakes and store error feedback in .message so it
+          # can be found by glue in fail(). Will be NULL if code is correct.
+          .message <- code_feedback()
+          
+          # call `pass`/`fail` inside `grade_this` to have access to `checking_env`
+          # but need to use `get()` to avoid using `utils::globalVariables`
+          if (is.null(.message)) {
+            # no code_feedback() message means the code is correct
+            pass(get(".__correct"))
+          }
+          
+          fail(get(".__incorrect"))
         }
-        
-        fail(get(".__incorrect"))
-      }
-    )(checking_env)
+      )(checking_env)
+    )
   }
 }
 
