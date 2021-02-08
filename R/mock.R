@@ -106,21 +106,35 @@ mock_this_exercise <- function(
     error = function(e) .error <- e
   )
   
-  .solution <- eval_code(.solution_code, rlang::env_clone(env_prep, env_global))
-  
-  list(
+  check_env <- list2env(list(
     .result = .result,
     .last_value = .result,
     .user = .result,
     .user_code = expr_text(.user_code),
-    .solution = .solution,
     .solution_code = expr_text(.solution_code),
     .label = .label,
     .engine = .engine,
     .error = .error,
     .envir_prep = env_prep,
     .envir_result = env_result
+  ))
+  
+  delayedAssign(
+    assign.env = check_env,
+    x = ".solution",
+    {
+      # Delayed evaluation of `.solution!`
+      if (length(expr_text(.solution_code)) == 0) {
+        fail(I("No solution is provided for this exercise."))
+      } else {
+        # solution code exists...
+        # Using eval_tidy does not evaluate the expression. Using eval() instead
+        eval_code(.solution_code, rlang::env_clone(env_prep, env_global))
+      }
+    }
   )
+  
+  check_env
 }
 
 eval_code <- function(x, env) {

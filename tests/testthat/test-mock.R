@@ -62,4 +62,13 @@ test_that("mock_this_exercise()", {
   # Solution Code
   expect_equal(ex1$.solution_code, "x + y")
   expect_equal(ex1$.solution_code, ex2$.solution_code)
+  
+  expect_equal(ex1$.solution, 42)
+  expect_equal(ex2$.solution, 42)
+  
+  # no solution, delayed assignment of solution throws fail()
+  expect_equal(
+    ex3$.solution,
+    fail(I("No solution is provided for this exercise."))
+  )
 })
