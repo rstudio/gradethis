@@ -2,7 +2,7 @@
 % Please edit documentation in R/mock.R
 \name{mock_this_exercise}
 \alias{mock_this_exercise}
-\title{Mock a User Submission to an Exercise}
+\title{Mock a user submission to an exercise}
 \usage{
 mock_this_exercise(
   .user_code,

@@ -1,4 +1,4 @@
-#' Mock a User Submission to an Exercise
+#' Mock a user submission to an exercise
 #' 
 #' This function helps you test your [grade_this()] and [grade_this_code()]
 #' logic by helping you quickly create the environment that these functions
