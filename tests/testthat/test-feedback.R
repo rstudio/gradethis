@@ -134,3 +134,101 @@ test_that("markdown: grading functions handle HTML messages", {
     msg = "<code>2</code>"
   )
 })
+
+test_that("feedback() converts graded() to feedback", {
+  # correct
+  expect_feedback(
+    graded(TRUE, I("test")),
+    is_correct = TRUE,
+    type = "success",
+    location = "append",
+    msg = "test"
+  )
+
+  # incorrect
+  expect_feedback(
+    graded(FALSE, I("test")),
+    is_correct = FALSE,
+    type = "error",
+    location = "append",
+    msg = "test"
+  )
+  
+  # neutral
+  expect_feedback(
+    graded(logical(0), I("test")),
+    is_correct = logical(0),
+    type = "custom",
+    location = "append",
+    msg = "test"
+  )
+})
+
+test_that("feedback() uses graded type and location", {
+  # correct
+  expect_feedback(
+    graded(TRUE, I("test"), type = "info"),
+    is_correct = TRUE,
+    type = "info",
+    location = "append",
+    msg = "test"
+  )
+  
+  # incorrect
+  expect_feedback(
+    graded(FALSE, I("test"), type = "warning", location = "prepend"),
+    is_correct = FALSE,
+    type = "warning",
+    location = "prepend",
+    msg = "test"
+  )
+  
+  # neutral
+  expect_feedback(
+    graded(logical(0), I("test"), type = "auto", location = "replace"),
+    is_correct = logical(0),
+    type = "custom",
+    location = "replace",
+    msg = "test"
+  )
+})
+
+test_that("feedback() prefers graded options over feedback options", {
+  # correct
+  expect_feedback(
+    feedback(
+      graded(TRUE, I("test"), type = "info"), 
+      type = "success"
+    ),
+    is_correct = TRUE,
+    type = "info",
+    location = "append",
+    msg = "test"
+  )
+  
+  # incorrect
+  expect_feedback(
+    feedback(
+      graded(FALSE, I("test"), type = "warning", location = "prepend"),
+      type = "error",
+      location = "append"
+    ),
+    is_correct = FALSE,
+    type = "warning",
+    location = "prepend",
+    msg = "test"
+  )
+  
+  # neutral
+  expect_feedback(
+    feedback(
+      graded(logical(0), I("test"), type = "auto", location = "replace"),
+      type = "info",
+      location = "append"
+    ),
+    is_correct = logical(0),
+    type = "custom",
+    location = "replace",
+    msg = "test"
+  )
+})

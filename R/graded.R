@@ -92,6 +92,11 @@
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A logical value of whether or not the checked code is correct.
+#' @param ... Additional properties added to the graded condition. If `type`
+#'   and `location` are present, they will determine the type and location
+#'   of the feedback object provided to \pkg{learnr}. See
+#'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for
+#'   more details.
 #' 
 #' @return `pass()` and `pass_if_equal()` signal a _correct_ grade with a
 #'   glue-able `message`.
@@ -100,17 +105,19 @@
 #'   glue-able `message`.
 #'   
 #'   `graded()` signals a correct or incorrect grade according to the logical
-#'   value of `correct`, with an unglued `message`.
+#'   value of `correct`, with a standard character (unglued) `message`.
 #' 
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
-graded <- function(correct, message = NULL) {
-  checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
+graded <- function(correct, message = NULL, ...) {
+  # allow logical(0) to signal a neutral grade
+  checkmate::expect_logical(correct, any.missing = FALSE, max.len = 1, null.ok = FALSE)
 
   obj <- structure(
     list(
       message = message %||% "",
-      correct = correct
+      correct = correct,
+      ...
     ),
     class = c("gradethis_graded", "condition")
   )

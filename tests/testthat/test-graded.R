@@ -117,3 +117,42 @@ test_that("fail_if_equal() in grade_this()", {
   expect_match(missing_result$message, "problem occurred", fixed = TRUE)
   expect_false(missing_result$correct)
 })
+
+test_that("graded() returns correct, incorrect, neutral", {
+  # correct
+  expect_graded(
+    graded(TRUE, I("test")),
+    TRUE,
+    "test"
+  )
+  # Allows additional arguments or data in the graded condition
+  correct <- expect_graded(
+    graded(TRUE, I("test"), type = "info", location = "prepend"),
+    TRUE,
+    "test"
+  )
+  expect_equal(correct$type, "info")
+  expect_equal(correct$location, "prepend")
+  
+  # incorrect
+  expect_graded(graded(FALSE, I("test")), FALSE, "test")
+  incorrect <- expect_graded(
+    graded(FALSE, I("test"), type = "warning", location = "replace"),
+    FALSE,
+    "test"
+  )
+  expect_equal(incorrect$type, "warning")
+  expect_equal(incorrect$location, "replace")
+  
+  # neutral
+  expect_graded(graded(logical(), I("test")), logical(), "test")
+  neutral <- expect_graded(
+    graded(logical(), I("test"), type = "custom", location = "append"),
+    logical(),
+    "test"
+  )
+  expect_equal(neutral$type, "custom")
+  expect_equal(neutral$location, "append")
+  
+  expect_error(graded("boom", I("bad")))
+})

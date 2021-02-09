@@ -8,7 +8,7 @@
 \alias{fail_if_equal}
 \title{Signal a final grade for a student's submission}
 \usage{
-graded(correct, message = NULL)
+graded(correct, message = NULL, ...)
 
 pass(message = getOption("gradethis.pass", "Correct!"), env = parent.frame())
 
@@ -33,6 +33,12 @@ fail_if_equal(
 
 \item{message}{A character string of the message to be displayed.}
 
+\item{...}{Additional properties added to the graded condition. If \code{type}
+and \code{location} are present, they will determine the type and location
+of the feedback object provided to \pkg{learnr}. See
+\url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for
+more details.}
+
 \item{env}{environment to evaluate the glue \code{message}}
 
 \item{y}{The expected value against which \code{x} is compared using
@@ -54,7 +60,7 @@ glue-able \code{message}.
 glue-able \code{message}.
 
 \code{graded()} signals a correct or incorrect grade according to the logical
-value of \code{correct}, with an unglued \code{message}.
+value of \code{correct}, with a standard character (unglued) \code{message}.
 }
 \description{
 \code{graded()} is used to signal a final grade for a submission. In general, it
