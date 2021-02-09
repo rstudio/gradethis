@@ -100,21 +100,39 @@ condition (if no conditions are met, the final grade can be controlled by \code{
 }
 \examples{
 
+# The student submits code that returns `5`
+submitted_5 <- mock_this_exercise(.user_code = 2 + 3)
+
+# grade_result() returns a function that is called on the student's 
+# submission. The *-check chunk of the exercise might contain the following
+# grade_result() code. When you're writing your tutorial, you can ignore the
+# `(submitted_5)`, we're using that notation here to preview what this
+# `grade_result()` will do with the mock submission.
 grade_result(
   fail_if(~ identical(.result, 4), "Try adding 1"),
   pass_if(~ identical(.result, 5), "You got 5, great!"),
   fail_if(~ TRUE, "Some generic failing message.")
-)(list(.last_value = 5, .envir_result = new.env()))
+)(submitted_5)
 
 grade_result_strict(
   pass_if(~ identical(.result, 5), "You got 5, great!"),
   fail_if(~ !is.integer(.result), "I expected an integer")
-)(list(.last_value = 5, .envir_result = new.env()))
+)(submitted_5)
 
+# Suppose our exercise asks the student to write a function that adds 1 to
+# the value of its only argument. The student submits:
+submitted_fn <- mock_this_exercise(
+  .user_code = function(x) { x + 2 }
+)
+
+# We can check submissions for this exercise using `grade_result()`. Note that
+# because all checks in this `grade_result()` are `fail_if()` statements, if
+# the student's submission passes all of the checks, then `grade_result()`
+# will return a correct grade.
 grade_result(
   fail_if(~ !is.function(.result), "I expected a function."),
   fail_if(~ .result(1) != 2, "Your function should add one.")
-)(list(.last_value = function(x) {x + 2}, .envir_result = new.env()))
+)(submitted_fn)
 
 # To learn more about using grade_result() and grade_code() with learnr, see:
 \dontrun{gradethis_demo()}
