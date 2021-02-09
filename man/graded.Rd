@@ -15,16 +15,16 @@ pass(message = getOption("gradethis.pass", "Correct!"), env = parent.frame())
 fail(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame())
 
 pass_if_equal(
-  y,
+  y = rlang::missing_arg(),
   message = getOption("gradethis.pass", "Correct!"),
-  x = get(".result", envir = env),
+  x = rlang::missing_arg(),
   env = parent.frame()
 )
 
 fail_if_equal(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = get(".result", envir = env),
+  x = rlang::missing_arg(),
   env = parent.frame()
 )
 }
@@ -35,9 +35,20 @@ fail_if_equal(
 
 \item{env}{environment to evaluate the glue \code{message}}
 
-\item{y}{Required value in which to compare \code{x}. Comparison is done using \code{testthat::compare(x, y)}}
+\item{y}{The expected value against which \code{x} is compared using
+\code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the
+exercise \code{.solution}, or the result of evaluating the code in the
+exercise's \verb{*-solution} chunk, will be used for the comparison.}
 
-\item{x}{First item in the comparison. Typically, this will be the user result}
+\item{x}{First item in the comparison. By default, when used inside
+\code{\link[=grade_this]{grade_this()}}, this is the \code{.result} object, or the result of running the
+student's submitted code. Generally, you will not need to supply a value
+for this argument, so it is not the first argument.}
+}
+\value{
+A correct graded condition with the glue-ed \code{message}
+
+An incorrect graded condition with the glue-ed \code{message}
 }
 \description{
 The return value from \code{graded} should be returned by every
@@ -55,14 +66,16 @@ use \code{graded()} or if statements around \verb{pass*()} and \verb{fail*()}
 }
 \section{Functions}{
 \itemize{
-\item \code{graded}: Programatic function to produce a graded a result.
+\item \code{graded}: Programmatic function to produce a graded a result.
 
 \item \code{pass}: Produce a \emph{passing} grade
 
 \item \code{fail}: Produce a \emph{failing} grade
 
-\item \code{pass_if_equal}: Produce a \emph{passing} grade only if \code{\link[testthat:compare]{testthat::compare()}} passes on \code{x} and \code{y}
+\item \code{pass_if_equal}: Produce a \emph{passing} grade only if \code{\link[waldo:compare]{waldo::compare()}}
+passes on \code{x} and \code{y}
 
-\item \code{fail_if_equal}: Produce a \emph{failing} grade only if \code{\link[testthat:compare]{testthat::compare()}} passes on \code{x} and \code{y}
+\item \code{fail_if_equal}: Produce a \emph{failing} grade only if \code{\link[testthat:compare]{testthat::compare()}}
+passes on \code{x} and \code{y}
 }}
 
