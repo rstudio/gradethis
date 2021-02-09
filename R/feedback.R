@@ -91,3 +91,10 @@ remove_dangerous_html_tags <- function(md) {
     ignore.case = TRUE
   )
 }
+
+feedback_grading_problem <- function(message = NULL, type = "error") {
+  feedback(
+    fail(message %||% "A problem occurred with your teacher's grading code. Defaulting to _incorrect_."),
+    type = type
+  )
+}
