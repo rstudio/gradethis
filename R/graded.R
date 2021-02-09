@@ -1,20 +1,108 @@
-#' Graded object for submission value
+#' Signal a final grade for a student's submission
 #'
-#' The return value from `graded` should be returned by every
-#' `*-check` chunk when used with [grade_learnr()].
+#' `graded()` is used to signal a final grade for a submission. In general, it
+#' is most helpful when used in [grade_this()], but it is used internally by
+#' other grading functions to signal that the student's submission has been
+#' graded. If you're using [grade_this()], you'll most likely want to use the
+#' helper functions `pass()`, `fail()`, `pass_if_equal()`, and
+#' `fail_if_equal()`, rather than to call `graded()` directly.
 #'
-#' `graded()` objects are signaled to the calling functions.
+#' @section Usage in `grade_learnr()`: 
+#'   
+#'   If \pkg{gradethis} is used in a [learnr::tutorial()] with the default
+#'   [gradethis_setup()], [grade_learnr()] expects the `*-check` chunk for an
+#'   exercise to return a function. When the exercise submission is to be
+#'   graded, [grade_learnr()] will call the checking function, providing it with
+#'   a consistent exercise submission environment — see [mock_this_exercise()]
+#'   for examples of this environment. The goal of this function is to evaluate
+#'   the submission and to return a final grade via `graded()`.
 #'
-#'   * [grade_result()] ignores when grades are created. `graded()` objects must be returned
-#'   * [grade_code()] handles `graded()` objects internally
-#'   * [grade_this()] will stop execution once a `pass()`, `pass_if_equal()`,
-#'     `fail()`, `fail_if_equal()`, or `grade()` is called. To generate programmatic grades,
-#'     use `graded()` or if statements around `pass*()` and `fail*()`
+#'   In general, tutorial authors will primarily use `graded()` and its helper
+#'   functions only when using [grade_this()]. Whenever one of these functions
+#'   is called inside [grade_this()], the submission checking will stop
+#'   immediately and the appropriate grade and feedback will be returned.
+#'
+#'   Internally, [grade_this_code()], [grade_result()], and [grade_code()] all
+#'   create `graded()` objects, but each provides a different mechanism for
+#'   grading the submission and tutorial authors do not need to call `graded()`
+#'   or its helper functions within those grading functions.
+#'   
+#' @examples
+#' # Suppose our exercise asks the student to prepare and execute code that
+#' # returns the value `42`. We'll use `grade_this()` to check their
+#' # submission.
+#' #
+#' # Because we are demonstrating these functions inside R documentation, we'll
+#' # save the function returned by `grade_this()` as `this_grader()`. Calling
+#' # `this_grader()` on a mock exercise submission is equivalent to running the
+#' # check code when the student clicks "Submit Answer" in a learnr tutorial.
+#' 
+#' this_grader <- 
+#' # ```{r *-check}
+#'   grade_this({
+#'     # Automatically use .result to compare to an expected value
+#'     pass_if_equal(42, "Great work!")
+#'     
+#'     # Similarly compare .result to an expected wrong value
+#'     fail_if_equal(41, "You were so close!")
+#'     fail_if_equal(43, "Oops, a little high there!")
+#'     
+#'     # or automatically pass if .result is equal to .solution
+#'     pass_if_equal(message = "Great work!")
+#'     
+#'     # Be explicit if you need to round to avoid numerical accuracy issues
+#'     pass_if_equal(x = round(.result), y = 42, "Close enough!")
+#'     fail_if_equal(x = round(.result), y = 64, "Hmm, that's not right.")
+#'     
+#'     # For more complicated calculations, call pass() or fail()
+#'     if (.result > 100) {
+#'       fail("{.result} is way too high!")
+#'     }
+#'     if (.result * 100 == .solution) {
+#'       pass("Right answer, but {.result} is two orders of magnitude too small.")
+#'     }
+#'     
+#'     # Choose a default grade if none of the above have resulted in a grade
+#'     fail()
+#'   })
+#' # ```
+#' 
+#' # Now lets try with a few different student submissions ----
+#' 
+#' # Correct!
+#' this_grader(mock_this_exercise(.user_code = 42))
+#' 
+#' # These were close...
+#' this_grader(mock_this_exercise(.user_code = 41))
+#' this_grader(mock_this_exercise(.user_code = 43))
+#' 
+#' # Automatically use .solution if you have a *-solution chunk...
+#' this_grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
+#' 
+#' # Floating point arithmetic is tricky...
+#' this_grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
+#' this_grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
+#' 
+#' # Complicated checking situations...
+#' this_grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
+#' this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
+#' 
+#' # Finally fall back to the final answer...
+#' this_grader(mock_this_exercise(.user_code = 33, .solution_code = 42))
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A logical value of whether or not the checked code is correct.
 #' 
-#' @describeIn graded Programmatic function to produce a graded a result.
+#' @return `pass()` and `pass_if_equal()` signal a _correct_ grade with a
+#'   glue-able `message`.
+#'
+#'   `fail()` and `fail_if_equal()` signal an _incorrect_ grade with a
+#'   glue-able `message`.
+#'   
+#'   `graded()` signals a correct or incorrect grade according to the logical
+#'   value of `correct`, with an unglued `message`.
+#' 
+#' @describeIn graded Prepare and signal a graded result.
 #' @export
 graded <- function(correct, message = NULL) {
   checkmate::expect_logical(correct, any.missing = FALSE, len = 1, null.ok = FALSE)
@@ -39,32 +127,36 @@ is_graded <- function(x) {
 }
 
 
-#' @describeIn graded Produce a _passing_ grade
+#' @describeIn graded Signal a _passing_ grade.
 #' @param env environment to evaluate the glue `message`
 #' @export
-pass <- function(message = getOption("gradethis.pass", "Correct!"), env = parent.frame()) {
+pass <- function(
+  message = getOption("gradethis.pass", "Correct!"),
+  env = parent.frame()
+) {
   graded(message = glue_message_with_env(env, message), correct = TRUE)
 }
 
-#' @describeIn graded Produce a _failing_ grade
+#' @describeIn graded Signal a _failing_ grade.
 #' @export
-fail <- function(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame()) {
+fail <- function(
+  message = getOption("gradethis.fail", "Incorrect"),
+  env = parent.frame()
+) {
   graded(message = glue_message_with_env(env, message), correct = FALSE)
 }
 
 
-#' @describeIn graded Produce a _passing_ grade only if [waldo::compare()]
-#'   passes on `x` and `y`
+#' @describeIn graded Signal a _passing_ grade only if `x` and `y` are equal.
 #' @param x First item in the comparison. By default, when used inside
-#'   [grade_this()], this is the `.result` object, or the result of running the
-#'   student's submitted code. Generally, you will not need to supply a value
-#'   for this argument, so it is not the first argument.
+#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
+#'   other words the result of running the student's submitted code. `x` is not
+#'   the first argument since you will often want to compare the final value of
+#'   the student's submission against a specific value, `y`.
 #' @param y The expected value against which `x` is compared using 
 #'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
 #'   exercise `.solution`, or the result of evaluating the code in the
 #'   exercise's `*-solution` chunk, will be used for the comparison.
-#'   
-#' @return A correct graded condition with the glue-ed `message`
 #' 
 #' @export
 pass_if_equal <- function(
@@ -84,10 +176,7 @@ pass_if_equal <- function(
   grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env)
 }
 
-#' @describeIn graded Produce a _failing_ grade only if [testthat::compare()]
-#'   passes on `x` and `y`
-#'
-#' @return An incorrect graded condition with the glue-ed `message`
+#' @describeIn graded Signal a _failing_ grade only if `x` and `y` are equal.
 #' @export
 fail_if_equal <- function(
   y,

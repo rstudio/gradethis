@@ -26,7 +26,7 @@
 #'   logic used in either.
 #'   
 #' @examples
-#' # First we'll create a grading function with gradethis(). The user's code 
+#' # First we'll create a grading function with grade_this(). The user's code 
 #' # should return the value 42, and we have some specific messages if they're
 #' # close but miss this target. Otherwise, we'll fall back to the default fail
 #' # message, which will include code feedback.
