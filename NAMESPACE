@@ -3,6 +3,7 @@
 S3method(conditionMessage,gradethis_graded)
 export(code_feedback)
 export(condition)
+export(debug_this)
 export(eval_gradethis)
 export(evaluate_condition)
 export(fail)

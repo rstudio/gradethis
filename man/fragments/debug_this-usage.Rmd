@@ -1,0 +1,72 @@
+
+### Always debug
+
+The first method is the most straight-forward. 
+Inside the `*-check` or `*-error-check` chunks for your exercise,
+simply call `debug_this()`:
+
+````
+```{r example-check}`r ''`
+debug_this()
+```
+````
+
+Every time you submit code for feedback via **Submit Answer**,
+the debug information will be printed.
+
+
+### Debug specific cases
+
+On the other hand, if you want to debug a specific submission,
+such as a case where a submission isn't matching any of your current grading conditions,
+you can call `debug_this()` wherever you like inside [grade_this()].
+
+````
+```{r example-check}`r ''`
+grade_this({
+  pass_if_equal(3, "Good work?")
+  
+  # debug the submission if it is somehow equal to 2
+  if (.result == 2) {
+    debug_this()
+  }
+})
+```
+````
+
+### Debug default fail condition
+
+It's common to have the grade-checking code 
+default to an incorrect grade with code feedback
+by calling `fail()` at the end of the checking code in [grade_this()].
+During development of a tutorial,
+you may want to have this default `fail()` return the debugging information
+rather than a failure.
+
+By setting the global option `gradethis.fail` to use `debug_this()`,
+
+````
+```{r setup}`r ''`
+library(learnr)
+library(gradethis)
+gradethis_setup()
+
+option(gradethis.fail = "{debug_this()}")
+```
+````
+
+you can see the values that are available to you during the submission check
+whenever your test submissions pass through your other checks.
+
+````
+```{r example-check}`r ''`
+grade_this({
+  pass_if_equal(3, "Good work?")
+  
+  fail()
+})
+```
+````
+
+Don't forget to reset or unset the `gradethis.fail` option
+when you're done working on your tutorial.

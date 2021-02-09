@@ -1,0 +1,19 @@
+`debug_this()` gives you a few ways to see the objects that are
+available inside [grade_this()] for you to use when grading exercise
+submissions. Suppose we have this example exercise:
+
+````markdown
+```{r example-setup}`r ''`
+x <- 1
+```
+
+```{r example, exercise = TRUE}`r ''`
+# user submits
+y <- 2
+x + y
+```
+
+```{r example-solution}`r ''`
+x + 3
+```
+````
