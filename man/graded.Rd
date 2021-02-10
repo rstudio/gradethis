@@ -10,14 +10,23 @@
 \usage{
 graded(correct, message = NULL, ...)
 
-pass(message = getOption("gradethis.pass", "Correct!"), env = parent.frame())
+pass(
+  message = getOption("gradethis.pass", "Correct!"),
+  ...,
+  env = parent.frame()
+)
 
-fail(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame())
+fail(
+  message = getOption("gradethis.fail", "Incorrect"),
+  ...,
+  env = parent.frame()
+)
 
 pass_if_equal(
   y = rlang::missing_arg(),
   message = getOption("gradethis.pass", "Correct!"),
   x = rlang::missing_arg(),
+  ...,
   env = parent.frame()
 )
 
@@ -25,6 +34,7 @@ fail_if_equal(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
   x = rlang::missing_arg(),
+  ...,
   env = parent.frame()
 )
 }
@@ -39,7 +49,8 @@ of the feedback object provided to \pkg{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for
 more details.}
 
-\item{env}{environment to evaluate the glue \code{message}}
+\item{env}{environment to evaluate the glue \code{message}. Most users of
+\pkg{gradethis} will not need to use this argument.}
 
 \item{y}{The expected value against which \code{x} is compared using
 \code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the

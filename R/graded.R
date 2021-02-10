@@ -135,22 +135,25 @@ is_graded <- function(x) {
 
 
 #' @describeIn graded Signal a _passing_ grade.
-#' @param env environment to evaluate the glue `message`
+#' @param env environment to evaluate the glue `message`. Most users of
+#'   \pkg{gradethis} will not need to use this argument.
 #' @export
 pass <- function(
   message = getOption("gradethis.pass", "Correct!"),
+  ...,
   env = parent.frame()
 ) {
-  graded(message = glue_message_with_env(env, message), correct = TRUE)
+  graded(message = glue_message_with_env(env, message), correct = TRUE, ...)
 }
 
 #' @describeIn graded Signal a _failing_ grade.
 #' @export
 fail <- function(
   message = getOption("gradethis.fail", "Incorrect"),
+  ...,
   env = parent.frame()
 ) {
-  graded(message = glue_message_with_env(env, message), correct = FALSE)
+  graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
 }
 
 
@@ -170,6 +173,7 @@ pass_if_equal <- function(
   y = rlang::missing_arg(),
   message = getOption("gradethis.pass", "Correct!"),
   x = rlang::missing_arg(),
+  ...,
   env = parent.frame()
 ) {
   if (rlang::is_missing(x)) {
@@ -180,7 +184,7 @@ pass_if_equal <- function(
     y <- get_from_env(".solution", env, "pass_if_equal")
     if (is_graded(y)) return(y)
   }
-  grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env)
+  grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...)
 }
 
 #' @describeIn graded Signal a _failing_ grade only if `x` and `y` are equal.
@@ -189,16 +193,17 @@ fail_if_equal <- function(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
   x = rlang::missing_arg(),
+  ...,
   env = parent.frame()
 ) {
   if (rlang::is_missing(x)) {
     x <- get_from_env(".result", env, "fail_if_equal")
     if (is_graded(x)) return(x)
   }
-  grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env)
+  grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...)
 }
 
-grade_if_equal <- function(x, y, message, correct, env) {
+grade_if_equal <- function(x, y, message, correct, env, ...) {
   compare_msg <- waldo::compare(x, y)
   if (length(compare_msg) > 0) {
     # not equal! quit early
@@ -206,7 +211,7 @@ grade_if_equal <- function(x, y, message, correct, env) {
   }
 
   # equal!
-  graded(message = glue_message_with_env(env, message), correct = correct)
+  graded(message = glue_message_with_env(env, message), correct = correct, ...)
 }
 
 
