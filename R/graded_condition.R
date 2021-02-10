@@ -11,12 +11,12 @@
 conditionMessage.gradethis_graded <- function(c) {
   condition_obj <- c
   correct <- if (length(condition_obj$correct)) {
-    if (condition_obj$correct) "Correct: " else "Incorrect: "
+    if (condition_obj$correct) "[Correct]" else "[Incorrect]"
   } else {
-    "Neutral: "
+    "[Neutral]"
   }
 
-  paste0(
+  paste(
     correct,
     paste(as.character(condition_obj$message), collapse = " ")
   )
