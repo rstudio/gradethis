@@ -236,11 +236,7 @@ legacy_graded <- function(...) {
 }
 
 get_from_env <- function(x, env) {
-  if (exists(x, envir = env)) {
-    get(x, envir = env)
-  } else {
-    rlang::missing_arg()
-  }
+  get0(x, envir = env, ifnotfound = rlang::missing_arg())
 }
 
 missing_object_in_env <- function(obj, env, caller) {
