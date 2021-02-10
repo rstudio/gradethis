@@ -156,3 +156,8 @@ test_that("graded() returns correct, incorrect, neutral", {
   
   expect_error(graded("boom", I("bad")))
 })
+
+test_that("graded() ensures that ... are empty", {
+  expect_error(graded(TRUE, "foo", arg = "boom!"))
+  expect_error(graded(TRUE, "foo", "boom!"))
+})

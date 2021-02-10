@@ -8,7 +8,7 @@
 \alias{fail_if_equal}
 \title{Signal a final grade for a student's submission}
 \usage{
-graded(correct, message = NULL, ...)
+graded(correct, message = NULL, ..., type = NULL, location = NULL)
 
 pass(
   message = getOption("gradethis.pass", "Correct!"),
@@ -43,11 +43,17 @@ fail_if_equal(
 
 \item{message}{A character string of the message to be displayed.}
 
-\item{...}{Additional properties added to the graded condition. If \code{type}
-and \code{location} are present, they will determine the type and location
-of the feedback object provided to \pkg{learnr}. See
-\url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for
-more details.}
+\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored}
+
+\item{type, location}{The \code{type} and \code{location} of the feedback object
+provided to \pkg{learnr}. See
+\url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for more
+details.
+
+\code{type} may be one of "auto", "success", "info", "warning", "error", or
+"custom".
+
+\code{location} may be one of "append", "prepend", or "replace".}
 
 \item{env}{environment to evaluate the glue \code{message}. Most users of
 \pkg{gradethis} will not need to use this argument.}
@@ -127,7 +133,7 @@ or its helper functions within those grading functions.
 # check code when the student clicks "Submit Answer" in a learnr tutorial.
 
 this_grader <- 
-# ```{r *-check}
+# ```{r example-check}
   grade_this({
     # Automatically use .result to compare to an expected value
     pass_if_equal(42, "Great work!")

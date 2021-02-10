@@ -34,11 +34,12 @@ feedback <- function(
   location <- match.arg(location)
 
   if (identical("auto", type)) {
-    type <- if (length(grade$correct)) {
-      if (grade$correct) "success" else "error"
-    } else {
-      "custom"
-    }
+    type <- 
+      if (length(grade$correct)) {
+        if (grade$correct) "success" else "error"
+      } else {
+        "custom"
+      }
   }
 
   structure(

@@ -38,7 +38,7 @@
 #' # check code when the student clicks "Submit Answer" in a learnr tutorial.
 #' 
 #' this_grader <- 
-#' # ```{r *-check}
+#' # ```{r example-check}
 #'   grade_this({
 #'     # Automatically use .result to compare to an expected value
 #'     pass_if_equal(42, "Great work!")
@@ -92,11 +92,25 @@
 #'
 #' @param message A character string of the message to be displayed.
 #' @param correct A logical value of whether or not the checked code is correct.
-#' @param ... Additional properties added to the graded condition. If `type`
-#'   and `location` are present, they will determine the type and location
-#'   of the feedback object provided to \pkg{learnr}. See
-#'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for
-#'   more details.
+#' @param x First item in the comparison. By default, when used inside
+#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
+#'   other words the result of running the student's submitted code. `x` is not
+#'   the first argument since you will often want to compare the final value of
+#'   the student's submission against a specific value, `y`.
+#' @param y The expected value against which `x` is compared using
+#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
+#'   exercise `.solution`, or the result of evaluating the code in the
+#'   exercise's `*-solution` chunk, will be used for the comparison.
+#' @param ... Additional arguments passed to `graded()` or otherwise ignored
+#' @param type,location The `type` and `location` of the feedback object
+#'   provided to \pkg{learnr}. See
+#'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for more
+#'   details.
+#'
+#'   `type` may be one of "auto", "success", "info", "warning", "error", or
+#'   "custom".
+#'
+#'   `location` may be one of "append", "prepend", or "replace".
 #' 
 #' @return `pass()` and `pass_if_equal()` signal a _correct_ grade with a
 #'   glue-able `message`.
@@ -109,7 +123,9 @@
 #' 
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
-graded <- function(correct, message = NULL, ...) {
+graded <- function(correct, message = NULL, ..., type = NULL, location = NULL) {
+  ellipsis::check_dots_empty()
+  
   # allow logical(0) to signal a neutral grade
   checkmate::expect_logical(correct, any.missing = FALSE, max.len = 1, null.ok = FALSE)
 
@@ -117,7 +133,8 @@ graded <- function(correct, message = NULL, ...) {
     list(
       message = message %||% "",
       correct = correct,
-      ...
+      type = type,
+      location = location
     ),
     class = c("gradethis_graded", "condition")
   )
@@ -158,15 +175,6 @@ fail <- function(
 
 
 #' @describeIn graded Signal a _passing_ grade only if `x` and `y` are equal.
-#' @param x First item in the comparison. By default, when used inside
-#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
-#'   other words the result of running the student's submitted code. `x` is not
-#'   the first argument since you will often want to compare the final value of
-#'   the student's submission against a specific value, `y`.
-#' @param y The expected value against which `x` is compared using 
-#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
-#'   exercise `.solution`, or the result of evaluating the code in the
-#'   exercise's `*-solution` chunk, will be used for the comparison.
 #' 
 #' @export
 pass_if_equal <- function(
@@ -177,12 +185,16 @@ pass_if_equal <- function(
   env = parent.frame()
 ) {
   if (rlang::is_missing(x)) {
-    x <- get_from_env(".result", env, "pass_if_equal")
-    if (is_graded(x)) return(x)
+    x <- get_from_env(".result", env)
+    if (rlang::is_missing(x)) {
+      return(missing_object_in_env(".result", env, "pass_if_equal"))
+    }
   }
   if (rlang::is_missing(y)) {
-    y <- get_from_env(".solution", env, "pass_if_equal")
-    if (is_graded(y)) return(y)
+    y <- get_from_env(".solution", env)
+    if (rlang::is_missing(y)) {
+      return(missing_object_in_env(".solution", env, "pass_if_equal"))
+    }
   }
   grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...)
 }
@@ -197,8 +209,10 @@ fail_if_equal <- function(
   env = parent.frame()
 ) {
   if (rlang::is_missing(x)) {
-    x <- get_from_env(".result", env, "fail_if_equal")
-    if (is_graded(x)) return(x)
+    x <- get_from_env(".result", env)
+    if (rlang::is_missing(x)) {
+      return(missing_object_in_env(".result", env, "fail_if_equal"))
+    }
   }
   grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...)
 }
@@ -221,28 +235,24 @@ legacy_graded <- function(...) {
   )
 }
 
-get_from_env <- function(x, env, .caller) {
-  tryCatch(
-    get(x, envir = env),
-    error = function(e) {
-      label <- get0(".label", env, ifnotfound = NULL)
-      label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
-      not_found <- sprintf(
-        gettext("object %s not found", domain = "R"), 
-        paste0("'", x, "'")
-      )
-      if (grepl(not_found, e$message, fixed = TRUE)) {
-        message(
-          label,
-          "`", .caller, "()`: expected `", x, "` to be found in its calling environment",
-          " or the environment specified by `env`. Did you call `", .caller, "()`",
-          " inside `grade_this()` or `grade_this_code()`?"
-        )
-      } else {
-        message(label, e$message)
-      }
-      # Signal problem with grading code
-      graded(FALSE, feedback_grading_problem()$message)
-    }
+get_from_env <- function(x, env) {
+  if (exists(x, envir = env)) {
+    get(x, envir = env)
+  } else {
+    rlang::missing_arg()
+  }
+}
+
+missing_object_in_env <- function(obj, env, caller) {
+  label <- get0(".label", env, ifnotfound = NULL)
+  label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
+  message(
+    label,
+    "`", caller, "()`: expected `", obj, "` to be found", 
+    " in its calling environment or the environment specified by `env`.",
+    " Did you call `", caller, "()`",
+    " inside `grade_this()` or `grade_this_code()`?"
   )
+  # Signal problem with grading code
+  graded(FALSE, feedback_grading_problem()$message)
 }
