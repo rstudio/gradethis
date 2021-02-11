@@ -7,6 +7,9 @@
     <loc>https://rstudio-education.github.io/gradethis//reference/code_feedback.html</loc>
   </url>
   <url>
+    <loc>https://rstudio-education.github.io/gradethis//reference/debug_this.html</loc>
+  </url>
+  <url>
     <loc>https://rstudio-education.github.io/gradethis//reference/eval_gradethis.html</loc>
   </url>
   <url>
@@ -38,6 +41,9 @@
   </url>
   <url>
     <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_setup.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis//reference/mock_this_exercise.html</loc>
   </url>
   <url>
     <loc>https://rstudio-education.github.io/gradethis//reference/praise.html</loc>
