@@ -79,7 +79,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
       </span>
     </div>
 
@@ -141,7 +141,7 @@
   allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code.partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>,
   glue_correct <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis_glue_correct"</span><span class='op'>)</span>,
   glue_incorrect <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis_glue_incorrect"</span><span class='op'>)</span>,
-  glue_pipe <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis_glue_pipe"</span><span class='op'>)</span>,
+  glue_pipe <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>,
   grader_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>,
   learnr_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
@@ -181,7 +181,7 @@ displayed. Defaults to <code><a href='https://rdrr.io/r/base/options.html'>getOp
       <th>glue_pipe</th>
       <td><p>A glue string that returns the final message displayed when
 the student uses a pipe, <code>%&gt;%</code>. Defaults to
-<code><a href='https://rdrr.io/r/base/options.html'>getOption("gradethis_glue_pipe")</a></code>.</p></td>
+<code><a href='https://rdrr.io/r/base/options.html'>getOption("gradethis.pipe_warning")</a></code>.</p></td>
     </tr>
     <tr>
       <th>grader_args</th>
@@ -264,18 +264,15 @@ student submits when it runs <code>grade_code()</code>.</p></li>
 #&gt;         env = check_env, allow_partial_matching = allow_partial_matching)
 #&gt;     if (is.null(message)) {
 #&gt;         return(legacy_graded(correct = TRUE, message = glue_message(glue_correct, 
-#&gt;             .is_correct = TRUE, .message = NULL, .correct = correct)))
+#&gt;             .is_correct = TRUE, .message = NULL, .correct = correct, 
+#&gt;             .user_code = user_code)))
 #&gt;     }
 #&gt;     message &lt;- glue_message(glue_incorrect, .is_correct = FALSE, 
-#&gt;         .message = message, .incorrect = incorrect)
-#&gt;     if (uses_pipe(user_code)) {
-#&gt;         message &lt;- glue_message(glue_pipe, .user = as.character(str2expression(user_code)), 
-#&gt;             .message = message, .incorrect = incorrect)
-#&gt;     }
+#&gt;         .message = message, .incorrect = incorrect, .user_code = user_code)
 #&gt;     legacy_graded(correct = FALSE, message = message)
 #&gt; }
-#&gt; &lt;bytecode: 0x7fe74f182ea8&gt;
-#&gt; &lt;environment: 0x7fe74f186700&gt;</div></span></pre>
+#&gt; &lt;bytecode: 0x7f9e890ec908&gt;
+#&gt; &lt;environment: 0x7f9e890f0710&gt;</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
