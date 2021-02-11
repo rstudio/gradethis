@@ -29,18 +29,15 @@
 #'
 #' For best results, name all arguments provided in the solution code.
 #'
-#' @param correct A `glue`-able character string to display if the student answer matches a
-#'   known correct answer.
+#' @param correct A `glue`-able character string to display if the student 
+#'   answer matches a known correct answer.
 #'
-#' @param incorrect A `glue`-able character string to display if the student answer matches
-#'   a known incorrect answer. `.message` is available in the calling environment.
+#' @param incorrect A `glue`-able character string to display if the student
+#'   answer does not match the known correct answer. Use `code_feedback()` in 
+#'   this string to control the placement of the auto-generated feedback message
+#'   produced by comparing the student's submission with the solution.
 #' @param ... Ignored
 #' @inheritParams code_feedback
-#' @inheritParams grade_this
-#'
-# ' @param glue_pipe A glue string that returns the final message displayed when
-# '   the student uses a pipe, `%>%`. Defaults to
-# '   `getOption("gradethis_glue_pipe")`.
 #'
 #' @return a function whose first parameter should be an environment that contains
 #' all necessary information to compare the code.  The result of the returned function will be a [graded()] object.
@@ -60,7 +57,7 @@
 #' ))
 #'
 #' # Remember, only `grade_this_code(correct, incorrect)` should be used.
-#' # The followup `list()`` and values will be called by `grade_learnr()`.
+#' # The followup `list()` and values will be called by `grade_learnr()`.
 #' # To learn more about using `grade_this_code()` with learnr, see:
 #' \dontrun{gradethis_demo()}
 #' @export
@@ -68,8 +65,7 @@ grade_this_code <- function(
   correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
-  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
 
@@ -78,20 +74,29 @@ grade_this_code <- function(
     check_env[[".__correct"]] <- correct
     check_env[[".__incorrect"]] <- incorrect
 
-    grade_this(
-      fail_code_feedback = fail_code_feedback,
-      expr = {
-        # create variable `.message` for glue to find
-        .message <- code_feedback(allow_partial_matching = allow_partial_matching)
-        # call `pass`/`fail` inside `grade_this` to have access to `check_env`
-        if (is.null(.message)) {
-          # need to use `get()` to avoid using `utils::globalVariables`
-          pass(get(".__correct"))
-        } else {
+    with_options(
+      # Pass allow_partial_matching to internal code_feedback() calls
+      list(gradethis.code.partial_matching = allow_partial_matching),
+      grade_this(
+        # The point of grade_this_code() is to return code feedback so we set
+        # fail_code_feedback to TRUE in case the user calls maybe_code_feedback()
+        fail_code_feedback = TRUE,
+        expr = {
+          # check code for mistakes and store error feedback in .message so it
+          # can be found by glue in fail(). Will be NULL if code is correct.
+          .message <- code_feedback()
+          
+          # call `pass`/`fail` inside `grade_this` to have access to `check_env`
+          # but need to use `get()` to avoid using `utils::globalVariables`
+          if (is.null(.message)) {
+            # no code_feedback() message means the code is correct
+            pass(get(".__correct"))
+          }
+          
           fail(get(".__incorrect"))
         }
-      }
-    )(check_env)
+      )(check_env)
+    )
   }
 }
 

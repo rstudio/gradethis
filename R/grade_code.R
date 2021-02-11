@@ -57,7 +57,7 @@
 #'
 #' @param glue_pipe A glue string that returns the final message displayed when
 #'   the student uses a pipe, `%>%`. Defaults to
-#'   `getOption("gradethis_glue_pipe")`.
+#'   `getOption("gradethis.pipe_warning")`.
 #' @param ... ignored. Should be empty
 #'
 #' @return a function whose first parameter should be an environment that contains
@@ -83,13 +83,24 @@ grade_code <- function(
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe"),
+  glue_pipe = deprecated(),
   grader_args = deprecated(),
   learnr_args = deprecated()
 ) {
   ellipsis::check_dots_empty()
   if (is_present(grader_args)) deprecate_warn("0.2.0", "grade_code(grader_args = )")
   if (is_present(learnr_args)) deprecate_warn("0.2.0", "grade_code(learnr_args = )")
+  if (is_present(glue_pipe)) {
+    deprecate_warn(
+      "0.2.1",
+      "grade_code(glue_pipe = )",
+      details = paste(
+        "Use the global option `gradethis.pipe_warning` to set the pipe warning message.",
+        "Or use `\"{pipe_warning()}\"` in the `glue_correct` or `glue_incorrect` arguments of `grade_code()`.",
+        sep = "\n"
+      )
+    )
+  }
 
 
   # return script style function
@@ -129,29 +140,20 @@ grade_code <- function(
           glue_correct,
           .is_correct = TRUE,
           .message = NULL,
-          .correct = correct
+          .correct = correct,
+          .user_code = user_code
         )
       ))
     }
-
-    # is incorrect
+    
+   # is incorrect
     message <- glue_message(
       glue_incorrect,
       .is_correct = FALSE,
       .message = message,
-      .incorrect = incorrect
+      .incorrect = incorrect,
+      .user_code = user_code
     )
-
-    # add pipe message
-    if (uses_pipe(user_code)) {
-      message <- glue_message(
-        glue_pipe,
-        # convert forwards and backwards to apply consistent formatting
-        .user = as.character(str2expression(user_code)),
-        .message = message,
-        .incorrect = incorrect
-      )
-    }
 
     # final grade
     legacy_graded(correct = FALSE, message = message)

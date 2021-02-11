@@ -117,6 +117,7 @@ grade_result <- function(
         .is_match = found_grade,
         .is_correct = final_grade$correct,
         .message = final_grade$message,
+        .message_pipe_warning = NULL,
         .correct = correct,
         .incorrect = incorrect
       )
@@ -165,6 +166,7 @@ grade_result_strict <- function(
         if (is_correct) glue_correct else glue_incorrect, # nolint
         .is_correct = is_correct,
         .message = NULL,
+        .message_pipe_warning = NULL,
         .correct = correct,
         .incorrect = incorrect,
         .num_correct = as.character(num_correct),

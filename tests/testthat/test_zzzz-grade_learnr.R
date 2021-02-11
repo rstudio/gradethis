@@ -82,6 +82,5 @@ test_that("gradethis_setup", {
     
     expect_silent(glue::glue(gradethis_pass))
     expect_silent(glue::glue(gradethis_fail))
-    expect_silent(glue::glue(gradethis_code_incorrect, .message = "Foo"))
   })
 })

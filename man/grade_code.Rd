@@ -11,7 +11,7 @@ grade_code(
   allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
   glue_correct = getOption("gradethis_glue_correct"),
   glue_incorrect = getOption("gradethis_glue_incorrect"),
-  glue_pipe = getOption("gradethis_glue_pipe"),
+  glue_pipe = deprecated(),
   grader_args = deprecated(),
   learnr_args = deprecated()
 )
@@ -35,7 +35,7 @@ displayed. Defaults to \code{getOption("gradethis_glue_incorrect")}.}
 
 \item{glue_pipe}{A glue string that returns the final message displayed when
 the student uses a pipe, \verb{\%>\%}. Defaults to
-\code{getOption("gradethis_glue_pipe")}.}
+\code{getOption("gradethis.pipe_warning")}.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
 (provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:

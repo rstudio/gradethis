@@ -10,22 +10,21 @@ grade_this_code(
   incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
-  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
+  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
 )
 }
 \arguments{
-\item{correct}{A \code{glue}-able character string to display if the student answer matches a
-known correct answer.}
+\item{correct}{A \code{glue}-able character string to display if the student
+answer matches a known correct answer.}
 
-\item{incorrect}{A \code{glue}-able character string to display if the student answer matches
-a known incorrect answer. \code{.message} is available in the calling environment.}
+\item{incorrect}{A \code{glue}-able character string to display if the student
+answer does not match the known correct answer. Use \code{code_feedback()} in
+this string to control the placement of the auto-generated feedback message
+produced by comparing the student's submission with the solution.}
 
 \item{...}{Ignored}
 
 \item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
-
-\item{fail_code_feedback}{Logical that determines if code feedback should be appended to the default failure message. Can also use \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} in your custom \code{\link[=fail]{fail()}} glue message.}
 }
 \value{
 a function whose first parameter should be an environment that contains
@@ -75,7 +74,7 @@ grade_this_code()(list(
 ))
 
 # Remember, only `grade_this_code(correct, incorrect)` should be used.
-# The followup `list()`` and values will be called by `grade_learnr()`.
+# The followup `list()` and values will be called by `grade_learnr()`.
 # To learn more about using `grade_this_code()` with learnr, see:
 \dontrun{gradethis_demo()}
 }
