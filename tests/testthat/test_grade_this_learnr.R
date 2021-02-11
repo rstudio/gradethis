@@ -57,10 +57,13 @@ test_that("length 0 user code", {
   )
 })
 
+# "A problem occurred with your teacher's grading code. Defaulting to _incorrect_."
+message_feedback_grading_problem <- feedback_grading_problem()$message
+
 test_that("length 0 solution code", {
   expect_grade_learnr(
     is_correct = FALSE,
-    msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+    msg = message_feedback_grading_problem,
     msg_type = "error",
     user_code = "1",
     check_code = ".solution; grade_this_code()",
@@ -73,7 +76,7 @@ test_that("pass / fail in check chunk are caught", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+      msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
       check_code = "pass()"
@@ -83,7 +86,7 @@ test_that("pass / fail in check chunk are caught", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+      msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
       check_code = "fail()"
@@ -96,7 +99,7 @@ test_that("check parsing error is caught", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+      msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
       check_code = "4 +"
@@ -109,7 +112,7 @@ test_that("return value is a function of 1 argument", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+      msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
       check_code = "1"
@@ -119,7 +122,7 @@ test_that("return value is a function of 1 argument", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+      msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
       check_code = "Sys.time"
@@ -140,7 +143,7 @@ test_that("a grade is given", {
   testthat::expect_message(
     expect_grade_learnr(
       is_correct = FALSE,
-      msg = "A problem occurred with your teacher's grading code. Defaulting to _incorrect_",
+      msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
       check_code = "function(...) NULL"

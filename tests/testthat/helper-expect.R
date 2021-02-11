@@ -116,7 +116,9 @@ expect_graded <- function(
   msg = NULL
 ) {
   expect_s3_class(grade, "gradethis_graded")
-  if (isTRUE(is_correct)) {
+  if (identical(is_correct, logical(0))) {
+    expect_equal(grade$correct, logical(0))
+  } else if (isTRUE(is_correct)) {
     expect_true(grade$correct)
   } else {
     expect_false(grade$correct)
@@ -129,6 +131,41 @@ expect_graded <- function(
     }
   }
   invisible(grade)
+}
+
+expect_feedback <- function(
+  feedback,
+  is_correct,
+  type = NULL,
+  location = NULL,
+  msg = NULL
+) {
+  if (is_graded(feedback)) {
+    feedback <- feedback(feedback)
+  }
+  
+  expect_s3_class(feedback, "gradethis_feedback")
+  if (identical(is_correct, logical(0))) {
+    expect_equal(feedback$correct, logical(0))
+  } else if (isTRUE(is_correct)) {
+    expect_true(feedback$correct)
+  } else {
+    expect_false(feedback$correct)
+  }
+  if (!is.null(type)) {
+    expect_equal(feedback$type, type)
+  }
+  if (!is.null(location)) {
+    expect_equal(feedback$location, location)
+  }
+  if (!is.null(msg)) {
+    if (is.character(msg)) {
+      expect_match(feedback$message, msg, fixed = TRUE)
+    } else {
+      expect_equal(feedback$message, msg)
+    }
+  }
+  invisible(feedback)
 }
 
 

@@ -5,10 +5,15 @@
 #' Creates a feedback object suitable for returning in a learnr checking function
 #' (e.g., the `exercise.checker` option in [learnr::tutorial_options()])
 #'
-#' @param grade a [graded()] object.
-#' @param type Feedback type (visual presentation style). Can be "auto", "success", "info", "warning", "error", or "custom".
-#' Note that "custom" implies that the "message" field is custom HTML rather than a character vector.
-#' @param location Location for feedback ("append", "prepend", or "replace").
+#' @param grade a [graded()] object. Note that if `grade` contains `type` or
+#'   `location` items, these values will override the values provided to
+#'   the `feedback()` call.
+#' @param type Feedback type (visual presentation style). Can be "auto",
+#'   "success", "info", "warning", "error", or "custom". Note that "custom"
+#'   implies that the "message" field is custom HTML rather than a character
+#'   vector.
+#' @param location Location for feedback ("append", "prepend", or
+#'   "replace").
 #' @noRd
 feedback <- function(
   grade,
@@ -22,10 +27,19 @@ feedback <- function(
     stop("`grade` must be a `graded` object", call. = FALSE)
   }
 
+  type <- grade$type %||% type %||% "auto"
   type <- match.arg(type)
+  
+  location <- grade$location %||% location %||% "append"
+  location <- match.arg(location)
 
   if (identical("auto", type)) {
-    type <- if (grade$correct) "success" else "error"
+    type <- 
+      if (length(grade$correct)) {
+        if (grade$correct) "success" else "error"
+      } else {
+        "custom"
+      }
   }
 
   structure(
@@ -33,7 +47,7 @@ feedback <- function(
       message = message_md(grade$message),
       correct = grade$correct,
       type = type,
-      location = match.arg(location)
+      location = location
     ),
     class = "gradethis_feedback"
   )
@@ -89,5 +103,12 @@ remove_dangerous_html_tags <- function(md) {
     replacement = "&lt;\\1",
     md,
     ignore.case = TRUE
+  )
+}
+
+feedback_grading_problem <- function(message = NULL, type = "error") {
+  feedback(
+    fail(message %||% "A problem occurred with your teacher's grading code. Defaulting to _incorrect_."),
+    type = type
   )
 }

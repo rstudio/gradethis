@@ -154,10 +154,7 @@ grade_learnr_ <- function(
             "Remember to only call ", fn_used, " inside your checking function (ex: `grade_this({})`"
           )
           # return from main function (even though in a inner function! voodoo!)
-          rlang::return_from(checking_envir, feedback(
-            fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
-            type = "error"
-          ))
+          rlang::return_from(checking_envir, feedback_grading_problem())
         }
       )
     },
@@ -166,10 +163,7 @@ grade_learnr_ <- function(
       # notify author of their mistake
       message("Error while executing checking `", check_label, "` chunk: ", e)
       # return from main function (even though in a inner function! voodoo!)
-      rlang::return_from(checking_envir, feedback(
-        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
-        type = "error"
-      ))
+      rlang::return_from(checking_envir, feedback_grading_problem())
     }
   )
 
@@ -202,12 +196,7 @@ grade_learnr_ <- function(
         collapse = "\n"
       )
     )
-    return(
-      feedback(
-        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
-        type = "error"
-      )
-    )
+    return(feedback_grading_problem())
   }
 
   # evaluate the function with the check envir passed in. (Passing an environment allows for `.solution` to be calculated on demand)
@@ -218,13 +207,11 @@ grade_learnr_ <- function(
 
   # make sure the result is a pass or fail
   if (!is_graded(graded_result)) {
-    message("`", check_label, "` chunk did not mark an answer as correct or incorrect. Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code")
-    return(
-      feedback(
-        fail("A problem occurred with your teacher's grading code. Defaulting to _incorrect_"),
-        type = "error"
-      )
+    message(
+      "`", check_label, "` chunk did not mark an answer as correct or incorrect.",
+      "Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code"
     )
+    return(feedback_grading_problem())
   }
 
   # return result like normal

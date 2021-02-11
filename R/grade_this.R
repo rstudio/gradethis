@@ -88,3 +88,151 @@ grade_this <- function(
     )
   }
 }
+
+#' Debug an exercise submission
+#' 
+#' When used in a `*-check` chunk or inside [grade_this()], `debug_this()`
+#' displays in the \pkg{learnr} tutorial a complete listing of the variables
+#' and environment available for checking. This can be helpful when you need
+#' to debug an exercise and a submission.
+#'
+#' @section Debugging exercises:
+#' 
+#' ```{r child = "man/fragments/debug_this-usage-setup.Rmd"}
+#' ```
+#' 
+#' \if{html}{
+#' The debug output will look like the following when used as described
+#' below.
+#' 
+#' \Sexpr[echo=FALSE,results=rd,stage=build]{
+#' submission <- gradethis::mock_this_exercise("# user submits\nx + 2", "x + 3", setup_exercise = "x <- 1", .label = "example")
+#' paste("\\\out{\n<blockquote>", gradethis::debug_this(submission)$message, "</blockquote>}", sep = "\n")
+#' }
+#' }
+#' 
+#' ```{r child = "man/fragments/debug_this-usage.Rmd"}
+#' ```
+#' 
+#' @examples
+#' # Suppose we have an exercise (guess the number 42). Mock a submission:
+#' submission <- mock_this_exercise(.user_code = 40, .solution_code = 11 + 31)
+#' 
+#' # Call `debug_this()` inside your *-check chunk, is equivalent to
+#' debug_this()(submission)$message
+#' 
+#' # Or you can call `debug_this()` inside a `grade_this()` call
+#' # at the point where you want to get debug feedback.
+#' grade_this({
+#'   pass_if_equal(42, "Good stuff!")
+#' 
+#'   # Find out why this is failing??
+#'   debug_this()
+#' })(submission)
+#' 
+#' # Set default `fail()` message to show debug information
+#' # (for tutorial development only!)
+#' old_opts <- options(gradethis.fail = "{debug_this()}")
+#' 
+#' grade_this({
+#'   pass_if_equal(42, "Good stuff!")
+#' 
+#'   fail()
+#' })(submission)
+#' 
+#' # default fail() will show debug until you reset gradethis.fail option
+#' options(old_opts)
+#' 
+#' @param check_env A grade checking environment. You can use
+#'   [mock_this_exercise()] to prepare a mocked exercise submission
+#'   environment. Otherwise, you don't need to use or set this argument.
+#'   
+#' @return Returns a neutral grade containing a message that includes any
+#'   and all information available about the exercise and the current 
+#'   submission. This information is all available for use within
+#'   [grade_this()].
+#' 
+#' @export
+debug_this <- function(check_env = parent.frame()) {
+  
+  if (!exists(".result", check_env)) {
+    # most likely called outside of grade_this(), so return
+    # debug_this directly to be used as a checking function
+    return(debug_this)
+  }
+  
+  tags <- htmltools::tags
+  html <- htmltools::HTML
+  collapse <- function(...) paste(..., collapse = "\n")
+  
+  str_chr <- function(x) {
+    utils::capture.output(utils::str(x))
+  }
+  
+  str_env <- function(env) {
+    vars <- ls(env)
+    names(vars) <- vars
+    x <- str_chr(lapply(vars, function(v) get(v, env)))
+    x[-1]
+  }
+  
+  code_block <- function(value, engine = "r") {
+    tags$pre(
+      class = engine,
+      tags$code(collapse(value), .noWS = "inside"),
+      .noWS = "inside"
+    )
+  }
+  
+  get_check_env <- function(x, otherwise = paste0("<no ", x, ">")) {
+    get0(x, envir = check_env, ifnotfound = otherwise)
+  }
+  
+  solution_code <- get_check_env(".solution_code")
+  
+  message <- htmltools::tagList(
+    tags$p(
+      tags$strong(html("Exercise label (<code>.label</code>):")),
+      tags$code(get_check_env(".label")),
+      tags$br(),
+      tags$strong(html("Engine (<code>.engine</code>):")),
+      tags$code(get_check_env(".engine"))
+    ),
+    tags$p(
+      html("Submission (<code>.result</code>, <code>.user</code>, <code>.last_value</code>):"),
+      code_block(get_check_env(".result"))
+    ),
+    if (!is.null(solution_code)) tags$p(
+      html("Solution (<code>.solution</code>):"),
+      code_block(get_check_env(".solution"))
+    ),
+    tags$details(
+      tags$summary(tags$code(".envir_prep")),
+      code_block(str_env(get_check_env(".envir_prep")), engine = NULL)
+    ),
+    tags$details(
+      tags$summary(tags$code(".envir_result")),
+      code_block(str_env(get_check_env(".envir_result")), engine = NULL)
+    ),
+    tags$details(
+      tags$summary(tags$code(".user_code")),
+      code_block(get_check_env(".user_code"), get_check_env(".engine", otherwise = "r"))
+    ),
+    tags$details(
+      tags$summary(tags$code(".solution_code")),
+      if (is.null(solution_code)) {
+        "No solution."
+      } else {
+        code_block(solution_code)
+      }
+    ),
+    if (!is.null(get_check_env(".error", NULL))) {
+      tags$details(
+        tags$summary(tags$code(".error")),
+        code_block(get_check_env(".error"))
+      )
+    }
+  )
+  
+  graded(logical(0), message = message, type = "custom", location = "replace")
+}

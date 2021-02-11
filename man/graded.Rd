@@ -6,25 +6,35 @@
 \alias{fail}
 \alias{pass_if_equal}
 \alias{fail_if_equal}
-\title{Graded object for submission value}
+\title{Signal a final grade for a student's submission}
 \usage{
-graded(correct, message = NULL)
+graded(correct, message = NULL, ..., type = NULL, location = NULL)
 
-pass(message = getOption("gradethis.pass", "Correct!"), env = parent.frame())
+pass(
+  message = getOption("gradethis.pass", "Correct!"),
+  ...,
+  env = parent.frame()
+)
 
-fail(message = getOption("gradethis.fail", "Incorrect"), env = parent.frame())
+fail(
+  message = getOption("gradethis.fail", "Incorrect"),
+  ...,
+  env = parent.frame()
+)
 
 pass_if_equal(
-  y,
+  y = rlang::missing_arg(),
   message = getOption("gradethis.pass", "Correct!"),
-  x = get(".result", envir = env),
+  x = rlang::missing_arg(),
+  ...,
   env = parent.frame()
 )
 
 fail_if_equal(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = get(".result", envir = env),
+  x = rlang::missing_arg(),
+  ...,
   env = parent.frame()
 )
 }
@@ -33,36 +43,146 @@ fail_if_equal(
 
 \item{message}{A character string of the message to be displayed.}
 
-\item{env}{environment to evaluate the glue \code{message}}
+\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored}
 
-\item{y}{Required value in which to compare \code{x}. Comparison is done using \code{testthat::compare(x, y)}}
+\item{type, location}{The \code{type} and \code{location} of the feedback object
+provided to \pkg{learnr}. See
+\url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for more
+details.
 
-\item{x}{First item in the comparison. Typically, this will be the user result}
+\code{type} may be one of "auto", "success", "info", "warning", "error", or
+"custom".
+
+\code{location} may be one of "append", "prepend", or "replace".}
+
+\item{env}{environment to evaluate the glue \code{message}. Most users of
+\pkg{gradethis} will not need to use this argument.}
+
+\item{y}{The expected value against which \code{x} is compared using
+\code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the
+exercise \code{.solution}, or the result of evaluating the code in the
+exercise's \verb{*-solution} chunk, will be used for the comparison.}
+
+\item{x}{First item in the comparison. By default, when used inside
+\code{\link[=grade_this]{grade_this()}}, \code{x} is automatically assigned the value of \code{.result} — in
+other words the result of running the student's submitted code. \code{x} is not
+the first argument since you will often want to compare the final value of
+the student's submission against a specific value, \code{y}.}
+}
+\value{
+\code{pass()} and \code{pass_if_equal()} signal a \emph{correct} grade with a
+glue-able \code{message}.
+
+\code{fail()} and \code{fail_if_equal()} signal an \emph{incorrect} grade with a
+glue-able \code{message}.
+
+\code{graded()} signals a correct or incorrect grade according to the logical
+value of \code{correct}, with a standard character (unglued) \code{message}.
 }
 \description{
-The return value from \code{graded} should be returned by every
-\verb{*-check} chunk when used with \code{\link[=grade_learnr]{grade_learnr()}}.
-}
-\details{
-\code{graded()} objects are signaled to the calling functions.
-\itemize{
-\item \code{\link[=grade_result]{grade_result()}} ignores when grades are created. \code{graded()} objects must be returned
-\item \code{\link[=grade_code]{grade_code()}} handles \code{graded()} objects internally
-\item \code{\link[=grade_this]{grade_this()}} will stop execution once a \code{pass()}, \code{pass_if_equal()},
-\code{fail()}, \code{fail_if_equal()}, or \code{grade()} is called. To generate programmatic grades,
-use \code{graded()} or if statements around \verb{pass*()} and \verb{fail*()}
-}
+\code{graded()} is used to signal a final grade for a submission. In general, it
+is most helpful when used in \code{\link[=grade_this]{grade_this()}}, but it is used internally by
+other grading functions to signal that the student's submission has been
+graded. If you're using \code{\link[=grade_this]{grade_this()}}, you'll most likely want to use the
+helper functions \code{pass()}, \code{fail()}, \code{pass_if_equal()}, and
+\code{fail_if_equal()}, rather than to call \code{graded()} directly.
 }
 \section{Functions}{
 \itemize{
-\item \code{graded}: Programatic function to produce a graded a result.
+\item \code{graded}: Prepare and signal a graded result.
 
-\item \code{pass}: Produce a \emph{passing} grade
+\item \code{pass}: Signal a \emph{passing} grade.
 
-\item \code{fail}: Produce a \emph{failing} grade
+\item \code{fail}: Signal a \emph{failing} grade.
 
-\item \code{pass_if_equal}: Produce a \emph{passing} grade only if \code{\link[testthat:compare]{testthat::compare()}} passes on \code{x} and \code{y}
+\item \code{pass_if_equal}: Signal a \emph{passing} grade only if \code{x} and \code{y} are equal.
 
-\item \code{fail_if_equal}: Produce a \emph{failing} grade only if \code{\link[testthat:compare]{testthat::compare()}} passes on \code{x} and \code{y}
+\item \code{fail_if_equal}: Signal a \emph{failing} grade only if \code{x} and \code{y} are equal.
 }}
 
+\section{Usage in \code{grade_learnr()}}{
+
+
+If \pkg{gradethis} is used in a \code{\link[learnr:tutorial]{learnr::tutorial()}} with the default
+\code{\link[=gradethis_setup]{gradethis_setup()}}, \code{\link[=grade_learnr]{grade_learnr()}} expects the \verb{*-check} chunk for an
+exercise to return a function. When the exercise submission is to be
+graded, \code{\link[=grade_learnr]{grade_learnr()}} will call the checking function, providing it with
+a consistent exercise submission environment — see \code{\link[=mock_this_exercise]{mock_this_exercise()}}
+for examples of this environment. The goal of this function is to evaluate
+the submission and to return a final grade via \code{graded()}.
+
+In general, tutorial authors will primarily use \code{graded()} and its helper
+functions only when using \code{\link[=grade_this]{grade_this()}}. Whenever one of these functions
+is called inside \code{\link[=grade_this]{grade_this()}}, the submission checking will stop
+immediately and the appropriate grade and feedback will be returned.
+
+Internally, \code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=grade_result]{grade_result()}}, and \code{\link[=grade_code]{grade_code()}} all
+create \code{graded()} objects, but each provides a different mechanism for
+grading the submission and tutorial authors do not need to call \code{graded()}
+or its helper functions within those grading functions.
+}
+
+\examples{
+# Suppose our exercise asks the student to prepare and execute code that
+# returns the value `42`. We'll use `grade_this()` to check their
+# submission.
+#
+# Because we are demonstrating these functions inside R documentation, we'll
+# save the function returned by `grade_this()` as `this_grader()`. Calling
+# `this_grader()` on a mock exercise submission is equivalent to running the
+# check code when the student clicks "Submit Answer" in a learnr tutorial.
+
+this_grader <- 
+# ```{r example-check}
+  grade_this({
+    # Automatically use .result to compare to an expected value
+    pass_if_equal(42, "Great work!")
+    
+    # Similarly compare .result to an expected wrong value
+    fail_if_equal(41, "You were so close!")
+    fail_if_equal(43, "Oops, a little high there!")
+    
+    # or automatically pass if .result is equal to .solution
+    pass_if_equal(message = "Great work!")
+    
+    # Be explicit if you need to round to avoid numerical accuracy issues
+    pass_if_equal(x = round(.result), y = 42, "Close enough!")
+    fail_if_equal(x = round(.result), y = 64, "Hmm, that's not right.")
+    
+    # For more complicated calculations, call pass() or fail()
+    if (.result > 100) {
+      fail("{.result} is way too high!")
+    }
+    if (.result * 100 == .solution) {
+      pass("Right answer, but {.result} is two orders of magnitude too small.")
+    }
+    
+    # Choose a default grade if none of the above have resulted in a grade
+    fail()
+  })
+# ```
+
+# Now lets try with a few different student submissions ----
+
+# Correct!
+this_grader(mock_this_exercise(.user_code = 42))
+
+# These were close...
+this_grader(mock_this_exercise(.user_code = 41))
+this_grader(mock_this_exercise(.user_code = 43))
+
+# Automatically use .solution if you have a *-solution chunk...
+this_grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
+
+# Floating point arithmetic is tricky...
+this_grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
+this_grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
+
+# Complicated checking situations...
+this_grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
+this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
+
+# Finally fall back to the final answer...
+this_grader(mock_this_exercise(.user_code = 33, .solution_code = 42))
+
+}
