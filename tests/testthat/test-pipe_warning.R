@@ -22,6 +22,35 @@ test_that("pipe_warning() in grade_this_code() is equivalent to grade_code()", {
   )
 })
 
+test_that("pipe_warning() requires a pipe in the user code for the warning", {
+  user_code <-  unpipe_all_str("penguins %>% pull(year) %>% min(year)")
+  solution_code <-  "penguins %>% pull(year) %>% min()"
+  
+  feedback_grade_this_code <- expect_this_code(
+    user_code = user_code,
+    solution_code = solution_code,
+    incorrect = "{pipe_warning()}{.message}",
+    is_correct = FALSE
+  )
+  
+  feedback_grade_code <- expect_grade_code(
+    user_code = user_code,
+    solution_code = solution_code,
+    glue_incorrect = "{pipe_warning()}{.message}",
+    is_correct = FALSE
+  )
+  
+  expect_equal(feedback_grade_this_code, feedback_grade_this_code)
+  expect_match(
+    feedback_grade_this_code$message,
+    "^I did not expect"
+  )
+  expect_match(
+    feedback_grade_code$message,
+    "^I did not expect"
+  )
+})
+
 test_that("pipe_warning() message returns unpiped text", {
   user_code <- "x %>% a() %>% b() %>% c()"
   with_options(

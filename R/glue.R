@@ -74,7 +74,7 @@ pipe_warning <- function(
     .user_code <- get0(".user_code", parent.frame(), ifnotfound = "")
   }
   
-  if (identical(trimws(.user_code), "")) {
+  if (identical(trimws(.user_code), "") || !uses_pipe(.user_code)) {
     return("")
   }
   
