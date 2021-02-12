@@ -8,9 +8,9 @@ grade_code(
   correct = NULL,
   incorrect = NULL,
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
-  glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
+  glue_correct = getOption("gradethis.glue_correct"),
+  glue_incorrect = getOption("gradethis.glue_incorrect"),
   glue_pipe = deprecated(),
   grader_args = deprecated(),
   learnr_args = deprecated()

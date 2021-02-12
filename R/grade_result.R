@@ -66,8 +66,8 @@ grade_result <- function(
   ...,
   correct = NULL,
   incorrect = NULL,
-  glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  glue_correct = getOption("gradethis.glue_correct"),
+  glue_incorrect = getOption("gradethis.glue_incorrect"),
   default_correct = "auto",
   default_message = NULL,
   grader_args = deprecated(),
@@ -109,6 +109,9 @@ grade_result <- function(
         break
       }
     }
+    
+    glue_correct   <- glue_correct   %||% gradethis_legacy_options$gradethis.glue_correct
+    glue_incorrect <- glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect
 
     legacy_graded(
       correct = final_grade$correct,
@@ -134,8 +137,8 @@ grade_result_strict <- function(
   ...,
   correct = NULL,
   incorrect = NULL,
-  glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test"),
+  glue_correct = getOption("gradethis.glue_correct_test"),
+  glue_incorrect = getOption("gradethis.glue_incorrect_test"),
   grader_args = deprecated(),
   learnr_args = deprecated()
 ) {
@@ -159,6 +162,9 @@ grade_result_strict <- function(
 
     num_correct <- sum(vapply(grades, function(x) x$correct, logical(1)))
     is_correct <- num_correct == length(conditions)
+    
+    glue_correct   <- glue_correct   %||% gradethis_legacy_options$gradethis.glue_correct_test
+    glue_incorrect <- glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect_test
 
     legacy_graded(
       correct = is_correct,

@@ -63,7 +63,7 @@
 grade_this <- function(
   expr,
   ...,
-  fail_code_feedback = getOption("gradethis.code.feedback", TRUE)
+  fail_code_feedback = getOption("gradethis.fail_code_feedback", TRUE)
 ) {
   express <- rlang::get_expr(rlang::enquo(expr))
 
