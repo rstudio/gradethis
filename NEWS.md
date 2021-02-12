@@ -22,6 +22,7 @@
 * gradethis now uses learnr for `random_praise()` and `random_encouragement()`. `random_encourage()` has been soft-deprecated (#183).
 * The `gradethis.glue_pipe` option is now called `gradethis.pipe_warning` as it sets the default value of the `pipe_warning()` function. `pipe_warning()` can be included in the glue strings of other messages, such as those set by `gradethis.code.incorrect` (#193).
 * The `glue_pipe` argument of `glue_code()` is now deprecated (#193).
+* The "Insert Exercise ..." RStudio Addins were removed from gradethis (#196).
 
 
 ### Bug fixes
