@@ -46,7 +46,7 @@ Imports:
     ellipsis,
     glue,
     htmltools,
-    learnr (>= 0.10.1.9007),
+    learnr (>= 0.10.1.9008),
     lifecycle,
     purrr,
     rlang,
