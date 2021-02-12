@@ -19,13 +19,13 @@ Authors@R:
              family = "Grolemund",
              role = c("ccp", "aut"),
              email = "garrett@rstudio.com"),
-      person(family = "RStudio, Inc.",
+      person(family = "RStudio, PBC",
              role = c("cph", "fnd")))
 Description: Pairing with the 'learnr' R package, 'gradethis'
     provides multiple methods to grade 'learnr' exercises.  To learn more
     about 'learnr' tutorials, please visit
     <http://rstudio.github.io/learnr/>.
-License: GPL-3
+License: MIT + file LICENSE
 URL: https://rstudio-education.github.io/gradethis/,
     https://rstudio.github.io/learnr/,
     https://github.com/rstudio-education/gradethis
