@@ -1,6 +1,6 @@
-Package: gradethis
 Type: Package
-Title: Tools for "grading" student exercises in learnr tutorials
+Package: gradethis
+Title: Automated Feedback for Student Exercises in 'learnr' Tutorials
 Version: 0.2.1.9000
 Authors@R:
     c(person(given = "Daniel",
@@ -11,36 +11,26 @@ Authors@R:
              family = "Schloerke",
              role = "aut",
              email = "barret@rstudio.com"),
-     person(given = "Garrick",
+      person(given = "Garrick",
              family = "Aden-Buie",
-             role = "aut",
+             role = c("aut", "cre"),
              email = "garrick@rstudio.com"),
       person(given = "Garrett",
              family = "Grolemund",
-             role = c("ccp", "aut", "cre"),
+             role = c("ccp", "aut"),
              email = "garrett@rstudio.com"),
       person(family = "RStudio, Inc.",
-             role = c("cph", "fnd")),
-      person(family = "Ajax.org B.V.",
-             role = c("ctb", "cph"),
-             comment = "Ace library"))
-Description: Pairing with the 'learnr' R package,
-    'gradethis' provides multiple methods to grade 'learnr' exercises.  To
-    learn more about 'learnr' tutorials, please visit
+             role = c("cph", "fnd")))
+Description: Pairing with the 'learnr' R package, 'gradethis'
+    provides multiple methods to grade 'learnr' exercises.  To learn more
+    about 'learnr' tutorials, please visit
     <http://rstudio.github.io/learnr/>.
 License: GPL-3
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
-Remotes: 
-    rstudio/learnr
 URL: https://rstudio-education.github.io/gradethis/,
     https://rstudio.github.io/learnr/,
     https://github.com/rstudio-education/gradethis
 BugReports:
     https://github.com/rstudio-education/gradethis/issues
-Roxygen: list(markdown = TRUE)
-RdMacros: lifecycle
 Depends:
     R (>= 3.2.0)
 Imports:
@@ -49,7 +39,7 @@ Imports:
     ellipsis,
     glue,
     htmltools,
-    learnr (>= 0.10.1.9007),
+    learnr (>= 0.10.1.9008),
     lifecycle,
     purrr,
     rlang,
@@ -60,3 +50,11 @@ Imports:
 Suggests:
     knitr,
     tidyr
+RdMacros: 
+    lifecycle
+Remotes: 
+    rstudio/learnr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
