@@ -53,7 +53,7 @@ pipe_warning <- function(
   message = getOption("gradethis.pipe_warning"),
   .user_code = NULL
 ) {
-  if (is.null(message)) {
+  if (is.null(message) || identical(trimws(message), "")) {
     return("")
   }
   
