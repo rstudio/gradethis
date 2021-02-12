@@ -13,11 +13,11 @@ Authors@R:
              email = "barret@rstudio.com"),
      person(given = "Garrick",
              family = "Aden-Buie",
-             role = "aut",
+             role = c("aut", "cre"),
              email = "garrick@rstudio.com"),
       person(given = "Garrett",
              family = "Grolemund",
-             role = c("ccp", "aut", "cre"),
+             role = c("ccp", "aut"),
              email = "garrett@rstudio.com"),
       person(family = "RStudio, Inc.",
              role = c("cph", "fnd")))
