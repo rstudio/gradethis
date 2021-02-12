@@ -1,9 +1,0 @@
-Name: Insert exercise: grade code
-Description: Inserts code chunks to do code checking at the cursor position.
-Binding: insert_exercise_grade_code
-Interactive: false
-
-Name: Insert exercise: grade result/conditions
-Description: Inserts code chunks to do result checking at the cursor position.
-Binding: insert_exercise_grade_result_conditions
-Interactive: false
