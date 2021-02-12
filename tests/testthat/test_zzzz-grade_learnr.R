@@ -1,7 +1,7 @@
 context("Check grade learnr")
 
 test_that("Grade learnr grade_result", {
-  expect_grade_learnr(
+  expect_exercise_checker(
     user_code = "4",
     check_code = "grade_result(
       pass_if(~ .result == 4, 'yes. you did it.'),
@@ -14,7 +14,7 @@ test_that("Grade learnr grade_result", {
 })
 
 test_that("Grade learnr check_code", {
-  expect_grade_learnr(
+  expect_exercise_checker(
     user_code = "4",
     check_code = "grade_code(correct = 'This works', glue_correct = '{.correct}')",
     solution_code = "4",
@@ -22,7 +22,7 @@ test_that("Grade learnr check_code", {
     msg = "This works"
   )
 
-  expect_grade_learnr(
+  expect_exercise_checker(
     user_code = "exp(log(2))",
     check_code = "grade_code(glue_incorrect = '{.message}')",
     solution_code = "exp(log(1))",
@@ -31,22 +31,22 @@ test_that("Grade learnr check_code", {
   )
 
   # User code that produces a parsing error should return an incorrect grade (by default)
-  expect_grade_learnr(
+  expect_exercise_checker(
     user_code = "function(",
     check_code = 'function(...) stop("boom")',
     solution_code = "4",
     is_correct = FALSE,
-    msg = I("might not be valid R code") # from default parse error in grade_learnr_parse_error()
+    msg = I("might not be valid R code") # from default parse error in grade_parse_error()
   )
   
   # Code scaffolding produces informative parsing error message
-  expect_grade_learnr(
+  expect_exercise_checker(
     user_code = "____(mtcars, cyl)",
     is_correct = FALSE,
     msg = I("contains 1 blank")
   )
   
-  expect_grade_learnr(
+  expect_exercise_checker(
     user_code = "________(___, ____)",
     is_correct = FALSE,
     msg = I("contains 3 blanks")
@@ -63,7 +63,7 @@ test_that("Grade learnr check_code", {
   }
   with_options(
     list(exercise.parse.error = parse_error_func),
-    expect_grade_learnr(
+    expect_exercise_checker(
       user_code = "function(",
       msg = "The user code of 'function(' produced a parsing error.",
       is_correct = FALSE

@@ -6,7 +6,7 @@
 #'
 #' @param condition a [condition()] object
 #' @param ... ignored
-#' @inheritParams grade_learnr
+#' @inheritParams gradethis_exercise_checker
 #' @param env environment to evaluate the condition
 #'
 #' @return a [graded()] value if `condi$x` is `TRUE` or

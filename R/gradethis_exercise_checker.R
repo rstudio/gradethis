@@ -1,53 +1,51 @@
-#' A checker function to use with `learnr`
+#' A checker function to use with \pkg{learnr}
 #'
-#' For exercise checking, `learnr` tutorials require a function that
-#' `learnr` can use in the background to run the code in each "-check"
-#' chunk and to format the results into a format that `learnr` can display.
-#' The function must accept a specific set of inputs and return a specific type
-#' of output (see [graded()]). Instructors are not intended to use the
-#' `grade_learnr` function directly, but to pass it to the
-#' `exercise.checker` knitr chunk option within the setup chunk of the
-#' `learnr` tutorial.
+#' For exercise checking, \pkg{learnr} tutorials require a function that
+#' \pkg{learnr} can use in the background to run the code in each "-check"
+#' chunk and to format the results into a format that \pkg{learnr} can display.
+#' To enable exercise checking in your learnr tutorial, attach \pkg{gradethis}
+#' with `library(gradethis)`, or call `gradethis_setup()` in the setup chunk
+#' of your tutorial. See `gradethis_demo()` to see an example learnr document
+#' that uses `gradethis_exercise_checker()`.
 #'
-#' To enable exercise checking in your learnr tutorial, set
-#' `tutorial_options(exercise.checker = grade_learnr)` in the setup chunk
-#' of your tutorial.
-#'
-#' Run `gradethis_demo()` to see an example learnr document that uses
-#' `grade_learnr()`.
-#'
+#' @examples
+#' \dontrun{gradethis_demo()}
+#' 
 #' @param label Label for exercise chunk
 #' @param solution_code Code provided within the "-solution" chunk for the
 #'   exercise.
 #' @param user_code R code submitted by the user
-#' @param check_code Code provided within the "-check" (or "-code-check") chunk for the exercise.
+#' @param check_code Code provided within the "-check" (or "-code-check") chunk
+#'   for the exercise.
 #' @param envir_result The R environment after the execution of the chunk.
 #' @param evaluate_result The return value from the `evaluate::evaluate`
 #'   function.
 #' @param envir_prep A copy of the R environment before the execution of the
 #'   chunk.
-#' @param last_value The last value from evaluating the user's exercise submission.
+#' @param last_value The last value from evaluating the user's exercise
+#'   submission.
 #' @param ... Extra arguments supplied by learnr
 #'
-#' @return An R list which contains several fields indicating the result of the
-#'   check.
-#' @export
-#' @seealso [gradethis_setup()]
+#' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
+#'   the results of the exercise grading code.
 #'
-#' @examples
-#' \dontrun{gradethis_demo()}
-grade_learnr <- function(label = NULL,
-                         solution_code = NULL,
-                         user_code = NULL,
-                         check_code = NULL,
-                         envir_result = NULL,
-                         evaluate_result = NULL,
-                         envir_prep = NULL,
-                         last_value = NULL,
-                         ...) {
+#' @seealso [gradethis_setup()], [grade_this()], [grade_this_code()]
+#'
+#' @export
+gradethis_exercise_checker <- function(
+  label = NULL,
+  solution_code = NULL,
+  user_code = NULL,
+  check_code = NULL,
+  envir_result = NULL,
+  evaluate_result = NULL,
+  envir_prep = NULL,
+  last_value = NULL,
+  ...
+) {
   # Call this function in such a way that it can use other gradethis internals when called by learnr
-  # (i.e., make tutorial_options(exercise.checker = gradethis::grade_learnr) always work)
-  utils::getFromNamespace("grade_learnr_", "gradethis")(
+  # (i.e., make tutorial_options(exercise.checker = gradethis::gradethis_exercise_checker) always work)
+  utils::getFromNamespace("check_exercise", "gradethis")(
     label = label,
     solution_code = solution_code,
     user_code = user_code,
@@ -60,8 +58,7 @@ grade_learnr <- function(label = NULL,
   )
 }
 
-
-grade_learnr_ <- function(
+check_exercise <- function(
   label = NULL,
   solution_code = NULL,
   user_code = NULL,

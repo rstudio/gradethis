@@ -49,3 +49,11 @@ random_encourage <- function() {
   lifecycle::deprecate_soft("0.2.1", "random_encourage()", "random_encouragement()")
   random_encouragement()
 }
+
+#' @describeIn gradethis-deprecated \lifecycle{superseded} Use
+#'   [gradethis_exercise_checker()].
+#' @export
+grade_learnr <- function(...) {
+  lifecycle::deprecate_soft("0.2.2", "grade_learnr()", "gradethis_exercise_checker()")
+  gradethis_exercise_checker(...)
+}

@@ -46,7 +46,7 @@
 #' @return Invisibly returns the global options as they were prior to setting
 #'   them with `gradethis_setup()`.
 #' 
-#' @seealso [grade_learnr()]
+#' @seealso [gradethis_exercise_checker()]
 #' @export
 gradethis_setup <- function(
   exercise.timelimit = NULL,

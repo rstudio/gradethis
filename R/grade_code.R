@@ -36,7 +36,7 @@
 #'   a known incorrect answer.
 #' @inheritParams code_feedback
 #' @param grader_args A list of parameters passed to `grader` functions
-#'   (provided by [grade_learnr()]). This contains:
+#'   (provided by [gradethis_exercise_checker()]). This contains:
 #'
 #'   * `user_quo`: Quoted R code submitted by the user. For example
 #'   \code{\link[rlang:quo]{rlang::quo(1)}}
@@ -44,8 +44,8 @@
 #'   * `solution_quo`: (Optional) Quoted solution R code provided by the
 #'   `*-solution` chunk for an exercise.
 #'
-#' @param learnr_args A list of all parameters passed to [grade_learnr()] by
-#'   `learnr`. See
+#' @param learnr_args A list of all parameters passed to
+#'   [gradethis_exercise_checker()] by `learnr`. See
 #'   <https://rstudio.github.io/learnr/exercises.html#exercise_checking> for
 #'   more details.
 #'

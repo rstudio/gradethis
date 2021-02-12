@@ -7,25 +7,21 @@
 #' helper functions `pass()`, `fail()`, `pass_if_equal()`, and
 #' `fail_if_equal()`, rather than to call `graded()` directly.
 #'
-#' @section Usage in `grade_learnr()`: 
-#'   
+#' @section Usage in `gradethis_exercise_checker()`:
+#'
 #'   If \pkg{gradethis} is used in a [learnr::tutorial()] with the default
-#'   [gradethis_setup()], [grade_learnr()] expects the `*-check` chunk for an
-#'   exercise to return a function. When the exercise submission is to be
-#'   graded, [grade_learnr()] will call the checking function, providing it with
-#'   a consistent exercise submission environment — see [mock_this_exercise()]
-#'   for examples of this environment. The goal of this function is to evaluate
-#'   the submission and to return a final grade via `graded()`.
+#'   [gradethis_setup()], [gradethis_exercise_checker()] expects the `*-check`
+#'   chunk for an exercise to return a function. When the exercise submission is
+#'   to be graded, [gradethis_exercise_checker()] will call the checking
+#'   function, providing it with a consistent exercise submission environment —
+#'   see [mock_this_exercise()] for examples of this environment. The goal of
+#'   this function is to evaluate the submission and to return a final grade via
+#'   `graded()`.
 #'
-#'   In general, tutorial authors will primarily use `graded()` and its helper
-#'   functions only when using [grade_this()]. Whenever one of these functions
-#'   is called inside [grade_this()], the submission checking will stop
-#'   immediately and the appropriate grade and feedback will be returned.
-#'
-#'   Internally, [grade_this_code()], [grade_result()], and [grade_code()] all
-#'   create `graded()` objects, but each provides a different mechanism for
-#'   grading the submission and tutorial authors do not need to call `graded()`
-#'   or its helper functions within those grading functions.
+#'   In general, tutorial authors should only use `graded()` and its helper
+#'   functions within [grade_this()]. Whenever one of these functions is called
+#'   inside [grade_this()], the submission checking will stop immediately and
+#'   the appropriate grade and feedback will be returned.
 #'   
 #' @examples
 #' # Suppose our exercise asks the student to prepare and execute code that

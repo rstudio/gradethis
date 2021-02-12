@@ -100,26 +100,22 @@ helper functions \code{pass()}, \code{fail()}, \code{pass_if_equal()}, and
 \item \code{fail_if_equal}: Signal a \emph{failing} grade only if \code{x} and \code{y} are equal.
 }}
 
-\section{Usage in \code{grade_learnr()}}{
+\section{Usage in \code{gradethis_exercise_checker()}}{
 
 
 If \pkg{gradethis} is used in a \code{\link[learnr:tutorial]{learnr::tutorial()}} with the default
-\code{\link[=gradethis_setup]{gradethis_setup()}}, \code{\link[=grade_learnr]{grade_learnr()}} expects the \verb{*-check} chunk for an
-exercise to return a function. When the exercise submission is to be
-graded, \code{\link[=grade_learnr]{grade_learnr()}} will call the checking function, providing it with
-a consistent exercise submission environment — see \code{\link[=mock_this_exercise]{mock_this_exercise()}}
-for examples of this environment. The goal of this function is to evaluate
-the submission and to return a final grade via \code{graded()}.
+\code{\link[=gradethis_setup]{gradethis_setup()}}, \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}} expects the \verb{*-check}
+chunk for an exercise to return a function. When the exercise submission is
+to be graded, \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}} will call the checking
+function, providing it with a consistent exercise submission environment —
+see \code{\link[=mock_this_exercise]{mock_this_exercise()}} for examples of this environment. The goal of
+this function is to evaluate the submission and to return a final grade via
+\code{graded()}.
 
-In general, tutorial authors will primarily use \code{graded()} and its helper
-functions only when using \code{\link[=grade_this]{grade_this()}}. Whenever one of these functions
-is called inside \code{\link[=grade_this]{grade_this()}}, the submission checking will stop
-immediately and the appropriate grade and feedback will be returned.
-
-Internally, \code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=grade_result]{grade_result()}}, and \code{\link[=grade_code]{grade_code()}} all
-create \code{graded()} objects, but each provides a different mechanism for
-grading the submission and tutorial authors do not need to call \code{graded()}
-or its helper functions within those grading functions.
+In general, tutorial authors should only use \code{graded()} and its helper
+functions within \code{\link[=grade_this]{grade_this()}}. Whenever one of these functions is called
+inside \code{\link[=grade_this]{grade_this()}}, the submission checking will stop immediately and
+the appropriate grade and feedback will be returned.
 }
 
 \examples{

@@ -11,7 +11,8 @@ evaluate_condition(condition, ..., last_value, env)
 
 \item{...}{ignored}
 
-\item{last_value}{The last value from evaluating the user's exercise submission.}
+\item{last_value}{The last value from evaluating the user's exercise
+submission.}
 
 \item{env}{environment to evaluate the condition}
 }

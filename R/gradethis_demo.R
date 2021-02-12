@@ -4,7 +4,7 @@
 #' file that demonstrates how to use the grader package to check student code.
 #'
 #' The tutorial sets the learnr `exercise.checker` option to
-#' `grade_learnr()` in the document's setup chunk.
+#' `gradethis_exercise_checker()` in the document's setup chunk.
 #'
 #' It then uses three different exercise checking methods:
 #' [grade_result()], [grade_conditions()], and [grade_code()].

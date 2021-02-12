@@ -57,7 +57,8 @@
 #' ))
 #'
 #' # Remember, only `grade_this(expr)` should be used.
-#' # The followup `list()` and values will be called by `grade_learnr()`
+#' # The followup `list()` and values will be called by 
+#' # `gradethis_exercise_checker()`
 #' # To learn more about using `grade_this()` with learnr, see:
 #' \dontrun{gradethis_demo()}
 grade_this <- function(

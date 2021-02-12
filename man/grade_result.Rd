@@ -58,7 +58,7 @@ be correct? When \code{"auto"}, this will be \code{TRUE} when all the \code{\lin
 included with the returned \code{\link[=graded]{graded()}} object?}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
-(provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
+(provided by \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}). This contains:
 \itemize{
 \item \code{user_quo}: Quoted R code submitted by the user. For example
 \code{\link[rlang:quo]{rlang::quo(1)}}
@@ -66,8 +66,8 @@ included with the returned \code{\link[=graded]{graded()}} object?}
 \verb{*-solution} chunk for an exercise.
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
-\code{learnr}. See
+\item{learnr_args}{A list of all parameters passed to
+\code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}} by \code{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
 more details.}
 
