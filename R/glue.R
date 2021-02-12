@@ -101,6 +101,7 @@ pipe_warning <- function(
     .user_code = .user_code,
     .user_code_unpiped = .user_code_unpiped,
     .user = .user(),
-    .message = .message()
+    .message = .message(),
+    .trim = FALSE
   )
 }
