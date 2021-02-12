@@ -15,7 +15,7 @@ with the \code{gradethis.pipe_warning} option.}
 \value{
 Returns a string containing the pipe warning message, or an empty
 string if the \code{.user_code} does not contain a pipe, if the \code{.user_code} is
-also empty or if the \code{message} is \code{NULL}.
+also empty, or if the \code{message} is \code{NULL}.
 }
 \description{
 Creates a warning message when user code contains the \verb{\%>\%}. When feedback
@@ -51,7 +51,7 @@ user_code_unpiped <- "min(pull(penguins, year), year)"
 # A `pipe_warning()` is created when the user's code contains `\%>\%`
 pipe_warning(.user_code = user_code)
 
-# And no message is creating when the user's code in un-piped
+# And no message is created when the user's code in un-piped
 pipe_warning(.user_code = user_code_unpiped)
 
 # Typically, this warning is only introduced when giving code feedback

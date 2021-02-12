@@ -28,7 +28,7 @@
 #' # A `pipe_warning()` is created when the user's code contains `%>%`
 #' pipe_warning(.user_code = user_code)
 #' 
-#' # And no message is creating when the user's code in un-piped
+#' # And no message is created when the user's code in un-piped
 #' pipe_warning(.user_code = user_code_unpiped)
 #' 
 #' # Typically, this warning is only introduced when giving code feedback
@@ -46,7 +46,7 @@
 #' 
 #' @return Returns a string containing the pipe warning message, or an empty
 #'   string if the `.user_code` does not contain a pipe, if the `.user_code` is
-#'   also empty or if the `message` is `NULL`.
+#'   also empty, or if the `message` is `NULL`.
 #' 
 #' @export
 pipe_warning <- function(
