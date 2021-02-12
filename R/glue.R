@@ -56,10 +56,53 @@ glue_with_env <- function(env, ...) {
 
 #' Pipe Warning Message
 #' 
-#' Creates a warning message when user code contains the `%>%`.
+#' Creates a warning message when user code contains the `%>%`. When feedback
+#' is automatically generated via [code_feedback()] or in [grade_this_code()],
+#' this message attempts to contextualize feedback that might make more sense
+#' when referenced against an un-piped version of the student's code.
 #' 
-#' @param message A glue string containing the message
+#' @section Options:
+#' 
+#' - `gradethis.pipe_warning`: The default pipe warning message is set via this option.
+#' 
+#' @section Glue Variables:
+#' 
+#' The following variables may be used in the glue-able `message`:
+#' 
+#' - `.user_code`: The student's original submitted code.
+#' 
+#' - `.user_code_unpiped`: The unpiped version of the student's submitted code.
+#'   
+#' @examples
+#' # The default `pipe_warning()` message:
+#' getOption("gradethis.pipe_warning")
+#' 
+#' # Let's consider two versions of the user code
+#' user_code <-  "penguins %>% pull(year) %>% min(year)"
+#' user_code_unpiped <- "min(pull(penguins, year), year)"
+#' 
+#' # A `pipe_warning()` is created when the user's code contains `%>%`
+#' pipe_warning(.user_code = user_code)
+#' 
+#' # And no message is creating when the user's code in un-piped
+#' pipe_warning(.user_code = user_code_unpiped)
+#' 
+#' # Typically, this warning is only introduced when giving code feedback
+#' # for an incorrect submission. Here we didn't expect `year` in `min()`.
+#' submission <- mock_this_exercise(
+#'   .user_code = !!user_code,
+#'   .solution_code = "penguins %>% pull(year) %>% min()"
+#' )
+#' 
+#' grade_this_code()(submission)
+#' 
+#' @param message A glue string containing the message. The default value is set
+#'   with the `gradethis.pipe_warning` option.
 #' @param .user_code The user's submitted code, found in `env` if `NULL`
+#' 
+#' @return Returns a string containing the pipe warning message, or an empty
+#'   string if the `.user_code` does not contain a pipe, if the `.user_code` is
+#'   also empty or if the `message` is `NULL`.
 #' 
 #' @export
 pipe_warning <- function(
