@@ -18,15 +18,10 @@
 #'   this function is to evaluate the submission and to return a final grade via
 #'   `graded()`.
 #'
-#'   In general, tutorial authors will primarily use `graded()` and its helper
-#'   functions only when using [grade_this()]. Whenever one of these functions
-#'   is called inside [grade_this()], the submission checking will stop
-#'   immediately and the appropriate grade and feedback will be returned.
-#'
-#'   Internally, [grade_this_code()], [grade_result()], and [grade_code()] all
-#'   create `graded()` objects, but each provides a different mechanism for
-#'   grading the submission and tutorial authors do not need to call `graded()`
-#'   or its helper functions within those grading functions.
+#'   In general, tutorial authors should only use `graded()` and its helper
+#'   functions within [grade_this()]. Whenever one of these functions is called
+#'   inside [grade_this()], the submission checking will stop immediately and
+#'   the appropriate grade and feedback will be returned.
 #'   
 #' @examples
 #' # Suppose our exercise asks the student to prepare and execute code that

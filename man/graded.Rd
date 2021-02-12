@@ -112,15 +112,10 @@ see \code{\link[=mock_this_exercise]{mock_this_exercise()}} for examples of this
 this function is to evaluate the submission and to return a final grade via
 \code{graded()}.
 
-In general, tutorial authors will primarily use \code{graded()} and its helper
-functions only when using \code{\link[=grade_this]{grade_this()}}. Whenever one of these functions
-is called inside \code{\link[=grade_this]{grade_this()}}, the submission checking will stop
-immediately and the appropriate grade and feedback will be returned.
-
-Internally, \code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=grade_result]{grade_result()}}, and \code{\link[=grade_code]{grade_code()}} all
-create \code{graded()} objects, but each provides a different mechanism for
-grading the submission and tutorial authors do not need to call \code{graded()}
-or its helper functions within those grading functions.
+In general, tutorial authors should only use \code{graded()} and its helper
+functions within \code{\link[=grade_this]{grade_this()}}. Whenever one of these functions is called
+inside \code{\link[=grade_this]{grade_this()}}, the submission checking will stop immediately and
+the appropriate grade and feedback will be returned.
 }
 
 \examples{
