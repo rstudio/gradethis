@@ -10,6 +10,7 @@
 * `pass_if_equal()` now compares the submitted `.result` to the exercise `.solution` by default (#203).
 * New function: `debug_this()` returns information about the various objects available for use by grading code. It is designed for tutorial authors to use during development and can be used in `*-check` chunks or inside `grade_this()` grading code and the feedback is shown in the tutorial when clicking on **Submit Answer**. See `?debug_this` for more information. (#203)
 * `graded()` and its pass/fail helper functions now accept `type` and `location` parameters that specify how the feedback is displayed (see [learnr Custom Checking](https://rstudio.github.io/learnr/exercises.html#Custom_checking) for more details about these options).
+* Calling `gradethis_setup()` is no longer required if you want to use the default gradethis setup. Simply call `library(gradethis)`. You can use `gradethis_setup()` to adjust the default values of any options. (#210)
 
 ### Breaking changes
 
@@ -23,6 +24,15 @@
 * The `gradethis.glue_pipe` option is now called `gradethis.pipe_warning` as it sets the default value of the `pipe_warning()` function. `pipe_warning()` can be included in the glue strings of other messages, such as those set by `gradethis.code.incorrect` (#193).
 * The `glue_pipe` argument of `glue_code()` is now deprecated (#193).
 * The "Insert Exercise ..." RStudio Addins were removed from gradethis (#196).
+* The names of several global options were changed in #210. This will only affect users who were setting the options directly rather than using `gradethis_setup()`. The name changes are:
+    - `gradethis.code.partial_matching` is now `gradethis.allow_partial_matching`
+    - `gradethis.code.feedback` is now `gradethis.fail_code_feedback`
+    - `gradethis.code.correct` is now `gradethis.code_correct`
+    - `gradethis.code.incorrect` is now `gradethis.code_incorrect`
+    - `gradethis_glue_correct` is now `gradethis.glue_correct`
+    - `gradethis_glue_incorrect` is now `gradethis.glue_incorrect`
+    - `gradethis_glue_correct_test` is now `gradethis.glue_correct_test`
+    - `gradethis_glue_incorrect_test` is now `gradethis.glue_incorrect_test`
 
 
 ### Bug fixes

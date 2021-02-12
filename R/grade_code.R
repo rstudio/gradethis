@@ -80,9 +80,9 @@ grade_code <- function(
   correct = NULL,
   incorrect = NULL,
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
-  glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
+  glue_correct = getOption("gradethis.glue_correct"),
+  glue_incorrect = getOption("gradethis.glue_incorrect"),
   glue_pipe = deprecated(),
   grader_args = deprecated(),
   learnr_args = deprecated()
@@ -137,7 +137,7 @@ grade_code <- function(
       return(legacy_graded(
         correct = TRUE,
         message = glue_message(
-          glue_correct,
+          glue_correct %||% gradethis_legacy_options$gradethis.glue_correct,
           .is_correct = TRUE,
           .message = NULL,
           .correct = correct,
@@ -148,7 +148,7 @@ grade_code <- function(
     
    # is incorrect
     message <- glue_message(
-      glue_incorrect,
+      glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect,
       .is_correct = FALSE,
       .message = message,
       .incorrect = incorrect,

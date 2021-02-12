@@ -50,7 +50,8 @@ expect_grade_result <- function(
 ) {
   user_code <- deparse_to_string(last_value)
   check_env <- create_learnr_env(user_code, solution_code = NULL, envir_prep)
-  grade <- grade_result(...)(check_env)
+  grader <- grade_result(...)
+  grade <- grader(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
 expect_grade_result_strict <- function(
@@ -76,7 +77,8 @@ expect_grade_code <- function(
   msg = NULL
 ) {
   check_env <- create_learnr_env(user_code, solution_code, envir_prep, eval = FALSE)
-  grade <- grade_code(...)(check_env)
+  grader <- grade_code(...)
+  grade <- grader(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
 
@@ -91,7 +93,8 @@ expect_grade_this <- function(
   env <- create_learnr_env(user_code, solution_code, envir_prep)
 
   expr_quo <- rlang::enquo(expr)
-  grade <- grade_this(!!expr_quo)(env)
+  grader <- grade_this(!!expr_quo)
+  grade <- grader(env)
 
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }

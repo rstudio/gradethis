@@ -62,10 +62,10 @@
 #' \dontrun{gradethis_demo()}
 #' @export
 grade_this_code <- function(
-  correct = getOption("gradethis.code.correct", getOption("gradethis.pass", "Correct!")),
-  incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail", "Incorrect")),
+  correct = getOption("gradethis.code_correct", getOption("gradethis.pass", "Correct!")),
+  incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
 
@@ -76,7 +76,7 @@ grade_this_code <- function(
 
     with_options(
       # Pass allow_partial_matching to internal code_feedback() calls
-      list(gradethis.code.partial_matching = allow_partial_matching),
+      list(gradethis.allow_partial_matching = allow_partial_matching),
       grade_this(
         # The point of grade_this_code() is to return code feedback so we set
         # fail_code_feedback to TRUE in case the user calls maybe_code_feedback()
@@ -157,7 +157,7 @@ code_feedback <- function(
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
 
@@ -190,11 +190,11 @@ to_expr <- function(x, name) {
 
 
 should_display_code_feedback <- function() {
-  isTRUE(getOption("gradethis.code.feedback", FALSE))
+  isTRUE(getOption("gradethis.fail_code_feedback", FALSE))
 }
 with_code_feedback <- function(val, expr) {
   with_options(
-    list("gradethis.code.feedback" = val),
+    list("gradethis.fail_code_feedback" = val),
     expr
   )
 }
@@ -209,7 +209,7 @@ maybe_code_feedback <- function(
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
   default = "",
   space_before = TRUE,
   space_after = FALSE

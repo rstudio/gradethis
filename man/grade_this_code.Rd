@@ -5,12 +5,12 @@
 \title{Grade student code against a solution}
 \usage{
 grade_this_code(
-  correct = getOption("gradethis.code.correct", getOption("gradethis.pass",
+  correct = getOption("gradethis.code_correct", getOption("gradethis.pass",
     "Correct!")),
-  incorrect = getOption("gradethis.code.incorrect", getOption("gradethis.fail",
+  incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 )
 }
 \arguments{

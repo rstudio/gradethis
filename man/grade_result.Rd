@@ -12,8 +12,8 @@ grade_result(
   ...,
   correct = NULL,
   incorrect = NULL,
-  glue_correct = getOption("gradethis_glue_correct"),
-  glue_incorrect = getOption("gradethis_glue_incorrect"),
+  glue_correct = getOption("gradethis.glue_correct"),
+  glue_incorrect = getOption("gradethis.glue_incorrect"),
   default_correct = "auto",
   default_message = NULL,
   grader_args = deprecated(),
@@ -24,8 +24,8 @@ grade_result_strict(
   ...,
   correct = NULL,
   incorrect = NULL,
-  glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test"),
+  glue_correct = getOption("gradethis.glue_correct_test"),
+  glue_incorrect = getOption("gradethis.glue_incorrect_test"),
   grader_args = deprecated(),
   learnr_args = deprecated()
 )

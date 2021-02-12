@@ -26,8 +26,8 @@ grade_conditions <- function(
   incorrect = NULL,
   grader_args = deprecated(),
   learnr_args = deprecated(),
-  glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+  glue_correct = getOption("gradethis.glue_correct_test"),
+  glue_incorrect = getOption("gradethis.glue_incorrect_test")
 ) {
   deprecate_warn("0.1.0", "grade_result_strict()")
 

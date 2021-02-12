@@ -15,8 +15,8 @@ grade_conditions(
   incorrect = NULL,
   grader_args = deprecated(),
   learnr_args = deprecated(),
-  glue_correct = getOption("gradethis_glue_correct_test"),
-  glue_incorrect = getOption("gradethis_glue_incorrect_test")
+  glue_correct = getOption("gradethis.glue_correct_test"),
+  glue_incorrect = getOption("gradethis.glue_incorrect_test")
 )
 
 random_encourage()

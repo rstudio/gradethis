@@ -10,7 +10,7 @@ code_feedback(
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 )
 
 maybe_code_feedback(
@@ -18,7 +18,7 @@ maybe_code_feedback(
   solution_code = get0(".solution_code", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
-  allow_partial_matching = getOption("gradethis.code.partial_matching", TRUE),
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
   default = "",
   space_before = TRUE,
   space_after = FALSE
