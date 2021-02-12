@@ -46,8 +46,13 @@
 
 
 <meta property="og:title" content="Setup gradethis for use within learnr — gradethis_setup" />
-<meta property="og:description" content="Call this function inside a learnr document's setup chunk in order to use
-a suggested behavior when grading exercises." />
+<meta property="og:description" content="Use this function to change the default options suggested by gradethis. This
+function also describes in detail each of the global options available for
+customization in the gradethis package. Note that you most likely do not want
+to change the defaults values for the learnr tutorial options that are
+prefixed with exercise.. Each of the gradethis-specific arguments sets a
+global option with the same name, prefixed with gradethis.. For example,
+pass sets gradethis.pass." />
 
 
 
@@ -125,25 +130,31 @@ a suggested behavior when grading exercises." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Setup gradethis for use within learnr</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/grade_learnr.R'><code>R/grade_learnr.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/gradethis_setup.R'><code>R/gradethis_setup.R</code></a></small>
     <div class="hidden name"><code>gradethis_setup.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Call this function inside a learnr document's setup chunk in order to use
-a suggested behavior when grading exercises.</p>
+    <p>Use this function to change the default options suggested by gradethis. This
+function also describes in detail each of the global options available for
+customization in the gradethis package. Note that you most likely do not want
+to change the defaults values for the learnr tutorial options that are
+prefixed with <code>exercise.</code>. Each of the gradethis-specific arguments sets a
+global option with the same name, prefixed with <code>gradethis.</code>. For example,
+<code>pass</code> sets <code>gradethis.pass</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>gradethis_setup</span><span class='op'>(</span>
-  exercise.timelimit <span class='op'>=</span> <span class='fl'>60</span>,
-  exercise.checker <span class='op'>=</span> <span class='va'>grade_learnr</span>,
-  exercise.error.check.code <span class='op'>=</span> <span class='st'>"grade_this_code()"</span>,
+  exercise.timelimit <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exercise.checker <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exercise.error.check.code <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>,
-  pass <span class='op'>=</span> <span class='st'>"{ random_praise() } Correct!"</span>,
-  fail <span class='op'>=</span> <span class='st'>"Incorrect.{ maybe_code_feedback() } { random_encouragement() }"</span>,
+  pass <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fail <span class='op'>=</span> <span class='cn'>NULL</span>,
   code_correct <span class='op'>=</span> <span class='cn'>NULL</span>,
-  code_incorrect <span class='op'>=</span> <span class='st'>"{ .message } { random_encouragement() }"</span>,
-  fail_code_feedback <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  code_incorrect <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fail_code_feedback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  pipe_warning <span class='op'>=</span> <span class='cn'>NULL</span>,
   allow_partial_matching <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
@@ -167,7 +178,19 @@ code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_cod
     </tr>
     <tr>
       <th>...</th>
-      <td><p>arguments passed to <code><a href='https://rdrr.io/pkg/learnr/man/tutorial_options.html'>learnr::tutorial_options()</a></code></p></td>
+      <td><p>Arguments passed on to <code><a href='https://rdrr.io/pkg/learnr/man/tutorial_options.html'>learnr::tutorial_options</a></code></p><dl>
+    <dt><code>exercise.cap</code></dt><dd><p>Caption for exercise chunk (defaults to the engine's icon or the combination of the engine and <code>" code"</code>).</p></dd>
+    <dt><code>exercise.eval</code></dt><dd><p>Whether to pre-evaluate the exercise so the reader can
+see some default output (defaults to <code>FALSE</code>).</p></dd>
+    <dt><code>exercise.lines</code></dt><dd><p>Lines of code for exercise editor (defaults to the
+number of lines in the code chunk).</p></dd>
+    <dt><code>exercise.completion</code></dt><dd><p>Use code completion in exercise editors.</p></dd>
+    <dt><code>exercise.diagnostics</code></dt><dd><p>Show diagnostics in exercise editors.</p></dd>
+    <dt><code>exercise.startover</code></dt><dd><p>Show "Start Over" button on exercise.</p></dd>
+    <dt><code>exercise.reveal_solution</code></dt><dd><p>Whether to reveal the exercise solution if
+a solution chunk is provided.</p></dd>
+  
+</dl></td>
     </tr>
     <tr>
       <th>pass</th>
@@ -179,26 +202,59 @@ code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_cod
     </tr>
     <tr>
       <th>code_correct</th>
-      <td><p>Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code.correct")</a></code> which read before <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.pass")</a></code> for the default correct message in <code><a href='grade_this_code.html'>grade_this_code()</a></code></p></td>
+      <td><p>Default <code>correct</code> message for <code><a href='grade_this_code.html'>grade_this_code()</a></code>. If
+unset, <code><a href='grade_this_code.html'>grade_this_code()</a></code> falls back to the value of the <code>gradethis.pass</code>
+option. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code_correct")</a></code>.</p></td>
     </tr>
     <tr>
       <th>code_incorrect</th>
-      <td><p>Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code.incorrect")</a></code> which read before <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.fail")</a></code> for the default incorrect message in <code><a href='grade_this_code.html'>grade_this_code()</a></code></p></td>
+      <td><p>Default <code>incorrect</code> message for <code><a href='grade_this_code.html'>grade_this_code()</a></code>. If
+unset <code><a href='grade_this_code.html'>grade_this_code()</a></code> falls back to the value of the <code>gradethis.fail</code>
+option. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code_incorrect")</a></code>.</p></td>
     </tr>
     <tr>
       <th>fail_code_feedback</th>
-      <td><p>Allows for <code><a href='code_feedback.html'>maybe_code_feedback()</a></code> to return code feedback. (To be paired with a <code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> message.)</p></td>
+      <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether
+<code><a href='code_feedback.html'>maybe_code_feedback()</a></code> should return code feedback, where if <code>FALSE</code>,
+<code><a href='code_feedback.html'>maybe_code_feedback()</a></code> will return an empty string. This can be useful in
+<code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> messages and is used by default in the default
+<code><a href='graded.html'>fail()</a></code> message and the default <code><a href='grade_this_code.html'>grade_this_code()</a></code> incorrect message.</p></td>
+    </tr>
+    <tr>
+      <th>pipe_warning</th>
+      <td><p>The default message used in <code><a href='pipe_warning.html'>pipe_warning()</a></code>. Sets
+<code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.pipe_warning")</a></code>.</p></td>
     </tr>
     <tr>
       <th>allow_partial_matching</th>
-      <td><p>Allows for partial matching in <code><a href='grade_this_code.html'>grade_this_code()</a></code>. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code.partial_matching")</a></code></p></td>
+      <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether
+partial matching is allowed in <code><a href='grade_this_code.html'>grade_this_code()</a></code>. Sets
+<code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.allow_partial_matching")</a></code>.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Invisibly returns the global options as they were prior to setting
+them with <code>gradethis_setup()</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='grade_learnr.html'>grade_learnr()</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># Not run in package documentation because this function changes global opts</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='va'>old_opts</span> <span class='op'>&lt;-</span> <span class='fu'>gradethis_setup</span><span class='op'>(</span>
+    pass <span class='op'>=</span> <span class='st'>"Great work!"</span>, 
+    fail <span class='op'>=</span> <span class='st'>"{random_encouragement()}"</span>
+  <span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'># Use getOption() to see the default value</span>
+<span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.pass"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "{random_praise()} Correct!"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code_correct"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
