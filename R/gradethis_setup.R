@@ -70,7 +70,7 @@ gradethis_setup <- function(
   for (learnr_opt in learnr_opts) {
     if (learnr_opt %in% names(set_opts)) {
       do.call(learnr::tutorial_options, set_opts[learnr_opt])
-    } else if (is.null(knitr::opts_chunk$get(learnr_opt))) {
+    } else if (is.null(knitr::opts_chunk$get(learnr_opt)) || learnr_opt == "exercise.checker") {
       # Ensure that the default value is set
       knitr::opts_chunk$set(
         learnr_opt, 
