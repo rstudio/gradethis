@@ -46,7 +46,10 @@
 
 
 <meta property="og:title" content="Pipe Warning Message — pipe_warning" />
-<meta property="og:description" content="Creates a warning message when user code contains the %&amp;gt;%." />
+<meta property="og:description" content="Creates a warning message when user code contains the %&amp;gt;%. When feedback
+is automatically generated via code_feedback() or in grade_this_code(),
+this message attempts to contextualize feedback that might make more sense
+when referenced against an un-piped version of the student's code." />
 
 
 
@@ -124,12 +127,15 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Pipe Warning Message</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/glue.R'><code>R/glue.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/pipe_warning.R'><code>R/pipe_warning.R</code></a></small>
     <div class="hidden name"><code>pipe_warning.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates a warning message when user code contains the <code>%&gt;%</code>.</p>
+    <p>Creates a warning message when user code contains the <code>%&gt;%</code>. When feedback
+is automatically generated via <code><a href='code_feedback.html'>code_feedback()</a></code> or in <code><a href='grade_this_code.html'>grade_this_code()</a></code>,
+this message attempts to contextualize feedback that might make more sense
+when referenced against an un-piped version of the student's code.</p>
     </div>
 
     <pre class="usage"><span class='fu'>pipe_warning</span><span class='op'>(</span>message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.pipe_warning"</span><span class='op'>)</span>, .user_code <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
@@ -139,7 +145,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>message</th>
-      <td><p>A glue string containing the message</p></td>
+      <td><p>A glue string containing the message. The default value is set
+with the <code>gradethis.pipe_warning</code> option.</p></td>
     </tr>
     <tr>
       <th>.user_code</th>
@@ -147,7 +154,66 @@
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>Returns a string containing the pipe warning message, or an empty
+string if the <code>.user_code</code> does not contain a pipe, if the <code>.user_code</code> is
+also empty, or if the <code>message</code> is <code>NULL</code>.</p>
+    <h2 class="hasAnchor" id="options"><a class="anchor" href="#options"></a>Options</h2>
+
+    
+
+<ul>
+<li><p><code>gradethis.pipe_warning</code>: The default pipe warning message is set via this option.</p></li>
+</ul>
+
+    <h2 class="hasAnchor" id="glue-variables"><a class="anchor" href="#glue-variables"></a>Glue Variables</h2>
+
+    
+
+
+<p>The following variables may be used in the glue-able <code>message</code>:</p><ul>
+<li><p><code>.user_code</code>: The student's original submitted code.</p></li>
+<li><p><code>.user_code_unpiped</code>: The unpiped version of the student's submitted code.</p></li>
+</ul>
+
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># The default `pipe_warning()` message:</span>
+<span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.pipe_warning"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n"</div><div class='input'>
+<span class='co'># Let's consider two versions of the user code</span>
+<span class='va'>user_code</span> <span class='op'>&lt;-</span>  <span class='st'>"penguins %&gt;% pull(year) %&gt;% min(year)"</span>
+<span class='va'>user_code_unpiped</span> <span class='op'>&lt;-</span> <span class='st'>"min(pull(penguins, year), year)"</span>
+
+<span class='co'># A `pipe_warning()` is created when the user's code contains `%&gt;%`</span>
+<span class='fu'>pipe_warning</span><span class='op'>(</span>.user_code <span class='op'>=</span> <span class='va'>user_code</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:
+#&gt; 
+#&gt; ```r
+#&gt; min(pull(penguins, year), year)
+#&gt; ```
+#&gt; 
+#&gt; </div><div class='input'>
+<span class='co'># And no message is created when the user's code in un-piped</span>
+<span class='fu'>pipe_warning</span><span class='op'>(</span>.user_code <span class='op'>=</span> <span class='va'>user_code_unpiped</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] ""</div><div class='input'>
+<span class='co'># Typically, this warning is only introduced when giving code feedback</span>
+<span class='co'># for an incorrect submission. Here we didn't expect `year` in `min()`.</span>
+<span class='va'>submission</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+  .user_code <span class='op'>=</span> <span class='op'>!</span><span class='op'>!</span><span class='va'>user_code</span>,
+  .solution_code <span class='op'>=</span> <span class='st'>"penguins %&gt;% pull(year) %&gt;% min()"</span>
+<span class='op'>)</span>
+
+<span class='fu'><a href='grade_this_code.html'>grade_this_code</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='va'>submission</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:
+#&gt; 
+#&gt; ```r
+#&gt; min(pull(penguins, year), year)
+#&gt; ```
+#&gt; 
+#&gt; I did not expect your call to `min()` to include `year`. You may have included an unnecessary argument, or you may have left out or misspelled an important argument name. Try it again. You get better each time.&gt;</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

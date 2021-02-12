@@ -205,24 +205,14 @@ student submits when it runs <code><a href='grade_code.html'>grade_code()</a></c
   .user_code <span class='op'>=</span> <span class='st'>"sqrt(log(2))"</span>,
   .solution_code <span class='op'>=</span> <span class='st'>"sqrt(log(1))"</span>
 <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:
-#&gt; 
-#&gt; ```r
-#&gt; sqrt(log(2))
-#&gt; ```
-#&gt; In `log(2)`, I expected `1` where you wrote `2`. But no need to fret, try it again.&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. But no need to fret, try it again.&gt;</div><div class='input'>
 <span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
   .user_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
   .solution_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Using `as.character()` on a quosure is deprecated as of rlang 0.3.0.</span>
 #&gt; <span class='warning'>Please use `as_label()` or `as_name()` instead.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:
-#&gt; 
-#&gt; ```r
-#&gt; ~sqrt(log(2))
-#&gt; ```
-#&gt; In `log(2)`, I expected `1` where you wrote `2`. Try it again. Perseverence is the key to success.&gt;</div><div class='input'>
+#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. Try it again. Perseverence is the key to success.&gt;</div><div class='input'>
 <span class='co'># Remember, only `grade_this_code(correct, incorrect)` should be used.</span>
 <span class='co'># The followup `list()` and values will be called by `grade_learnr()`.</span>
 <span class='co'># To learn more about using `grade_this_code()` with learnr, see:</span>
