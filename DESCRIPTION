@@ -20,10 +20,7 @@ Authors@R:
              role = c("ccp", "aut", "cre"),
              email = "garrett@rstudio.com"),
       person(family = "RStudio, Inc.",
-             role = c("cph", "fnd")),
-      person(family = "Ajax.org B.V.",
-             role = c("ctb", "cph"),
-             comment = "Ace library"))
+             role = c("cph", "fnd")))
 Description: Pairing with the 'learnr' R package,
     'gradethis' provides multiple methods to grade 'learnr' exercises.  To
     learn more about 'learnr' tutorials, please visit
