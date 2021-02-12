@@ -46,7 +46,7 @@ names(gradethis_legacy_options) <- paste0(
 
 gradethis_default_learnr_options <- list(
   exercise.timelimit = 60,
-  exercise.checker = grade_learnr,
+  exercise.checker = gradethis_exercise_checker,
   exercise.error.check.code = "grade_this_code()"
 )
 

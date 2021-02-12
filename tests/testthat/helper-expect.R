@@ -204,7 +204,7 @@ create_learnr_env <- function(user_code, solution_code = NULL, envir_prep, eval 
 
 
 
-expect_grade_learnr <- function(
+expect_exercise_checker <- function(
   user_code,
   check_code = "function(...) stop('boom')",
   prep_code = "",
@@ -221,7 +221,7 @@ expect_grade_learnr <- function(
   envir_result <- new.env(parent = envir_prep)
   last_value <- try(eval(parse(text = user_code), envir = envir_result), silent = TRUE)
 
-  feedback <- grade_learnr(
+  feedback <- gradethis_exercise_checker(
     label = "test",
     user_code = user_code,
     solution_code = solution_code,

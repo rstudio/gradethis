@@ -5,6 +5,7 @@
 \alias{grade_feedback}
 \alias{grade_conditions}
 \alias{random_encourage}
+\alias{grade_learnr}
 \title{Deprecated}
 \usage{
 grade_feedback(...)
@@ -20,6 +21,8 @@ grade_conditions(
 )
 
 random_encourage()
+
+grade_learnr(...)
 }
 \description{
 Deprecated
@@ -31,6 +34,9 @@ Deprecated
 \item \code{grade_conditions}: \lifecycle{superseded} Use \code{\link[=grade_result_strict]{grade_result_strict()}}
 
 \item \code{random_encourage}: \lifecycle{superseded} Use \code{\link[=random_encouragement]{random_encouragement()}}.
+
+\item \code{grade_learnr}: \lifecycle{superseded} Use
+\code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}.
 }}
 
 \keyword{internal}

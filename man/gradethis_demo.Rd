@@ -12,7 +12,7 @@ file that demonstrates how to use the grader package to check student code.
 }
 \details{
 The tutorial sets the learnr \code{exercise.checker} option to
-\code{grade_learnr()} in the document's setup chunk.
+\code{gradethis_exercise_checker()} in the document's setup chunk.
 
 It then uses three different exercise checking methods:
 \code{\link[=grade_result]{grade_result()}}, \code{\link[=grade_conditions]{grade_conditions()}}, and \code{\link[=grade_code]{grade_code()}}.

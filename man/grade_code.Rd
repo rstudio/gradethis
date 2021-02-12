@@ -38,7 +38,7 @@ the student uses a pipe, \verb{\%>\%}. Defaults to
 \code{getOption("gradethis.pipe_warning")}.}
 
 \item{grader_args}{A list of parameters passed to \code{grader} functions
-(provided by \code{\link[=grade_learnr]{grade_learnr()}}). This contains:
+(provided by \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}). This contains:
 \itemize{
 \item \code{user_quo}: Quoted R code submitted by the user. For example
 \code{\link[rlang:quo]{rlang::quo(1)}}
@@ -46,8 +46,8 @@ the student uses a pipe, \verb{\%>\%}. Defaults to
 \verb{*-solution} chunk for an exercise.
 }}
 
-\item{learnr_args}{A list of all parameters passed to \code{\link[=grade_learnr]{grade_learnr()}} by
-\code{learnr}. See
+\item{learnr_args}{A list of all parameters passed to
+\code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}} by \code{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#exercise_checking} for
 more details.}
 }

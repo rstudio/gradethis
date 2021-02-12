@@ -96,5 +96,5 @@ getOption("gradethis.code_correct")
 
 }
 \seealso{
-\code{\link[=grade_learnr]{grade_learnr()}}
+\code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}
 }
