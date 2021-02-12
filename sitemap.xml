@@ -19,9 +19,6 @@
     <loc>https://rstudio-education.github.io/gradethis//reference/grade_code.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/grade_learnr.html</loc>
-  </url>
-  <url>
     <loc>https://rstudio-education.github.io/gradethis//reference/grade_result.html</loc>
   </url>
   <url>
@@ -38,6 +35,9 @@
   </url>
   <url>
     <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_demo.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_exercise_checker.html</loc>
   </url>
   <url>
     <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_setup.html</loc>

@@ -83,7 +83,7 @@ fail_if_equal(), rather than to call graded() directly." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
       </span>
     </div>
 
@@ -237,26 +237,23 @@ value of <code>correct</code>, with a standard character (unglued) <code>message
 <li><p><code>pass_if_equal</code>: Signal a <em>passing</em> grade only if <code>x</code> and <code>y</code> are equal.</p></li>
 <li><p><code>fail_if_equal</code>: Signal a <em>failing</em> grade only if <code>x</code> and <code>y</code> are equal.</p></li>
 </ul>
-    <h2 class="hasAnchor" id="usage-in-grade-learnr-"><a class="anchor" href="#usage-in-grade-learnr-"></a>Usage in <code><a href='grade_learnr.html'>grade_learnr()</a></code></h2>
+    <h2 class="hasAnchor" id="usage-in-gradethis-exercise-checker-"><a class="anchor" href="#usage-in-gradethis-exercise-checker-"></a>Usage in <code><a href='gradethis_exercise_checker.html'>gradethis_exercise_checker()</a></code></h2>
 
     
 
 
 <p>If <span class="pkg">gradethis</span> is used in a <code><a href='https://rdrr.io/pkg/learnr/man/tutorial.html'>learnr::tutorial()</a></code> with the default
-<code><a href='gradethis_setup.html'>gradethis_setup()</a></code>, <code><a href='grade_learnr.html'>grade_learnr()</a></code> expects the <code>*-check</code> chunk for an
-exercise to return a function. When the exercise submission is to be
-graded, <code><a href='grade_learnr.html'>grade_learnr()</a></code> will call the checking function, providing it with
-a consistent exercise submission environment — see <code><a href='mock_this_exercise.html'>mock_this_exercise()</a></code>
-for examples of this environment. The goal of this function is to evaluate
-the submission and to return a final grade via <code>graded()</code>.</p>
-<p>In general, tutorial authors will primarily use <code>graded()</code> and its helper
-functions only when using <code><a href='grade_this.html'>grade_this()</a></code>. Whenever one of these functions
-is called inside <code><a href='grade_this.html'>grade_this()</a></code>, the submission checking will stop
-immediately and the appropriate grade and feedback will be returned.</p>
-<p>Internally, <code><a href='grade_this_code.html'>grade_this_code()</a></code>, <code><a href='grade_result.html'>grade_result()</a></code>, and <code><a href='grade_code.html'>grade_code()</a></code> all
-create <code>graded()</code> objects, but each provides a different mechanism for
-grading the submission and tutorial authors do not need to call <code>graded()</code>
-or its helper functions within those grading functions.</p>
+<code><a href='gradethis_setup.html'>gradethis_setup()</a></code>, <code><a href='gradethis_exercise_checker.html'>gradethis_exercise_checker()</a></code> expects the <code>*-check</code>
+chunk for an exercise to return a function. When the exercise submission is
+to be graded, <code><a href='gradethis_exercise_checker.html'>gradethis_exercise_checker()</a></code> will call the checking
+function, providing it with a consistent exercise submission environment —
+see <code><a href='mock_this_exercise.html'>mock_this_exercise()</a></code> for examples of this environment. The goal of
+this function is to evaluate the submission and to return a final grade via
+<code>graded()</code>.</p>
+<p>In general, tutorial authors should only use <code>graded()</code> and its helper
+functions within <code><a href='grade_this.html'>grade_this()</a></code>. Whenever one of these functions is called
+inside <code><a href='grade_this.html'>grade_this()</a></code>, the submission checking will stop immediately and
+the appropriate grade and feedback will be returned.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Suppose our exercise asks the student to prepare and execute code that</span>

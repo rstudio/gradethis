@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • gradethis</title>
+<title>A checker function to use with learnr — gradethis_exercise_checker • gradethis</title>
 
 
 <!-- jquery -->
@@ -45,7 +45,14 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="A checker function to use with learnr — gradethis_exercise_checker" />
+<meta property="og:description" content="For exercise checking, learnr tutorials require a function that
+learnr can use in the background to run the code in each &quot;-check&quot;
+chunk and to format the results into a format that learnr can display.
+To enable exercise checking in your learnr tutorial, attach gradethis
+with library(gradethis), or call gradethis_setup() in the setup chunk
+of your tutorial. See gradethis_demo() to see an example learnr document
+that uses gradethis_exercise_checker()." />
 
 
 
@@ -64,7 +71,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -122,18 +129,97 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>A checker function to use with <span class="pkg">learnr</span></h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/gradethis_exercise_checker.R'><code>R/gradethis_exercise_checker.R</code></a></small>
+    <div class="hidden name"><code>gradethis_exercise_checker.Rd</code></div>
     </div>
 
-  </div>
+    <div class="ref-description">
+    <p>For exercise checking, <span class="pkg">learnr</span> tutorials require a function that
+<span class="pkg">learnr</span> can use in the background to run the code in each "-check"
+chunk and to format the results into a format that <span class="pkg">learnr</span> can display.
+To enable exercise checking in your learnr tutorial, attach <span class="pkg">gradethis</span>
+with <code><a href='https://rstudio-education.github.io/gradethis/'>library(gradethis)</a></code>, or call <code><a href='gradethis_setup.html'>gradethis_setup()</a></code> in the setup chunk
+of your tutorial. See <code><a href='gradethis_demo.html'>gradethis_demo()</a></code> to see an example learnr document
+that uses <code>gradethis_exercise_checker()</code>.</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>gradethis_exercise_checker</span><span class='op'>(</span>
+  label <span class='op'>=</span> <span class='cn'>NULL</span>,
+  solution_code <span class='op'>=</span> <span class='cn'>NULL</span>,
+  user_code <span class='op'>=</span> <span class='cn'>NULL</span>,
+  check_code <span class='op'>=</span> <span class='cn'>NULL</span>,
+  envir_result <span class='op'>=</span> <span class='cn'>NULL</span>,
+  evaluate_result <span class='op'>=</span> <span class='cn'>NULL</span>,
+  envir_prep <span class='op'>=</span> <span class='cn'>NULL</span>,
+  last_value <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>label</th>
+      <td><p>Label for exercise chunk</p></td>
+    </tr>
+    <tr>
+      <th>solution_code</th>
+      <td><p>Code provided within the "-solution" chunk for the
+exercise.</p></td>
+    </tr>
+    <tr>
+      <th>user_code</th>
+      <td><p>R code submitted by the user</p></td>
+    </tr>
+    <tr>
+      <th>check_code</th>
+      <td><p>Code provided within the "-check" (or "-code-check") chunk
+for the exercise.</p></td>
+    </tr>
+    <tr>
+      <th>envir_result</th>
+      <td><p>The R environment after the execution of the chunk.</p></td>
+    </tr>
+    <tr>
+      <th>evaluate_result</th>
+      <td><p>The return value from the <code><a href='https://rdrr.io/pkg/evaluate/man/evaluate.html'>evaluate::evaluate</a></code>
+function.</p></td>
+    </tr>
+    <tr>
+      <th>envir_prep</th>
+      <td><p>A copy of the R environment before the execution of the
+chunk.</p></td>
+    </tr>
+    <tr>
+      <th>last_value</th>
+      <td><p>The last value from evaluating the user's exercise
+submission.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Extra arguments supplied by learnr</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Returns a feedback object suitable for <span class="pkg">learnr</span> tutorials with
+the results of the exercise grading code.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='gradethis_setup.html'>gradethis_setup()</a></code>, <code><a href='grade_this.html'>grade_this()</a></code>, <code><a href='grade_this_code.html'>grade_this_code()</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='fu'><a href='gradethis_demo.html'>gradethis_demo</a></span><span class='op'>(</span><span class='op'>)</span>
+
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 
