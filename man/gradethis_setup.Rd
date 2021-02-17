@@ -5,28 +5,23 @@
 \title{Setup gradethis for use within learnr}
 \usage{
 gradethis_setup(
-  exercise.timelimit = NULL,
-  exercise.checker = NULL,
-  exercise.error.check.code = NULL,
-  ...,
   pass = NULL,
   fail = NULL,
+  ...,
   code_correct = NULL,
   code_incorrect = NULL,
   fail_code_feedback = NULL,
   pipe_warning = NULL,
-  allow_partial_matching = NULL
+  allow_partial_matching = NULL,
+  exercise.checker = gradethis_exercise_checker,
+  exercise.timelimit = NULL,
+  exercise.error.check.code = NULL
 )
 }
 \arguments{
-\item{exercise.timelimit}{Number of seconds to limit execution time to
-(defaults to \code{30}).}
+\item{pass}{Default message for \code{\link[=pass]{pass()}}. Sets \code{options("gradethis.pass")}}
 
-\item{exercise.checker}{Function used to check exercise answers
-(e.g., \code{gradethis::grade_learnr()}).}
-
-\item{exercise.error.check.code}{A string containing R code to use for checking
-code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
+\item{fail}{Default message for \code{\link[=fail]{fail()}}. Sets \code{options("gradethis.fail")}}
 
 \item{...}{
   Arguments passed on to \code{\link[learnr:tutorial_options]{learnr::tutorial_options}}
@@ -42,10 +37,6 @@ number of lines in the code chunk).}
     \item{\code{exercise.reveal_solution}}{Whether to reveal the exercise solution if
 a solution chunk is provided.}
   }}
-
-\item{pass}{Default message for \code{\link[=pass]{pass()}}. Sets \code{options("gradethis.pass")}}
-
-\item{fail}{Default message for \code{\link[=fail]{fail()}}. Sets \code{options("gradethis.fail")}}
 
 \item{code_correct}{Default \code{correct} message for \code{\link[=grade_this_code]{grade_this_code()}}. If
 unset, \code{\link[=grade_this_code]{grade_this_code()}} falls back to the value of the \code{gradethis.pass}
@@ -67,6 +58,15 @@ option. Sets \code{options("gradethis.code_incorrect")}.}
 \item{allow_partial_matching}{Logical \code{TRUE} or \code{FALSE} to determine whether
 partial matching is allowed in \code{grade_this_code()}. Sets
 \code{options("gradethis.allow_partial_matching")}.}
+
+\item{exercise.checker}{Function used to check exercise answers
+(e.g., \code{gradethis::grade_learnr()}).}
+
+\item{exercise.timelimit}{Number of seconds to limit execution time to
+(defaults to \code{30}).}
+
+\item{exercise.error.check.code}{A string containing R code to use for checking
+code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
 }
 \value{
 Invisibly returns the global options as they were prior to setting

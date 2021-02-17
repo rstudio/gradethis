@@ -49,18 +49,25 @@
 #' @seealso [gradethis_exercise_checker()]
 #' @export
 gradethis_setup <- function(
-  exercise.timelimit = NULL,
-  exercise.checker = NULL,
-  exercise.error.check.code = NULL,
-  ...,
   pass = NULL,
   fail = NULL,
+  ...,
   code_correct = NULL,
   code_incorrect = NULL,
   fail_code_feedback = NULL,
   pipe_warning = NULL,
-  allow_partial_matching = NULL
+  allow_partial_matching = NULL,
+  exercise.checker = gradethis_exercise_checker,
+  exercise.timelimit = NULL,
+  exercise.error.check.code = NULL
 ) {
+  if (isTRUE(getOption("gradethis.__require__", TRUE))) {
+    # avoids cyclical loading when called by .onLoad(). Even if called as
+    # gradethis::gradethis_setup(), .onLoad() is called first, setting the
+    # default option values ahead of the current gradethis_setup() call
+    require(gradethis)
+  }
+  
   set_opts <- as.list(match.call()[-1])
   set_opts <- set_opts[setdiff(names(set_opts), "...")]
   
