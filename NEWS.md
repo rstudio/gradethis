@@ -34,6 +34,7 @@
     - `gradethis_glue_correct_test` is now `gradethis.glue_correct_test`
     - `gradethis_glue_incorrect_test` is now `gradethis.glue_incorrect_test`
 * `grade_learnr()` is now called `gradethis_exercise_checker()`. `grade_learnr()` will continue to work but will issue a deprecation warning (#204).
+* `gradethis_setup()` now uses a new argument order that favors the gradethis-specific options (#212).
 
 
 ### Bug fixes
