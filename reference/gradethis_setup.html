@@ -145,36 +145,29 @@ global option with the same name, prefixed with <code>gradethis.</code>. For exa
     </div>
 
     <pre class="usage"><span class='fu'>gradethis_setup</span><span class='op'>(</span>
-  exercise.timelimit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  exercise.checker <span class='op'>=</span> <span class='cn'>NULL</span>,
-  exercise.error.check.code <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>...</span>,
   pass <span class='op'>=</span> <span class='cn'>NULL</span>,
   fail <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>,
   code_correct <span class='op'>=</span> <span class='cn'>NULL</span>,
   code_incorrect <span class='op'>=</span> <span class='cn'>NULL</span>,
   fail_code_feedback <span class='op'>=</span> <span class='cn'>NULL</span>,
   pipe_warning <span class='op'>=</span> <span class='cn'>NULL</span>,
-  allow_partial_matching <span class='op'>=</span> <span class='cn'>NULL</span>
+  allow_partial_matching <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exercise.checker <span class='op'>=</span> <span class='va'>gradethis_exercise_checker</span>,
+  exercise.timelimit <span class='op'>=</span> <span class='cn'>NULL</span>,
+  exercise.error.check.code <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>exercise.timelimit</th>
-      <td><p>Number of seconds to limit execution time to
-(defaults to <code>30</code>).</p></td>
+      <th>pass</th>
+      <td><p>Default message for <code><a href='graded.html'>pass()</a></code>. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.pass")</a></code></p></td>
     </tr>
     <tr>
-      <th>exercise.checker</th>
-      <td><p>Function used to check exercise answers
-(e.g., <code><a href='gradethis-deprecated.html'>gradethis::grade_learnr()</a></code>).</p></td>
-    </tr>
-    <tr>
-      <th>exercise.error.check.code</th>
-      <td><p>A string containing R code to use for checking
-code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_code()"</code>).</p></td>
+      <th>fail</th>
+      <td><p>Default message for <code><a href='graded.html'>fail()</a></code>. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.fail")</a></code></p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -191,14 +184,6 @@ number of lines in the code chunk).</p></dd>
 a solution chunk is provided.</p></dd>
   
 </dl></td>
-    </tr>
-    <tr>
-      <th>pass</th>
-      <td><p>Default message for <code><a href='graded.html'>pass()</a></code>. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.pass")</a></code></p></td>
-    </tr>
-    <tr>
-      <th>fail</th>
-      <td><p>Default message for <code><a href='graded.html'>fail()</a></code>. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.fail")</a></code></p></td>
     </tr>
     <tr>
       <th>code_correct</th>
@@ -230,6 +215,21 @@ option. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradet
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether
 partial matching is allowed in <code><a href='grade_this_code.html'>grade_this_code()</a></code>. Sets
 <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.allow_partial_matching")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>exercise.checker</th>
+      <td><p>Function used to check exercise answers
+(e.g., <code><a href='gradethis-deprecated.html'>gradethis::grade_learnr()</a></code>).</p></td>
+    </tr>
+    <tr>
+      <th>exercise.timelimit</th>
+      <td><p>Number of seconds to limit execution time to
+(defaults to <code>30</code>).</p></td>
+    </tr>
+    <tr>
+      <th>exercise.error.check.code</th>
+      <td><p>A string containing R code to use for checking
+code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_code()"</code>).</p></td>
     </tr>
     </table>
 

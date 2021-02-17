@@ -130,7 +130,7 @@
     </div>
 
     <div class="ref-description">
-    <p><a href='https://www.tidyverse.org/lifecycle/#superseded'><img src='figures/lifecycle-superseded.svg' alt='Superseded lifecycle'></a>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#superseded'><img src='figures/lifecycle-superseded.svg' alt='[Superseded]' /></a>
  Please use <code><a href='grade_this_code.html'>grade_this_code()</a></code>.</p>
     </div>
 
@@ -244,9 +244,7 @@ student submits when it runs <code>grade_code()</code>.</p></li>
 <span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/expression.html'>expression</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>grade_code</span><span class='op'>(</span>grader_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>user_quo <span class='op'>=</span> <span class='va'>y</span>, solution_quo <span class='op'>=</span> <span class='va'>z</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: The `grader_args` argument of `grade_code()` is deprecated as of gradethis 0.2.0.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; function (check_env) 
+</div><div class='output co'>#&gt; <span class='warning'>Warning: The `grader_args` argument of `grade_code()` is deprecated as of gradethis 0.2.0.</span></div><div class='output co'>#&gt; function (check_env) 
 #&gt; {
 #&gt;     if (is.list(check_env)) {
 #&gt;         check_env &lt;- list2env(check_env)
@@ -273,8 +271,8 @@ student submits when it runs <code>grade_code()</code>.</p></li>
 #&gt;         .user_code = user_code)
 #&gt;     legacy_graded(correct = FALSE, message = message)
 #&gt; }
-#&gt; &lt;bytecode: 0x7fc24d458368&gt;
-#&gt; &lt;environment: 0x7fc24d45bd10&gt;</div></span></pre>
+#&gt; &lt;bytecode: 0x7fd1f3284908&gt;
+#&gt; &lt;environment: 0x7fd1f32862b0&gt;</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
