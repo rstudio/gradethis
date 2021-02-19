@@ -170,3 +170,49 @@ test_that("a grade is given", {
     check_code = "function(...) stop('boom')"
   )
 })
+
+test_that("pass_if() and fail_if() work in grade_this()", {
+  expect_exercise_checker(
+    is_correct = TRUE,
+    msg = "1 + 1 is right!",
+    user_code = "1 + 1",
+    solution_code = "1 + 1",
+    check_code = "grade_this(pass_if(.result == .solution, '{.user_code} is right!'))"
+  )
+  
+  expect_exercise_checker(
+    is_correct = FALSE,
+    msg = "1 + 3 is wrong!",
+    user_code = "1 + 3",
+    solution_code = "1 + 1",
+    check_code = "grade_this(fail_if(.result == .solution, '{.user_code} is wrong!'))"
+  )
+  
+  expect_warning(
+    expect_exercise_checker(
+      is_correct = logical(),
+      msg = I("problem"),
+      user_code = "1 + 3",
+      solution_code = "1 + 1",
+      check_code = "grade_this(fail_if(~ .result == .solution, '{.user_code} is meh'))",
+      msg_type = "warning",
+      msg_fixed = TRUE
+    ),
+    # fail_if() doesn't accept...
+    "functions or formulas"
+  )
+  
+  expect_warning(
+    expect_exercise_checker(
+      is_correct = logical(),
+      msg = I("problem"),
+      user_code = "1 + 1",
+      solution_code = "1 + 1",
+      check_code = "grade_this(pass_if(~ .result == .solution, '{.user_code} is meh'))",
+      msg_type = "warning",
+      msg_fixed = TRUE
+    ),
+    # pass_if() doesn't accept...
+    "functions or formulas"
+  )
+})

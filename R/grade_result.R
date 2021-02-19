@@ -207,31 +207,61 @@ condition <- function(x, message, correct) {
       x = x,
       message = message,
       correct = correct,
-      type = if (rlang::is_formula(x)) {
-        "formula"
-      } else if (rlang::is_function(x)) {
-        "function"
-      } else {
-        "value"
-      }
+      type = condition_type(x)
     ),
     class = "gradethis_condition"
   )
 }
 
+condition_type <- function(x) {
+  if (rlang::is_formula(x)) {
+    "formula"
+  } else if (rlang::is_function(x)) {
+    "function"
+  } else {
+    "value"
+  }
+}
+
 #' @rdname grade_result
 #' @export
 pass_if <- function(x, message = NULL) {
-  condition(x, message, correct = TRUE)
+  env <- parent.frame()
+  if (detect_grade_this(env)) {
+    assert_gradethis_condition_type(x, "pass_if")
+    if (x) {
+      pass(message, env = env)
+    }
+  } else {
+    condition(x, message, correct = TRUE)
+  }
 }
 
 #' @rdname grade_result
 #' @export
 fail_if <- function(x, message = NULL) {
+  env <- parent.frame()
+  if (detect_grade_this(env)) {
+    assert_gradethis_condition_type(x, "fail_if")
+    if (!(x)) {
+      fail(message, env = env)
+    }
+  } else {
   condition(x, message, correct = FALSE)
+  }
 }
 
-
+assert_gradethis_condition_type <- function(x, from) {
+  type <- condition_type(x)
+  if (!identical(type, "value")) {
+    warning(
+      from, "() does not accept functions or formulas when used inside grade_this().",
+      immediate. = TRUE, 
+      call. = FALSE
+    )
+    graded(logical(), feedback_grading_problem()$message, type = "warning")
+  }
+}
 
 learnr_env <- function(envir_prep, envir_result) {
   envir_result %||%
