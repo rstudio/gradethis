@@ -26,7 +26,7 @@
 * The "Insert Exercise ..." RStudio Addins were removed from gradethis (#196).
 * The names of several global options were changed in #210. This will only affect users who were setting the options directly rather than using `gradethis_setup()`. The name changes are:
     - `gradethis.code.partial_matching` is now `gradethis.allow_partial_matching`
-    - `gradethis.code.feedback` is now `gradethis.fail_code_feedback`
+    - `gradethis.code.feedback` is now `gradethis.maybe_code_feedback`
     - `gradethis.code.correct` is now `gradethis.code_correct`
     - `gradethis.code.incorrect` is now `gradethis.code_incorrect`
     - `gradethis_glue_correct` is now `gradethis.glue_correct`

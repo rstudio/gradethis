@@ -8,8 +8,8 @@ gradethis_default_options <- list(
   # Default message for fail(message)
   fail = "Incorrect.{maybe_code_feedback()} {random_encouragement()}",
   
-  # Default value for grade_this(fail_code_feedback). Plays with `maybe_code_feedback()`
-  fail_code_feedback = TRUE,
+  # Default value for grade_this(maybe_code_feedback). Plays with `maybe_code_feedback()`
+  maybe_code_feedback = TRUE,
 
   # Default message for grade_this_code(correct)
   code_correct = NULL,

@@ -20,7 +20,7 @@
 #' 
 #' # Use getOption() to see the default value
 #' getOption("gradethis.pass")
-#' getOption("gradethis.code_correct")
+#' getOption("gradethis.maybe_code_feedback")
 #' 
 #' @param pass Default message for [pass()]. Sets `options("gradethis.pass")`
 #' @param fail Default message for [fail()]. Sets `options("gradethis.fail")`
@@ -30,16 +30,18 @@
 #' @param code_incorrect Default `incorrect` message for [grade_this_code()]. If
 #'   unset [grade_this_code()] falls back to the value of the `gradethis.fail`
 #'   option. Sets `options("gradethis.code_incorrect")`.
-#' @param fail_code_feedback Logical `TRUE` or `FALSE` to determine whether 
+#' @param maybe_code_feedback Logical `TRUE` or `FALSE` to determine whether 
 #'   [maybe_code_feedback()] should return code feedback, where if `FALSE`,
-#'   [maybe_code_feedback()] will return an empty string. This can be useful in
-#'   [pass()] or [fail()] messages and is used by default in the default 
-#'   [fail()] message and the default [grade_this_code()] incorrect message.
+#'   [maybe_code_feedback()] will return an empty string.
+#'   [maybe_code_feedback()] is used in the default messages when [pass()] or 
+#'   [fail()] are called without any arguments, which are set by the `pass` or
+#'   `fail` arguments of [gradethis_setup()].
 #' @param allow_partial_matching Logical `TRUE` or `FALSE` to determine whether
 #'   partial matching is allowed in `grade_this_code()`. Sets
 #'   `options("gradethis.allow_partial_matching")`.
 #' @param pipe_warning The default message used in [pipe_warning()]. Sets
 #'   `options("gradethis.pipe_warning")`.
+#' @param fail_code_feedback Deprecated. Use `maybe_code_feedback`.
 #' @inheritParams learnr::tutorial_options
 #' @inheritDotParams learnr::tutorial_options
 #' 
@@ -54,18 +56,23 @@ gradethis_setup <- function(
   ...,
   code_correct = NULL,
   code_incorrect = NULL,
-  fail_code_feedback = NULL,
+  maybe_code_feedback = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
-  exercise.error.check.code = NULL
+  exercise.error.check.code = NULL,
+  fail_code_feedback = NULL
 ) {
   if (isTRUE(getOption("gradethis.__require__", TRUE))) {
     # avoids cyclical loading when called by .onLoad(). Even if called as
     # gradethis::gradethis_setup(), .onLoad() is called first, setting the
     # default option values ahead of the current gradethis_setup() call
     require(gradethis)
+  }
+  
+  if (!is.null(fail_code_feedback)) {
+    deprecate_fail_code_feedback(fail_code_feedback = NULL)
   }
   
   set_opts <- as.list(match.call()[-1])

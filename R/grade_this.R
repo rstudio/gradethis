@@ -2,30 +2,48 @@
 #'
 #' @section Available variables:
 #'
-#' `grade_this()` allows instructors to create an expression to grade. Within the expression,
-#' all `learnr` tutorial variables variables are available for inspection with a `.` prepended to the name:
+#'   `grade_this()` allows instructors to create an expression to grade. Within
+#'   the expression, all `learnr` tutorial variables variables are available for
+#'   inspection with a `.` prepended to the name:
 #'
-#' * `.label`: Label for exercise chunk
-#' * `.solution_code`: Code provided within the "-solution" chunk for the exercise
-#' * `.user_code`: R code submitted by the user
-#' * `.check_code`: Code provided within the "-check" (or "-code-check") chunk for the exercise.
-#' * `.envir_prep`: A copy of the R environment before the execution of the chunk.
-#' * `.envir_result`: The R environment after the execution of the chunk.
-#' * `.evaluate_result`: The return value from the `evaluate::evaluate` function.
-#' * `.last_value The last value from evaluating the user's exercise submission.
-#' In addition, gradethis has provided some extra variables:
-#' * `.user`, `.result`: A direct copy of `.last_value` for friendlier naming
-#' * `.solution`: When accessed, will be the result of evaluating the `.solution_code` in a child environment of `.envir_prep`
+#'   * `.label`: Label for exercise chunk 
+#'   * `.solution_code`: Code provided within the "-solution" chunk for the exercise 
+#'   * `.user_code`: R code submitted by the user 
+#'   * `.check_code`: Code provided within the "-check" (or "-code-check") chunk for the exercise. 
+#'   * `.envir_prep`: A copy of the R environment before the execution of the chunk. 
+#'   * `.envir_result`: The R environment after the execution of the chunk. 
+#'   * `.evaluate_result`: The return value from the `evaluate::evaluate` function. 
+#'   * `.last_value` The last value from evaluating the user's exercise submission. 
+#'   
+#'   In addition, \pkg{gradethis} has provided some extra variables: 
+#'   
+#'   * `.user`, `.result`: A direct copy of `.last_value` for friendlier naming 
+#'   * `.solution`: When accessed, will be the result of evaluating the 
+#'      `.solution_code` in a child environment of `.envir_prep`
 #'
-#' As the instructor, you are free to use any logic to determine a student's grade as long as a [graded()] object is signaled.
-#' The check code can also contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations will be turned into [fail()]ed grades
-#' with the corresponding message.
+#'   As the instructor, you are free to use any logic to determine a student's
+#'   grade as long as a [graded()] object is signaled. The check code can also
+#'   contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
+#'   will be turned into [fail()]ed grades with the corresponding message.
 #'
-#' @param expr Expression to be evaluated. MUST either signal a grade via [pass()] or [fail()] like \pkg{gradethis} functions or throw an error (via \pkg{testthat} or [stop()]). Errors will be converted to [fail()] calls with the corresponding error message.
+#' @param expr Expression to be evaluated. MUST either signal a grade via
+#'   [pass()] or [fail()] like \pkg{gradethis} functions or throw an error (via
+#'   \pkg{testthat} or [stop()]). Errors will be converted to [fail()] calls
+#'   with the corresponding error message.
 #' @param ... ignored
-#' @param fail_code_feedback Logical that determines if code feedback should be appended to the default failure message. Can also use [maybe_code_feedback()] in your custom [fail()] glue message.
-#' @return a function whose first parameter should be an environment that contains all necessary information to execute the expression.  The evaluation of the expression should return a [graded()] object.
-#'
+#' @param maybe_code_feedback Logical that determines if `maybe_code_feedback()`
+#'   should provide code feedback when used in a [graded()] message. The default
+#'   value can be set with [gradethis_setup()].
+#'   
+#'   Typically, [maybe_code_feedback()] is called in the default [fail()] 
+#'   message (the default can be customized the `fail` argument of 
+#'   [gradethis_setup()]). If the `maybe_code_feedback` argument is `FALSE`, 
+#'   `maybe_code_feedback()` returns an empty string.
+#'   
+#' @return a function whose first parameter should be an environment that
+#'   contains all necessary information to execute the expression.  The
+#'   evaluation of the expression should return a [graded()] object.
+#'   
 #' @seealso [grade_this_code()], [eval_gradethis()]
 #' @export
 #' @examples
@@ -64,9 +82,17 @@
 grade_this <- function(
   expr,
   ...,
-  fail_code_feedback = getOption("gradethis.fail_code_feedback", TRUE)
+  maybe_code_feedback = getOption("gradethis.maybe_code_feedback", TRUE)
 ) {
   express <- rlang::get_expr(rlang::enquo(expr))
+  
+  if ("fail_code_feedback" %in% names(list(...))) {
+    lifecycle::deprecate_warn(
+      "0.2.3", 
+      "grade_this(fail_code_feedback=)", 
+      "grade_this(maybe_code_feedback=)"
+    )
+  }
 
   function(check_env) {
     if (is.list(check_env)) {
@@ -74,8 +100,8 @@ grade_this <- function(
     }
 
     # make sure fail calls can get code feed back (or not) if they want
-    with_code_feedback(
-      fail_code_feedback,
+    with_maybe_code_feedback(
+      maybe_code_feedback,
 
       # capture all pass/fail calls and errors thrown
       eval_gradethis({

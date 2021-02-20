@@ -7,18 +7,30 @@
 grade_this(
   expr,
   ...,
-  fail_code_feedback = getOption("gradethis.fail_code_feedback", TRUE)
+  maybe_code_feedback = getOption("gradethis.maybe_code_feedback", TRUE)
 )
 }
 \arguments{
-\item{expr}{Expression to be evaluated. MUST either signal a grade via \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} like \pkg{gradethis} functions or throw an error (via \pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to \code{\link[=fail]{fail()}} calls with the corresponding error message.}
+\item{expr}{Expression to be evaluated. MUST either signal a grade via
+\code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} like \pkg{gradethis} functions or throw an error (via
+\pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to \code{\link[=fail]{fail()}} calls
+with the corresponding error message.}
 
 \item{...}{ignored}
 
-\item{fail_code_feedback}{Logical that determines if code feedback should be appended to the default failure message. Can also use \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} in your custom \code{\link[=fail]{fail()}} glue message.}
+\item{maybe_code_feedback}{Logical that determines if \code{maybe_code_feedback()}
+should provide code feedback when used in a \code{\link[=graded]{graded()}} message. The default
+value can be set with \code{\link[=gradethis_setup]{gradethis_setup()}}.
+
+Typically, \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} is called in the default \code{\link[=fail]{fail()}}
+message (the default can be customized the \code{fail} argument of
+\code{\link[=gradethis_setup]{gradethis_setup()}}). If the \code{maybe_code_feedback} argument is \code{FALSE},
+\code{maybe_code_feedback()} returns an empty string.}
 }
 \value{
-a function whose first parameter should be an environment that contains all necessary information to execute the expression.  The evaluation of the expression should return a \code{\link[=graded]{graded()}} object.
+a function whose first parameter should be an environment that
+contains all necessary information to execute the expression.  The
+evaluation of the expression should return a \code{\link[=graded]{graded()}} object.
 }
 \description{
 Grade expression
@@ -26,8 +38,9 @@ Grade expression
 \section{Available variables}{
 
 
-\code{grade_this()} allows instructors to create an expression to grade. Within the expression,
-all \code{learnr} tutorial variables variables are available for inspection with a \code{.} prepended to the name:
+\code{grade_this()} allows instructors to create an expression to grade. Within
+the expression, all \code{learnr} tutorial variables variables are available for
+inspection with a \code{.} prepended to the name:
 \itemize{
 \item \code{.label}: Label for exercise chunk
 \item \code{.solution_code}: Code provided within the "-solution" chunk for the exercise
@@ -36,15 +49,20 @@ all \code{learnr} tutorial variables variables are available for inspection with
 \item \code{.envir_prep}: A copy of the R environment before the execution of the chunk.
 \item \code{.envir_result}: The R environment after the execution of the chunk.
 \item \code{.evaluate_result}: The return value from the \code{evaluate::evaluate} function.
-\item `.last_value The last value from evaluating the user's exercise submission.
-In addition, gradethis has provided some extra variables:
-\item \code{.user}, \code{.result}: A direct copy of \code{.last_value} for friendlier naming
-\item \code{.solution}: When accessed, will be the result of evaluating the \code{.solution_code} in a child environment of \code{.envir_prep}
+\item \code{.last_value} The last value from evaluating the user's exercise submission.
 }
 
-As the instructor, you are free to use any logic to determine a student's grade as long as a \code{\link[=graded]{graded()}} object is signaled.
-The check code can also contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations will be turned into \code{\link[=fail]{fail()}}ed grades
-with the corresponding message.
+In addition, \pkg{gradethis} has provided some extra variables:
+\itemize{
+\item \code{.user}, \code{.result}: A direct copy of \code{.last_value} for friendlier naming
+\item \code{.solution}: When accessed, will be the result of evaluating the
+\code{.solution_code} in a child environment of \code{.envir_prep}
+}
+
+As the instructor, you are free to use any logic to determine a student's
+grade as long as a \code{\link[=graded]{graded()}} object is signaled. The check code can also
+contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
+will be turned into \code{\link[=fail]{fail()}}ed grades with the corresponding message.
 }
 
 \examples{

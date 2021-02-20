@@ -76,27 +76,27 @@ grade_this_code <- function(
     check_env[[".__incorrect"]] <- incorrect
 
     with_options(
-      # Pass allow_partial_matching to internal code_feedback() calls
-      list(gradethis.allow_partial_matching = allow_partial_matching),
-      grade_this(
+      list(
+        # Pass allow_partial_matching to internal code_feedback() calls
+        gradethis.allow_partial_matching = allow_partial_matching,
         # The point of grade_this_code() is to return code feedback so we set
-        # fail_code_feedback to TRUE in case the user calls maybe_code_feedback()
-        fail_code_feedback = TRUE,
-        expr = {
-          # check code for mistakes and store error feedback in .message so it
-          # can be found by glue in fail(). Will be NULL if code is correct.
-          .message <- code_feedback()
-          
-          # call `pass`/`fail` inside `grade_this` to have access to `check_env`
-          # but need to use `get()` to avoid using `utils::globalVariables`
-          if (is.null(.message)) {
-            # no code_feedback() message means the code is correct
-            pass(get(".__correct"))
-          }
-          
-          fail(get(".__incorrect"))
+        # maybe_code_feedback to TRUE in case the user calls maybe_code_feedback()
+        gradethis.maybe_code_feedback = TRUE
+      ),
+      grade_this({
+        # check code for mistakes and store error feedback in .message so it
+        # can be found by glue in fail(). Will be NULL if code is correct.
+        .message <- code_feedback()
+        
+        # call `pass`/`fail` inside `grade_this` to have access to `check_env`
+        # but need to use `get()` to avoid using `utils::globalVariables`
+        if (is.null(.message)) {
+          # no code_feedback() message means the code is correct
+          pass(get(".__correct"))
         }
-      )(check_env)
+        
+        fail(get(".__incorrect"))
+      })(check_env)
     )
   }
 }
@@ -189,21 +189,36 @@ to_expr <- function(x, name) {
   }
 }
 
+deprecate_fail_code_feedback <- function(...) {
+  if ("fail_code_feedback" %in% names(list(...))) {
+    lifecycle::deprecate_warn(
+      when = "0.2.3", 
+      what = "gradethis_setup(fail_code_feedback=)", 
+      with = "gradethis_setup(maybe_code_feedback=)",
+      details = "Any usage of `fail_code_feedback` will be ignored."
+    )
+  }
+}
 
 should_display_code_feedback <- function() {
-  isTRUE(getOption("gradethis.fail_code_feedback", FALSE))
+  isTRUE(getOption("gradethis.maybe_code_feedback", FALSE))
 }
-with_code_feedback <- function(val, expr) {
+
+with_maybe_code_feedback <- function(val, expr) {
   with_options(
-    list("gradethis.fail_code_feedback" = val),
+    list("gradethis.maybe_code_feedback" = val),
     expr
   )
 }
 
-#' @describeIn code_feedback Return `code_feedback()` result when possible. Useful when setting default [fail()] glue messages. For example, if there is no solution, no code feedback will be given.
+#' @describeIn code_feedback Return `code_feedback()` result when possible.
+#'   Useful when setting default [fail()] glue messages. For example, if there
+#'   is no solution, no code feedback will be given.
 #' @param ... Ignored
-#' @param default Default value to return if no code feedback is found or code feedback can be provided
-#' @param space_before,space_after Logical value to determine if a space should be included before ([TRUE]) or after ([FALSE])
+#' @param default Default value to return if no code feedback is found or code
+#'   feedback can be provided
+#' @param space_before,space_after Logical value to determine if a space should
+#'   be included before ([TRUE]) or after ([FALSE])
 #' @export
 maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
