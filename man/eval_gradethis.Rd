@@ -9,12 +9,21 @@ eval_gradethis(expr, on_error = NULL, on_graded = NULL)
 \arguments{
 \item{expr}{Code block to evaluate}
 
-\item{on_error}{A \code{\link[=withCallingHandlers]{withCallingHandlers()}} handler for class \code{error} with signature \verb{function(error, this_env)} that receives the error object and calling environment of the error handler. \code{on_error} should use \code{\link[rlang:return_from]{rlang::return_from()}} using \code{this_env} to immediately return the value and not continue evaluation.}
+\item{on_error}{A \code{\link[=withCallingHandlers]{withCallingHandlers()}} handler for class \code{error} with
+signature \verb{function(error, this_env)} that receives the error object and
+calling environment of the error handler. \code{on_error} should use
+\code{\link[rlang:return_from]{rlang::return_from()}} using \code{this_env} to immediately return the value and
+not continue evaluation.}
 
-\item{on_graded}{A \code{\link[=withCallingHandlers]{withCallingHandlers()}} handler for class \code{graded} with signature \verb{function(grade, this_env)} that receives the error object and calling environment of the error handler. \code{on_graded} should use \code{\link[rlang:return_from]{rlang::return_from()}} using \code{this_env} to immediately return the value and not continue evaluation.}
+\item{on_graded}{A \code{\link[=withCallingHandlers]{withCallingHandlers()}} handler for class \code{graded} with
+signature \verb{function(grade, this_env)} that receives the error object and
+calling environment of the error handler. \code{on_graded} should use
+\code{\link[rlang:return_from]{rlang::return_from()}} using \code{this_env} to immediately return the value and
+not continue evaluation.}
 }
 \description{
-Capture the first \code{\link[=graded]{graded()}} signal or error thrown when evaluating the \code{expr}.
+Capture the first \code{\link[=graded]{graded()}} signal or error thrown when evaluating the
+\code{expr}.
 }
 \examples{
 ans1 <- eval_gradethis({
@@ -37,4 +46,5 @@ ans3 <- eval_gradethis({
   pass("message 3")
 })
 ans3 # failing - boom
+
 }

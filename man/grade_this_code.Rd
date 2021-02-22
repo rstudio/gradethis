@@ -24,7 +24,11 @@ produced by comparing the student's submission with the solution.}
 
 \item{...}{Ignored}
 
-\item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
+\item{allow_partial_matching}{A logical. If \code{FALSE}, the partial matching of
+argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
+message indicating that the full formal name \code{min} should be used. The
+default is set via the \code{gradethis.allow_partial_matching} option, or by
+\code{\link[=gradethis_setup]{gradethis_setup()}}.}
 }
 \value{
 a function whose first parameter should be an environment that contains

@@ -11,6 +11,8 @@ gradethis_setup(
   code_correct = NULL,
   code_incorrect = NULL,
   maybe_code_feedback = NULL,
+  maybe_code_feedback.before = NULL,
+  maybe_code_feedback.after = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -53,6 +55,11 @@ option. Sets \code{options("gradethis.code_incorrect")}.}
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} is used in the default messages when \code{\link[=pass]{pass()}} or
 \code{\link[=fail]{fail()}} are called without any arguments, which are set by the \code{pass} or
 \code{fail} arguments of \code{\link[=gradethis_setup]{gradethis_setup()}}.}
+
+\item{maybe_code_feedback.before, maybe_code_feedback.after}{Text that should
+be added \code{before} or \code{after} the \code{maybe_code_feedback()} output, if any is
+returned. Sets the default values of the \code{before} and \code{after} arguments of
+\code{\link[=maybe_code_feedback]{maybe_code_feedback()}}.}
 
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets
 \code{options("gradethis.pipe_warning")}.}

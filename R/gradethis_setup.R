@@ -36,6 +36,10 @@
 #'   [maybe_code_feedback()] is used in the default messages when [pass()] or 
 #'   [fail()] are called without any arguments, which are set by the `pass` or
 #'   `fail` arguments of [gradethis_setup()].
+#' @param maybe_code_feedback.before,maybe_code_feedback.after Text that should
+#'   be added `before` or `after` the `maybe_code_feedback()` output, if any is
+#'   returned. Sets the default values of the `before` and `after` arguments of
+#'   [maybe_code_feedback()].
 #' @param allow_partial_matching Logical `TRUE` or `FALSE` to determine whether
 #'   partial matching is allowed in `grade_this_code()`. Sets
 #'   `options("gradethis.allow_partial_matching")`.
@@ -57,6 +61,8 @@ gradethis_setup <- function(
   code_correct = NULL,
   code_incorrect = NULL,
   maybe_code_feedback = NULL,
+  maybe_code_feedback.before = NULL,
+  maybe_code_feedback.after = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
