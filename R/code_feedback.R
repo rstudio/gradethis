@@ -172,7 +172,7 @@ code_feedback <- function(
 
 to_expr <- function(x, name) {
   if (rlang::is_quosure(x)) {
-    rlang::get_expr(x)
+    as.expression(rlang::get_expr(x))
   } else {
     checkmate::assert_character(x, null.ok = FALSE, min.len = 1L, .var.name = name)
     str2expression(x)
@@ -278,17 +278,17 @@ maybe_code_feedback <- function(
 with_code_feedback <- function(
   expr,
   ...,
-  env = rlang::env_parent(),
+  env = parent.frame(),
   location = c("after", "before")
 ) {
   location <- match.arg(location)
   
   # evaluate expression in gradethis context to catch any grades
-  expr <- rlang::get_expr(rlang::enquo(expr))
-  res <- eval_gradethis(rlang::eval_tidy(expr, env = env))
+  expr_q <- rlang::get_expr(rlang::enquo(expr))
+  res <- eval_gradethis(rlang::eval_bare(expr_q, env))
   
   # then dispatch on input type internally
-  with_code_feedback_(res, env = env, ...)
+  with_code_feedback_(res, env = env, location = location, ...)
 }
 
 with_code_feedback_ <- function(
@@ -325,14 +325,19 @@ with_code_feedback_.gradethis_graded <- function(
   env = rlang::env_parent(n = 2),
   location = "after"
 ) {
-  # grade <- x
-  if (is.null(env$.solution_code) || !identical(grade$correct, FALSE)) {
+  solution_code <- get0(".solution_code", envir = env, ifnotfound = NULL)
+  user_code <- get0(".user_code", envir = env, ifnotfound = NULL)
+  
+  if (is.null(solution_code) || !identical(grade$correct, FALSE)) {
+    signalCondition(grade)
     return(grade)
   }
+  
+  # What about correct grades with differences??
 
   feedback <- with_maybe_code_feedback(
     TRUE,
-    maybe_code_feedback(env$.user_code, env$.solution_code, ...)
+    maybe_code_feedback(user_code, solution_code, ...)
   )
   
   if (identical(feedback, "")) return(grade)
@@ -343,7 +348,8 @@ with_code_feedback_.gradethis_graded <- function(
     grade$message, 
     if (!before) feedback
   )
-
+  
+  signalCondition(grade)
   grade
 }
 

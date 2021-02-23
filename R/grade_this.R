@@ -92,6 +92,9 @@ grade_this <- function(
       "grade_this(fail_code_feedback=)", 
       "grade_this(maybe_code_feedback=)"
     )
+    if (missing(maybe_code_feedback)) {
+      maybe_code_feedback <- list(...)$fail_code_feedback
+    }
   }
 
   function(check_env) {
@@ -107,7 +110,7 @@ grade_this <- function(
       eval_gradethis({
 
         # force the evaluation of the expression in an environment
-        rlang::eval_tidy(
+        rlang::eval_bare(
           express,
           env = check_env
         )

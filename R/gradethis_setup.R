@@ -78,12 +78,22 @@ gradethis_setup <- function(
     require(gradethis)
   }
   
-  if (!is.null(fail_code_feedback)) {
-    deprecate_fail_code_feedback(fail_code_feedback = NULL)
-  }
   
   set_opts <- as.list(match.call()[-1])
+  set_opts <- lapply(set_opts, eval, envir = new.env())
   set_opts <- set_opts[setdiff(names(set_opts), "...")]
+  
+  if (!is.null(fail_code_feedback)) {
+    lifecycle::deprecate_warn(
+      when = "0.2.3", 
+      what = "gradethis_setup(fail_code_feedback=)", 
+      with = "gradethis_setup(maybe_code_feedback=)"
+    )
+    if (missing(maybe_code_feedback)) {
+      set_opts[["maybe_code_feedback"]] <- fail_code_feedback
+      set_opts[["fail_code_feedback"]] <- NULL
+    }
+  }
   
   learnr_opts <- names(gradethis_default_learnr_options)
   gradethis_opts <- names(gradethis_default_options)

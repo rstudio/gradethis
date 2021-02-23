@@ -30,7 +30,7 @@ maybe_code_feedback(
 with_code_feedback(
   expr,
   ...,
-  env = rlang::env_parent(),
+  env = parent.frame(),
   location = c("after", "before")
 )
 }

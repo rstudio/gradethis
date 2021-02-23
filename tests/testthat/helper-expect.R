@@ -245,4 +245,6 @@ expect_exercise_checker <- function(
   
   msg <- message_md(msg)
   expect_match(feedback$message, msg, fixed = msg_fixed)
+  
+  invisible(feedback)
 }
