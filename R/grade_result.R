@@ -228,7 +228,7 @@ condition_type <- function(x) {
 pass_if <- function(x, message = NULL) {
   env <- parent.frame()
   if (detect_grade_this(env)) {
-    assert_gradethis_condition_type(x, "pass_if")
+    assert_gradethis_condition_type_is_value(x, "pass_if")
     if (x) {
       pass(message, env = env)
     }
@@ -242,22 +242,23 @@ pass_if <- function(x, message = NULL) {
 fail_if <- function(x, message = NULL) {
   env <- parent.frame()
   if (detect_grade_this(env)) {
-    assert_gradethis_condition_type(x, "fail_if")
+    assert_gradethis_condition_type_is_value(x, "fail_if")
     if (!(x)) {
       fail(message, env = env)
     }
   } else {
-  condition(x, message, correct = FALSE)
+    condition(x, message, correct = FALSE)
   }
 }
 
-assert_gradethis_condition_type <- function(x, from) {
+assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
   type <- condition_type(x)
   if (!identical(type, "value")) {
+    from <- if (!is.null(from)) paste0(from, "() ") else ""
     warning(
-      from, "() does not accept functions or formulas when used inside grade_this().",
+      from, "does not accept functions or formulas when used inside grade_this().",
       immediate. = TRUE, 
-      call. = FALSE
+      call. = !is.null(from)
     )
     graded(logical(), feedback_grading_problem()$message, type = "warning")
   }
