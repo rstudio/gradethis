@@ -11,6 +11,7 @@
 * New function: `debug_this()` returns information about the various objects available for use by grading code. It is designed for tutorial authors to use during development and can be used in `*-check` chunks or inside `grade_this()` grading code and the feedback is shown in the tutorial when clicking on **Submit Answer**. See `?debug_this` for more information. (#203)
 * `graded()` and its pass/fail helper functions now accept `type` and `location` parameters that specify how the feedback is displayed (see [learnr Custom Checking](https://rstudio.github.io/learnr/exercises.html#Custom_checking) for more details about these options).
 * Calling `gradethis_setup()` is no longer required if you want to use the default gradethis setup. Simply call `library(gradethis)`. You can use `gradethis_setup()` to adjust the default values of any options. (#210)
+* New function: `give_code_feedback()`. When applied to a `grade_this()` or `grade_result()` grading function, code feedback is added to the messages of any `fail()` grades. (#219)
 
 ### Breaking changes
 
@@ -35,6 +36,7 @@
     - `gradethis_glue_incorrect_test` is now `gradethis.glue_incorrect_test`
 * `grade_learnr()` is now called `gradethis_exercise_checker()`. `grade_learnr()` will continue to work but will issue a deprecation warning (#204).
 * `gradethis_setup()` now uses a new argument order that favors the gradethis-specific options (#212).
+* The `space_before` and `space_after` arguments of `maybe_code_feedback()` have been deprecated in favor of more flexible arguments `before` and `after` that accept arbitrary strings to add before or after the message. (#219)
 
 
 ### Bug fixes
