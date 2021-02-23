@@ -285,40 +285,40 @@ test_that("can be overwritten by local fail() message", {
 })
 
 
-# with_code_feedback() ----------------------------------------------------
+# give_code_feedback() ----------------------------------------------------
 
 submission_wrong <- mock_this_exercise(
   .user_code = "log(4)", 
   .solution_code = "sqrt(4)"
 )
 
-test_that("with_code_feedback() adds feedback to character messages", {
+test_that("give_code_feedback() adds feedback to character messages", {
   expect_equal(
-    with_code_feedback("Message."),
+    give_code_feedback("Message."),
     "Message.{maybe_code_feedback()}"
   )
   expect_equal(
-    with_code_feedback("Message.", location = "after"),
+    give_code_feedback("Message.", location = "after"),
     "Message.{maybe_code_feedback()}"
   )
   expect_equal(
-    with_code_feedback("Message.", location = "before"),
+    give_code_feedback("Message.", location = "before"),
     "{maybe_code_feedback()}Message."
   )
 })
 
-test_that("with_code_feedback() checks basic assumptions", {
-  expect_error(with_code_feedback(location = "between"))
-  expect_error(with_code_feedback(12))
-  expect_error(with_code_feedback(FALSE))
+test_that("give_code_feedback() checks basic assumptions", {
+  expect_error(give_code_feedback(location = "between"))
+  expect_error(give_code_feedback(12))
+  expect_error(give_code_feedback(FALSE))
 })
 
-test_that("with_code_feedback() wraps grade_this()", {
+test_that("give_code_feedback() wraps grade_this()", {
   expect_match(
     expect_exercise_checker(
       user_code = "log(4)",
       solution_code = "sqrt(4)",
-      check_code = 'with_code_feedback(grade_this({
+      check_code = 'give_code_feedback(grade_this({
        pass_if_equal(.solution, "Good job!")
        if (.result < 2) {
          fail("Too low!")
@@ -336,7 +336,7 @@ test_that("with_code_feedback() wraps grade_this()", {
       expect_exercise_checker(
         user_code = "sqrt(4)",
         solution_code = "sqrt(4)",
-        check_code = 'with_code_feedback(grade_this({
+        check_code = 'give_code_feedback(grade_this({
        pass_if_equal(.solution, "Good job!")
        if (.result < 2) {
          fail("Too low!")
@@ -350,7 +350,7 @@ test_that("with_code_feedback() wraps grade_this()", {
   )
 })
 
-test_that("with_code_feedback() wraps grades, does not affect passing grades", {
+test_that("give_code_feedback() wraps grades, does not affect passing grades", {
   expect_match(
     expect_exercise_checker(
       user_code = "log(4)",
@@ -358,7 +358,7 @@ test_that("with_code_feedback() wraps grades, does not affect passing grades", {
       check_code = 'grade_this({
        pass_if_equal(.solution, "Good job!")
        if (.result < 2) {
-         with_code_feedback(fail("Too low!"))
+         give_code_feedback(fail("Too low!"))
        }
        fail()
      })',
@@ -375,9 +375,9 @@ test_that("with_code_feedback() wraps grades, does not affect passing grades", {
         user_code = "sqrt(4)",
         solution_code = "sqrt(4)",
         check_code = 'grade_this({
-       with_code_feedback(pass_if_equal(.solution, "Good job!"))
+       give_code_feedback(pass_if_equal(.solution, "Good job!"))
        if (.result < 2) {
-         with_code_feedback(fail("Too low!"))
+         give_code_feedback(fail("Too low!"))
        }
        fail()
      })',
@@ -388,13 +388,13 @@ test_that("with_code_feedback() wraps grades, does not affect passing grades", {
   )
 })
 
-test_that("with_code_feedback() catches testthat errors", {
+test_that("give_code_feedback() catches testthat errors", {
   expect_match(
     expect_exercise_checker(
       user_code = "5",
       solution_code = "5L",
       check_code = 'grade_this({
-       with_code_feedback(testthat::expect_type(.result, "integer"))
+       give_code_feedback(testthat::expect_type(.result, "integer"))
        pass()
      })',
       is_correct = FALSE,
@@ -407,7 +407,7 @@ test_that("with_code_feedback() catches testthat errors", {
     expect_exercise_checker(
       user_code = "5",
       solution_code = "5L",
-      check_code = 'with_code_feedback(grade_this({
+      check_code = 'give_code_feedback(grade_this({
        testthat::expect_type(.result, "integer")
        pass()
      }))',
@@ -418,13 +418,13 @@ test_that("with_code_feedback() catches testthat errors", {
   )
 })
 
-test_that("with_code_feedback() catches plain errors", {
+test_that("give_code_feedback() catches plain errors", {
   expect_match(
     expect_exercise_checker(
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       with_code_feedback(stop("nope;"))
+       give_code_feedback(stop("nope;"))
        pass()
      })',
       is_correct = FALSE,
@@ -437,7 +437,7 @@ test_that("with_code_feedback() catches plain errors", {
     expect_exercise_checker(
       user_code = "apple",
       solution_code = "banana",
-      check_code = 'with_code_feedback(grade_this({
+      check_code = 'give_code_feedback(grade_this({
        stop("nope;")
        pass()
      }))',
@@ -448,7 +448,7 @@ test_that("with_code_feedback() catches plain errors", {
   )
 })
 
-test_that("with_code_feedback() doesn't add feedback twice", {
+test_that("give_code_feedback() doesn't add feedback twice", {
   str_count <- function(string, pattern) {
     stopifnot(length(string) == 1)
     m <- gregexpr(pattern, string)[[1]]
@@ -460,7 +460,7 @@ test_that("with_code_feedback() doesn't add feedback twice", {
     user_code = "apple",
     solution_code = "banana",
     check_code = 'grade_this({
-       with_code_feedback(fail("{maybe_code_feedback()}"))
+       give_code_feedback(fail("{maybe_code_feedback()}"))
      })',
     is_correct = FALSE,
     msg = NULL
@@ -476,7 +476,7 @@ test_that("with_code_feedback() doesn't add feedback twice", {
         user_code = "apple",
         solution_code = "banana",
         check_code = 'grade_this({
-       with_code_feedback(fail())
+       give_code_feedback(fail())
      })',
         is_correct = FALSE,
         msg = NULL

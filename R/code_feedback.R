@@ -59,7 +59,7 @@
 #' # Unstandardised arguments match in order and value
 #' code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
 #' 
-#' # with_code_feedback() -------------------------------------------------
+#' # give_code_feedback() -------------------------------------------------
 #' 
 #' # We'll use this example of an incorrect exercise submission throughout
 #' submission_wrong <- mock_this_exercise(
@@ -68,10 +68,10 @@
 #' )
 #' 
 #' # To add feedback to *any* incorrect grade, 
-#' # wrap the entire `grade_this()` call in `with_code_feedback()`:
+#' # wrap the entire `grade_this()` call in `give_code_feedback()`:
 #' grader <- 
 #' # ```{r example-check}
-#'   with_code_feedback(grade_this({
+#'   give_code_feedback(grade_this({
 #'     pass_if_equal(.solution, "Good job!")
 #'     if (.result < 2) {
 #'       fail("Too low!")
@@ -87,7 +87,7 @@
 #'   grade_this({
 #'     pass_if_equal(.solution, "Good job!")
 #'     if (.result < 2) {
-#'       fail(with_code_feedback("Too low!"))
+#'       fail(give_code_feedback("Too low!"))
 #'     }
 #'     fail()
 #'   })
@@ -103,10 +103,10 @@
 #' # ```
 #' grader(submission_wrong)
 #' 
-#' # But you can use with_code_feedback() to append code feedback
+#' # But you can use give_code_feedback() to append code feedback
 #' grader <- 
 #' # ```{r example-check}
-#'   with_code_feedback(grade_result(
+#'   give_code_feedback(grade_result(
 #'     fail_if(~ round(.result, 0) != 2, "Not quite!")
 #'   ))
 #' # ```
@@ -116,7 +116,7 @@
 #' # so be sure to remove \"{maybe_code_feedback()}\" from the incorrect message
 #' grader <- 
 #' # ```{r example-check}
-#'   with_code_feedback(grade_this_code(incorrect = "{random_encouragement()}"))
+#'   give_code_feedback(grade_this_code(incorrect = "{random_encouragement()}"))
 #' # ```
 #' grader(submission_wrong)
 #'
@@ -128,7 +128,7 @@
 #'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
 #'   not found, the [parent.frame()] will be used
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In
-#'   `with_code_feedback()`, `...` are passed to `maybe_code_feedback()`.
+#'   `give_code_feedback()`, `...` are passed to `maybe_code_feedback()`.
 #' @param allow_partial_matching A logical. If `FALSE`, the partial matching of
 #'   argument names is not allowed and e.g. `runif(1, mi = 0)` will return a
 #'   message indicating that the full formal name `min` should be used. The
@@ -138,7 +138,7 @@
 #' @return If no discrepancies are found, `code_feedback()` returns `NULL`. If a
 #'   code difference is found, a character value describing the difference. For
 #'   safe use in glue strings, use `maybe_code_feedback()`, which returns an
-#'   empty string if no discrepancies are found. `with_code_feedback()` adds
+#'   empty string if no discrepancies are found. `give_code_feedback()` adds
 #'   code feedback to the messages of [fail()] grades.
 #'   
 #' @describeIn code_feedback Determine code feedback
@@ -275,7 +275,7 @@ maybe_code_feedback <- function(
 #' @param location Should the code feedback message be added before or after?
 #'   
 #' @export
-with_code_feedback <- function(
+give_code_feedback <- function(
   expr,
   ...,
   env = parent.frame(),
@@ -292,20 +292,20 @@ with_code_feedback <- function(
   )
   
   # then dispatch on input type internally
-  with_code_feedback_(res, env = env, location = location, ...)
+  give_code_feedback_(res, env = env, location = location, ...)
 }
 
-with_code_feedback_ <- function(
+give_code_feedback_ <- function(
   x,
   ...,
   env = parent.frame(),
   location = c("after", "before")
 ) {
-  UseMethod("with_code_feedback_", x)
+  UseMethod("give_code_feedback_", x)
 }
 
 #' @export
-with_code_feedback_.character <- function(x, ..., location = "after") {
+give_code_feedback_.character <- function(x, ..., location = "after") {
   # This just inlines maybe_code_feedback() but doesn't guarantee it will show up
   mcf <- "{maybe_code_feedback()}"
   before <- identical(location, "before")
@@ -313,17 +313,17 @@ with_code_feedback_.character <- function(x, ..., location = "after") {
 }
 
 #' @export
-with_code_feedback_.function <- function(x, ..., env = NULL, location = "after") {
+give_code_feedback_.function <- function(x, ..., env = NULL, location = "after") {
   function(check_env) {
     # get original grade without any code feedback (it will always be appended)
     grade <- capture_graded(with_maybe_code_feedback(FALSE, x(check_env)))
 
-    with_code_feedback_(grade, env = check_env, location = location, ...)
+    give_code_feedback_(grade, env = check_env, location = location, ...)
   }
 }
 
 #' @export
-with_code_feedback_.gradethis_graded <- function(
+give_code_feedback_.gradethis_graded <- function(
   grade,
   ...,
   env = rlang::env_parent(n = 2),
@@ -359,9 +359,9 @@ with_code_feedback_.gradethis_graded <- function(
 
 
 #' @export
-with_code_feedback_.default <- function(x, ...) {
+give_code_feedback_.default <- function(x, ...) {
   stop(
-    "with_code_feedback() expected a character, function, or grade.",
+    "give_code_feedback() expected a character, function, or grade.",
     call. = FALSE
   )
 }
