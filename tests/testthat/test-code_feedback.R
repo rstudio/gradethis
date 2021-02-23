@@ -500,3 +500,67 @@ test_that("give_code_feedback() doesn't add feedback twice", {
   
   expect_equal(str_count(feedback, "I expected"), 1)
 })
+
+test_that("give_code_feedback() works with pipes", {
+  expect_match(
+    expect_exercise_checker(
+      user_code = "log(4)",
+      solution_code = "sqrt(4)",
+      check_code = 'grade_this({
+       pass_if_equal(.solution, "Good job!")
+       if (.result < 2) {
+         fail("Too low!")
+       }
+       fail()
+     }) %>% give_code_feedback()',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "I expected.+sqrt.+log"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "log(4)",
+      solution_code = "sqrt(4)",
+      check_code = 'grade_this({
+       pass_if_equal(.solution, "Good job!")
+       if (.result < 2) {
+         fail("Too low!") %>% give_code_feedback()
+       }
+       fail()
+     })',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "I expected.+sqrt.+log"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "apple",
+      solution_code = "banana",
+      check_code = 'grade_this({
+       stop("nope;") %>% give_code_feedback()
+       pass()
+     })',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "nope; I expected"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "apple",
+      solution_code = "banana",
+      check_code = 'grade_this({
+       stop("nope;")
+       pass()
+     }) %>% give_code_feedback()',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "nope; I expected"
+  )
+})
