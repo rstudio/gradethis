@@ -2,6 +2,13 @@ url: https://rstudio-education.github.io/gradethis/
 
 template:
   package: quillt
+  opengraph:
+    image:
+      src: https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png
+      alt: "gradethis package"
+    twitter:
+      creator: "@rstudio"
+      card: summary
   params:
     docsearch:
       api_key: 6e6350018f3204fb7cb6f4e7d3487cce
