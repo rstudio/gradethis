@@ -35,15 +35,13 @@ give_code_feedback(
 )
 }
 \arguments{
-\item{user_code}{String containing user code. Defaults to retrieving
-\code{.user_code} from the calling environment. (Required)}
-
-\item{solution_code}{String containing solution code. Defaults to retrieving
-\code{.solution_code} from the calling environment. (Required)}
+\item{user_code, solution_code}{String containing user or solution code. For
+ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
+default retrieved from the calling environment.}
 
 \item{env}{Environment used to standardise formals of the user and solution
 code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
-not found, the \code{\link[=parent.frame]{parent.frame()}} will be used}
+not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
 \item{...}{Ignored in \code{code_feedback()} and \code{maybe_code_feedback()}. In
 \code{give_code_feedback()}, \code{...} are passed to \code{maybe_code_feedback()}.}
@@ -55,7 +53,7 @@ default is set via the \code{gradethis.allow_partial_matching} option, or by
 \code{\link[=gradethis_setup]{gradethis_setup()}}.}
 
 \item{default}{Default value to return if no code feedback is found or code
-feedback can be provided}
+feedback can be provided.}
 
 \item{before, after}{Strings to be added before or after the code feedback
 message to ensure the message is properly formatted in your feedback.}

@@ -127,13 +127,12 @@
 #' # ```
 #' grader(submission_wrong)
 #'
-#' @param user_code String containing user code. Defaults to retrieving
-#'   `.user_code` from the calling environment. (Required)
-#' @param solution_code String containing solution code. Defaults to retrieving
-#'   `.solution_code` from the calling environment. (Required)
+#' @param user_code,solution_code String containing user or solution code. For 
+#'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by 
+#'   default retrieved from the calling environment.
 #' @param env Environment used to standardise formals of the user and solution
 #'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
-#'   not found, the [parent.frame()] will be used
+#'   not found, the [parent.frame()] will be used.
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In
 #'   `give_code_feedback()`, `...` are passed to `maybe_code_feedback()`.
 #' @param allow_partial_matching A logical. If `FALSE`, the partial matching of
@@ -209,7 +208,7 @@ with_maybe_code_feedback <- function(val, expr) {
 #'   is no solution, no code feedback will be given.
 #'   
 #' @param default Default value to return if no code feedback is found or code
-#'   feedback can be provided
+#'   feedback can be provided.
 #' @param before,after Strings to be added before or after the code feedback
 #'   message to ensure the message is properly formatted in your feedback.
 #' @param space_before,space_after Deprecated. Use `before` and `after`.
