@@ -284,8 +284,12 @@ with_code_feedback <- function(
   location <- match.arg(location)
   
   # evaluate expression in gradethis context to catch any grades
+  # and also turn off maybe_code_feedback so that feedback isn't repeated twice
   expr_q <- rlang::get_expr(rlang::enquo(expr))
-  res <- eval_gradethis(rlang::eval_bare(expr_q, env))
+  res <- with_maybe_code_feedback(
+    FALSE,
+    eval_gradethis(rlang::eval_bare(expr_q, env))
+  )
   
   # then dispatch on input type internally
   with_code_feedback_(res, env = env, location = location, ...)

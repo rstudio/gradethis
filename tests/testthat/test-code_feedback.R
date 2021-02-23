@@ -387,3 +387,101 @@ test_that("with_code_feedback() wraps grades, does not affect passing grades", {
     )
   )
 })
+
+test_that("with_code_feedback() catches testthat errors", {
+  expect_match(
+    expect_exercise_checker(
+      user_code = "5",
+      solution_code = "5L",
+      check_code = 'grade_this({
+       with_code_feedback(testthat::expect_type(.result, "integer"))
+       pass()
+     })',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "\\.result.+has type.+I expected"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "5",
+      solution_code = "5L",
+      check_code = 'with_code_feedback(grade_this({
+       testthat::expect_type(.result, "integer")
+       pass()
+     }))',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "\\.result.+has type.+I expected"
+  )
+})
+
+test_that("with_code_feedback() catches plain errors", {
+  expect_match(
+    expect_exercise_checker(
+      user_code = "apple",
+      solution_code = "banana",
+      check_code = 'grade_this({
+       with_code_feedback(stop("nope;"))
+       pass()
+     })',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "nope; I expected"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "apple",
+      solution_code = "banana",
+      check_code = 'with_code_feedback(grade_this({
+       stop("nope;")
+       pass()
+     }))',
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "nope; I expected"
+  )
+})
+
+test_that("with_code_feedback() doesn't add feedback twice", {
+  str_count <- function(string, pattern) {
+    stopifnot(length(string) == 1)
+    m <- gregexpr(pattern, string)[[1]]
+    if (m[1] < 0) return(0)
+    length(m)
+  }
+  
+  feedback <- expect_exercise_checker(
+    user_code = "apple",
+    solution_code = "banana",
+    check_code = 'grade_this({
+       with_code_feedback(fail("{maybe_code_feedback()}"))
+     })',
+    is_correct = FALSE,
+    msg = NULL
+  )$message
+    
+  expect_equal(str_count(feedback, "I expected"), 1)
+  
+  feedback <- 
+    with_gradethis_setup(
+      fail = "{maybe_code_feedback()}",
+      maybe_code_feedback = TRUE,
+      expect_exercise_checker(
+        user_code = "apple",
+        solution_code = "banana",
+        check_code = 'grade_this({
+       with_code_feedback(fail())
+     })',
+        is_correct = FALSE,
+        msg = NULL
+      )$message
+    )
+  
+  expect_equal(str_count(feedback, "I expected"), 1)
+})
