@@ -1,9 +1,14 @@
 
 #' Code Feedback
 #'
-#' Generate a message describing the first instance of a code mismatch. This
-#' function is built to be used within [grade_this()] without using arguments.
-#' Manual calling of `code_feedback()` is also encouraged!
+#' Generate a message describing the first instance of a code mismatch. Three
+#' functions are provided for working with code feedback: `code_feedback()` does
+#' the comparison and returns a character description of the mismatch, or a
+#' `NULL` if no differences are found. `maybe_code_feedback()` is designed to be
+#' used inside [fail()] and related [graded()] messages, as in 
+#' `"{maybe_code_feedback()}"`. And `give_code_feedback()` gives you a way to
+#' add code feedback to any [fail()] message in a [grade_this()] or 
+#' [grade_result()] checking function.
 #' 
 #' @section Code differences:
 #'
@@ -32,32 +37,34 @@
 #' 
 #' @examples
 #' # code_feedback() ------------------------------------------------------
-#' # Values are same
-#' code_feedback("log(2)", "log(2)") # NULL # no differences found
+#' 
+#' # Values are same, so no differences found
+#' code_feedback("log(2)", "log(2)")
 #'
 #' # Functions are different
 #' code_feedback("log(2)", "sqrt(2)")
 #'
-#' # Standardise user names
-#' code_feedback("read.csv('file.csv')", "read.csv(file = 'file.csv')") # NULL
+#' # Standardise argument names (no differences)
+#' code_feedback("read.csv('file.csv')", "read.csv(file = 'file.csv')")
 #'
-#' # No partial matching
+#' # Partial matching is not allowed
 #' code_feedback("read.csv(f = 'file.csv')", "read.csv(file = 'file.csv')")
 #'
-#' # All named arguments are provided (even if they match default value)
-#' code_feedback("read.csv('file.csv')", "read.csv('file.csv', header = TRUE)")
-#'
-#' # All named argument values match
+#' # Feedback will spot differences in argument values...
 #' code_feedback(
 #'   "read.csv('file.csv', header = FALSE)", 
 #'   "read.csv('file.csv', header = TRUE)"
 #' )
 #'
-#' # No extra arguments are provided
+#' # ...or when arguments are expected to appear in a call...
 #' code_feedback("mean(1:10)", "mean(1:10, na.rm = TRUE)")
 #'
-#' # Unstandardised arguments match in order and value
+#' # ...even when the expected argument matches the function's default value
+#' code_feedback("read.csv('file.csv')", "read.csv('file.csv', header = TRUE)")
+#'
+#' # Unstandardised arguments will match by order and value
 #' code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
+#' 
 #' 
 #' # give_code_feedback() -------------------------------------------------
 #' 
@@ -112,7 +119,7 @@
 #' # ```
 #' grader(submission_wrong)
 #' 
-#' # The default `grade_this_code()` `incorrect` message adds code feedback,
+#' # The default `grade_this_code()` `incorrect` message always adds code feedback,
 #' # so be sure to remove \"{maybe_code_feedback()}\" from the incorrect message
 #' grader <- 
 #' # ```{r example-check}
@@ -135,13 +142,20 @@
 #'   default is set via the `gradethis.allow_partial_matching` option, or by
 #'   [gradethis_setup()].
 #'
-#' @return If no discrepancies are found, `code_feedback()` returns `NULL`. If a
-#'   code difference is found, a character value describing the difference. For
-#'   safe use in glue strings, use `maybe_code_feedback()`, which returns an
-#'   empty string if no discrepancies are found. `give_code_feedback()` adds
-#'   code feedback to the messages of [fail()] grades.
+#' @return 
+#' 
+#'   - `code_feedback()` returns a character value describing the difference
+#'     between the student's submitted code and the solution. If no 
+#'     discrepancies are found, `code_feedback()` returns `NULL`.
 #'   
-#' @describeIn code_feedback Determine code feedback
+#'   - `maybe_code_feedback()` always returns a string for safe use in glue 
+#'     strings. If no discrepancies are found, it returns an empty string.
+#'   
+#'   - `give_code_feedback()` catches [fail()] grades and adds code feedback to
+#'      the feedback message using `maybe_code_feedback()`.
+#'   
+#' @describeIn code_feedback Determine code feedback by comparing the user's 
+#'   code to the solution.
 #' @export
 code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
