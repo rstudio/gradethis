@@ -15,9 +15,13 @@ test_that("grade_learnr() is deprecated", {
 })
 
 test_that("fail_code_feedback= is deprecated", {
-  opts <- lifecycle::expect_deprecated(gradethis_setup(fail_code_feedback = FALSE))
-  on.exit(options(opts))
-  expect_false(getOption("gradethis.maybe_code_feedback"))
+  lifecycle::expect_deprecated(
+    with_gradethis_setup(
+      fail_code_feedback = FALSE,
+      expect_false(getOption("gradethis.maybe_code_feedback"))
+    )
+  )
+  expect_true(getOption("gradethis.maybe_code_feedback"))
   lifecycle::expect_deprecated(grade_this(fail(), fail_code_feedback = FALSE))
 })
 
@@ -25,8 +29,9 @@ test_that("space_before and space_after in maybe_code_feedback() are deprecated"
   .user <- "runif()"
   .solution <- "rnorm()"
   
-  with_options(
-    list(gradethis.maybe_code_feedback = TRUE), {
+  with_gradethis_setup(
+    maybe_code_feedback = TRUE, 
+    {
       lifecycle::expect_deprecated(maybe_code_feedback(.user, .solution, space_before = TRUE))
       lifecycle::expect_deprecated(maybe_code_feedback(.user, .solution, space_after = TRUE))
       
@@ -55,5 +60,6 @@ test_that("space_before and space_after in maybe_code_feedback() are deprecated"
         ),
         maybe_code_feedback(.user, .solution, after = "\n")
       )
-    })
+    }
+  )
 })

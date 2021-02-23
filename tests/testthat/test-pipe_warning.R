@@ -52,8 +52,8 @@ test_that("pipe_warning() requires a pipe in the user code for the warning", {
 
 test_that("pipe_warning() message returns unpiped text", {
   user_code <- "x %>% a() %>% b() %>% c()"
-  with_options(
-    list(gradethis.pipe_warning = "{.user_code_unpiped}"),
+  with_gradethis_setup(
+    pipe_warning = "{.user_code_unpiped}",
     expect_grade_code(
       user_code = user_code,
       solution_code = "b(a(x))",
@@ -78,7 +78,7 @@ test_that("pipe_warning() can be disabled by setting equal to NULL", {
   solution_code = "x %>% a()"
   
   with_options(
-    list(gradethis.pipe_warning = NULL),
+    list(pipe_warning = NULL),
     {
       expect_equal(
         expect_grade_code(
@@ -109,8 +109,8 @@ test_that("pipe_warning() can be disabled by setting equal to empty character st
   user_code = "x %>% b()"
   solution_code = "x %>% a()"
   
-  with_options(
-    list(gradethis.pipe_warning = ""),
+  with_gradethis_setup(
+    pipe_warning = "",
     {
       expect_equal(
         expect_grade_code(

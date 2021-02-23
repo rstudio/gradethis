@@ -185,8 +185,8 @@ test_that("is used in grade_this_code", {
 
 test_that("is not used when no solution is available", {
   
-  with_options(
-    list(gradethis.fail = "A fail message.{maybe_code_feedback()}"),
+  with_gradethis_setup(
+    fail = "A fail message.{maybe_code_feedback()}",
     {
       expect_equal(
         expect_grade_this(
@@ -201,8 +201,8 @@ test_that("is not used when no solution is available", {
     }
   )
   
-  with_options(
-    list(gradethis.fail = "A fail message. {maybe_code_feedback(default = 'No feedback!')}"),
+  with_gradethis_setup(
+    fail = "A fail message. {maybe_code_feedback(default = 'No feedback!')}",
     {
       expect_equal(
         expect_grade_this(
@@ -221,8 +221,8 @@ test_that("is not used when no solution is available", {
 
 test_that("is used when solution is available", {
   
-  with_options(
-    list(gradethis.fail = "A fail message.{maybe_code_feedback()}"),
+  with_gradethis_setup(
+    fail = "A fail message.{maybe_code_feedback()}",
     {
       expect_equal(
         expect_grade_this(
@@ -242,11 +242,9 @@ test_that("is used when solution is available", {
 
 test_that("is not included when gradethis.maybe_code_feedback is FALSE", {
 
-  with_options(
-    list(
-      gradethis.fail = "A fail message.{maybe_code_feedback()}",
-      gradethis.maybe_code_feedback = FALSE
-    ),
+  with_gradethis_setup(
+    fail = "A fail message.{maybe_code_feedback()}",
+    maybe_code_feedback = FALSE,
     {
       expect_equal(
         expect_grade_this(
@@ -267,8 +265,8 @@ test_that("is not included when gradethis.maybe_code_feedback is FALSE", {
 
 test_that("can be overwritten by local fail() message", {
   
-  with_options(
-    list(gradethis.fail = "A fail message.{ maybe_code_feedback() }"),
+  with_gradethis_setup(
+    fail = "A fail message.{ maybe_code_feedback() }",
     {
       expect_equal(
         expect_grade_this(
@@ -383,7 +381,7 @@ test_that("with_code_feedback() wraps grades, does not affect passing grades", {
        }
        fail()
      })',
-        is_correct = FALSE,
+        is_correct = TRUE,
         msg = NULL
       )$message
     )

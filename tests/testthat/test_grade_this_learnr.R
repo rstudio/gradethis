@@ -38,13 +38,11 @@ test_that("parser error is used", {
         fail("test parse error")
       }
     ),
-    {
-      expect_exercise_checker(
-        is_correct = FALSE,
-        msg = "test parse error",
-        user_code = "4 +"
-      )
-    }
+    expect_exercise_checker(
+      is_correct = FALSE,
+      msg = "test parse error",
+      user_code = "4 +"
+    )
   )
 })
 
