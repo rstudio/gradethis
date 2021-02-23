@@ -1,7 +1,47 @@
 url: https://rstudio-education.github.io/gradethis/
 
 template:
+  package: quillt
   params:
     docsearch:
       api_key: 6e6350018f3204fb7cb6f4e7d3487cce
       index_name: rstudio-education
+
+development:
+  version_tooltip: "auto"
+
+home:
+  strip_header: false
+
+navbar:
+  title: ~
+  type: default
+  structure:
+    left:  [intro, examples, articles]
+    right: [reference, news, github]
+  components:
+    home: ~
+    # examples:
+    #   text: Examples
+    #   href: articles/articles/examples.html
+    articles:
+      text: Articles
+      menu:
+        - text: "No vignettes"
+    reference:
+      text: Reference
+      href: reference/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/rstudio-education/gradethis
+    # news:
+    #   text: News
+    #   menu:
+    #     - text: "Changelog"
+    #       href: news/index.html
+    #     - text: "------------------"
+    #     - text: "Blog posts"
+    #     - text: "Version 1.0"
+    #       href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
+    #     - text: "Version 0.1"
+    #       href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
