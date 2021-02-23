@@ -871,3 +871,20 @@ test_that("detect_mistakes works with function arguments", {
     "In `y2 %>% x`, I expected `y` where you wrote `y2`."
   )
 })
+
+
+test_that("detect_mistakes returns a reasonable amount of intro context", {
+  ggplot_1 <- 'ggplot(data = penguins, mapping = aes(x = flipper_length_mm, fill = species)) +
+    geom_density(alpha = 0.4) + 
+    labs(title = "Gentoos have the longest flippers", x = "Flipper length (mm)", y = "Density") + 
+    scale_color_brewer(palette = "Set1")'
+  ggplot_2 <- 'ggplot(data = penguins, mapping = aes(x = flipper_length_mm, fill = species)) +
+    geom_density(alpha = 0.4) + 
+    labs(title = "Gentoos have the longest flippers", x = "Flipper length (mm)", y = "Density") + 
+    scale_fill_brewer(palette = "Set1")'
+  
+  feedback <- code_feedback(ggplot_1, ggplot_2)
+  expect_false(grepl("^In ", feedback))
+  expect_match(feedback, "scale_color_brewer", fixed = TRUE)
+  expect_match(feedback, "scale_fill_brewer", fixed = TRUE)
+})

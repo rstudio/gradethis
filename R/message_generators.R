@@ -384,15 +384,19 @@ build_intro <- function(.call = NULL, .arg = NULL) {
   is_call_fn_def <- is_function_definition(.call)
 
   if(!is.null(.call)) {
-    .call <- deparse_to_string(.call)
+    .call_str <- deparse_to_string(.call)
     if (!is.null(.arg) && !identical(.arg, "")) {
-      .call <- paste(.arg, "=", .call)
+      .call_str <- paste(.arg, "=", .call_str)
     } 
     if (is_call_fn_def) {
       # strip function body
-      .call <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call)
+      .call_str <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call_str)
     }
-    intro <- glue::glue("In `{.call}`, ")
+    if (nchar(.call_str) > 80) {
+      # too much context, the intro is too long to be helpful
+      return("")
+    }
+    intro <- glue::glue("In `{.call_str}`, ")
   } else {
     intro <- ""
   }
