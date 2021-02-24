@@ -44,7 +44,14 @@ fail_if_equal(
 
 pass_if(cond, message = NULL, ..., env = parent.frame(), x = deprecated())
 
-fail_if(cond, message = NULL, ..., env = parent.frame(), x = deprecated())
+fail_if(
+  cond,
+  message = NULL,
+  ...,
+  env = parent.frame(),
+  hint = getOption("gradethis.fail.hint", FALSE),
+  x = deprecated()
+)
 }
 \arguments{
 \item{correct}{A logical value of whether or not the checked code is correct.}

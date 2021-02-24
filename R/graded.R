@@ -330,7 +330,8 @@ fail_if <- function(
   cond, 
   message = NULL, 
   ..., 
-  env = parent.frame(), 
+  env = parent.frame(),
+  hint = getOption("gradethis.fail.hint", FALSE),
   x = deprecated()
 ) {
   ellipsis::check_dots_empty()
@@ -341,13 +342,19 @@ fail_if <- function(
       cond <- x
     }
   }
-  
+
   if (detect_grade_this(env)) {
     assert_gradethis_condition_type_is_value(cond, "fail_if")
-    if (!(cond)) {
-      fail(message, env = env)
+    if (cond) {
+      maybe_hint(hint, env = env, fail(message, env = env))
     }
   } else {
+    if (!missing(hint) || isTRUE(hint)) {
+      warning(
+        "The `hint` argument only works when `fail_if()` is called inside `grade_this()`.",
+        immediate. = TRUE
+      )
+    }
     condition(cond, message, correct = FALSE)
   }
 }

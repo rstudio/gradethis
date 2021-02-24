@@ -185,7 +185,7 @@ test_that("pass_if() and fail_if() work in grade_this()", {
     msg = "1 + 3 is wrong!",
     user_code = "1 + 3",
     solution_code = "1 + 1",
-    check_code = "grade_this(fail_if(.result == .solution, '{.user_code} is wrong!'))"
+    check_code = "grade_this(fail_if(.result != .solution, '{.user_code} is wrong!'))"
   )
   
   expect_warning(
@@ -194,7 +194,7 @@ test_that("pass_if() and fail_if() work in grade_this()", {
       msg = I("problem"),
       user_code = "1 + 3",
       solution_code = "1 + 1",
-      check_code = "grade_this(fail_if(~ .result == .solution, '{.user_code} is meh'))",
+      check_code = "grade_this(fail_if(~ .result != .solution, '{.user_code} is meh'))",
       msg_type = "warning",
       msg_fixed = TRUE
     ),
@@ -208,7 +208,7 @@ test_that("pass_if() and fail_if() work in grade_this()", {
       msg = I("problem"),
       user_code = "1 + 1",
       solution_code = "1 + 1",
-      check_code = "grade_this(pass_if(~ .result == .solution, '{.user_code} is meh'))",
+      check_code = "grade_this(pass_if(~ .result != .solution, '{.user_code} is meh'))",
       msg_type = "warning",
       msg_fixed = TRUE
     ),
