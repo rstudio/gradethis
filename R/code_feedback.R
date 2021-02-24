@@ -370,6 +370,10 @@ give_code_feedback_.gradethis_graded <- function(
   grade
 }
 
+#' @export
+give_code_feedback_.NULL <- function(x, ...) {
+  invisible(NULL)
+}
 
 #' @export
 give_code_feedback_.default <- function(x, ...) {

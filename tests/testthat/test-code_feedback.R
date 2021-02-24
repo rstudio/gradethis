@@ -564,3 +564,20 @@ test_that("give_code_feedback() works with pipes", {
     "nope; I expected"
   )
 })
+
+
+test_that("give_code_feedback() does nothing for NULL", {
+  expect_match(
+    expect_exercise_checker(
+      user_code = "apple",
+      solution_code = "banana",
+      check_code = 'grade_this({
+       give_code_feedback(if (FALSE) stop("nope;"))
+       pass("okay")
+     }) %>% give_code_feedback()',
+      is_correct = TRUE,
+      msg = NULL
+    )$message,
+    "okay"
+  )
+})
