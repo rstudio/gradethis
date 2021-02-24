@@ -162,7 +162,11 @@ produced by comparing the student's submission with the solution.</p></td>
     </tr>
     <tr>
       <th>allow_partial_matching</th>
-      <td><p>A logical if <code>FALSE</code> don't allow partial matching</p></td>
+      <td><p>A logical. If <code>FALSE</code>, the partial matching of
+argument names is not allowed and e.g. <code><a href='https://rdrr.io/r/stats/Uniform.html'>runif(1, mi = 0)</a></code> will return a
+message indicating that the full formal name <code>min</code> should be used. The
+default is set via the <code>gradethis.allow_partial_matching</code> option, or by
+<code><a href='gradethis_setup.html'>gradethis_setup()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -205,14 +209,14 @@ student submits when it runs <code><a href='grade_code.html'>grade_code()</a></c
   .user_code <span class='op'>=</span> <span class='st'>"sqrt(log(2))"</span>,
   .solution_code <span class='op'>=</span> <span class='st'>"sqrt(log(1))"</span>
 <span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. But no need to fret, try it again.&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. Don't give up now, try it one more time.&gt;</div><div class='input'>
 <span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
   .user_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
   .solution_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: Using `as.character()` on a quosure is deprecated as of rlang 0.3.0.</span>
 #&gt; <span class='warning'>Please use `as_label()` or `as_name()` instead.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. Try it again. Perseverence is the key to success.&gt;</div><div class='input'>
+#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. Try it again. You get better each time.&gt;</div><div class='input'>
 <span class='co'># Remember, only `grade_this_code(correct, incorrect)` should be used.</span>
 <span class='co'># The followup `list()` and values will be called by </span>
 <span class='co'># `gradethis_exercise_checker()`.</span>

@@ -46,7 +46,8 @@
 
 
 <meta property="og:title" content="Capture grades and errors — eval_gradethis" />
-<meta property="og:description" content="Capture the first graded() signal or error thrown when evaluating the expr." />
+<meta property="og:description" content="Capture the first graded() signal or error thrown when evaluating the
+expr." />
 
 
 
@@ -129,7 +130,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Capture the first <code><a href='graded.html'>graded()</a></code> signal or error thrown when evaluating the <code>expr</code>.</p>
+    <p>Capture the first <code><a href='graded.html'>graded()</a></code> signal or error thrown when evaluating the
+<code>expr</code>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>eval_gradethis</span><span class='op'>(</span><span class='va'>expr</span>, on_error <span class='op'>=</span> <span class='cn'>NULL</span>, on_graded <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
@@ -143,11 +145,19 @@
     </tr>
     <tr>
       <th>on_error</th>
-      <td><p>A <code><a href='https://rdrr.io/r/base/conditions.html'>withCallingHandlers()</a></code> handler for class <code>error</code> with signature <code>function(error, this_env)</code> that receives the error object and calling environment of the error handler. <code>on_error</code> should use <code><a href='https://rlang.r-lib.org/reference/return_from.html'>rlang::return_from()</a></code> using <code>this_env</code> to immediately return the value and not continue evaluation.</p></td>
+      <td><p>A <code><a href='https://rdrr.io/r/base/conditions.html'>withCallingHandlers()</a></code> handler for class <code>error</code> with
+signature <code>function(error, this_env)</code> that receives the error object and
+calling environment of the error handler. <code>on_error</code> should use
+<code><a href='https://rlang.r-lib.org/reference/return_from.html'>rlang::return_from()</a></code> using <code>this_env</code> to immediately return the value and
+not continue evaluation.</p></td>
     </tr>
     <tr>
       <th>on_graded</th>
-      <td><p>A <code><a href='https://rdrr.io/r/base/conditions.html'>withCallingHandlers()</a></code> handler for class <code>graded</code> with signature <code>function(grade, this_env)</code> that receives the error object and calling environment of the error handler. <code>on_graded</code> should use <code><a href='https://rlang.r-lib.org/reference/return_from.html'>rlang::return_from()</a></code> using <code>this_env</code> to immediately return the value and not continue evaluation.</p></td>
+      <td><p>A <code><a href='https://rdrr.io/r/base/conditions.html'>withCallingHandlers()</a></code> handler for class <code>graded</code> with
+signature <code>function(grade, this_env)</code> that receives the error object and
+calling environment of the error handler. <code>on_graded</code> should use
+<code><a href='https://rlang.r-lib.org/reference/return_from.html'>rlang::return_from()</a></code> using <code>this_env</code> to immediately return the value and
+not continue evaluation.</p></td>
     </tr>
     </table>
 
@@ -176,7 +186,8 @@
   <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"message 3"</span><span class='op'>)</span>
 <span class='op'>}</span><span class='op'>)</span>
 <span class='va'>ans3</span> <span class='co'># failing - boom</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] boom&gt;</div></span></pre>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] boom&gt;</div><div class='input'>
+</div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

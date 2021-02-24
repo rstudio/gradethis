@@ -150,12 +150,16 @@ global option with the same name, prefixed with <code>gradethis.</code>. For exa
   <span class='va'>...</span>,
   code_correct <span class='op'>=</span> <span class='cn'>NULL</span>,
   code_incorrect <span class='op'>=</span> <span class='cn'>NULL</span>,
-  fail_code_feedback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  maybe_code_feedback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  maybe_code_feedback.before <span class='op'>=</span> <span class='cn'>NULL</span>,
+  maybe_code_feedback.after <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fail.hint <span class='op'>=</span> <span class='cn'>NULL</span>,
   pipe_warning <span class='op'>=</span> <span class='cn'>NULL</span>,
   allow_partial_matching <span class='op'>=</span> <span class='cn'>NULL</span>,
   exercise.checker <span class='op'>=</span> <span class='va'>gradethis_exercise_checker</span>,
   exercise.timelimit <span class='op'>=</span> <span class='cn'>NULL</span>,
-  exercise.error.check.code <span class='op'>=</span> <span class='cn'>NULL</span>
+  exercise.error.check.code <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fail_code_feedback <span class='op'>=</span> <span class='cn'>NULL</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -198,12 +202,26 @@ unset <code><a href='grade_this_code.html'>grade_this_code()</a></code> falls ba
 option. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code_incorrect")</a></code>.</p></td>
     </tr>
     <tr>
-      <th>fail_code_feedback</th>
+      <th>maybe_code_feedback</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether
 <code><a href='code_feedback.html'>maybe_code_feedback()</a></code> should return code feedback, where if <code>FALSE</code>,
-<code><a href='code_feedback.html'>maybe_code_feedback()</a></code> will return an empty string. This can be useful in
-<code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> messages and is used by default in the default
-<code><a href='graded.html'>fail()</a></code> message and the default <code><a href='grade_this_code.html'>grade_this_code()</a></code> incorrect message.</p></td>
+<code><a href='code_feedback.html'>maybe_code_feedback()</a></code> will return an empty string.
+<code><a href='code_feedback.html'>maybe_code_feedback()</a></code> is used in the default messages when <code><a href='graded.html'>pass()</a></code> or
+<code><a href='graded.html'>fail()</a></code> are called without any arguments, which are set by the <code>pass</code> or
+<code>fail</code> arguments of <code>gradethis_setup()</code>.</p></td>
+    </tr>
+    <tr>
+      <th>maybe_code_feedback.before, maybe_code_feedback.after</th>
+      <td><p>Text that should
+be added <code>before</code> or <code>after</code> the <code><a href='code_feedback.html'>maybe_code_feedback()</a></code> output, if any is
+returned. Sets the default values of the <code>before</code> and <code>after</code> arguments of
+<code><a href='code_feedback.html'>maybe_code_feedback()</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>fail.hint</th>
+      <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether an automated
+code feedback hint should be shown with a <code><a href='graded.html'>fail()</a></code> or <code><a href='graded.html'>fail_if_equal()</a></code>
+message.</p></td>
     </tr>
     <tr>
       <th>pipe_warning</th>
@@ -231,6 +249,10 @@ partial matching is allowed in <code><a href='grade_this_code.html'>grade_this_c
       <td><p>A string containing R code to use for checking
 code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_code()"</code>).</p></td>
     </tr>
+    <tr>
+      <th>fail_code_feedback</th>
+      <td><p>Deprecated. Use <code>maybe_code_feedback</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -252,8 +274,8 @@ them with <code>gradethis_setup()</code>.</p>
 
 <span class='co'># Use getOption() to see the default value</span>
 <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.pass"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "{random_praise()} Correct!"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.code_correct"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'>
+</div><div class='output co'>#&gt; [1] "{random_praise()} Correct!"</div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.maybe_code_feedback"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

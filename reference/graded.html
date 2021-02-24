@@ -153,7 +153,8 @@ helper functions <code>pass()</code>, <code>fail()</code>, <code>pass_if_equal()
 <span class='fu'>fail</span><span class='op'>(</span>
   message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail"</span>, <span class='st'>"Incorrect"</span><span class='op'>)</span>,
   <span class='va'>...</span>,
-  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>
+  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
+  hint <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail.hint"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='op'>)</span>
 
 <span class='fu'>pass_if_equal</span><span class='op'>(</span>
@@ -169,7 +170,8 @@ helper functions <code>pass()</code>, <code>fail()</code>, <code>pass_if_equal()
   message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail"</span>, <span class='st'>"Incorrect"</span><span class='op'>)</span>,
   x <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/missing_arg.html'>missing_arg</a></span><span class='op'>(</span><span class='op'>)</span>,
   <span class='va'>...</span>,
-  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>
+  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
+  hint <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail.hint"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -201,6 +203,14 @@ details.</p>
       <th>env</th>
       <td><p>environment to evaluate the glue <code>message</code>. Most users of
 <span class="pkg">gradethis</span> will not need to use this argument.</p></td>
+    </tr>
+    <tr>
+      <th>hint</th>
+      <td><p>Include a code feedback hint with the failing message? This
+argument only applies to <code>fail()</code> and <code>fail_if_equal()</code> and the message is
+added using the default options of <code><a href='code_feedback.html'>give_code_feedback()</a></code> and
+<code><a href='code_feedback.html'>maybe_code_feedback()</a></code>. The default value of <code>hint</code> can be set using
+<code><a href='gradethis_setup.html'>gradethis_setup()</a></code> or the <code>gradethis.fail.hint</code> option.</p></td>
     </tr>
     <tr>
       <th>y</th>
@@ -317,7 +327,7 @@ the appropriate grade and feedback will be returned.</p>
 </div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Right answer, but 0.42 is two orders of magnitude too small.&gt;</div><div class='input'>
 <span class='co'># Finally fall back to the final answer...</span>
 <span class='fu'>this_grader</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>.user_code <span class='op'>=</span> <span class='fl'>33</span>, .solution_code <span class='op'>=</span> <span class='fl'>42</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Incorrect. I expected `42` where you wrote `33`. Don't give up now, try it one more time.&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Incorrect. I expected `42` where you wrote `33`. Give it another try.&gt;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

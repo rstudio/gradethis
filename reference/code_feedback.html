@@ -46,8 +46,14 @@
 
 
 <meta property="og:title" content="Code Feedback — code_feedback" />
-<meta property="og:description" content="Generate a message describing the first instance of a code mismatch. This function is built to be used within grade_this() without using arguments.
-Manual calling of code_feedback() is also encouraged!" />
+<meta property="og:description" content="Generate a message describing the first instance of a code mismatch. Three
+functions are provided for working with code feedback: code_feedback() does
+the comparison and returns a character description of the mismatch, or a
+NULL if no differences are found. maybe_code_feedback() is designed to be
+used inside fail() and related graded() messages, as in
+&quot;{maybe_code_feedback()}&quot;. And give_code_feedback() gives you a way to
+add code feedback to any fail() message in a grade_this() or
+grade_result() checking function." />
 
 
 
@@ -125,13 +131,19 @@ Manual calling of code_feedback() is also encouraged!" />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Code Feedback</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/grade_this_code.R'><code>R/grade_this_code.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/code_feedback.R'><code>R/code_feedback.R</code></a></small>
     <div class="hidden name"><code>code_feedback.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a message describing the first instance of a code mismatch. This function is built to be used within <code><a href='grade_this.html'>grade_this()</a></code> without using arguments.
-Manual calling of <code>code_feedback()</code> is also encouraged!</p>
+    <p>Generate a message describing the first instance of a code mismatch. Three
+functions are provided for working with code feedback: <code>code_feedback()</code> does
+the comparison and returns a character description of the mismatch, or a
+<code>NULL</code> if no differences are found. <code>maybe_code_feedback()</code> is designed to be
+used inside <code><a href='graded.html'>fail()</a></code> and related <code><a href='graded.html'>graded()</a></code> messages, as in
+<code>"{maybe_code_feedback()}"</code>. And <code>give_code_feedback()</code> gives you a way to
+add code feedback to any <code><a href='graded.html'>fail()</a></code> message in a <code><a href='grade_this.html'>grade_this()</a></code> or
+<code><a href='grade_result.html'>grade_result()</a></code> checking function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>code_feedback</span><span class='op'>(</span>
@@ -149,95 +161,223 @@ Manual calling of <code>code_feedback()</code> is also encouraged!</p>
   <span class='va'>...</span>,
   allow_partial_matching <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.allow_partial_matching"</span>, <span class='cn'>TRUE</span><span class='op'>)</span>,
   default <span class='op'>=</span> <span class='st'>""</span>,
-  space_before <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  space_after <span class='op'>=</span> <span class='cn'>FALSE</span>
+  before <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.maybe_code_feedback.before"</span>, <span class='st'>" "</span><span class='op'>)</span>,
+  after <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.maybe_code_feedback.after"</span>, <span class='cn'>NULL</span><span class='op'>)</span>,
+  space_before <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>,
+  space_after <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='op'>)</span>
+
+<span class='fu'>give_code_feedback</span><span class='op'>(</span>
+  <span class='va'>expr</span>,
+  <span class='va'>...</span>,
+  env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
+  location <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"after"</span>, <span class='st'>"before"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>user_code</th>
-      <td><p>String containing user code. Defaults to retrieving <code>.user_code</code> from the calling environment. (Required)</p></td>
-    </tr>
-    <tr>
-      <th>solution_code</th>
-      <td><p>String containing solution code. Defaults to retrieving <code>.solution_code</code> from the calling environment. (Required)</p></td>
+      <th>user_code, solution_code</th>
+      <td><p>String containing user or solution code. For
+ease of use in <code><a href='grade_this.html'>grade_this()</a></code>, <code>.user_code</code> or <code>.solution_code</code> are by
+default retrieved from the calling environment.</p></td>
     </tr>
     <tr>
       <th>env</th>
-      <td><p>Environment used to standardise formals of the user and solution code. Defaults to retrieving <code>.envir_prep</code> from the calling environment. If not found, the <code><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame()</a></code> will be used</p></td>
+      <td><p>Environment used to standardise formals of the user and solution
+code. Defaults to retrieving <code>.envir_prep</code> from the calling environment. If
+not found, the <code><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame()</a></code> will be used.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Ignored</p></td>
+      <td><p>Ignored in <code>code_feedback()</code> and <code>maybe_code_feedback()</code>. In
+<code>give_code_feedback()</code>, <code>...</code> are passed to <code>maybe_code_feedback()</code>.</p></td>
     </tr>
     <tr>
       <th>allow_partial_matching</th>
-      <td><p>A logical if <code>FALSE</code> don't allow partial matching</p></td>
+      <td><p>A logical. If <code>FALSE</code>, the partial matching of
+argument names is not allowed and e.g. <code><a href='https://rdrr.io/r/stats/Uniform.html'>runif(1, mi = 0)</a></code> will return a
+message indicating that the full formal name <code>min</code> should be used. The
+default is set via the <code>gradethis.allow_partial_matching</code> option, or by
+<code><a href='gradethis_setup.html'>gradethis_setup()</a></code>.</p></td>
     </tr>
     <tr>
       <th>default</th>
-      <td><p>Default value to return if no code feedback is found or code feedback can be provided</p></td>
+      <td><p>Default value to return if no code feedback is found or code
+feedback can be provided.</p></td>
+    </tr>
+    <tr>
+      <th>before, after</th>
+      <td><p>Strings to be added before or after the code feedback
+message to ensure the message is properly formatted in your feedback.</p></td>
     </tr>
     <tr>
       <th>space_before, space_after</th>
-      <td><p>Logical value to determine if a space should be included before (<a href='https://rdrr.io/r/base/logical.html'>TRUE</a>) or after (<a href='https://rdrr.io/r/base/logical.html'>FALSE</a>)</p></td>
+      <td><p>Deprecated. Use <code>before</code> and <code>after</code>.</p></td>
+    </tr>
+    <tr>
+      <th>expr</th>
+      <td><p>A grading function — like <code><a href='grade_this.html'>grade_this()</a></code> or <code><a href='grade_result.html'>grade_result()</a></code> —
+or a character string. The code feedback will be appended to the message
+of any incorrect grades using <code>maybe_code_feedback()</code>, set to always
+include the code feedback, if possible. If <code>expr</code> is a character string,
+<code>"{maybe_code_feedback()}"</code> is pasted into the string, without
+customization.</p></td>
+    </tr>
+    <tr>
+      <th>location</th>
+      <td><p>Should the code feedback message be added before or after?</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>If no discrepencies are found, a <code>NULL</code> value is returned. If a code difference is found, a character value describing the difference.</p>
+    
+<ul>
+<li><p><code>code_feedback()</code> returns a character value describing the difference
+between the student's submitted code and the solution. If no
+discrepancies are found, <code>code_feedback()</code> returns <code>NULL</code>.</p></li>
+<li><p><code>maybe_code_feedback()</code> always returns a string for safe use in glue
+strings. If no discrepancies are found, it returns an empty string.</p></li>
+<li><p><code>give_code_feedback()</code> catches <code><a href='graded.html'>fail()</a></code> grades and adds code feedback to
+the feedback message using <code>maybe_code_feedback()</code>.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
     
 <ul>
-<li><p><code>code_feedback</code>: Determine code feedback</p></li>
-<li><p><code>maybe_code_feedback</code>: Return <code>code_feedback()</code> result when possible. Useful when setting default <code><a href='graded.html'>fail()</a></code> glue messages. For example, if there is no solution, no code feedback will be given.</p></li>
+<li><p><code>code_feedback</code>: Determine code feedback by comparing the user's
+code to the solution.</p></li>
+<li><p><code>maybe_code_feedback</code>: Return <code>code_feedback()</code> result when possible.
+Useful when setting default <code><a href='graded.html'>fail()</a></code> glue messages. For example, if there
+is no solution, no code feedback will be given.</p></li>
+<li><p><code>give_code_feedback</code>: Appends <code>maybe_code_feedback()</code> to the
+message generated by incorrect grades.</p></li>
 </ul>
     <h2 class="hasAnchor" id="code-differences"><a class="anchor" href="#code-differences"></a>Code differences</h2>
 
     
 
 
-<p>There are many different ways that code can be different, yet still the same. Here is how we detect code differences:</p><ol>
+<p>There are many different ways that code can be different, yet still the same.
+Here is how we detect code differences:</p><ol>
 <li><p>If the single values are different. Ex: <code><a href='https://rdrr.io/r/base/Log.html'>log(2)</a></code> vs <code><a href='https://rdrr.io/r/base/Log.html'>log(3)</a></code></p></li>
 <li><p>If the function call is different. Ex: <code><a href='https://rdrr.io/r/base/Log.html'>log(2)</a></code> vs <code><a href='https://rdrr.io/r/base/MathFun.html'>sqrt(2)</a></code></p></li>
-<li><p>Validate the user code can be standardised via <code><a href='https://rlang.r-lib.org/reference/call_standardise.html'>rlang::call_standardise()</a></code>. The <code>env</code> parameter is important for this step as <span class="pkg">gradethis</span> does not readily know about user defined functions. Ex: <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv")</a></code> turns into <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv(file = "file.csv")</a></code></p></li>
-<li><p>If multiple formals are matched. Ex: <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv(f = "file.csv")</a></code> has <code>f</code> match to <code>file</code> and <code>fill</code>.</p></li>
-<li><p>Verify that every named argument in the solution appears in the user code. Ex: If the solution is <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv", header = TRUE)</a></code>, <code>header</code> must exist.</p></li>
-<li><p>Verify that the user did not supply extra named arguments to <code>...</code>. Ex: <code><a href='https://rdrr.io/r/base/mean.html'>mean(x = 1:10, na.rm = TRUE)</a></code> vs <code><a href='https://rdrr.io/r/base/mean.html'>mean(x = 1:10)</a></code></p></li>
-<li><p>Verify that every named argument in the solution matches the value of the corresponding user argument. Ex: <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv", header = TRUE)</a></code> vs <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv", header = FALSE)</a></code></p></li>
-<li><p>Verify that the remaining aruguments of the user and solution code match in order and value. Ex: <code><a href='https://rdrr.io/r/base/mean.html'>mean(1:10, 0.1)</a></code> vs <code><a href='https://rdrr.io/r/base/mean.html'>mean(1:10, 0.2)</a></code></p></li>
+<li><p>Validate the user code can be standardised via
+<code><a href='https://rlang.r-lib.org/reference/call_standardise.html'>rlang::call_standardise()</a></code>. The <code>env</code> parameter is important for this
+step as <span class="pkg">gradethis</span> does not readily know about user defined
+functions. Ex: <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv")</a></code> turns into
+<code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv(file = "file.csv")</a></code></p></li>
+<li><p>If multiple formals are matched. Ex: <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv(f = "file.csv")</a></code> has <code>f</code>
+match to <code>file</code> and <code>fill</code>.</p></li>
+<li><p>Verify that every named argument in the solution appears in the user
+code. Ex: If the solution is <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv", header = TRUE)</a></code>,
+<code>header</code> must exist.</p></li>
+<li><p>Verify that the user did not supply extra named arguments to <code>...</code>.
+Ex: <code><a href='https://rdrr.io/r/base/mean.html'>mean(x = 1:10, na.rm = TRUE)</a></code> vs <code><a href='https://rdrr.io/r/base/mean.html'>mean(x = 1:10)</a></code></p></li>
+<li><p>Verify that every named argument in the solution matches the value of the
+corresponding user argument. Ex: <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv", header = TRUE)</a></code>
+vs <code><a href='https://rdrr.io/r/utils/read.table.html'>read.csv("file.csv", header = FALSE)</a></code></p></li>
+<li><p>Verify that the remaining arguments of the user and solution code match
+in order and value. Ex: <code><a href='https://rdrr.io/r/base/mean.html'>mean(1:10, 0.1)</a></code> vs <code><a href='https://rdrr.io/r/base/mean.html'>mean(1:10, 0.2)</a></code></p></li>
 </ol>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Values are same</span>
-<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"log(2)"</span><span class='op'>)</span> <span class='co'># NULL # no differences found</span>
+    <pre class="examples"><div class='input'><span class='co'># code_feedback() ------------------------------------------------------</span>
+
+<span class='co'># Values are same, so no differences found</span>
+<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"log(2)"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='co'># Functions are different</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"log(2)"</span>, <span class='st'>"sqrt(2)"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; I expected you to call `sqrt()` where you called `log()`.</div><div class='input'>
-<span class='co'># Standardise user names</span>
-<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv')"</span>, <span class='st'>"read.csv(file = 'file.csv')"</span><span class='op'>)</span> <span class='co'># NULL</span>
+<span class='co'># Standardise argument names (no differences)</span>
+<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv')"</span>, <span class='st'>"read.csv(file = 'file.csv')"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
-<span class='co'># No partial matching</span>
+<span class='co'># Partial matching is not allowed</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv(f = 'file.csv')"</span>, <span class='st'>"read.csv(file = 'file.csv')"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; `read.csv()` accepts more than one argument name that begins with `f`. As a result, R cannot figure out which argument you want to pass `"file.csv"` to. Check how you spelled `f`, or write out the full argument name.</div><div class='input'>
-<span class='co'># All named arguments are provided (even if they match default value)</span>
-<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv')"</span>, <span class='st'>"read.csv('file.csv', header = TRUE)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; Your call to `read.csv()` should include `"header"` as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
-<span class='co'># All named argument values match</span>
-<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv', header = FALSE)"</span>, <span class='st'>"read.csv('file.csv', header = TRUE)"</span><span class='op'>)</span>
+<span class='co'># Feedback will spot differences in argument values...</span>
+<span class='fu'>code_feedback</span><span class='op'>(</span>
+  <span class='st'>"read.csv('file.csv', header = FALSE)"</span>, 
+  <span class='st'>"read.csv('file.csv', header = TRUE)"</span>
+<span class='op'>)</span>
 </div><div class='output co'>#&gt; In `read.csv("file.csv", header = FALSE)`, I expected `header = TRUE` where you wrote `header = FALSE`.</div><div class='input'>
-<span class='co'># No extra arguments are provided</span>
+<span class='co'># ...or when arguments are expected to appear in a call...</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"mean(1:10)"</span>, <span class='st'>"mean(1:10, na.rm = TRUE)"</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; Your call to `mean()` should include `"na.rm"` as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
-<span class='co'># Unstandardised arguments match in order and value</span>
+<span class='co'># ...even when the expected argument matches the function's default value</span>
+<span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"read.csv('file.csv')"</span>, <span class='st'>"read.csv('file.csv', header = TRUE)"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Your call to `read.csv()` should include `"header"` as one of its arguments. You may have misspelled an argument name, or left out an important argument.</div><div class='input'>
+<span class='co'># Unstandardised arguments will match by order and value</span>
 <span class='fu'>code_feedback</span><span class='op'>(</span><span class='st'>"mean(1:10, 0.1)"</span>, <span class='st'>"mean(1:10, 0.2)"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; In `mean(1:10, 0.1)`, I expected `0.2` where you wrote ``:`()`.</div></pre>
+</div><div class='output co'>#&gt; In `mean(1:10, 0.1)`, I expected `0.2` where you wrote ``:`()`.</div><div class='input'>
+
+<span class='co'># give_code_feedback() -------------------------------------------------</span>
+
+<span class='co'># We'll use this example of an incorrect exercise submission throughout</span>
+<span class='va'>submission_wrong</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+  .user_code <span class='op'>=</span> <span class='st'>"log(4)"</span>, 
+  .solution_code <span class='op'>=</span> <span class='st'>"sqrt(4)"</span>
+<span class='op'>)</span>
+
+<span class='co'># To add feedback to *any* incorrect grade, </span>
+<span class='co'># wrap the entire `grade_this()` call in `give_code_feedback()`:</span>
+<span class='va'>grader</span> <span class='op'>&lt;-</span> 
+<span class='co'># ```{r example-check}</span>
+  <span class='fu'>give_code_feedback</span><span class='op'>(</span><span class='fu'><a href='grade_this.html'>grade_this</a></span><span class='op'>(</span><span class='op'>{</span>
+    <span class='fu'><a href='graded.html'>pass_if_equal</a></span><span class='op'>(</span><span class='va'>.solution</span>, <span class='st'>"Good job!"</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='va'>.result</span> <span class='op'>&lt;</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>{</span>
+      <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='st'>"Too low!"</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='op'>)</span>
+  <span class='op'>}</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># ```</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: testthat</span></div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Too low! I expected you to call `sqrt()` where you called `log()`.&gt;</div><div class='input'>
+<span class='co'># Or you can wrap the message of any fail() directly:</span>
+<span class='va'>grader</span> <span class='op'>&lt;-</span> 
+<span class='co'># ```{r example-check}</span>
+  <span class='fu'><a href='grade_this.html'>grade_this</a></span><span class='op'>(</span><span class='op'>{</span>
+    <span class='fu'><a href='graded.html'>pass_if_equal</a></span><span class='op'>(</span><span class='va'>.solution</span>, <span class='st'>"Good job!"</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='va'>.result</span> <span class='op'>&lt;</span> <span class='fl'>2</span><span class='op'>)</span> <span class='op'>{</span>
+      <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='fu'>give_code_feedback</span><span class='op'>(</span><span class='st'>"Too low!"</span><span class='op'>)</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='op'>)</span>
+  <span class='op'>}</span><span class='op'>)</span>
+<span class='co'># ```</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Too low! I expected you to call `sqrt()` where you called `log()`.&gt;</div><div class='input'>
+<span class='co'># Typically, grade_result() doesn't include code feedback</span>
+<span class='va'>grader</span> <span class='op'>&lt;-</span> 
+<span class='co'># ```{r example-check}</span>
+  <span class='fu'><a href='grade_result.html'>grade_result</a></span><span class='op'>(</span>
+    <span class='fu'><a href='grade_result.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>0</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Not quite!"</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='co'># ```</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Not quite!  Try it again. I have a good feeling about this.&gt;</div><div class='input'>
+<span class='co'># But you can use give_code_feedback() to append code feedback</span>
+<span class='va'>grader</span> <span class='op'>&lt;-</span> 
+<span class='co'># ```{r example-check}</span>
+  <span class='fu'>give_code_feedback</span><span class='op'>(</span><span class='fu'><a href='grade_result.html'>grade_result</a></span><span class='op'>(</span>
+    <span class='fu'><a href='grade_result.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>0</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Not quite!"</span><span class='op'>)</span>
+  <span class='op'>)</span><span class='op'>)</span>
+<span class='co'># ```</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Not quite!  Don't give up now, try it one more time. I expected you to call `sqrt()` where you called `log()`.&gt;</div><div class='input'>
+<span class='co'># The default `grade_this_code()` `incorrect` message always adds code feedback,</span>
+<span class='co'># so be sure to remove \"{maybe_code_feedback()}\" from the incorrect message</span>
+<span class='va'>grader</span> <span class='op'>&lt;-</span> 
+<span class='co'># ```{r example-check}</span>
+  <span class='fu'>give_code_feedback</span><span class='op'>(</span><span class='fu'><a href='grade_this_code.html'>grade_this_code</a></span><span class='op'>(</span>incorrect <span class='op'>=</span> <span class='st'>"{random_encouragement()}"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'># ```</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect] But no need to fret, try it again. I expected you to call `sqrt()` where you called `log()`.&gt;</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
