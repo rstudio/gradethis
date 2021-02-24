@@ -6,6 +6,8 @@
 \alias{fail}
 \alias{pass_if_equal}
 \alias{fail_if_equal}
+\alias{pass_if}
+\alias{fail_if}
 \title{Signal a final grade for a student's submission}
 \usage{
 graded(correct, message = NULL, ..., type = NULL, location = NULL)
@@ -39,13 +41,18 @@ fail_if_equal(
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE)
 )
+
+pass_if(cond, message = NULL, ..., env = parent.frame(), x = deprecated())
+
+fail_if(cond, message = NULL, ..., env = parent.frame(), x = deprecated())
 }
 \arguments{
 \item{correct}{A logical value of whether or not the checked code is correct.}
 
 \item{message}{A character string of the message to be displayed.}
 
-\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored}
+\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored.
+Ignored by \code{pass_if()} and \code{fail_if()}.}
 
 \item{type, location}{The \code{type} and \code{location} of the feedback object
 provided to \pkg{learnr}. See
@@ -76,24 +83,30 @@ exercise's \verb{*-solution} chunk, will be used for the comparison.}
 other words the result of running the student's submitted code. \code{x} is not
 the first argument since you will often want to compare the final value of
 the student's submission against a specific value, \code{y}.}
+
+\item{cond}{For \code{pass_if()} and \code{fail_if()}: A logical value or an expression
+that will evaluate to a \code{TRUE} or \code{FALSE} value. If the value is \code{TRUE}, or
+would be considered \code{TRUE} in an \verb{if (cond)} statement, then a passing or
+failing grade is returned to the user.}
 }
 \value{
-\code{pass()} and \code{pass_if_equal()} signal a \emph{correct} grade with a
+\itemize{
+\item \code{pass()} and \code{pass_if_equal()} signal a \emph{correct} grade with a
 glue-able \code{message}.
-
-\code{fail()} and \code{fail_if_equal()} signal an \emph{incorrect} grade with a
+\item \code{fail()} and \code{fail_if_equal()} signal an \emph{incorrect} grade with a
 glue-able \code{message}.
-
-\code{graded()} signals a correct or incorrect grade according to the logical
+\item \code{pass_if()} and \code{fail_if()} signal a correct or incorrect grade if the
+provided condition is \code{TRUE}, with a glue-able \code{message}.
+\item \code{graded()} signals a correct or incorrect grade according to the logical
 value of \code{correct}, with a standard character (unglued) \code{message}.
 }
+}
 \description{
-\code{graded()} is used to signal a final grade for a submission. In general, it
-is most helpful when used in \code{\link[=grade_this]{grade_this()}}, but it is used internally by
-other grading functions to signal that the student's submission has been
-graded. If you're using \code{\link[=grade_this]{grade_this()}}, you'll most likely want to use the
-helper functions \code{pass()}, \code{fail()}, \code{pass_if_equal()}, and
-\code{fail_if_equal()}, rather than to call \code{graded()} directly.
+\code{graded()} is used to signal a final grade for a submission. Most likely,
+you'll want to use its helper functions: \code{pass()}, \code{fail()},
+\code{pass_if_equal()}, \code{fail_if_equal()}, \code{pass_if()} and \code{fail_if()}. When used
+in \code{\link[=grade_this]{grade_this()}}, these functions signal a final grade and no further
+checking of the student's submitted code is performed.
 }
 \section{Functions}{
 \itemize{
@@ -106,7 +119,55 @@ helper functions \code{pass()}, \code{fail()}, \code{pass_if_equal()}, and
 \item \code{pass_if_equal}: Signal a \emph{passing} grade only if \code{x} and \code{y} are equal.
 
 \item \code{fail_if_equal}: Signal a \emph{failing} grade only if \code{x} and \code{y} are equal.
+
+\item \code{pass_if}: Pass if \code{cond} is \code{TRUE}.
+
+\item \code{fail_if}: Fail if \code{cond} is \code{TRUE}.
 }}
+
+\section{Return a grade immediately}{
+
+
+\code{graded()} and its helper functions are designed to short-circuit further
+evaluation whenever they are called. If you're familiar with writing
+functions in R, you can think of \code{graded()} (and \code{pass()}, \code{fail()}, etc.)
+as a special version of \code{return()}.
+
+The early return behavior can be helpful when you have to perform
+complicated or long-running tests to determine if a student's code
+submission is correct. We recommend that you perform the easiest tests
+first, progressing to the most complicated tests. By taking advantage of
+early grade returns, you can simplify your checking code:\preformatted{```\{r\}
+grade_this(\{
+  # is the answer a tibble?
+  if (!inherits(.result, "tibble")) \{
+    fail("Your answer should be a tibble.")
+  \}
+  
+  # from now on we know that .result is a tibble...
+  if (nrow(.result) == 5) \{
+    fail("Your table should have 5 rows")
+  \}
+  
+  # ...and it has 5 rows
+  if (.result[[1]][[5]] != 5) \{
+    fail("The value of the 5th row of the 1st column should be 5.")
+  \}
+  
+  # all of the above checks have passed now.
+  pass()
+\})
+```
+}
+
+Notice that it's important to choose a final fall-back grade as the last
+value in your \code{\link[=grade_this]{grade_this()}} checking code. This last value is the default
+grade that will be given if the submission passes all other checks. If
+you're using the standard \code{\link[=gradethis_setup]{gradethis_setup()}} and you call \code{pass()} or
+\code{fail()} without arguments, \code{pass()} will return a random praising phrase
+and \code{fail()} will return code feedback (if possible) with an encouraging
+phrase.
+}
 
 \section{Usage in \code{gradethis_exercise_checker()}}{
 

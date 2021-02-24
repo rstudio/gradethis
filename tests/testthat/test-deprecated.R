@@ -63,3 +63,14 @@ test_that("space_before and space_after in maybe_code_feedback() are deprecated"
     }
   )
 })
+
+test_that("x is deprecated in pass_if() and fail_if()", {
+  expect_equal(
+    lifecycle::expect_deprecated(pass_if(x = TRUE, message = "deprecated")),
+    pass_if(TRUE, "deprecated")
+  )
+  expect_equal(
+    lifecycle::expect_deprecated(fail_if(x = TRUE, message = "deprecated")),
+    fail_if(TRUE, "deprecated")
+  )
+})

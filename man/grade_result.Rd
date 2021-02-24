@@ -4,8 +4,6 @@
 \alias{grade_result}
 \alias{grade_result_strict}
 \alias{condition}
-\alias{pass_if}
-\alias{fail_if}
 \title{Grade result of exercise code (Legacy)}
 \usage{
 grade_result(
@@ -31,10 +29,6 @@ grade_result_strict(
 )
 
 condition(x, message, correct)
-
-pass_if(x, message = NULL)
-
-fail_if(x, message = NULL)
 }
 \arguments{
 \item{...}{\code{pass_if()}/\code{fail_if()} \code{condition()}s to check.}

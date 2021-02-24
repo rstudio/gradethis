@@ -1,11 +1,55 @@
 #' Signal a final grade for a student's submission
 #'
-#' `graded()` is used to signal a final grade for a submission. In general, it
-#' is most helpful when used in [grade_this()], but it is used internally by
-#' other grading functions to signal that the student's submission has been
-#' graded. If you're using [grade_this()], you'll most likely want to use the
-#' helper functions `pass()`, `fail()`, `pass_if_equal()`, and
-#' `fail_if_equal()`, rather than to call `graded()` directly.
+#' `graded()` is used to signal a final grade for a submission. Most likely,
+#' you'll want to use its helper functions: `pass()`, `fail()`, 
+#' `pass_if_equal()`, `fail_if_equal()`, `pass_if()` and `fail_if()`. When used
+#' in [grade_this()], these functions signal a final grade and no further
+#' checking of the student's submitted code is performed.
+#' 
+#' @section Return a grade immediately:
+#' 
+#'   `graded()` and its helper functions are designed to short-circuit further
+#'   evaluation whenever they are called. If you're familiar with writing
+#'   functions in R, you can think of `graded()` (and `pass()`, `fail()`, etc.)
+#'   as a special version of `return()`.
+#'   
+#'   The early return behavior can be helpful when you have to perform 
+#'   complicated or long-running tests to determine if a student's code 
+#'   submission is correct. We recommend that you perform the easiest tests
+#'   first, progressing to the most complicated tests. By taking advantage of
+#'   early grade returns, you can simplify your checking code:
+#'   
+#'   ````
+#'   ```{r}
+#'   grade_this({
+#'     # is the answer a tibble?
+#'     if (!inherits(.result, "tibble")) {
+#'       fail("Your answer should be a tibble.")
+#'     }
+#'     
+#'     # from now on we know that .result is a tibble...
+#'     if (nrow(.result) == 5) {
+#'       fail("Your table should have 5 rows")
+#'     }
+#'     
+#'     # ...and it has 5 rows
+#'     if (.result[[1]][[5]] != 5) {
+#'       fail("The value of the 5th row of the 1st column should be 5.")
+#'     }
+#'     
+#'     # all of the above checks have passed now.
+#'     pass()
+#'   })
+#'   ```
+#'   ````
+#'   
+#'   Notice that it's important to choose a final fall-back grade as the last
+#'   value in your [grade_this()] checking code. This last value is the default
+#'   grade that will be given if the submission passes all other checks. If
+#'   you're using the standard [gradethis_setup()] and you call `pass()` or 
+#'   `fail()` without arguments, `pass()` will return a random praising phrase
+#'   and `fail()` will return code feedback (if possible) with an encouraging
+#'   phrase.
 #'
 #' @section Usage in `gradethis_exercise_checker()`:
 #'
@@ -97,7 +141,8 @@
 #'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
 #'   exercise `.solution`, or the result of evaluating the code in the
 #'   exercise's `*-solution` chunk, will be used for the comparison.
-#' @param ... Additional arguments passed to `graded()` or otherwise ignored
+#' @param ... Additional arguments passed to `graded()` or otherwise ignored.
+#'   Ignored by `pass_if()` and `fail_if()`.
 #' @param type,location The `type` and `location` of the feedback object
 #'   provided to \pkg{learnr}. See
 #'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for more
@@ -108,14 +153,18 @@
 #'
 #'   `location` may be one of "append", "prepend", or "replace".
 #' 
-#' @return `pass()` and `pass_if_equal()` signal a _correct_ grade with a
-#'   glue-able `message`.
+#' @return 
+#'   - `pass()` and `pass_if_equal()` signal a _correct_ grade with a
+#'     glue-able `message`.
 #'
-#'   `fail()` and `fail_if_equal()` signal an _incorrect_ grade with a
-#'   glue-able `message`.
+#'   - `fail()` and `fail_if_equal()` signal an _incorrect_ grade with a
+#'     glue-able `message`.
 #'   
-#'   `graded()` signals a correct or incorrect grade according to the logical
-#'   value of `correct`, with a standard character (unglued) `message`.
+#'   - `pass_if()` and `fail_if()` signal a correct or incorrect grade if the
+#'     provided condition is `TRUE`, with a glue-able `message`.
+#'   
+#'   - `graded()` signals a correct or incorrect grade according to the logical
+#'     value of `correct`, with a standard character (unglued) `message`.
 #' 
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
@@ -185,7 +234,6 @@ fail <- function(
 
 
 #' @describeIn graded Signal a _passing_ grade only if `x` and `y` are equal.
-#' 
 #' @export
 pass_if_equal <- function(
   y = rlang::missing_arg(),
@@ -243,6 +291,87 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
   graded(message = glue_message_with_env(env, message), correct = correct, ...)
 }
 
+
+#' @describeIn graded Pass if `cond` is `TRUE`.
+#' @param cond For `pass_if()` and `fail_if()`: A logical value or an expression
+#'   that will evaluate to a `TRUE` or `FALSE` value. If the value is `TRUE`, or
+#'   would be considered `TRUE` in an `if (cond)` statement, then a passing or
+#'   failing grade is returned to the user.
+#' @export
+pass_if <- function(
+  cond, 
+  message = NULL, 
+  ..., 
+  env = parent.frame(), 
+  x = deprecated()
+) {
+  ellipsis::check_dots_empty()
+  
+  if (is_present(x)) {
+    deprecated_x_in_pass_fail_if("pass_if")
+    if (missing(cond)) {
+      cond <- x
+    }
+  }
+  
+  if (detect_grade_this(env)) {
+    assert_gradethis_condition_type_is_value(cond, "pass_if")
+    if (cond) {
+      pass(message, env = env)
+    }
+  } else {
+    condition(cond, message, correct = TRUE)
+  }
+}
+
+#' @describeIn graded Fail if `cond` is `TRUE`.
+#' @export
+fail_if <- function(
+  cond, 
+  message = NULL, 
+  ..., 
+  env = parent.frame(), 
+  x = deprecated()
+) {
+  ellipsis::check_dots_empty()
+  
+  if (is_present(x)) {
+    deprecated_x_in_pass_fail_if("fail_if")
+    if (missing(cond)) {
+      cond <- x
+    }
+  }
+  
+  if (detect_grade_this(env)) {
+    assert_gradethis_condition_type_is_value(cond, "fail_if")
+    if (!(cond)) {
+      fail(message, env = env)
+    }
+  } else {
+    condition(cond, message, correct = FALSE)
+  }
+}
+
+assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
+  type <- condition_type(x)
+  if (!identical(type, "value")) {
+    from <- if (!is.null(from)) paste0(from, "() ") else ""
+    warning(
+      from, "does not accept functions or formulas when used inside grade_this().",
+      immediate. = TRUE, 
+      call. = !is.null(from)
+    )
+    graded(logical(), feedback_grading_problem()$message, type = "warning")
+  }
+}
+
+deprecated_x_in_pass_fail_if <- function(fn) {
+  deprecate_warn(
+    "0.2.3",
+    paste0(fn, "(x = )"),
+    paste0(fn, "(cond = )")
+  )
+}
 
 legacy_graded <- function(...) {
   capture_graded(
