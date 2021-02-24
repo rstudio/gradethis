@@ -41,6 +41,9 @@
 #'   be added `before` or `after` the `maybe_code_feedback()` output, if any is
 #'   returned. Sets the default values of the `before` and `after` arguments of
 #'   [maybe_code_feedback()].
+#' @param fail.hint Logical `TRUE` or `FALSE` to determine whether an automated
+#'   code feedback hint should be shown with a [fail()] or [fail_if_equal()]
+#'   message.
 #' @param allow_partial_matching Logical `TRUE` or `FALSE` to determine whether
 #'   partial matching is allowed in `grade_this_code()`. Sets
 #'   `options("gradethis.allow_partial_matching")`.
@@ -64,6 +67,7 @@ gradethis_setup <- function(
   maybe_code_feedback = NULL,
   maybe_code_feedback.before = NULL,
   maybe_code_feedback.after = NULL,
+  fail.hint = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -150,6 +154,7 @@ gradethis_default_options <- list(
   pass = "{random_praise()} Correct!",
   # Default message for fail(message)
   fail = "Incorrect.{maybe_code_feedback()} {random_encouragement()}",
+  fail.hint = FALSE,
   
   # Default value for grade_this(maybe_code_feedback). Plays with `maybe_code_feedback()`
   maybe_code_feedback = TRUE,

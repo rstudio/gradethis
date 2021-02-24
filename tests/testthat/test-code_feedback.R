@@ -581,3 +581,61 @@ test_that("give_code_feedback() does nothing for NULL", {
     "okay"
   )
 })
+
+
+# fail() with hints -------------------------------------------------------
+
+test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
+  grader <- quote(
+    grade_this({
+      if (.result == 1) fail("Nothing special.")
+      if (.result == 2) fail("Not two!", hint = TRUE)
+      fail_if_equal(3, "Not three!", hint = TRUE)
+      fail(hint = TRUE)
+      pass("TEST FAILED")
+    })
+  )
+  
+  expect_exercise_checker(
+    user_code = "1",
+    solution_code = "4",
+    check_code = deparse_to_string(grader),
+    is_correct = FALSE,
+    msg = "Nothing special."
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "2",
+      solution_code = "4",
+      check_code = deparse_to_string(grader),
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "Not two! I expected"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "3",
+      solution_code = "4",
+      check_code = deparse_to_string(grader),
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "Not three! I expected"
+  )
+  
+  expect_false(
+    grepl(
+      "I expected",
+      expect_exercise_checker(
+        user_code = "4",
+        solution_code = "4",
+        check_code = deparse_to_string(grader),
+        is_correct = FALSE,
+        msg = NULL
+      )$message
+    )
+  )
+})

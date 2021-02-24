@@ -19,7 +19,8 @@ pass(
 fail(
   message = getOption("gradethis.fail", "Incorrect"),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  hint = getOption("gradethis.fail.hint", FALSE)
 )
 
 pass_if_equal(
@@ -35,7 +36,8 @@ fail_if_equal(
   message = getOption("gradethis.fail", "Incorrect"),
   x = rlang::missing_arg(),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  hint = getOption("gradethis.fail.hint", FALSE)
 )
 }
 \arguments{
@@ -57,6 +59,12 @@ details.
 
 \item{env}{environment to evaluate the glue \code{message}. Most users of
 \pkg{gradethis} will not need to use this argument.}
+
+\item{hint}{Include a code feedback hint with the failing message? This
+argument only applies to \code{fail()} and \code{fail_if_equal()} and the message is
+added using the default options of \code{\link[=give_code_feedback]{give_code_feedback()}} and
+\code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
+\code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
 \item{y}{The expected value against which \code{x} is compared using
 \code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the

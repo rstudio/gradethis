@@ -13,6 +13,7 @@ gradethis_setup(
   maybe_code_feedback = NULL,
   maybe_code_feedback.before = NULL,
   maybe_code_feedback.after = NULL,
+  fail.hint = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -60,6 +61,10 @@ option. Sets \code{options("gradethis.code_incorrect")}.}
 be added \code{before} or \code{after} the \code{maybe_code_feedback()} output, if any is
 returned. Sets the default values of the \code{before} and \code{after} arguments of
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}.}
+
+\item{fail.hint}{Logical \code{TRUE} or \code{FALSE} to determine whether an automated
+code feedback hint should be shown with a \code{\link[=fail]{fail()}} or \code{\link[=fail_if_equal]{fail_if_equal()}}
+message.}
 
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets
 \code{options("gradethis.pipe_warning")}.}

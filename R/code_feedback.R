@@ -346,8 +346,7 @@ give_code_feedback_.gradethis_graded <- function(
   user_code <- get0(".user_code", envir = env, ifnotfound = NULL)
   
   if (is.null(solution_code) || !identical(grade$correct, FALSE)) {
-    signalCondition(grade)
-    return(grade)
+    signal_grade(grade)
   }
   
   # What about correct grades with differences??
@@ -357,7 +356,7 @@ give_code_feedback_.gradethis_graded <- function(
     maybe_code_feedback(user_code, solution_code, ...)
   )
   
-  if (identical(feedback, "")) return(grade)
+  if (identical(feedback, "")) signal_grade(grade)
   
   before <- identical(location, "before")
   grade$message <- paste0(
@@ -366,8 +365,7 @@ give_code_feedback_.gradethis_graded <- function(
     if (!before) feedback
   )
   
-  signalCondition(grade)
-  grade
+  signal_grade(grade)
 }
 
 #' @export
