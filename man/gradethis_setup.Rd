@@ -10,12 +10,16 @@ gradethis_setup(
   ...,
   code_correct = NULL,
   code_incorrect = NULL,
-  fail_code_feedback = NULL,
+  maybe_code_feedback = NULL,
+  maybe_code_feedback.before = NULL,
+  maybe_code_feedback.after = NULL,
+  fail.hint = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
-  exercise.error.check.code = NULL
+  exercise.error.check.code = NULL,
+  fail_code_feedback = NULL
 )
 }
 \arguments{
@@ -46,11 +50,21 @@ option. Sets \code{options("gradethis.code_correct")}.}
 unset \code{\link[=grade_this_code]{grade_this_code()}} falls back to the value of the \code{gradethis.fail}
 option. Sets \code{options("gradethis.code_incorrect")}.}
 
-\item{fail_code_feedback}{Logical \code{TRUE} or \code{FALSE} to determine whether
+\item{maybe_code_feedback}{Logical \code{TRUE} or \code{FALSE} to determine whether
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} should return code feedback, where if \code{FALSE},
-\code{\link[=maybe_code_feedback]{maybe_code_feedback()}} will return an empty string. This can be useful in
-\code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} messages and is used by default in the default
-\code{\link[=fail]{fail()}} message and the default \code{\link[=grade_this_code]{grade_this_code()}} incorrect message.}
+\code{\link[=maybe_code_feedback]{maybe_code_feedback()}} will return an empty string.
+\code{\link[=maybe_code_feedback]{maybe_code_feedback()}} is used in the default messages when \code{\link[=pass]{pass()}} or
+\code{\link[=fail]{fail()}} are called without any arguments, which are set by the \code{pass} or
+\code{fail} arguments of \code{\link[=gradethis_setup]{gradethis_setup()}}.}
+
+\item{maybe_code_feedback.before, maybe_code_feedback.after}{Text that should
+be added \code{before} or \code{after} the \code{maybe_code_feedback()} output, if any is
+returned. Sets the default values of the \code{before} and \code{after} arguments of
+\code{\link[=maybe_code_feedback]{maybe_code_feedback()}}.}
+
+\item{fail.hint}{Logical \code{TRUE} or \code{FALSE} to determine whether an automated
+code feedback hint should be shown with a \code{\link[=fail]{fail()}} or \code{\link[=fail_if_equal]{fail_if_equal()}}
+message.}
 
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets
 \code{options("gradethis.pipe_warning")}.}
@@ -67,6 +81,8 @@ partial matching is allowed in \code{grade_this_code()}. Sets
 
 \item{exercise.error.check.code}{A string containing R code to use for checking
 code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
+
+\item{fail_code_feedback}{Deprecated. Use \code{maybe_code_feedback}.}
 }
 \value{
 Invisibly returns the global options as they were prior to setting
@@ -92,7 +108,7 @@ if (FALSE) {
 
 # Use getOption() to see the default value
 getOption("gradethis.pass")
-getOption("gradethis.code_correct")
+getOption("gradethis.maybe_code_feedback")
 
 }
 \seealso{

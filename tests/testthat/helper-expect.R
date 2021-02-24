@@ -194,16 +194,6 @@ create_learnr_env <- function(user_code, solution_code = NULL, envir_prep, eval 
   env
 }
 
-
-
-
-
-
-
-
-
-
-
 expect_exercise_checker <- function(
   user_code,
   check_code = "function(...) stop('boom')",
@@ -245,4 +235,12 @@ expect_exercise_checker <- function(
   
   msg <- message_md(msg)
   expect_match(feedback$message, msg, fixed = msg_fixed)
+  
+  invisible(feedback)
+}
+
+with_gradethis_setup <- function(expr, ...) {
+  old_opts <- gradethis_setup(...)
+  on.exit(options(old_opts), add = TRUE)
+  force(expr)
 }

@@ -1,6 +1,7 @@
 Type: Package
 Package: gradethis
-Title: Automated Feedback for Student Exercises in 'learnr' Tutorials
+Title: Automated Feedback for Student Exercises in 'learnr'
+    Tutorials
 Version: 0.2.2.9000
 Authors@R:
     c(person(given = "Daniel",
@@ -41,6 +42,7 @@ Imports:
     htmltools,
     learnr (>= 0.10.1.9008),
     lifecycle,
+    magrittr,
     purrr,
     rlang,
     rstudioapi,

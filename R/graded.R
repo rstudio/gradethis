@@ -146,6 +146,10 @@ is_graded <- function(x) {
   inherits(x, "gradethis_graded")
 }
 
+signal_grade <- function(grade, env = parent.frame()) {
+  signalCondition(grade)
+  rlang::return_from(env, grade)
+}
 
 #' @describeIn graded Signal a _passing_ grade.
 #' @param env environment to evaluate the glue `message`. Most users of
@@ -160,13 +164,23 @@ pass <- function(
 }
 
 #' @describeIn graded Signal a _failing_ grade.
+#' @param hint Include a code feedback hint with the failing message? This
+#'   argument only applies to `fail()` and `fail_if_equal()` and the message is
+#'   added using the default options of [give_code_feedback()] and
+#'   [maybe_code_feedback()]. The default value of `hint` can be set using
+#'   [gradethis_setup()] or the `gradethis.fail.hint` option.
 #' @export
 fail <- function(
   message = getOption("gradethis.fail", "Incorrect"),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  hint = getOption("gradethis.fail.hint", FALSE)
 ) {
-  graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
+  maybe_hint(
+    hint, 
+    env = env, 
+    graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
+  )
 }
 
 
@@ -202,7 +216,8 @@ fail_if_equal <- function(
   message = getOption("gradethis.fail", "Incorrect"),
   x = rlang::missing_arg(),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  hint = getOption("gradethis.fail.hint", FALSE)
 ) {
   if (rlang::is_missing(x)) {
     x <- get_from_env(".result", env)
@@ -210,7 +225,11 @@ fail_if_equal <- function(
       return(missing_object_in_env(".result", env, "fail_if_equal"))
     }
   }
-  grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...)
+  maybe_hint(
+    hint, 
+    env = env, 
+    grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...)
+  )
 }
 
 grade_if_equal <- function(x, y, message, correct, env, ...) {
@@ -247,4 +266,14 @@ missing_object_in_env <- function(obj, env, caller) {
   )
   # Signal problem with grading code
   graded(FALSE, feedback_grading_problem()$message)
+}
+
+maybe_hint <- function(should_hint, expr, env) {
+  grade <- capture_graded(expr)
+  if (isTRUE(should_hint)) {
+    # we already have the grade, so use the internal s3 method to give feedback
+    give_code_feedback_(grade, env = env)
+  } else {
+    signal_grade(grade)
+  }
 }

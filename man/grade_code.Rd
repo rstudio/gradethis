@@ -25,7 +25,11 @@ a known incorrect answer.}
 
 \item{...}{ignored. Should be empty}
 
-\item{allow_partial_matching}{A logical if \code{FALSE} don't allow partial matching}
+\item{allow_partial_matching}{A logical. If \code{FALSE}, the partial matching of
+argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
+message indicating that the full formal name \code{min} should be used. The
+default is set via the \code{gradethis.allow_partial_matching} option, or by
+\code{\link[=gradethis_setup]{gradethis_setup()}}.}
 
 \item{glue_correct}{A glue string that returns the final correct message
 displayed. Defaults to \code{getOption("gradethis_glue_correct")}.}
