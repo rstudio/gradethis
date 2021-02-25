@@ -63,7 +63,7 @@ first way that the answer differs, the message will be the content of the \code{
 argument.
 }
 \description{
-\lifecycle{superseded} Please use \code{\link[=grade_this_code]{grade_this_code()}}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use \code{\link[=grade_this_code]{grade_this_code()}}.
 }
 \details{
 Checks the code expression or the code result against a solution.

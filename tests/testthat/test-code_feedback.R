@@ -591,6 +591,7 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
       if (.result == 1) fail("Nothing special.")
       if (.result == 2) fail("Not two!", hint = TRUE)
       fail_if_equal(3, "Not three!", hint = TRUE)
+      fail_if(.result == 5, "Not five!", hint = TRUE)
       fail(hint = TRUE)
       pass("TEST FAILED")
     })
@@ -624,6 +625,17 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
       msg = NULL
     )$message,
     "Not three! I expected"
+  )
+  
+  expect_match(
+    expect_exercise_checker(
+      user_code = "5",
+      solution_code = "4",
+      check_code = deparse_to_string(grader),
+      is_correct = FALSE,
+      msg = NULL
+    )$message,
+    "Not five! I expected"
   )
   
   expect_false(

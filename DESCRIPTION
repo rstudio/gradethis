@@ -2,7 +2,7 @@ Type: Package
 Package: gradethis
 Title: Automated Feedback for Student Exercises in 'learnr'
     Tutorials
-Version: 0.2.2.9000
+Version: 0.2.3.9000
 Authors@R:
     c(person(given = "Daniel",
              family = "Chen",
@@ -52,8 +52,6 @@ Imports:
 Suggests:
     knitr,
     tidyr
-RdMacros: 
-    lifecycle
 Remotes: 
     rstudio/learnr
 Encoding: UTF-8

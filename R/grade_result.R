@@ -1,13 +1,16 @@
 #' Grade result of exercise code (Legacy)
 #'
-#' \lifecycle{superseded} Please use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
+#' @description 
+#' `r lifecycle::badge("superseded")` Please use [grade_this()]
+#' mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
 #'
-#' `grade_result()` and `grade_result_strict()` both take a set of `pass_if()`/`fail_if()`
-#' conditions, evaluate them, and return a final [graded()] object. For `grade_result_strict()`
-#' to return a correct grade, every `pass_if()` condition must be met, and every `fail_if()` condition
-#' must not be met. On the other hand, `grade_result()`'s final grade reflects the first satisfied
-#' condition (if no conditions are met, the final grade can be controlled by `default_correct` and
-#' `default_message`).
+#' `grade_result()` and `grade_result_strict()` both take a set of
+#' `pass_if()`/`fail_if()` conditions, evaluate them, and return a final
+#' [graded()] object. For `grade_result_strict()` to return a correct grade,
+#' every `pass_if()` condition must be met, and every `fail_if()` condition must
+#' not be met. On the other hand, `grade_result()`'s final grade reflects the
+#' first satisfied condition (if no conditions are met, the final grade can be
+#' controlled by `default_correct` and `default_message`).
 #'
 #' @inheritParams grade_code
 #' @param ... `pass_if()`/`fail_if()` `condition()`s to check.
@@ -184,8 +187,6 @@ grade_result_strict <- function(
 }
 
 
-
-
 #' @rdname grade_result
 #' @export
 #' @param x A formula, function, or value, that returns `TRUE` or `FALSE`.
@@ -207,31 +208,21 @@ condition <- function(x, message, correct) {
       x = x,
       message = message,
       correct = correct,
-      type = if (rlang::is_formula(x)) {
-        "formula"
-      } else if (rlang::is_function(x)) {
-        "function"
-      } else {
-        "value"
-      }
+      type = condition_type(x)
     ),
     class = "gradethis_condition"
   )
 }
 
-#' @rdname grade_result
-#' @export
-pass_if <- function(x, message = NULL) {
-  condition(x, message, correct = TRUE)
+condition_type <- function(x) {
+  if (rlang::is_formula(x)) {
+    "formula"
+  } else if (rlang::is_function(x)) {
+    "function"
+  } else {
+    "value"
+  }
 }
-
-#' @rdname grade_result
-#' @export
-fail_if <- function(x, message = NULL) {
-  condition(x, message, correct = FALSE)
-}
-
-
 
 learnr_env <- function(envir_prep, envir_result) {
   envir_result %||%

@@ -161,3 +161,50 @@ test_that("graded() ensures that ... are empty", {
   expect_error(graded(TRUE, "foo", arg = "boom!"))
   expect_error(graded(TRUE, "foo", "boom!"))
 })
+
+test_that("pass_if() and fail_if() use default pass/fail message in grade_this()", {
+  with_gradethis_setup(
+    pass = "TEST PASSED",
+    fail = "TEST FAILED",
+    expect_grade_this({
+      pass_if(.result < 5)
+      fail_if(.result >= 5)
+      fail("TEST FAILED")
+    },
+      user_code = "2",
+      is_correct = TRUE,
+      msg = "TEST PASSED"
+    )
+  )
+  
+  with_gradethis_setup(
+    pass = "TEST FAILED",
+    fail = "TEST PASSED",
+    expect_grade_this({
+      pass_if(.result < 5)
+      fail_if(.result >= 5)
+      fail("TEST FAILED")
+    },
+      user_code = "6",
+      is_correct = FALSE,
+      msg = "TEST PASSED"
+    )
+  )
+  
+  with_gradethis_setup(
+    pass = "TEST FAILED",
+    fail = "TEST PASSED.{maybe_code_feedback()}",
+    expect_match(
+      expect_grade_this({
+        pass_if(.result < 5)
+        fail_if(.result >= 5)
+        fail("TEST FAILED")
+      },
+        user_code = "6",
+        solution_code = "2",
+        is_correct = FALSE,
+      )$message,
+      "TEST PASSED\\. I expected"
+    )
+  )
+})

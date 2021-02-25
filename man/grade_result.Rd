@@ -4,8 +4,6 @@
 \alias{grade_result}
 \alias{grade_result_strict}
 \alias{condition}
-\alias{pass_if}
-\alias{fail_if}
 \title{Grade result of exercise code (Legacy)}
 \usage{
 grade_result(
@@ -31,10 +29,6 @@ grade_result_strict(
 )
 
 condition(x, message, correct)
-
-pass_if(x, message = NULL)
-
-fail_if(x, message = NULL)
 }
 \arguments{
 \item{...}{\code{pass_if()}/\code{fail_if()} \code{condition()}s to check.}
@@ -88,15 +82,16 @@ all necessary information to compare the user's result.  The result of the retur
 will be a \code{\link[=graded]{graded()}} object containing a formatted \code{correct} or \code{incorrect} message.
 }
 \description{
-\lifecycle{superseded} Please use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}.
-}
-\details{
-\code{grade_result()} and \code{grade_result_strict()} both take a set of \code{pass_if()}/\code{fail_if()}
-conditions, evaluate them, and return a final \code{\link[=graded]{graded()}} object. For \code{grade_result_strict()}
-to return a correct grade, every \code{pass_if()} condition must be met, and every \code{fail_if()} condition
-must not be met. On the other hand, \code{grade_result()}'s final grade reflects the first satisfied
-condition (if no conditions are met, the final grade can be controlled by \code{default_correct} and
-\code{default_message}).
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use \code{\link[=grade_this]{grade_this()}}
+mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}.
+
+\code{grade_result()} and \code{grade_result_strict()} both take a set of
+\code{pass_if()}/\code{fail_if()} conditions, evaluate them, and return a final
+\code{\link[=graded]{graded()}} object. For \code{grade_result_strict()} to return a correct grade,
+every \code{pass_if()} condition must be met, and every \code{fail_if()} condition must
+not be met. On the other hand, \code{grade_result()}'s final grade reflects the
+first satisfied condition (if no conditions are met, the final grade can be
+controlled by \code{default_correct} and \code{default_message}).
 }
 \examples{
 

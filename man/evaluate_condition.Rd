@@ -21,7 +21,7 @@ a \code{\link[=graded]{graded()}} value if \code{condi$x} is \code{TRUE} or
 \code{NULL} if \code{condi$x} is \code{FALSE}
 }
 \description{
-\lifecycle{superseded} Please use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}. Can also use \code{\link[=eval_gradethis]{eval_gradethis()}}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Please use \code{\link[=grade_this]{grade_this()}} mixed with \code{\link[=pass]{pass()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail]{fail()}}, and/or \code{\link[=fail_if_equal]{fail_if_equal()}}. Can also use \code{\link[=eval_gradethis]{eval_gradethis()}}.
 }
 \details{
 Evaluates the \code{\link[=condition]{condition()}} object to return a \code{\link[=graded]{graded()}} value.

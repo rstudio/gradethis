@@ -224,12 +224,12 @@ expect_exercise_checker <- function(
 
   checkmate::expect_names(names(feedback), identical.to = c("message", "correct", "type", "location"))
   checkmate::expect_string(feedback$message, null.ok = TRUE)
-  checkmate::expect_logical(feedback$correct, null.ok = FALSE, len = 1)
+  checkmate::expect_logical(feedback$correct, null.ok = FALSE, max.len = 1)
   checkmate::expect_string(feedback$type, null.ok = FALSE)
   checkmate::expect_choice(feedback$type, choices = c("warning", "success", "error", "info"))
   testthat::expect_equal(feedback$location, "append")
 
-  expect_equal(feedback$correct, isTRUE(is_correct))
+  expect_equal(feedback$correct, is_correct)
   msg_type <- msg_type %||% (if (isTRUE(is_correct)) "success" else "error")
   expect_equal(feedback$type, msg_type)
   

@@ -101,6 +101,8 @@ grade_this <- function(
     if (is.list(check_env)) {
       check_env <- list2env(check_env)
     }
+    
+    check_env[[".__gradethis_check_env"]] <- TRUE
 
     # make sure fail calls can get code feed back (or not) if they want
     with_maybe_code_feedback(
@@ -117,6 +119,11 @@ grade_this <- function(
       })
     )
   }
+}
+
+detect_grade_this <- function(env = parent.frame()) {
+  # Is this running in a grade_this_check_env?
+  get0(".__gradethis_check_env", envir = env, ifnotfound = FALSE)
 }
 
 #' Debug an exercise submission

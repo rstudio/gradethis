@@ -7,7 +7,8 @@
 NULL
 
 
-#' @describeIn gradethis-deprecated \lifecycle{deprecated} Removed from package
+#' @describeIn gradethis-deprecated `r lifecycle::badge("deprecated")` Removed 
+#'   from package
 #' @export
 grade_feedback <- function(...) {
   deprecate_warn("0.2.0", "grade_feedback()")
@@ -18,7 +19,8 @@ grade_feedback <- function(...) {
 }
 
 
-#' @describeIn gradethis-deprecated \lifecycle{superseded} Use [grade_result_strict()]
+#' @describeIn gradethis-deprecated `r lifecycle::badge("superseded")` Use
+#'   [grade_result_strict()]
 #' @export
 grade_conditions <- function(
   ...,
@@ -43,14 +45,15 @@ grade_conditions <- function(
 }
 
 
-#' @describeIn gradethis-deprecated \lifecycle{superseded} Use [random_encouragement()].
+#' @describeIn gradethis-deprecated `r lifecycle::badge("superseded")` Use
+#'   [random_encouragement()].
 #' @export
 random_encourage <- function() {
   lifecycle::deprecate_soft("0.2.1", "random_encourage()", "random_encouragement()")
   random_encouragement()
 }
 
-#' @describeIn gradethis-deprecated \lifecycle{superseded} Use
+#' @describeIn gradethis-deprecated `r lifecycle::badge("superseded")` Use
 #'   [gradethis_exercise_checker()].
 #' @export
 grade_learnr <- function(...) {
