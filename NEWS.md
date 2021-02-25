@@ -12,6 +12,7 @@
 * `graded()` and its pass/fail helper functions now accept `type` and `location` parameters that specify how the feedback is displayed (see [learnr Custom Checking](https://rstudio.github.io/learnr/exercises.html#Custom_checking) for more details about these options).
 * Calling `gradethis_setup()` is no longer required if you want to use the default gradethis setup. Simply call `library(gradethis)`. You can use `gradethis_setup()` to adjust the default values of any options. (#210)
 * New function: `give_code_feedback()`. When applied to a `grade_this()` or `grade_result()` grading function, code feedback is added to the messages of any `fail()` grades. (#219)
+* All _failing_ `graded()` helper functions, like `fail()` etc, now take a `hint` argument that when `TRUE` adds a code feedback hint to the custom feedback message. The default value of this argument can be set via `gradethis_setup()`. (#216)
 
 ### Breaking changes
 
@@ -37,6 +38,7 @@
 * `grade_learnr()` is now called `gradethis_exercise_checker()`. `grade_learnr()` will continue to work but will issue a deprecation warning (#204).
 * `gradethis_setup()` now uses a new argument order that favors the gradethis-specific options (#212).
 * The `space_before` and `space_after` arguments of `maybe_code_feedback()` have been deprecated in favor of more flexible arguments `before` and `after` that accept arbitrary strings to add before or after the message. (#219)
+* The `x` argument of `pass_if()` and `fail_if()` has been renamed `cond` and both functions now work inside `grade_this()`, although the function and formula versions are not supported there. (#216)
 
 
 ### Bug fixes
