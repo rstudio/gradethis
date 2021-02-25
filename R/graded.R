@@ -308,7 +308,11 @@ pass_if <- function(
   ellipsis::check_dots_empty()
   
   if (is_present(x)) {
-    deprecated_x_in_pass_fail_if("pass_if")
+    deprecate_warn(
+      "0.2.3",
+      "pass_if(x = )",
+      "pass_if(cond = )"
+    )
     if (missing(cond)) {
       cond <- x
     }
@@ -317,6 +321,7 @@ pass_if <- function(
   if (detect_grade_this(env)) {
     assert_gradethis_condition_type_is_value(cond, "pass_if")
     if (cond) {
+      message <- message %||% getOption("gradethis.pass", "Correct!")
       pass(message, env = env)
     }
   } else {
@@ -337,7 +342,11 @@ fail_if <- function(
   ellipsis::check_dots_empty()
   
   if (is_present(x)) {
-    deprecated_x_in_pass_fail_if("fail_if")
+    deprecate_warn(
+      "0.2.3",
+      "fail_if(x = )",
+      "fail_if(cond = )"
+    )
     if (missing(cond)) {
       cond <- x
     }
@@ -346,6 +355,7 @@ fail_if <- function(
   if (detect_grade_this(env)) {
     assert_gradethis_condition_type_is_value(cond, "fail_if")
     if (cond) {
+      message <- message %||% getOption("gradethis.fail", "Inorrect.")
       maybe_hint(hint, env = env, fail(message, env = env))
     }
   } else {
@@ -370,14 +380,6 @@ assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
     )
     graded(logical(), feedback_grading_problem()$message, type = "warning")
   }
-}
-
-deprecated_x_in_pass_fail_if <- function(fn) {
-  deprecate_warn(
-    "0.2.3",
-    paste0(fn, "(x = )"),
-    paste0(fn, "(cond = )")
-  )
 }
 
 legacy_graded <- function(...) {
