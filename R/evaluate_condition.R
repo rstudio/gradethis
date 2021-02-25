@@ -1,6 +1,6 @@
 #' Evaluates a condition
 #'
-#' \lifecycle{superseded} Please use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()]. Can also use [eval_gradethis()].
+#' `r lifecycle::badge("superseded")` Please use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()]. Can also use [eval_gradethis()].
 #'
 #' Evaluates the [condition()] object to return a [graded()] value.
 #'

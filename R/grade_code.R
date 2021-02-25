@@ -1,6 +1,6 @@
 #' Grade student code against a solution (Legacy)
 #'
-#' \lifecycle{superseded} Please use [grade_this_code()].
+#' `r lifecycle::badge("superseded")` Please use [grade_this_code()].
 #'
 #' Checks the code expression or the code result against a solution.
 #'

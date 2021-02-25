@@ -52,8 +52,6 @@ Imports:
 Suggests:
     knitr,
     tidyr
-RdMacros: 
-    lifecycle
 Remotes: 
     rstudio/learnr
 Encoding: UTF-8

@@ -1,13 +1,16 @@
 #' Grade result of exercise code (Legacy)
 #'
-#' \lifecycle{superseded} Please use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
+#' @description 
+#' `r lifecycle::badge("superseded")` Please use [grade_this()]
+#' mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
 #'
-#' `grade_result()` and `grade_result_strict()` both take a set of `pass_if()`/`fail_if()`
-#' conditions, evaluate them, and return a final [graded()] object. For `grade_result_strict()`
-#' to return a correct grade, every `pass_if()` condition must be met, and every `fail_if()` condition
-#' must not be met. On the other hand, `grade_result()`'s final grade reflects the first satisfied
-#' condition (if no conditions are met, the final grade can be controlled by `default_correct` and
-#' `default_message`).
+#' `grade_result()` and `grade_result_strict()` both take a set of
+#' `pass_if()`/`fail_if()` conditions, evaluate them, and return a final
+#' [graded()] object. For `grade_result_strict()` to return a correct grade,
+#' every `pass_if()` condition must be met, and every `fail_if()` condition must
+#' not be met. On the other hand, `grade_result()`'s final grade reflects the
+#' first satisfied condition (if no conditions are met, the final grade can be
+#' controlled by `default_correct` and `default_message`).
 #'
 #' @inheritParams grade_code
 #' @param ... `pass_if()`/`fail_if()` `condition()`s to check.
