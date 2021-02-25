@@ -38,6 +38,7 @@
 * `grade_learnr()` is now called `gradethis_exercise_checker()`. `grade_learnr()` will continue to work but will issue a deprecation warning (#204).
 * `gradethis_setup()` now uses a new argument order that favors the gradethis-specific options (#212).
 * The `space_before` and `space_after` arguments of `maybe_code_feedback()` have been deprecated in favor of more flexible arguments `before` and `after` that accept arbitrary strings to add before or after the message. (#219)
+* The `x` argument of `pass_if()` and `fail_if()` has been renamed `cond` and both functions now work inside `grade_this()`, although the function and formula versions are not supported there. (#216)
 
 
 ### Bug fixes
