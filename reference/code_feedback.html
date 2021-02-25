@@ -85,7 +85,7 @@ grade_result() checking function." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
       </span>
     </div>
 
@@ -355,7 +355,7 @@ in order and value. Ex: <code><a href='https://rdrr.io/r/base/mean.html'>mean(1:
 <span class='va'>grader</span> <span class='op'>&lt;-</span> 
 <span class='co'># ```{r example-check}</span>
   <span class='fu'><a href='grade_result.html'>grade_result</a></span><span class='op'>(</span>
-    <span class='fu'><a href='grade_result.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>0</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Not quite!"</span><span class='op'>)</span>
+    <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>0</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Not quite!"</span><span class='op'>)</span>
   <span class='op'>)</span>
 <span class='co'># ```</span>
 <span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>
@@ -364,7 +364,7 @@ in order and value. Ex: <code><a href='https://rdrr.io/r/base/mean.html'>mean(1:
 <span class='va'>grader</span> <span class='op'>&lt;-</span> 
 <span class='co'># ```{r example-check}</span>
   <span class='fu'>give_code_feedback</span><span class='op'>(</span><span class='fu'><a href='grade_result.html'>grade_result</a></span><span class='op'>(</span>
-    <span class='fu'><a href='grade_result.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>0</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Not quite!"</span><span class='op'>)</span>
+    <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>0</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Not quite!"</span><span class='op'>)</span>
   <span class='op'>)</span><span class='op'>)</span>
 <span class='co'># ```</span>
 <span class='fu'>grader</span><span class='op'>(</span><span class='va'>submission_wrong</span><span class='op'>)</span>

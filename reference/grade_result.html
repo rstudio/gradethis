@@ -46,8 +46,15 @@
 
 
 <meta property="og:title" content="Grade result of exercise code (Legacy) — grade_result" />
-<meta property="og:description" content="
- Please use grade_this() mixed with pass(), pass_if_equal(), fail(), and/or fail_if_equal()." />
+<meta property="og:description" content=" Please use grade_this()
+mixed with pass(), pass_if_equal(), fail(), and/or fail_if_equal().
+grade_result() and grade_result_strict() both take a set of
+pass_if()/fail_if() conditions, evaluate them, and return a final
+graded() object. For grade_result_strict() to return a correct grade,
+every pass_if() condition must be met, and every fail_if() condition must
+not be met. On the other hand, grade_result()'s final grade reflects the
+first satisfied condition (if no conditions are met, the final grade can be
+controlled by default_correct and default_message)." />
 
 
 
@@ -79,7 +86,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
       </span>
     </div>
 
@@ -130,8 +137,15 @@
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#superseded'><img src='figures/lifecycle-superseded.svg' alt='[Superseded]' /></a>
- Please use <code><a href='grade_this.html'>grade_this()</a></code> mixed with <code><a href='graded.html'>pass()</a></code>, <code><a href='graded.html'>pass_if_equal()</a></code>, <code><a href='graded.html'>fail()</a></code>, and/or <code><a href='graded.html'>fail_if_equal()</a></code>.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#superseded'><img src='figures/lifecycle-superseded.svg' alt='[Superseded]' /></a> Please use <code><a href='grade_this.html'>grade_this()</a></code>
+mixed with <code><a href='graded.html'>pass()</a></code>, <code><a href='graded.html'>pass_if_equal()</a></code>, <code><a href='graded.html'>fail()</a></code>, and/or <code><a href='graded.html'>fail_if_equal()</a></code>.</p>
+<p><code>grade_result()</code> and <code>grade_result_strict()</code> both take a set of
+<code><a href='graded.html'>pass_if()</a></code>/<code><a href='graded.html'>fail_if()</a></code> conditions, evaluate them, and return a final
+<code><a href='graded.html'>graded()</a></code> object. For <code>grade_result_strict()</code> to return a correct grade,
+every <code><a href='graded.html'>pass_if()</a></code> condition must be met, and every <code><a href='graded.html'>fail_if()</a></code> condition must
+not be met. On the other hand, <code>grade_result()</code>'s final grade reflects the
+first satisfied condition (if no conditions are met, the final grade can be
+controlled by <code>default_correct</code> and <code>default_message</code>).</p>
     </div>
 
     <pre class="usage"><span class='fu'>grade_result</span><span class='op'>(</span>
@@ -156,18 +170,14 @@
   learnr_args <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Deprecated.html'>deprecated</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span>
 
-<span class='fu'>condition</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>message</span>, <span class='va'>correct</span><span class='op'>)</span>
-
-<span class='fu'>pass_if</span><span class='op'>(</span><span class='va'>x</span>, message <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-
-<span class='fu'>fail_if</span><span class='op'>(</span><span class='va'>x</span>, message <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+<span class='fu'>condition</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>message</span>, <span class='va'>correct</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>...</th>
-      <td><p><code>pass_if()</code>/<code>fail_if()</code> <code>condition()</code>s to check.</p></td>
+      <td><p><code><a href='graded.html'>pass_if()</a></code>/<code><a href='graded.html'>fail_if()</a></code> <code>condition()</code>s to check.</p></td>
     </tr>
     <tr>
       <th>correct</th>
@@ -191,7 +201,7 @@ displayed. Defaults to <code><a href='https://rdrr.io/r/base/options.html'>getOp
     <tr>
       <th>default_correct</th>
       <td><p>In the event that no <code>condition()</code>s are met, should the end result
-be correct? When <code>"auto"</code>, this will be <code>TRUE</code> when all the <code><a href='https://rdrr.io/r/base/conditions.html'>conditions()</a></code> are <code>fail_if()</code>
+be correct? When <code>"auto"</code>, this will be <code>TRUE</code> when all the <code><a href='https://rdrr.io/r/base/conditions.html'>conditions()</a></code> are <code><a href='graded.html'>fail_if()</a></code>
 (and <code>FALSE</code> otherwise).</p></td>
     </tr>
     <tr>
@@ -229,7 +239,7 @@ It is advised that the user use <code><a href='https://rdrr.io/r/base/identical.
     <tr>
       <th>message</th>
       <td><p>character string for message returned (usually passed in from
-<code>pass_if()</code> or <code>fail_if()</code>.</p></td>
+<code><a href='graded.html'>pass_if()</a></code> or <code><a href='graded.html'>fail_if()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -238,14 +248,6 @@ It is advised that the user use <code><a href='https://rdrr.io/r/base/identical.
     <p>a function whose first parameter should be an environment that contains
 all necessary information to compare the user's result.  The result of the returned function
 will be a <code><a href='graded.html'>graded()</a></code> object containing a formatted <code>correct</code> or <code>incorrect</code> message.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p><code>grade_result()</code> and <code>grade_result_strict()</code> both take a set of <code>pass_if()</code>/<code>fail_if()</code>
-conditions, evaluate them, and return a final <code><a href='graded.html'>graded()</a></code> object. For <code>grade_result_strict()</code>
-to return a correct grade, every <code>pass_if()</code> condition must be met, and every <code>fail_if()</code> condition
-must not be met. On the other hand, <code>grade_result()</code>'s final grade reflects the first satisfied
-condition (if no conditions are met, the final grade can be controlled by <code>default_correct</code> and
-<code>default_message</code>).</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='grade_code.html'>grade_code()</a></code></p></div>
@@ -261,14 +263,14 @@ condition (if no conditions are met, the final grade can be controlled by <code>
 <span class='co'># `(submitted_5)`, we're using that notation here to preview what this</span>
 <span class='co'># `grade_result()` will do with the mock submission.</span>
 <span class='fu'>grade_result</span><span class='op'>(</span>
-  <span class='fu'>fail_if</span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='st'>"Try adding 1"</span><span class='op'>)</span>,
-  <span class='fu'>pass_if</span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
-  <span class='fu'>fail_if</span><span class='op'>(</span><span class='op'>~</span> <span class='cn'>TRUE</span>, <span class='st'>"Some generic failing message."</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='st'>"Try adding 1"</span><span class='op'>)</span>,
+  <span class='fu'><a href='graded.html'>pass_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
+  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='cn'>TRUE</span>, <span class='st'>"Some generic failing message."</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>(</span><span class='va'>submitted_5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Well done! You got 5, great! &gt;</div><div class='input'>
 <span class='fu'>grade_result_strict</span><span class='op'>(</span>
-  <span class='fu'>pass_if</span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
-  <span class='fu'>fail_if</span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected an integer"</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>pass_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
+  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected an integer"</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>(</span><span class='va'>submitted_5</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] 1/2 correct! Try it again; next time's the charm!&gt;</div><div class='input'>
 <span class='co'># Suppose our exercise asks the student to write a function that adds 1 to</span>
@@ -282,8 +284,8 @@ condition (if no conditions are met, the final grade can be controlled by <code>
 <span class='co'># the student's submission passes all of the checks, then `grade_result()`</span>
 <span class='co'># will return a correct grade.</span>
 <span class='fu'>grade_result</span><span class='op'>(</span>
-  <span class='fu'>fail_if</span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/is.function.html'>is.function</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected a function."</span><span class='op'>)</span>,
-  <span class='fu'>fail_if</span><span class='op'>(</span><span class='op'>~</span> <span class='fu'>.result</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Your function should add one."</span><span class='op'>)</span>
+  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/is.function.html'>is.function</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected a function."</span><span class='op'>)</span>,
+  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'>.result</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Your function should add one."</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>(</span><span class='va'>submitted_fn</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Your function should add one.  But no need to fret, try it again.&gt;</div><div class='input'>
 <span class='co'># To learn more about using grade_result() and grade_code() with learnr, see:</span>
