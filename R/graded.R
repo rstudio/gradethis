@@ -1,19 +1,57 @@
 #' Signal a final grade for a student's submission
 #'
 #' `graded()` is used to signal a final grade for a submission. Most likely,
-#' you'll want to use its helper functions: `pass()`, `fail()`, 
+#' you'll want to use its helper functions: `pass()`, `fail()`,
 #' `pass_if_equal()`, `fail_if_equal()`, `pass_if()` and `fail_if()`. When used
 #' in [grade_this()], these functions signal a final grade and no further
-#' checking of the student's submitted code is performed.
+#' checking of the student's submitted code is performed. See the sections below
+#' for more details about how these functions are used in [grade_this()].
+#'
+#' @section Usage in `grade_this()`:
+#'
+#'   The `graded()` helper functions are all designed to be called from within
+#'   `grade_this()`, but this has the unfortunate side-effect of making their
+#'   default arguments somewhat opaque.
+#'
+#'   The helper functions follow these common patterns:
+#'
+#'   1. If you don't provide a custom `message`, the default pass or fail
+#'      messages will be used. With the default \pkg{gradethis} setup, the pass
+#'      message follows the pattern ``r gradethis_default_options$pass`` , and 
+#'      the fail message follows ``r gradethis_default_options$fail``.
+#'
+#'      You can set the default message pattern using the `pass` and `fail` in
+#'      [gradethis_setup()], or the options `gradethis.pass` and 
+#'      `gradethis.fail`.
+#'
+#'      In the custom `message`, you can use [glue::glue()] syntax to reference 
+#'      any of the available variables in [grade_this()] or that you've created 
+#'      in your checking code: e.g. `"Your table has {nrow(.result)} rows."`.
+#'
+#'   2. `pass_if_equal()` and `fail_if_equal()` automatically compare their 
+#'      first argument against the `.result` of running the student's code.
+#'      `pass_if_equal()` takes this one step further and if called without any
+#'      arguments will compare the `.result` to the value returned by evaluating
+#'      the `.solution` code, if available.
+#'
+#'   3. All `fail` helper functions have an additional `hint` parameter. If
+#'      `hint = TRUE`, a code feedback hint is added to the custom `message`. 
+#'      You can also control `hint` globally with [gradethis_setup()].
+#'
+#'   4. All helper functions include an `env` parameters. You can generally
+#'      ignore this argument. It's used internally to help `pass()` and `fail()`
+#'      _et al._ find the default argument values and to build the `message`
+#'      using [glue::glue()].
 #' 
 #' @section Return a grade immediately:
 #' 
 #'   `graded()` and its helper functions are designed to short-circuit further
 #'   evaluation whenever they are called. If you're familiar with writing
 #'   functions in R, you can think of `graded()` (and `pass()`, `fail()`, etc.)
-#'   as a special version of `return()`.
+#'   as a special version of `return()`. If a grade is created, it is returned
+#'   immediately and no more checking will be performed.
 #'   
-#'   The early return behavior can be helpful when you have to perform 
+#'   The immediate return behavior can be helpful when you have to perform 
 #'   complicated or long-running tests to determine if a student's code 
 #'   submission is correct. We recommend that you perform the easiest tests
 #'   first, progressing to the most complicated tests. By taking advantage of
@@ -28,13 +66,13 @@
 #'     }
 #'     
 #'     # from now on we know that .result is a tibble...
-#'     if (nrow(.result) == 5) {
-#'       fail("Your table should have 5 rows")
+#'     if (nrow(.result) != 5 && ncol(.result) < 2) {
+#'       fail("Your table should have 5 rows and more than 1 column.")
 #'     }
 #'     
-#'     # ...and it has 5 rows
-#'     if (.result[[1]][[5]] != 5) {
-#'       fail("The value of the 5th row of the 1st column should be 5.")
+#'     # ...and now we know it has 5 rows and at least 2 columns
+#'     if (.result[[2]][[5]] != 5) {
+#'       fail("The value of the 5th row of the 2nd column should be 5.")
 #'     }
 #'     
 #'     # all of the above checks have passed now.
@@ -43,29 +81,13 @@
 #'   ```
 #'   ````
 #'   
-#'   Notice that it's important to choose a final fall-back grade as the last
+#'   Notice that it's important to choose a final fallback grade as the last
 #'   value in your [grade_this()] checking code. This last value is the default
 #'   grade that will be given if the submission passes all other checks. If
 #'   you're using the standard [gradethis_setup()] and you call `pass()` or 
 #'   `fail()` without arguments, `pass()` will return a random praising phrase
 #'   and `fail()` will return code feedback (if possible) with an encouraging
 #'   phrase.
-#'
-#' @section Usage in `gradethis_exercise_checker()`:
-#'
-#'   If \pkg{gradethis} is used in a [learnr::tutorial()] with the default
-#'   [gradethis_setup()], [gradethis_exercise_checker()] expects the `*-check`
-#'   chunk for an exercise to return a function. When the exercise submission is
-#'   to be graded, [gradethis_exercise_checker()] will call the checking
-#'   function, providing it with a consistent exercise submission environment —
-#'   see [mock_this_exercise()] for examples of this environment. The goal of
-#'   this function is to evaluate the submission and to return a final grade via
-#'   `graded()`.
-#'
-#'   In general, tutorial authors should only use `graded()` and its helper
-#'   functions within [grade_this()]. Whenever one of these functions is called
-#'   inside [grade_this()], the submission checking will stop immediately and
-#'   the appropriate grade and feedback will be returned.
 #'   
 #' @examples
 #' # Suppose our exercise asks the student to prepare and execute code that
