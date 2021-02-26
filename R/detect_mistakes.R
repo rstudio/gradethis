@@ -249,8 +249,8 @@ detect_mistakes <- function(user,
     return(
       surplus_argument(
         this_call = user,
-        this = user[[i]],
-        this_name = rlang::names2(user[i]),
+        this = user_args[[i]],
+        this_name = rlang::names2(user_args[i]),
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )
@@ -320,12 +320,13 @@ detect_mistakes <- function(user,
   #    has a match because of Step 5.
   user_args <- as.list(user)[-1]         # remove the call
   solution_args <- as.list(solution)[-1] # remove the call
+  user_named_args_ignore_list <- c()
 
   for (name in solution_names) {
     if (!identical(user[[name]], solution[[name]])) {
       arg_name <- ifelse(name %in% submitted_names, name, "")
       # recover the user submission as provided by only unpiping one level
-      user_submitted <- call_standardise_formals(unpipe(submitted))
+      user_submitted <- call_standardise_formals(unpipe(submitted), env = env)
       res <- detect_mistakes(
         user = user_submitted[[name]],
         solution = solution[[name]],
@@ -340,6 +341,7 @@ detect_mistakes <- function(user,
     }
 
     # Make these arguments invisible to further checks
+    user_named_args_ignore_list <- c(user_named_args_ignore_list, name)
     user_args[[name]] <- NULL
     solution_args[[name]] <- NULL
   }
@@ -392,9 +394,15 @@ detect_mistakes <- function(user,
     } else if (!identical(user_args[[i]], solution_args[[i]])) {
       name <- rlang::names2(user_args[i])
       if (!(name %in% submitted_names)) name <- ""
+      
+      # find user arg as submitted
+      user_args_submitted <- as.list(call_standardise_formals(unpipe(submitted), env = env))
+      user_args_ignore <- which(names(user_args_submitted) %in% user_named_args_ignore_list)
+      user_args_submitted <- user_args_submitted[-c(1, user_args_ignore)]
+      
       res <- detect_mistakes(
         # unpipe only one level to detect mistakes in the argument as submitted
-        user = unpipe(submitted)[[i + 1]],
+        user = user_args_submitted[[i]],
         solution = solution_args[[i]],
         env = env,
         # If too verbose, use user[1]
