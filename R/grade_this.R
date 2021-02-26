@@ -221,8 +221,13 @@ debug_this <- function(check_env = parent.frame()) {
     )
   }
   
-  get_check_env <- function(x, otherwise = paste0("<no ", x, ">")) {
+  get_check_env <- function(x, otherwise = I(paste0("<no ", x, ">"))) {
     get0(x, envir = check_env, ifnotfound = otherwise)
+  }
+  
+  prnt <- function(x) {
+    if (inherits(x, "AsIs")) return(x)
+    capture.output(print(x))
   }
   
   solution_code <- get_check_env(".solution_code")
@@ -237,11 +242,11 @@ debug_this <- function(check_env = parent.frame()) {
     ),
     tags$p(
       html("Submission (<code>.result</code>, <code>.user</code>, <code>.last_value</code>):"),
-      code_block(get_check_env(".result"))
+      code_block(prnt(get_check_env(".result")))
     ),
     if (!is.null(solution_code)) tags$p(
       html("Solution (<code>.solution</code>):"),
-      code_block(get_check_env(".solution"))
+      code_block(prnt(get_check_env(".solution")))
     ),
     tags$details(
       tags$summary(tags$code(".envir_prep")),
