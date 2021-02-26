@@ -335,11 +335,26 @@ wrong_value <- function(this,
   # "{intro}I expected {that} where you wrote {this}."
 
   intro <- build_intro(.call = enclosing_call)
+  expected <- "expected"
 
+  if (length(this) > length(that)) {
+    expected <- "didn't expect"
+    that <- this
+    this <- NULL
+  }
+  
+  where <- " where you wrote "
+  
   that_original <- that
-  this <- prep(this)
   that <- prep(that)
-
+  this <- 
+    if (is.null(this)) {
+      intro <- ""
+      build_intro(enclosing_call %||% that_original, .open = "", .close = "")
+    } else {
+      prep(this)
+    }
+      
   if (!is.null(this_name) && this_name != "") {
     that <- md_code_prepend(paste(this_name, "= "), that)
     this <- md_code_prepend(paste(this_name, "= "), this)
@@ -357,11 +372,14 @@ wrong_value <- function(this,
 
   glue::glue_data(
     list(
-      this = this,
+      intro = intro,
+      expected = expected,
       that = that,
+      where = if (!identical(this, "")) where else "",
+      this = this,
       action = action %||% ""
     ),
-    "{intro}I expected {action}{that} where you wrote {this}."
+    "{intro}I {expected} {action}{that}{where}{this}."
   )
 }
 
@@ -380,7 +398,7 @@ prep <- function(text) {
   paste0("`", deparse_to_string(text), "`")
 }
 
-build_intro <- function(.call = NULL, .arg = NULL) {
+build_intro <- function(.call = NULL, .arg = NULL, .open = "In ", .close = ", ") {
   is_call_fn_def <- is_function_definition(.call)
 
   if(!is.null(.call)) {
@@ -396,7 +414,7 @@ build_intro <- function(.call = NULL, .arg = NULL) {
       # too much context, the intro is too long to be helpful
       return("")
     }
-    intro <- glue::glue("In `{.call_str}`, ")
+    intro <- glue::glue("{.open}`{.call_str}`{.close}")
   } else {
     intro <- ""
   }
@@ -409,7 +427,8 @@ prep_function_arguments <- function(arg_list) {
     if (arg_value == quote("")) return("")
     paste(" =", deparse(arg_value))
   })
-  paste("arguments", paste0("`", args, values, "`", collapse = ", "))
+  s <- if (length(args) == 1) " " else "s "
+  paste0("argument", s, paste0("`", args, values, "`", collapse = ", "))
 }
 
 md_code_prepend <- function(prefix, x) {

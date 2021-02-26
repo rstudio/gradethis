@@ -65,6 +65,11 @@ detect_mistakes <- function(user,
   # BUT WHAT IF ONE IS A CALL THAT EVALUATES TO THE VALUE OF THE OTHER?
   if (!is.call(user) || !is.call(solution)) {
     if (!identical(user, solution)) {
+      if (detect_mismatched_function_arguments(user, solution)) {
+        submitted <- as.pairlist(user[setdiff(names(user), names(solution))])
+        solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
+      }
+      
       return(
         wrong_value(
           this = submitted,
@@ -422,4 +427,10 @@ detect_mistakes <- function(user,
 real_names <- function(x) {
   x_names <- rlang::names2(x)
   x_names[x_names != ""]
+}
+
+detect_mismatched_function_arguments <- function(user, solution) {
+  is.pairlist(user) && 
+    is.pairlist(solution) &&
+    length(user) != length(solution)
 }

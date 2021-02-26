@@ -871,14 +871,14 @@ test_that("detect_mistakes : Differentiate between 'strings' and objects in mess
 test_that("detect_mistakes works with function arguments", {
   expect_equal(
     detect_mistakes(as.pairlist(alist(x = , y = )), as.pairlist(alist(x = , y = , z =))),
-    "I expected arguments `x`, `y`, `z` where you wrote arguments `x`, `y`." 
+    "I expected argument `z`." 
   )
   
   expect_grade_code(
     user_code = "function(x, y, z) x + y",
     solution_code = "function(x, y) x + y",
     is_correct = FALSE,
-    msg = "In `function(x, y, z)`, I expected arguments `x`, `y` where you wrote arguments `x`, `y`, `z`."
+    msg = "I didn't expect argument `z` where you wrote `function(x, y, z)`."
   )
   
   expect_grade_code(
@@ -928,4 +928,27 @@ test_that("detect_mistakes returns a reasonable amount of intro context", {
   expect_false(grepl("^In ", feedback))
   expect_match(feedback, "scale_color_brewer", fixed = TRUE)
   expect_match(feedback, "scale_fill_brewer", fixed = TRUE)
+})
+
+test_that("detect_mistakes says 'didn't expect' when there are too many things", {
+  expect_grade_code(
+    user_code = "a$b",
+    solution_code = "a",
+    is_correct = FALSE,
+    msg = "I didn't expect `$` where you wrote `a$b`."
+  )
+  
+  expect_grade_code(
+    user_code = "a == b",
+    solution_code = "a",
+    is_correct = FALSE,
+    msg = "I didn't expect `==` where you wrote `a == b`."
+  )
+  
+  expect_grade_code(
+    user_code = "a * b",
+    solution_code = "a",
+    is_correct = FALSE,
+    msg = "I didn't expect `*` where you wrote `a * b`."
+  )
 })
