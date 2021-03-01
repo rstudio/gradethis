@@ -869,9 +869,12 @@ test_that("detect_mistakes : Differentiate between 'strings' and objects in mess
 
 
 test_that("detect_mistakes works with function arguments", {
-  expect_equal(
-    detect_mistakes(as.pairlist(alist(x = , y = )), as.pairlist(alist(x = , y = , z =))),
-    "I expected argument `z`." 
+  expect_match(
+    detect_mistakes(
+      as.pairlist(alist(x = , y = )), 
+      as.pairlist(alist(x = , y = , z =))
+    ),
+    "I expected argument `z`" 
   )
   
   expect_grade_code(

@@ -335,8 +335,8 @@ wrong_value <- function(this,
   # "{intro}I expected {that} where you wrote {this}."
 
   intro <- build_intro(.call = enclosing_call)
-  expected <- "expected"
 
+  expected <- "expected"
   if (length(this) > length(that)) {
     expected <- "didn't expect"
     that <- this
@@ -347,13 +347,13 @@ wrong_value <- function(this,
   
   that_original <- that
   that <- prep(that)
-  this <- 
-    if (is.null(this)) {
-      intro <- ""
-      build_intro(enclosing_call %||% that_original, .open = "", .close = "")
-    } else {
-      prep(this)
-    }
+   
+  if (is.null(this)) {
+    intro <- ""
+    this <- build_intro(enclosing_call %||% that_original, .open = "", .close = "")
+  } else {
+    this <-prep(this)
+  }
       
   if (!is.null(this_name) && this_name != "") {
     that <- md_code_prepend(paste(this_name, "= "), that)
