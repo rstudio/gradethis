@@ -8,12 +8,6 @@ test_that("random_encouragement() returns a string", {
   expect_type(random_encouragement(), "character")
 })
 
-
-with_seed <- function(seed, expr) {
-  set.seed(seed)
-  expr
-}
-
 test_that("give_praise() gives praise", {
   expect_equal(
     give_praise("xxx"),
