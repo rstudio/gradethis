@@ -303,8 +303,30 @@ fail_if_equal <- function(
 }
 
 grade_if_equal <- function(x, y, message, correct, env, ...) {
-  compare_msg <- waldo::compare(x, y)
-  if (length(compare_msg) > 0) {
+  compare_msg <- tryCatch(
+    waldo::compare(x, y),
+    error = function(e) {
+      # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
+      # waldo::compare() calls diffobj::ses() — these functions try hard to create
+      # a useable diff to describe the differences. These filters below cover
+      # cases where the diff description throws an error, but we know they only
+      # arise when a difference has occurred. Since we aren't (currently) 
+      # interested in reporting the differences between `x` and `y`, we mark
+      # these as known to be different
+      if (grepl("Exceeded buffer for finding fake snake", e$message, fixed = TRUE)) {
+        "different"
+      } else if (grepl("reached theoretically unreachable branch 2", e$message, fixed = TRUE)) {
+        "different"
+      } else {
+        warning("Error in waldo::compare(): ", e$message, call. = FALSE)
+        return(NULL)
+      }
+    }
+  )
+  
+  if (is.null(compare_msg)) {
+    return(graded(logical(), feedback_grading_problem()$message, type = "warning"))
+  } else if (length(compare_msg) > 0) {
     # not equal! quit early
     return()
   }
