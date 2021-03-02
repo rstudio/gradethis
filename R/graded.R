@@ -306,6 +306,7 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
   compare_msg <- tryCatch(
     waldo::compare(x, y),
     error = function(e) {
+      # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
       # waldo::compare() calls diffobj::ses() — these functions try hard to create
       # a useable diff to describe the differences. These filters below cover
       # cases where the diff description throws an error, but we know they only
