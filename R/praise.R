@@ -8,6 +8,12 @@
 #' replicate(5, glue::glue("Random praise: {random_praise()}"))
 #' replicate(5, glue::glue("Random encouragement: {random_encouragement()}"))
 #' 
+#' # give_praise() adds praise to passing grade messages
+#' give_praise(pass("That's absolutely correct."))
+#' 
+#' # give_encouragement() encouragement to failing grade messages
+#' give_encouragement(fail("Sorry, but no."))
+#' 
 #' @return 
 #'   - `random_praise()` and `random_encouragement()` each return a length-one
 #'     string with a praising or encouraging phrase.
