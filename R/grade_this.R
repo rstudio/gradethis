@@ -227,7 +227,7 @@ debug_this <- function(check_env = parent.frame()) {
   
   prnt <- function(x) {
     if (inherits(x, "AsIs")) return(x)
-    capture.output(print(x))
+    utils::capture.output(print(x))
   }
   
   solution_code <- get_check_env(".solution_code")

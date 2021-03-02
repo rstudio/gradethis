@@ -593,6 +593,47 @@ test_that("detect_mistakes works with pipes", {
 
 })
 
+test_that("detect_mistakes handles a mix of named and unnamed arguments and with pipes", {
+  env = new.env()
+  env$fn <- function(.data, ...) .data
+  
+  expect_equal(
+    detect_mistakes(
+      quote(x %>% fn(name == "John")),
+      quote(x %>% fn(name == "Paul")),
+      env = env
+    ),
+    wrong_value("John", "Paul", enclosing_call = quote(name == "John"))
+  )
+  
+  expect_equal(
+    detect_mistakes(
+      quote(fn(x, name == "John")),
+      quote(fn(.data = x, name == "Paul")),
+      env = env
+    ),
+    wrong_value("John", "Paul", enclosing_call = quote(name == "John"))
+  )
+
+  expect_equal(
+    detect_mistakes(
+      quote(fn(x = 1, 2)),
+      quote(fn(x = 1)),
+      env = env
+    ),
+    surplus_argument(quote(fn()), quote(2), "")
+  )
+  
+  expect_equal(
+    detect_mistakes(
+      quote(fn(x = 1, 2)),
+      quote(fn(x = 1)),
+      env = env
+    ),
+    surplus_argument(quote(fn()), quote(2), "")
+  )
+})
+
 test_that("detect_mistakes handles argument names correctly", {
   user <-     quote(c(x = a(b(1))))
   solution <- quote(c(x = b(1)))
@@ -828,16 +869,19 @@ test_that("detect_mistakes : Differentiate between 'strings' and objects in mess
 
 
 test_that("detect_mistakes works with function arguments", {
-  expect_equal(
-    detect_mistakes(as.pairlist(alist(x = , y = )), as.pairlist(alist(x = , y = , z =))),
-    "I expected arguments `x`, `y`, `z` where you wrote arguments `x`, `y`." 
+  expect_match(
+    detect_mistakes(
+      as.pairlist(alist(x = , y = )), 
+      as.pairlist(alist(x = , y = , z =))
+    ),
+    "I expected argument `z`" 
   )
   
   expect_grade_code(
     user_code = "function(x, y, z) x + y",
     solution_code = "function(x, y) x + y",
     is_correct = FALSE,
-    msg = "In `function(x, y, z)`, I expected arguments `x`, `y` where you wrote arguments `x`, `y`, `z`."
+    msg = "I didn't expect argument `z` where you wrote `function(x, y, z)`."
   )
   
   expect_grade_code(
@@ -887,4 +931,27 @@ test_that("detect_mistakes returns a reasonable amount of intro context", {
   expect_false(grepl("^In ", feedback))
   expect_match(feedback, "scale_color_brewer", fixed = TRUE)
   expect_match(feedback, "scale_fill_brewer", fixed = TRUE)
+})
+
+test_that("detect_mistakes says 'didn't expect' when there are too many things", {
+  expect_grade_code(
+    user_code = "a$b",
+    solution_code = "a",
+    is_correct = FALSE,
+    msg = "I didn't expect `$` where you wrote `a$b`."
+  )
+  
+  expect_grade_code(
+    user_code = "a == b",
+    solution_code = "a",
+    is_correct = FALSE,
+    msg = "I didn't expect `==` where you wrote `a == b`."
+  )
+  
+  expect_grade_code(
+    user_code = "a * b",
+    solution_code = "a",
+    is_correct = FALSE,
+    msg = "I didn't expect `*` where you wrote `a * b`."
+  )
 })

@@ -6,7 +6,12 @@ is_pipe <- function(x) {
 }
 
 .infixes_assign <- c("<-", "<<-", "->", "->>", "=")
-.infixes <- c("+", "-", "*", "/", "^", "%%", "%/%", "%in%", .infixes_assign)
+.infixes_comp <- c("==", "!=", ">", ">=", "<", "<=")
+.infixes <- c(
+  "+", "-", "*", "/", "^", "$", "[", "[[", "!", "%%", "%/%", "%in%", 
+  .infixes_assign,
+  .infixes_comp
+)
 
 is_infix <- function(x, infix_vals = .infixes) {
 
