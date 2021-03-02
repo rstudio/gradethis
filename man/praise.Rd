@@ -12,21 +12,9 @@ random_praise()
 
 random_encouragement()
 
-give_praise(
-  expr,
-  ...,
-  location = c("after", "before"),
-  before = NULL,
-  after = NULL
-)
+give_praise(expr, ..., location = "before", before = NULL, after = NULL)
 
-give_encouragement(
-  expr,
-  ...,
-  location = c("after", "before"),
-  before = NULL,
-  after = NULL
-)
+give_encouragement(expr, ..., location = "after", before = NULL, after = NULL)
 }
 \arguments{
 \item{expr}{A \code{graded()} grade or helper function, or a grading function —

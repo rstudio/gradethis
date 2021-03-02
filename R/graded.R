@@ -223,34 +223,50 @@ signal_grade <- function(grade, env = parent.frame()) {
 }
 
 #' @describeIn graded Signal a _passing_ grade.
+#'
 #' @param env environment to evaluate the glue `message`. Most users of
 #'   \pkg{gradethis} will not need to use this argument.
+#' @param praise Include a random praising phrase with [random_praise()]? The
+#'   default value of `praise` can be set using [gradethis_setup()] or the
+#'   `gradethis.pass.praise` option.
+#'
 #' @export
 pass <- function(
   message = getOption("gradethis.pass", "Correct!"),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  praise = getOption("gradethis.pass.praise", FALSE)
 ) {
-  graded(message = glue_message_with_env(env, message), correct = TRUE, ...)
+  maybe_extras(
+    graded(message = glue_message_with_env(env, message), correct = TRUE, ...),
+    praise = praise
+  )
 }
 
 #' @describeIn graded Signal a _failing_ grade.
+#' 
 #' @param hint Include a code feedback hint with the failing message? This
 #'   argument only applies to `fail()` and `fail_if_equal()` and the message is
 #'   added using the default options of [give_code_feedback()] and
 #'   [maybe_code_feedback()]. The default value of `hint` can be set using
 #'   [gradethis_setup()] or the `gradethis.fail.hint` option.
+#' @param encourage Incude a random encouraging phrase with 
+#'   [random_encouragement()]? The default value of `encourage` can be set
+#'   using [gradethis_setup()] or the `gradethis.fail.encourage` option.
+#'   
 #' @export
 fail <- function(
   message = getOption("gradethis.fail", "Incorrect"),
   ...,
   env = parent.frame(),
-  hint = getOption("gradethis.fail.hint", FALSE)
+  hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
-  maybe_hint(
-    hint, 
+  maybe_extras(
+    graded(message = glue_message_with_env(env, message), correct = FALSE, ...),
     env = env, 
-    graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
+    hint = hint,
+    encourage = encourage
   )
 }
 
@@ -262,7 +278,8 @@ pass_if_equal <- function(
   message = getOption("gradethis.pass", "Correct!"),
   x = rlang::missing_arg(),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  praise = getOption("gradethis.pass.praise", FALSE)
 ) {
   if (rlang::is_missing(x)) {
     x <- get_from_env(".result", env)
@@ -276,7 +293,10 @@ pass_if_equal <- function(
       return(missing_object_in_env(".solution", env, "pass_if_equal"))
     }
   }
-  grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...)
+  maybe_extras(
+    grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...),
+    praise = praise
+  )
 }
 
 #' @describeIn graded Signal a _failing_ grade only if `x` and `y` are equal.
@@ -287,7 +307,8 @@ fail_if_equal <- function(
   x = rlang::missing_arg(),
   ...,
   env = parent.frame(),
-  hint = getOption("gradethis.fail.hint", FALSE)
+  hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
   if (rlang::is_missing(x)) {
     x <- get_from_env(".result", env)
@@ -295,10 +316,11 @@ fail_if_equal <- function(
       return(missing_object_in_env(".result", env, "fail_if_equal"))
     }
   }
-  maybe_hint(
-    hint, 
+  maybe_extras(
+    grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...),
     env = env, 
-    grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...)
+    hint = hint,
+    encourage = encourage
   )
 }
 
@@ -346,7 +368,8 @@ pass_if <- function(
   cond, 
   message = NULL, 
   ..., 
-  env = parent.frame(), 
+  env = parent.frame(),
+  praise = getOption("gradethis.pass.praise", FALSE), 
   x = deprecated()
 ) {
   ellipsis::check_dots_empty()
@@ -366,7 +389,7 @@ pass_if <- function(
     assert_gradethis_condition_type_is_value(cond, "pass_if")
     if (cond) {
       message <- message %||% getOption("gradethis.pass", "Correct!")
-      pass(message, env = env)
+      maybe_extras(pass(message, env = env), praise = praise)
     }
   } else {
     condition(cond, message, correct = TRUE)
@@ -381,6 +404,7 @@ fail_if <- function(
   ..., 
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE),
   x = deprecated()
 ) {
   ellipsis::check_dots_empty()
@@ -400,7 +424,12 @@ fail_if <- function(
     assert_gradethis_condition_type_is_value(cond, "fail_if")
     if (cond) {
       message <- message %||% getOption("gradethis.fail", "Inorrect.")
-      maybe_hint(hint, env = env, fail(message, env = env))
+      maybe_extras(
+        fail(message, env = env),
+        env = env,
+        hint = hint,
+        encourage = encourage
+      )
     }
   } else {
     if (!missing(hint) || isTRUE(hint)) {
@@ -450,12 +479,36 @@ missing_object_in_env <- function(obj, env, caller) {
   graded(FALSE, feedback_grading_problem()$message)
 }
 
-maybe_hint <- function(should_hint, expr, env) {
-  grade <- capture_graded(expr)
-  if (isTRUE(should_hint)) {
-    # we already have the grade, so use the internal s3 method to give feedback
-    give_code_feedback_(grade, env = env)
-  } else {
-    signal_grade(grade)
+maybe_extras <- function(
+  expr,
+  env = NULL,
+  hint = FALSE,
+  praise = FALSE,
+  encourage = FALSE
+) {
+  # praise and encourage arguments win over inline praise/encouragement
+  tmp_opts <- list()
+  if (isTRUE(praise)) {
+    tmp_opts[["gradethis.__praise"]] <- FALSE
   }
+  if (isTRUE(encourage)) {
+    tmp_opts[["gradethis.__encouragement"]] <- FALSE
+  }
+  
+  grade <- with_options(
+    tmp_opts,
+    capture_graded(expr)
+  )
+  
+  if (isTRUE(praise)) {
+    grade <- capture_graded(give_praise(grade, location = "before"))
+  }
+  if (isTRUE(hint)) {
+    grade <- capture_graded(give_code_feedback_(grade, env = env))
+  }
+  if (isTRUE(encourage)) {
+    grade <- capture_graded(give_encouragement(grade, location = "after"))
+  }
+  
+  signal_grade(grade)
 }

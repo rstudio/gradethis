@@ -15,14 +15,16 @@ graded(correct, message = NULL, ..., type = NULL, location = NULL)
 pass(
   message = getOption("gradethis.pass", "Correct!"),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  praise = getOption("gradethis.pass.praise", FALSE)
 )
 
 fail(
   message = getOption("gradethis.fail", "Incorrect"),
   ...,
   env = parent.frame(),
-  hint = getOption("gradethis.fail.hint", FALSE)
+  hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE)
 )
 
 pass_if_equal(
@@ -30,7 +32,8 @@ pass_if_equal(
   message = getOption("gradethis.pass", "Correct!"),
   x = rlang::missing_arg(),
   ...,
-  env = parent.frame()
+  env = parent.frame(),
+  praise = getOption("gradethis.pass.praise", FALSE)
 )
 
 fail_if_equal(
@@ -39,10 +42,18 @@ fail_if_equal(
   x = rlang::missing_arg(),
   ...,
   env = parent.frame(),
-  hint = getOption("gradethis.fail.hint", FALSE)
+  hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE)
 )
 
-pass_if(cond, message = NULL, ..., env = parent.frame(), x = deprecated())
+pass_if(
+  cond,
+  message = NULL,
+  ...,
+  env = parent.frame(),
+  praise = getOption("gradethis.pass.praise", FALSE),
+  x = deprecated()
+)
 
 fail_if(
   cond,
@@ -50,6 +61,7 @@ fail_if(
   ...,
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE),
   x = deprecated()
 )
 }
@@ -74,11 +86,19 @@ details.
 \item{env}{environment to evaluate the glue \code{message}. Most users of
 \pkg{gradethis} will not need to use this argument.}
 
+\item{praise}{Include a random praising phrase with \code{\link[=random_praise]{random_praise()}}? The
+default value of \code{praise} can be set using \code{\link[=gradethis_setup]{gradethis_setup()}} or the
+\code{gradethis.pass.praise} option.}
+
 \item{hint}{Include a code feedback hint with the failing message? This
 argument only applies to \code{fail()} and \code{fail_if_equal()} and the message is
 added using the default options of \code{\link[=give_code_feedback]{give_code_feedback()}} and
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
 \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
+
+\item{encourage}{Incude a random encouraging phrase with
+\code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
+using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 
 \item{y}{The expected value against which \code{x} is compared using
 \code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the
