@@ -84,7 +84,7 @@ mock_this_exercise <- function(
   .engine <- tolower(.engine)
   .engine <- match.arg(.engine)
   
-  env_global <- rlang::env(baseenv())
+  env_global <- rlang::env(globalenv())
   
   .user_code <- rlang::enexpr(.user_code)
   .solution_code <- rlang::enexpr(.solution_code)
