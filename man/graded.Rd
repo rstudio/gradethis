@@ -8,6 +8,7 @@
 \alias{fail_if_equal}
 \alias{pass_if}
 \alias{fail_if}
+\alias{fail_if_code_feedback}
 \title{Signal a final grade for a student's submission}
 \usage{
 graded(correct, message = NULL, ..., type = NULL, location = NULL)
@@ -64,6 +65,17 @@ fail_if(
   encourage = getOption("gradethis.fail.encourage", FALSE),
   x = deprecated()
 )
+
+fail_if_code_feedback(
+  user_code = rlang::missing_arg(),
+  solution_code = rlang::missing_arg(),
+  message = NULL,
+  ...,
+  env = parent.frame(),
+  hint = TRUE,
+  encourage = getOption("gradethis.fail.encourage", FALSE),
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
+)
 }
 \arguments{
 \item{correct}{A logical value of whether or not the checked code is correct.}
@@ -71,7 +83,8 @@ fail_if(
 \item{message}{A character string of the message to be displayed.}
 
 \item{...}{Additional arguments passed to \code{graded()} or otherwise ignored.
-Ignored by \code{pass_if()} and \code{fail_if()}.}
+Ignored by \code{pass_if()} and \code{fail_if()}. In \code{fail_if_code_feedback()},
+additional arguments \code{...} are passed to \code{\link[=code_feedback]{code_feedback()}}.}
 
 \item{type, location}{The \code{type} and \code{location} of the feedback object
 provided to \pkg{learnr}. See
@@ -115,6 +128,20 @@ the student's submission against a specific value, \code{y}.}
 that will evaluate to a \code{TRUE} or \code{FALSE} value. If the value is \code{TRUE}, or
 would be considered \code{TRUE} in an \verb{if (cond)} statement, then a passing or
 failing grade is returned to the user.}
+
+\item{user_code}{String containing user or solution code. For
+ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
+default retrieved from the calling environment.}
+
+\item{solution_code}{String containing user or solution code. For
+ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
+default retrieved from the calling environment.}
+
+\item{allow_partial_matching}{A logical. If \code{FALSE}, the partial matching of
+argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
+message indicating that the full formal name \code{min} should be used. The
+default is set via the \code{gradethis.allow_partial_matching} option, or by
+\code{\link[=gradethis_setup]{gradethis_setup()}}.}
 }
 \value{
 \itemize{
@@ -126,6 +153,9 @@ glue-able \code{message}.
 provided condition is \code{TRUE}, with a glue-able \code{message}.
 \item \code{graded()} signals a correct or incorrect grade according to the logical
 value of \code{correct}, with a standard character (unglued) \code{message}.
+\item \code{fail_if_code_feedback()} compares the user code to the solution code
+(if available) and signals an incorrect grade with feedback if there are
+differences.
 }
 }
 \description{
@@ -151,6 +181,9 @@ for more details about how these functions are used in \code{\link[=grade_this]{
 \item \code{pass_if}: Pass if \code{cond} is \code{TRUE}.
 
 \item \code{fail_if}: Fail if \code{cond} is \code{TRUE}.
+
+\item \code{fail_if_code_feedback}: Signal a \emph{failing} grade if mistakes are detected in the
+submitted code.
 }}
 
 \section{Usage in \code{grade_this()}}{
@@ -208,17 +241,17 @@ grade_this(\{
   if (!inherits(.result, "tibble")) \{
     fail("Your answer should be a tibble.")
   \}
-  
+
   # from now on we know that .result is a tibble...
   if (nrow(.result) != 5 && ncol(.result) < 2) \{
     fail("Your table should have 5 rows and more than 1 column.")
   \}
-  
+
   # ...and now we know it has 5 rows and at least 2 columns
   if (.result[[2]][[5]] != 5) \{
     fail("The value of the 5th row of the 2nd column should be 5.")
   \}
-  
+
   # all of the above checks have passed now.
   pass()
 \})
@@ -244,23 +277,23 @@ phrase.
 # `this_grader()` on a mock exercise submission is equivalent to running the
 # check code when the student clicks "Submit Answer" in a learnr tutorial.
 
-this_grader <- 
+this_grader <-
 # ```{r example-check}
   grade_this({
     # Automatically use .result to compare to an expected value
     pass_if_equal(42, "Great work!")
-    
+
     # Similarly compare .result to an expected wrong value
     fail_if_equal(41, "You were so close!")
     fail_if_equal(43, "Oops, a little high there!")
-    
+
     # or automatically pass if .result is equal to .solution
     pass_if_equal(message = "Great work!")
-    
+
     # Be explicit if you need to round to avoid numerical accuracy issues
     pass_if_equal(x = round(.result), y = 42, "Close enough!")
     fail_if_equal(x = round(.result), y = 64, "Hmm, that's not right.")
-    
+
     # For more complicated calculations, call pass() or fail()
     if (.result > 100) {
       fail("{.result} is way too high!")
@@ -269,6 +302,10 @@ this_grader <-
       pass("Right answer, but {.result} is two orders of magnitude too small.")
     }
     
+    # Fail with a hint if student code differs from the solution
+    # (Skipped automatically if there isn't a -solution chunk)
+    fail_if_code_feedback()
+
     # Choose a default grade if none of the above have resulted in a grade
     fail()
   })
@@ -295,6 +332,6 @@ this_grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
 this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 
 # Finally fall back to the final answer...
-this_grader(mock_this_exercise(.user_code = 33, .solution_code = 42))
+this_grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
 
 }
