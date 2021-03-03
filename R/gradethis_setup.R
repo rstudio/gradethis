@@ -27,10 +27,10 @@
 #' @param fail Default message for [fail()]. Sets `options("gradethis.fail")`
 #' @param code_correct Default `correct` message for [grade_this_code()]. If
 #'   unset, [grade_this_code()] falls back to the value of the `gradethis.pass`
-#'   option. Sets `options("gradethis.code_correct")`.
+#'   option. Sets the `gradethis.code_correct` option.
 #' @param code_incorrect Default `incorrect` message for [grade_this_code()]. If
 #'   unset [grade_this_code()] falls back to the value of the `gradethis.fail`
-#'   option. Sets `options("gradethis.code_incorrect")`.
+#'   option. Sets the `gradethis.code_incorrect` option.
 #' @param maybe_code_feedback Logical `TRUE` or `FALSE` to determine whether 
 #'   [maybe_code_feedback()] should return code feedback, where if `FALSE`,
 #'   [maybe_code_feedback()] will return an empty string.
@@ -41,14 +41,20 @@
 #'   be added `before` or `after` the `maybe_code_feedback()` output, if any is
 #'   returned. Sets the default values of the `before` and `after` arguments of
 #'   [maybe_code_feedback()].
+#' @param pass.praise Logical `TRUE` or `FALSE` to determine whether a praising
+#'   phrase should be automatically prepended to any [pass()] or
+#'   [pass_if_equal()] messages. Sets the `gradethis.pass.praise` option.
 #' @param fail.hint Logical `TRUE` or `FALSE` to determine whether an automated
 #'   code feedback hint should be shown with a [fail()] or [fail_if_equal()]
-#'   message.
+#'   message. Sets the `gradethis.fail.hint` option.
+#' @param fail.encourage Logical `TRUE` or `FALSE` to determine whether an
+#'   encouraging phrase should be automatically appended to any [fail()] or
+#'   [fail_if_equal()] messages. Sets the `gradethis.fail.encourage` option.
 #' @param allow_partial_matching Logical `TRUE` or `FALSE` to determine whether
-#'   partial matching is allowed in `grade_this_code()`. Sets
-#'   `options("gradethis.allow_partial_matching")`.
-#' @param pipe_warning The default message used in [pipe_warning()]. Sets
-#'   `options("gradethis.pipe_warning")`.
+#'   partial matching is allowed in `grade_this_code()`. Sets the
+#'   `gradethis.allow_partial_matching` option.
+#' @param pipe_warning The default message used in [pipe_warning()]. Sets the
+#'   `gradethis.pipe_warning` option.
 #' @param fail_code_feedback Deprecated. Use `maybe_code_feedback`.
 #' @inheritParams learnr::tutorial_options
 #' @inheritDotParams learnr::tutorial_options
@@ -67,7 +73,9 @@ gradethis_setup <- function(
   maybe_code_feedback = NULL,
   maybe_code_feedback.before = NULL,
   maybe_code_feedback.after = NULL,
+  pass.praise = NULL,
   fail.hint = NULL,
+  fail.encourage = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -152,9 +160,11 @@ gradethis_default_options <- list(
   
   # Default message for pass(message)
   pass = "{random_praise()} Correct!",
+  pass.praise = FALSE,
   # Default message for fail(message)
   fail = "Incorrect.{maybe_code_feedback()} {random_encouragement()}",
   fail.hint = FALSE,
+  fail.encourage = FALSE,
   
   # Default value for grade_this(maybe_code_feedback). Plays with `maybe_code_feedback()`
   maybe_code_feedback = TRUE,

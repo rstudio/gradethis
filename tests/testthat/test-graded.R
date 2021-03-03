@@ -248,3 +248,91 @@ test_that("grade_if_equal() edge cases with diffobj::ses()", {
     grade_if_equal(a, b, message = "TEST_FAILED", FALSE)
   )
 })
+
+test_that("praise argument works with passing grades", {
+  with_seed(
+    seed = 33,
+    expect_graded(
+      pass("xxx", praise = TRUE),
+      is_correct = TRUE,
+      msg = paste(with_seed(33, random_praise()), "xxx")
+    )
+  )
+  
+  with_seed(
+    seed = 12,
+    expect_graded(
+      pass_if_equal(x = 1, y = 1, message = "xxx", praise = TRUE),
+      is_correct = TRUE,
+      msg = paste(with_seed(12, random_praise()), "xxx")
+    )
+  )
+  
+  with_options(
+    list(gradethis.pass.praise = TRUE),
+    with_seed(
+      seed = 99,
+      expect_graded(
+        pass(message = "xxx"),
+        is_correct = TRUE,
+        msg = paste(with_seed(99, random_praise()), "xxx")
+      )
+    )
+  )
+  
+  gradethis_env <- rlang::env(".__gradethis_check_env" = TRUE)
+  
+  # only one random_praise(), praise = TRUE wins
+  with_seed(
+    seed = 84,
+    expect_graded(
+      pass_if(TRUE, message = "{random_praise()}", praise = TRUE, env = gradethis_env),
+      is_correct = TRUE,
+      msg = with_seed(84, random_praise())
+    )
+  )
+})
+
+test_that("encourage argument works with failing grades", {
+  with_seed(
+    seed = 33,
+    expect_graded(
+      fail("xxx", encourage = TRUE),
+      is_correct = FALSE,
+      msg = paste("xxx", with_seed(33, random_encouragement()))
+    )
+  )
+  
+  with_seed(
+    seed = 12,
+    expect_graded(
+      fail_if_equal(x = 1, y = 1, message = "xxx", encourage = TRUE),
+      is_correct = FALSE,
+      msg = paste("xxx", with_seed(12, random_encouragement()))
+    )
+  )
+  
+  with_options(
+    list(gradethis.fail.encourage = TRUE),
+    with_seed(
+      seed = 99,
+      expect_graded(
+        fail(message = "xxx"),
+        is_correct = FALSE,
+        msg = paste("xxx", with_seed(99, random_encouragement()))
+      )
+    )
+  )
+  
+  gradethis_env <- rlang::env(".__gradethis_check_env" = TRUE)
+  
+  # only one random_encouragement(), encourage = TRUE wins
+  with_seed(
+    seed = 84,
+    expect_graded(
+      fail_if(TRUE, message = "{random_encouragement()}", encourage = TRUE, env = gradethis_env),
+      is_correct = FALSE,
+      msg = with_seed(84, random_encouragement())
+    )
+  )
+})

@@ -13,7 +13,9 @@ gradethis_setup(
   maybe_code_feedback = NULL,
   maybe_code_feedback.before = NULL,
   maybe_code_feedback.after = NULL,
+  pass.praise = NULL,
   fail.hint = NULL,
+  fail.encourage = NULL,
   pipe_warning = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -44,11 +46,11 @@ a solution chunk is provided.}
 
 \item{code_correct}{Default \code{correct} message for \code{\link[=grade_this_code]{grade_this_code()}}. If
 unset, \code{\link[=grade_this_code]{grade_this_code()}} falls back to the value of the \code{gradethis.pass}
-option. Sets \code{options("gradethis.code_correct")}.}
+option. Sets the \code{gradethis.code_correct} option.}
 
 \item{code_incorrect}{Default \code{incorrect} message for \code{\link[=grade_this_code]{grade_this_code()}}. If
 unset \code{\link[=grade_this_code]{grade_this_code()}} falls back to the value of the \code{gradethis.fail}
-option. Sets \code{options("gradethis.code_incorrect")}.}
+option. Sets the \code{gradethis.code_incorrect} option.}
 
 \item{maybe_code_feedback}{Logical \code{TRUE} or \code{FALSE} to determine whether
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} should return code feedback, where if \code{FALSE},
@@ -62,16 +64,24 @@ be added \code{before} or \code{after} the \code{maybe_code_feedback()} output, 
 returned. Sets the default values of the \code{before} and \code{after} arguments of
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}.}
 
+\item{pass.praise}{Logical \code{TRUE} or \code{FALSE} to determine whether a praising
+phrase should be automatically prepended to any \code{\link[=pass]{pass()}} or
+\code{\link[=pass_if_equal]{pass_if_equal()}} messages. Sets the \code{gradethis.pass.praise} option.}
+
 \item{fail.hint}{Logical \code{TRUE} or \code{FALSE} to determine whether an automated
 code feedback hint should be shown with a \code{\link[=fail]{fail()}} or \code{\link[=fail_if_equal]{fail_if_equal()}}
-message.}
+message. Sets the \code{gradethis.fail.hint} option.}
 
-\item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets
-\code{options("gradethis.pipe_warning")}.}
+\item{fail.encourage}{Logical \code{TRUE} or \code{FALSE} to determine whether an
+encouraging phrase should be automatically appended to any \code{\link[=fail]{fail()}} or
+\code{\link[=fail_if_equal]{fail_if_equal()}} messages. Sets the \code{gradethis.fail.encourage} option.}
+
+\item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
+\code{gradethis.pipe_warning} option.}
 
 \item{allow_partial_matching}{Logical \code{TRUE} or \code{FALSE} to determine whether
-partial matching is allowed in \code{grade_this_code()}. Sets
-\code{options("gradethis.allow_partial_matching")}.}
+partial matching is allowed in \code{grade_this_code()}. Sets the
+\code{gradethis.allow_partial_matching} option.}
 
 \item{exercise.checker}{Function used to check exercise answers
 (e.g., \code{gradethis::grade_learnr()}).}

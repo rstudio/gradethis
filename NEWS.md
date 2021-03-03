@@ -13,6 +13,8 @@
 * Calling `gradethis_setup()` is no longer required if you want to use the default gradethis setup. Simply call `library(gradethis)`. You can use `gradethis_setup()` to adjust the default values of any options. (#210)
 * New function: `give_code_feedback()`. When applied to a `grade_this()` or `grade_result()` grading function, code feedback is added to the messages of any `fail()` grades. (#219)
 * All _failing_ `graded()` helper functions, like `fail()` etc, now take a `hint` argument that when `TRUE` adds a code feedback hint to the custom feedback message. The default value of this argument can be set via `gradethis_setup()`. (#216)
+* Passing and failing `graded()` helper functions gain a `praise` or `encourage` argument (respectively) to prepend a random praising phrase when passing or append a random encouraging phrase when failing. The default values of these arguments can be set via `gradethis_setup()`. (#227)
+* New functions: `give_praise()` and `give_encouragement()`. Follow the same pattern as `give_code_feedback()` to automatically add praise or encouragement to `pass()` or `fail()` grades, respectively. (#227)
 
 ### Breaking changes
 

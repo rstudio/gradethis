@@ -2,17 +2,68 @@
 % Please edit documentation in R/praise.R
 \name{praise}
 \alias{praise}
+\alias{random_praise}
+\alias{random_encouragement}
+\alias{give_praise}
+\alias{give_encouragement}
 \title{Random praise and encouragement}
-\description{
-Generate a random praise or encouragement phrase.
-This can be used in conjunction with
-\code{\link[glue:glue]{glue::glue()}} to generate praise or encouragement within feedback to users.
+\usage{
+random_praise()
+
+random_encouragement()
+
+give_praise(expr, ..., location = "before", before = NULL, after = NULL)
+
+give_encouragement(expr, ..., location = "after", before = NULL, after = NULL)
 }
+\arguments{
+\item{expr}{A \code{graded()} grade or helper function, or a grading function —
+like \code{\link[=grade_this]{grade_this()}} or \code{\link[=grade_result]{grade_result()}} — or a character string. Praise
+will be added to any passing grades and encouragement will be added to any
+failing grade. If \code{expr} is a character string, then \code{"{random_praise()}"}
+or \code{"{random_encouragement()}"} is pasted before or after the string
+according to \code{location}.}
+
+\item{...}{Ignored.}
+
+\item{location}{Should the praise or encouragement be added before or after
+the grade message?}
+
+\item{before, after}{Text to be added before or after the praise or
+encouragement phrase.}
+}
+\value{
+\itemize{
+\item \code{random_praise()} and \code{random_encouragement()} each return a length-one
+string with a praising or encouraging phrase.
+\item \code{give_praise()} and \code{give_encouragment()} add praise or encouragement
+phrases to passing and failing grades, respectively.
+}
+}
+\description{
+Generate a random praise or encouragement phrase. These functions are
+designed for use within \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} messages, or anywhere else that
+\pkg{gradethis} provides feedback to the student.
+}
+\section{Functions}{
+\itemize{
+\item \code{random_praise}: Random praising phrase
+
+\item \code{random_encouragement}: Random encouraging phrase
+
+\item \code{give_praise}: Add praising message to a passing grade.
+
+\item \code{give_encouragement}: Add encouraging message to a failing grade.
+}}
+
 \examples{
 replicate(5, glue::glue("Random praise: {random_praise()}"))
 replicate(5, glue::glue("Random encouragement: {random_encouragement()}"))
 
-}
-\seealso{
-\code{\link[learnr:random_praise]{learnr::random_praise()}}, \code{\link[learnr:random_praise]{learnr::random_encouragement()}}
+# give_praise() adds praise to passing grade messages
+give_praise(pass("That's absolutely correct."))
+
+# give_encouragement() encouragement to failing grade messages
+give_encouragement(fail("Sorry, but no."))
+
 }
