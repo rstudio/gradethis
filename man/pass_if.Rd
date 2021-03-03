@@ -25,10 +25,10 @@ fail_if(
 )
 }
 \arguments{
-\item{cond}{For \code{pass_if()} and \code{fail_if()}: A logical value or an expression
-that will evaluate to a \code{TRUE} or \code{FALSE} value. If the value is \code{TRUE}, or
-would be considered \code{TRUE} in an \verb{if (cond)} statement, then a passing or
-failing grade is returned to the user.}
+\item{cond}{A logical value or an expression that will evaluate to a \code{TRUE}
+or \code{FALSE} value. If the value is \code{TRUE}, or would be considered \code{TRUE} in
+an \verb{if (cond)} statement, then a passing or failing grade is returned to
+the user.}
 
 \item{message}{A character string of the message to be displayed. In all
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
@@ -81,5 +81,6 @@ or \code{FALSE}.
 
 }
 \seealso{
-Grading helper functions
+Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},
+\code{\link[=pass_if]{pass_if()}}, \code{\link[=fail_if]{fail_if()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail_if_equal]{fail_if_equal()}}.
 }

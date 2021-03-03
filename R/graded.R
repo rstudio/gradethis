@@ -175,7 +175,7 @@
 #'   _incorrect_ submission, and `graded()` returns a correct or incorrect
 #'   submission according to the value of `correct`.
 #'
-#' @seealso Grading helper functions
+#' @template graded-family
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
 graded <- function(correct, message = NULL, ..., type = NULL, location = NULL) {
@@ -279,7 +279,7 @@ fail <- function(
 #' 
 #' @return Returns a passing or failing grade if `x` and `y` are equal.
 #' 
-#' @seealso Grading helper functions
+#' @template graded-family
 #' @describeIn pass_if_equal Signal a _passing_ grade only if `x` and `y` are
 #'   equal.
 #' @export
@@ -382,11 +382,11 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
 #' 
 #' @examples 
 #' # TODO: examples
-#' 
-#' @param cond For `pass_if()` and `fail_if()`: A logical value or an expression
-#'   that will evaluate to a `TRUE` or `FALSE` value. If the value is `TRUE`, or
-#'   would be considered `TRUE` in an `if (cond)` statement, then a passing or
-#'   failing grade is returned to the user.
+#'
+#' @param cond A logical value or an expression that will evaluate to a `TRUE`
+#'   or `FALSE` value. If the value is `TRUE`, or would be considered `TRUE` in
+#'   an `if (cond)` statement, then a passing or failing grade is returned to
+#'   the user.
 #' @param x Deprecated. Replaced with `cond`.
 #' @param ... Ignored
 #' @inheritParams graded
@@ -394,7 +394,7 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
 #' @return `pass_if()` and `fail_if()` signal a correct or incorrect grade if
 #'   the provided condition is `TRUE`.
 #'   
-#' @seealso Grading helper functions
+#' @template graded-family
 #' @describeIn pass_if Pass if `cond` is `TRUE`.
 #' @export
 pass_if <- function(
@@ -494,7 +494,7 @@ fail_if <- function(
 #'   between the submitted user code and the solution code. If solution code is
 #'   not available, no grade is returned.
 #'
-#' @seealso Grading helper functions
+#' @template graded-family
 #' @export
 fail_if_code_feedback <- function(
   user_code = missing_arg(),

@@ -78,5 +78,6 @@ equal.
 }}
 
 \seealso{
-Grading helper functions
+Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},
+\code{\link[=pass_if]{pass_if()}}, \code{\link[=fail_if]{fail_if()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail_if_equal]{fail_if_equal()}}.
 }
