@@ -283,22 +283,22 @@ fail <- function(
 #' @describeIn graded Signal a _passing_ grade only if `x` and `y` are equal.
 #' @export
 pass_if_equal <- function(
-  y = rlang::missing_arg(),
+  y = missing_arg(),
   message = getOption("gradethis.pass", "Correct!"),
-  x = rlang::missing_arg(),
+  x = missing_arg(),
   ...,
   env = parent.frame(),
   praise = getOption("gradethis.pass.praise", FALSE)
 ) {
-  if (rlang::is_missing(x)) {
+  if (is_missing(x)) {
     x <- get_from_env(".result", env)
-    if (rlang::is_missing(x)) {
+    if (is_missing(x)) {
       return(missing_object_in_env(".result", env, "pass_if_equal"))
     }
   }
-  if (rlang::is_missing(y)) {
+  if (is_missing(y)) {
     y <- get_from_env(".solution", env)
-    if (rlang::is_missing(y)) {
+    if (is_missing(y)) {
       return(missing_object_in_env(".solution", env, "pass_if_equal"))
     }
   }
@@ -313,15 +313,15 @@ pass_if_equal <- function(
 fail_if_equal <- function(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = rlang::missing_arg(),
+  x = missing_arg(),
   ...,
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
-  if (rlang::is_missing(x)) {
+  if (is_missing(x)) {
     x <- get_from_env(".result", env)
-    if (rlang::is_missing(x)) {
+    if (is_missing(x)) {
       return(missing_object_in_env(".result", env, "fail_if_equal"))
     }
   }
@@ -458,8 +458,8 @@ fail_if <- function(
 #'
 #' @export
 fail_if_code_feedback <- function(
-  user_code = rlang::missing_arg(),
-  solution_code = rlang::missing_arg(),
+  user_code = missing_arg(),
+  solution_code = missing_arg(),
   message = NULL,
   ...,
   env = parent.frame(),
@@ -467,23 +467,23 @@ fail_if_code_feedback <- function(
   encourage = getOption("gradethis.fail.encourage", FALSE),
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
-  if (rlang::is_missing(user_code)) {
+  if (is_missing(user_code)) {
     user_code <- get_from_env(".user_code", env)
-    if (rlang::is_missing(user_code)) {
+    if (is_missing(user_code)) {
       return(missing_object_in_env(".user_code", env, "fail_if_code_feedback"))
     }
     if (is.null(user_code) || length(user_code) == 0 || !nzchar(user_code)) {
       graded(logical(), "I didn't receive your code. Did you write any?", type = "info")
     }
   }
-  if (rlang::is_missing(solution_code)) {
+  if (is_missing(solution_code)) {
     solution_code <- get_from_env(".solution_code", env)
-    if (rlang::is_missing(solution_code)) {
+    if (is_missing(solution_code)) {
       # warn about missing solution code, but don't emit grade
       capture_graded(missing_object_in_env(".solution_code", env, "fail_if_code_feedback"))
     }
     if (
-      rlang::is_missing(solution_code) || 
+      is_missing(solution_code) || 
         is.null(solution_code) || 
         length(solution_code) == 0 || 
         !nzchar(solution_code)
@@ -544,7 +544,7 @@ legacy_graded <- function(...) {
 }
 
 get_from_env <- function(x, env) {
-  get0(x, envir = env, ifnotfound = rlang::missing_arg())
+  get0(x, envir = env, ifnotfound = missing_arg())
 }
 
 missing_object_in_env <- function(obj, env, caller) {

@@ -29,9 +29,9 @@ fail(
 )
 
 pass_if_equal(
-  y = rlang::missing_arg(),
+  y = missing_arg(),
   message = getOption("gradethis.pass", "Correct!"),
-  x = rlang::missing_arg(),
+  x = missing_arg(),
   ...,
   env = parent.frame(),
   praise = getOption("gradethis.pass.praise", FALSE)
@@ -40,7 +40,7 @@ pass_if_equal(
 fail_if_equal(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = rlang::missing_arg(),
+  x = missing_arg(),
   ...,
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),
@@ -67,8 +67,8 @@ fail_if(
 )
 
 fail_if_code_feedback(
-  user_code = rlang::missing_arg(),
-  solution_code = rlang::missing_arg(),
+  user_code = missing_arg(),
+  solution_code = missing_arg(),
   message = NULL,
   ...,
   env = parent.frame(),
