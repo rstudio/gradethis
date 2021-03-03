@@ -15,6 +15,7 @@
 * All _failing_ `graded()` helper functions, like `fail()` etc, now take a `hint` argument that when `TRUE` adds a code feedback hint to the custom feedback message. The default value of this argument can be set via `gradethis_setup()`. (#216)
 * Passing and failing `graded()` helper functions gain a `praise` or `encourage` argument (respectively) to prepend a random praising phrase when passing or append a random encouraging phrase when failing. The default values of these arguments can be set via `gradethis_setup()`. (#227)
 * New functions: `give_praise()` and `give_encouragement()`. Follow the same pattern as `give_code_feedback()` to automatically add praise or encouragement to `pass()` or `fail()` grades, respectively. (#227)
+* New function: `fail_if_code_feedback()`. Returns an _incorrect_ grade when there are differences between the user code and solution code (if it exists). (#228)
 
 ### Breaking changes
 

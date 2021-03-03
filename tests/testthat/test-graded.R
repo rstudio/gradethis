@@ -118,6 +118,141 @@ test_that("fail_if_equal() in grade_this()", {
   expect_false(missing_result$correct)
 })
 
+test_that("fail_if_code_feedback() returns grade if code feedback", {
+  # code feedback message by default
+  expect_graded(
+    fail_if_code_feedback("x + y", "x + z"),
+    is_correct = FALSE,
+    msg = code_feedback("x + y", "x + z")
+  )
+  
+  # fails with message and feedback
+  expect_graded(
+    fail_if_code_feedback("x + y", "x + z", message = "zzz"),
+    is_correct = FALSE,
+    msg = paste("zzz", code_feedback("x + y", "x + z"))
+  )
+  
+  # fails with message and no feedback
+  expect_graded(
+    fail_if_code_feedback("x + y", "x + z", message = "zzz", hint = FALSE),
+    is_correct = FALSE,
+    msg = "zzz"
+  )
+  
+  # finds .user_code and .solution_code and also glues correctly
+  expect_grade_this(
+    {
+      x <- "zzz"
+      fail_if_code_feedback(message = "{x}")
+      pass("TEST FAILED")
+    },
+    user_code = "x + y",
+    solution_code = "x + z",
+    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    is_correct = FALSE,
+    msg = paste("zzz", code_feedback("x + y", "x + z"))
+  )
+  
+  # accesses grade_this env variables in glue message
+  expect_grade_this(
+    {
+      fail_if_code_feedback(message = "{.result}.")
+      pass("TEST FAILED")
+    },
+    user_code = "x + y",
+    solution_code = "x + z",
+    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    is_correct = FALSE,
+    msg = paste("3.", code_feedback("x + y", "x + z"))
+  )
+  
+  # no feedback if hint = FALSE
+  expect_false(
+    grepl(
+      "I expected",
+      expect_grade_this(
+        {
+          fail_if_code_feedback(message = "TEST PASSED", hint = FALSE)
+          pass("TEST FAILED")
+        },
+        user_code = "x + y",
+        solution_code = "x + z",
+        envir_prep = rlang::env(x = 1, y = 2, z = 3),
+        is_correct = FALSE,
+        msg = "TEST PASSED"
+      )$message
+    )
+  )
+  
+  # turn off local feedback, added back in with give_code_feedback()
+  expect_grade_this(
+    {
+      fail_if_code_feedback("x + y", "x + z", message = "zzz", hint = FALSE) %>% 
+        give_code_feedback()
+      pass("TEST FAILED")
+    },
+    user_code = "x + y",
+    solution_code = "x + z",
+    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    is_correct = FALSE,
+    msg = paste("zzz", code_feedback("x + y", "x + z"))
+  )
+  
+  # no-op if no feedback
+  expect_grade_this(
+    {
+      fail_if_code_feedback(message = "zzz")
+      pass("TEST PASSED")
+    },
+    user_code = "x + z",
+    solution_code = "x + z",
+    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    is_correct = TRUE,
+    msg = "TEST PASSED"
+  )
+  
+  # no-op if no solution
+  expect_grade_this(
+    {
+      fail_if_code_feedback(message = "zzz")
+      pass("TEST PASSED")
+    },
+    user_code = "x + z",
+    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    is_correct = TRUE,
+    msg = "TEST PASSED"
+  )
+  
+  # info grade if no user code
+  expect_grade_this(
+    {
+      fail_if_code_feedback(message = "zzz")
+      pass("TEST PASSED")
+    },
+    user_code = "",
+    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    is_correct = logical(),
+    msg = "I didn't receive your code"
+  )
+  
+  # Expect teacher grading problem if called outside of grade_this()
+  testthat::expect_message(
+    expect_graded(
+      fail_if_code_feedback(),
+      is_correct = FALSE,
+      msg = feedback_grading_problem()$message
+    )
+  )
+  
+  
+  testthat::expect_message(
+    expect_null(fail_if_code_feedback("2")),
+    "expected `.solution_code` to be found",
+    fixed = TRUE
+  )
+})
+
 test_that("graded() returns correct, incorrect, neutral", {
   # correct
   expect_graded(
@@ -309,6 +444,18 @@ test_that("encourage argument works with failing grades", {
       fail_if_equal(x = 1, y = 1, message = "xxx", encourage = TRUE),
       is_correct = FALSE,
       msg = paste("xxx", with_seed(12, random_encouragement()))
+    )
+  )
+  
+  with_seed(
+    seed = 44,
+    expect_graded(
+      fail_if_code_feedback("1 + 1", "1 + 2", message = "xxx", encourage = TRUE),
+      is_correct = FALSE,
+      msg = paste(
+        "xxx In `1 + 1`, I expected `2` where you wrote `1`.", 
+        with_seed(44, random_encouragement())
+      )
     )
   )
   
