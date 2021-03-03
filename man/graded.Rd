@@ -4,11 +4,6 @@
 \alias{graded}
 \alias{pass}
 \alias{fail}
-\alias{pass_if_equal}
-\alias{fail_if_equal}
-\alias{pass_if}
-\alias{fail_if}
-\alias{fail_if_code_feedback}
 \title{Signal a final grade for a student's submission}
 \usage{
 graded(correct, message = NULL, ..., type = NULL, location = NULL)
@@ -27,64 +22,15 @@ fail(
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 )
-
-pass_if_equal(
-  y = missing_arg(),
-  message = getOption("gradethis.pass", "Correct!"),
-  x = missing_arg(),
-  ...,
-  env = parent.frame(),
-  praise = getOption("gradethis.pass.praise", FALSE)
-)
-
-fail_if_equal(
-  y,
-  message = getOption("gradethis.fail", "Incorrect"),
-  x = missing_arg(),
-  ...,
-  env = parent.frame(),
-  hint = getOption("gradethis.fail.hint", FALSE),
-  encourage = getOption("gradethis.fail.encourage", FALSE)
-)
-
-pass_if(
-  cond,
-  message = NULL,
-  ...,
-  env = parent.frame(),
-  praise = getOption("gradethis.pass.praise", FALSE),
-  x = deprecated()
-)
-
-fail_if(
-  cond,
-  message = NULL,
-  ...,
-  env = parent.frame(),
-  hint = getOption("gradethis.fail.hint", FALSE),
-  encourage = getOption("gradethis.fail.encourage", FALSE),
-  x = deprecated()
-)
-
-fail_if_code_feedback(
-  user_code = missing_arg(),
-  solution_code = missing_arg(),
-  message = NULL,
-  ...,
-  env = parent.frame(),
-  hint = TRUE,
-  encourage = getOption("gradethis.fail.encourage", FALSE),
-  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
-)
 }
 \arguments{
 \item{correct}{A logical value of whether or not the checked code is correct.}
 
-\item{message}{A character string of the message to be displayed.}
+\item{message}{A character string of the message to be displayed. In all
+grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
+string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
-\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored.
-Ignored by \code{pass_if()} and \code{fail_if()}. In \code{fail_if_code_feedback()},
-additional arguments \code{...} are passed to \code{\link[=code_feedback]{code_feedback()}}.}
+\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored.}
 
 \item{type, location}{The \code{type} and \code{location} of the feedback object
 provided to \pkg{learnr}. See
@@ -112,51 +58,11 @@ added using the default options of \code{\link[=give_code_feedback]{give_code_fe
 \item{encourage}{Incude a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
-
-\item{y}{The expected value against which \code{x} is compared using
-\code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the
-exercise \code{.solution}, or the result of evaluating the code in the
-exercise's \verb{*-solution} chunk, will be used for the comparison.}
-
-\item{x}{First item in the comparison. By default, when used inside
-\code{\link[=grade_this]{grade_this()}}, \code{x} is automatically assigned the value of \code{.result} — in
-other words the result of running the student's submitted code. \code{x} is not
-the first argument since you will often want to compare the final value of
-the student's submission against a specific value, \code{y}.}
-
-\item{cond}{For \code{pass_if()} and \code{fail_if()}: A logical value or an expression
-that will evaluate to a \code{TRUE} or \code{FALSE} value. If the value is \code{TRUE}, or
-would be considered \code{TRUE} in an \verb{if (cond)} statement, then a passing or
-failing grade is returned to the user.}
-
-\item{user_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
-default retrieved from the calling environment.}
-
-\item{solution_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
-default retrieved from the calling environment.}
-
-\item{allow_partial_matching}{A logical. If \code{FALSE}, the partial matching of
-argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
-message indicating that the full formal name \code{min} should be used. The
-default is set via the \code{gradethis.allow_partial_matching} option, or by
-\code{\link[=gradethis_setup]{gradethis_setup()}}.}
 }
 \value{
-\itemize{
-\item \code{pass()} and \code{pass_if_equal()} signal a \emph{correct} grade with a
-glue-able \code{message}.
-\item \code{fail()} and \code{fail_if_equal()} signal an \emph{incorrect} grade with a
-glue-able \code{message}.
-\item \code{pass_if()} and \code{fail_if()} signal a correct or incorrect grade if the
-provided condition is \code{TRUE}, with a glue-able \code{message}.
-\item \code{graded()} signals a correct or incorrect grade according to the logical
-value of \code{correct}, with a standard character (unglued) \code{message}.
-\item \code{fail_if_code_feedback()} compares the user code to the solution code
-(if available) and signals an incorrect grade with feedback if there are
-differences.
-}
+\code{pass()} signals a \emph{correct} submission, \code{fail()} signals an
+\emph{incorrect} submission, and \code{graded()} returns a correct or incorrect
+submission according to the value of \code{correct}.
 }
 \description{
 \code{graded()} is used to signal a final grade for a submission. Most likely,
@@ -173,17 +79,6 @@ for more details about how these functions are used in \code{\link[=grade_this]{
 \item \code{pass}: Signal a \emph{passing} grade.
 
 \item \code{fail}: Signal a \emph{failing} grade.
-
-\item \code{pass_if_equal}: Signal a \emph{passing} grade only if \code{x} and \code{y} are equal.
-
-\item \code{fail_if_equal}: Signal a \emph{failing} grade only if \code{x} and \code{y} are equal.
-
-\item \code{pass_if}: Pass if \code{cond} is \code{TRUE}.
-
-\item \code{fail_if}: Fail if \code{cond} is \code{TRUE}.
-
-\item \code{fail_if_code_feedback}: Signal a \emph{failing} grade if mistakes are detected in the
-submitted code.
 }}
 
 \section{Usage in \code{grade_this()}}{
@@ -334,4 +229,7 @@ this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 # Finally fall back to the final answer...
 this_grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
 
+}
+\seealso{
+Grading helper functions
 }

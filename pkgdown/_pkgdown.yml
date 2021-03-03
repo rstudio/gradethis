@@ -67,6 +67,8 @@ reference:
     checking logic in `grade_this()`.
   contents:
   - '`graded`'
+  - starts_with("pass_")
+  - starts_with("fail_")
 - title: Generate Feedback Messages
   description: |
     Create feedback messages for use in `graded()` grades or in the exercise 

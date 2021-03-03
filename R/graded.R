@@ -156,20 +156,11 @@
 #' # Finally fall back to the final answer...
 #' this_grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
 #'
-#' @param message A character string of the message to be displayed.
+#' @param message A character string of the message to be displayed. In all
+#'   grading helper functions other than [graded()], `message` is a template
+#'   string that will be processed with [glue::glue()].
 #' @param correct A logical value of whether or not the checked code is correct.
-#' @param x First item in the comparison. By default, when used inside
-#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
-#'   other words the result of running the student's submitted code. `x` is not
-#'   the first argument since you will often want to compare the final value of
-#'   the student's submission against a specific value, `y`.
-#' @param y The expected value against which `x` is compared using
-#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
-#'   exercise `.solution`, or the result of evaluating the code in the
-#'   exercise's `*-solution` chunk, will be used for the comparison.
 #' @param ... Additional arguments passed to `graded()` or otherwise ignored.
-#'   Ignored by `pass_if()` and `fail_if()`. In `fail_if_code_feedback()`, 
-#'   additional arguments `...` are passed to [code_feedback()].
 #' @param type,location The `type` and `location` of the feedback object
 #'   provided to \pkg{learnr}. See
 #'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for more
@@ -180,23 +171,11 @@
 #'
 #'   `location` may be one of "append", "prepend", or "replace".
 #'
-#' @return
-#'   - `pass()` and `pass_if_equal()` signal a _correct_ grade with a
-#'     glue-able `message`.
+#' @return `pass()` signals a _correct_ submission, `fail()` signals an
+#'   _incorrect_ submission, and `graded()` returns a correct or incorrect
+#'   submission according to the value of `correct`.
 #'
-#'   - `fail()` and `fail_if_equal()` signal an _incorrect_ grade with a
-#'     glue-able `message`.
-#'
-#'   - `pass_if()` and `fail_if()` signal a correct or incorrect grade if the
-#'     provided condition is `TRUE`, with a glue-able `message`.
-#'
-#'   - `graded()` signals a correct or incorrect grade according to the logical
-#'     value of `correct`, with a standard character (unglued) `message`.
-#'     
-#'   - `fail_if_code_feedback()` compares the user code to the solution code
-#'     (if available) and signals an incorrect grade with feedback if there are
-#'     differences.
-#'
+#' @seealso Grading helper functions
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
 graded <- function(correct, message = NULL, ..., type = NULL, location = NULL) {
@@ -279,8 +258,30 @@ fail <- function(
   )
 }
 
-
-#' @describeIn graded Signal a _passing_ grade only if `x` and `y` are equal.
+#' Signal a passing or failing grade if two values are equal
+#' 
+#' `pass_if_equal()` and `fail_if_equal()` are two [graded()] helper functions
+#' that signal a passing or a failing grade if two values are equal. They are
+#' designed to easily compare the returned value of the student's submitted
+#' code with the value returned by the solution or another known value.
+#' 
+#' @inheritParams graded
+#' @param x First item in the comparison. By default, when used inside
+#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
+#'   other words the result of running the student's submitted code. `x` is not
+#'   the first argument since you will often want to compare the final value of
+#'   the student's submission against a specific value, `y`.
+#' @param y The expected value against which `x` is compared using
+#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
+#'   exercise `.solution`, or the result of evaluating the code in the
+#'   exercise's `*-solution` chunk, will be used for the comparison.
+#' @param ... Additional arguments passed to [graded()]
+#' 
+#' @return Returns a passing or failing grade if `x` and `y` are equal.
+#' 
+#' @seealso Grading helper functions
+#' @describeIn pass_if_equal Signal a _passing_ grade only if `x` and `y` are
+#'   equal.
 #' @export
 pass_if_equal <- function(
   y = missing_arg(),
@@ -308,7 +309,8 @@ pass_if_equal <- function(
   )
 }
 
-#' @describeIn graded Signal a _failing_ grade only if `x` and `y` are equal.
+#' @describeIn pass_if_equal Signal a _failing_ grade only if `x` and `y` are
+#'   equal.
 #' @export
 fail_if_equal <- function(
   y,
@@ -366,12 +368,34 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
   graded(message = glue_message_with_env(env, message), correct = correct, ...)
 }
 
-
-#' @describeIn graded Pass if `cond` is `TRUE`.
+#' Signal a passing or failing grade if a condition is TRUE
+#' 
+#' @description
+#' `pass_if()` and `fail_if()` both create passing or failing grades if a given
+#' condition is `TRUE`. 
+#' 
+#' These functions are also used in legacy \pkg{gradethis} code, in particular
+#' in the superseded function [grade_result()]. While previous versions of
+#' \pkg{gradethis} allowed the condition to be determined by a function or
+#' formula, when used in [grade_this()] the condition must be a logical `TRUE`
+#' or `FALSE`.
+#' 
+#' @examples 
+#' # TODO: examples
+#' 
 #' @param cond For `pass_if()` and `fail_if()`: A logical value or an expression
 #'   that will evaluate to a `TRUE` or `FALSE` value. If the value is `TRUE`, or
 #'   would be considered `TRUE` in an `if (cond)` statement, then a passing or
 #'   failing grade is returned to the user.
+#' @param x Deprecated. Replaced with `cond`.
+#' @param ... Ignored
+#' @inheritParams graded
+#' 
+#' @return `pass_if()` and `fail_if()` signal a correct or incorrect grade if
+#'   the provided condition is `TRUE`.
+#'   
+#' @seealso Grading helper functions
+#' @describeIn pass_if Pass if `cond` is `TRUE`.
 #' @export
 pass_if <- function(
   cond,
@@ -405,7 +429,7 @@ pass_if <- function(
   }
 }
 
-#' @describeIn graded Fail if `cond` is `TRUE`.
+#' @describeIn pass_if Fail if `cond` is `TRUE`.
 #' @export
 fail_if <- function(
   cond,
@@ -451,11 +475,26 @@ fail_if <- function(
   }
 }
 
-#' @describeIn graded Signal a _failing_ grade if mistakes are detected in the
-#'   submitted code.
-#'   
+#' Signal a failing grade if mistakes are detected in the submitted code
+#' 
+#' `fail_if_code_feedback()` uses [code_feedback()] to detect if there are
+#' differences between the user's submitted code and the solution code (if
+#' available). If the exercise does not have an associated solution, or if there
+#' are no detected differences between the user's and the solution code, no
+#' grade is returned.
+#' 
+#' @examples
+#' # TODO: examples
+#' 
 #' @inheritParams code_feedback
+#' @inheritParams graded
+#' @inheritDotParams graded
+#' 
+#' @return Signals an incorrect grade with feedback if there are differences
+#'   between the submitted user code and the solution code. If solution code is
+#'   not available, no grade is returned.
 #'
+#' @seealso Grading helper functions
 #' @export
 fail_if_code_feedback <- function(
   user_code = missing_arg(),
@@ -514,7 +553,6 @@ fail_if_code_feedback <- function(
     message <- paste0(message, " ")
   }
   
-
   maybe_extras(
     graded(FALSE, glue::glue("{message}{feedback}"), ...),
     env = env,
