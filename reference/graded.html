@@ -160,9 +160,9 @@ for more details about how these functions are used in <code><a href='grade_this
 <span class='op'>)</span>
 
 <span class='fu'>pass_if_equal</span><span class='op'>(</span>
-  y <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/missing_arg.html'>missing_arg</a></span><span class='op'>(</span><span class='op'>)</span>,
+  y <span class='op'>=</span> <span class='fu'>missing_arg</span><span class='op'>(</span><span class='op'>)</span>,
   message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.pass"</span>, <span class='st'>"Correct!"</span><span class='op'>)</span>,
-  x <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/missing_arg.html'>missing_arg</a></span><span class='op'>(</span><span class='op'>)</span>,
+  x <span class='op'>=</span> <span class='fu'>missing_arg</span><span class='op'>(</span><span class='op'>)</span>,
   <span class='va'>...</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
   praise <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.pass.praise"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
@@ -171,7 +171,7 @@ for more details about how these functions are used in <code><a href='grade_this
 <span class='fu'>fail_if_equal</span><span class='op'>(</span>
   <span class='va'>y</span>,
   message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail"</span>, <span class='st'>"Incorrect"</span><span class='op'>)</span>,
-  x <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/missing_arg.html'>missing_arg</a></span><span class='op'>(</span><span class='op'>)</span>,
+  x <span class='op'>=</span> <span class='fu'>missing_arg</span><span class='op'>(</span><span class='op'>)</span>,
   <span class='va'>...</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
   hint <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail.hint"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>,
@@ -198,8 +198,8 @@ for more details about how these functions are used in <code><a href='grade_this
 <span class='op'>)</span>
 
 <span class='fu'>fail_if_code_feedback</span><span class='op'>(</span>
-  user_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/missing_arg.html'>missing_arg</a></span><span class='op'>(</span><span class='op'>)</span>,
-  solution_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/missing_arg.html'>missing_arg</a></span><span class='op'>(</span><span class='op'>)</span>,
+  user_code <span class='op'>=</span> <span class='fu'>missing_arg</span><span class='op'>(</span><span class='op'>)</span>,
+  solution_code <span class='op'>=</span> <span class='fu'>missing_arg</span><span class='op'>(</span><span class='op'>)</span>,
   message <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sys.parent.html'>parent.frame</a></span><span class='op'>(</span><span class='op'>)</span>,
