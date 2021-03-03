@@ -167,6 +167,24 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
     msg = paste("3.", code_feedback("x + y", "x + z"))
   )
   
+  # no feedback if hint = FALSE
+  expect_false(
+    grepl(
+      "I expected",
+      expect_grade_this(
+        {
+          fail_if_code_feedback(message = "TEST PASSED", hint = FALSE)
+          pass("TEST FAILED")
+        },
+        user_code = "x + y",
+        solution_code = "x + z",
+        envir_prep = rlang::env(x = 1, y = 2, z = 3),
+        is_correct = FALSE,
+        msg = "TEST PASSED"
+      )$message
+    )
+  )
+  
   # turn off local feedback, added back in with give_code_feedback()
   expect_grade_this(
     {

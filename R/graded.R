@@ -504,11 +504,16 @@ fail_if_code_feedback <- function(
   if (is.null(feedback)) {
     return()
   }
+
+  if (!isTRUE(hint)) {
+    feedback <- ""
+  }
   
   message <- glue_with_env(env, message %||% "")
   if (nzchar(message) && nzchar(feedback)) {
     message <- paste0(message, " ")
   }
+  
 
   maybe_extras(
     graded(FALSE, glue::glue("{message}{feedback}"), ...),
