@@ -153,7 +153,9 @@ global option with the same name, prefixed with <code>gradethis.</code>. For exa
   maybe_code_feedback <span class='op'>=</span> <span class='cn'>NULL</span>,
   maybe_code_feedback.before <span class='op'>=</span> <span class='cn'>NULL</span>,
   maybe_code_feedback.after <span class='op'>=</span> <span class='cn'>NULL</span>,
+  pass.praise <span class='op'>=</span> <span class='cn'>NULL</span>,
   fail.hint <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fail.encourage <span class='op'>=</span> <span class='cn'>NULL</span>,
   pipe_warning <span class='op'>=</span> <span class='cn'>NULL</span>,
   allow_partial_matching <span class='op'>=</span> <span class='cn'>NULL</span>,
   exercise.checker <span class='op'>=</span> <span class='va'>gradethis_exercise_checker</span>,
@@ -193,13 +195,13 @@ a solution chunk is provided.</p></dd>
       <th>code_correct</th>
       <td><p>Default <code>correct</code> message for <code><a href='grade_this_code.html'>grade_this_code()</a></code>. If
 unset, <code><a href='grade_this_code.html'>grade_this_code()</a></code> falls back to the value of the <code>gradethis.pass</code>
-option. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code_correct")</a></code>.</p></td>
+option. Sets the <code>gradethis.code_correct</code> option.</p></td>
     </tr>
     <tr>
       <th>code_incorrect</th>
       <td><p>Default <code>incorrect</code> message for <code><a href='grade_this_code.html'>grade_this_code()</a></code>. If
 unset <code><a href='grade_this_code.html'>grade_this_code()</a></code> falls back to the value of the <code>gradethis.fail</code>
-option. Sets <code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.code_incorrect")</a></code>.</p></td>
+option. Sets the <code>gradethis.code_incorrect</code> option.</p></td>
     </tr>
     <tr>
       <th>maybe_code_feedback</th>
@@ -218,21 +220,33 @@ returned. Sets the default values of the <code>before</code> and <code>after</co
 <code><a href='code_feedback.html'>maybe_code_feedback()</a></code>.</p></td>
     </tr>
     <tr>
+      <th>pass.praise</th>
+      <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether a praising
+phrase should be automatically prepended to any <code><a href='graded.html'>pass()</a></code> or
+<code><a href='graded.html'>pass_if_equal()</a></code> messages. Sets the <code>gradethis.pass.praise</code> option.</p></td>
+    </tr>
+    <tr>
       <th>fail.hint</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether an automated
 code feedback hint should be shown with a <code><a href='graded.html'>fail()</a></code> or <code><a href='graded.html'>fail_if_equal()</a></code>
-message.</p></td>
+message. Sets the <code>gradethis.fail.hint</code> option.</p></td>
+    </tr>
+    <tr>
+      <th>fail.encourage</th>
+      <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether an
+encouraging phrase should be automatically appended to any <code><a href='graded.html'>fail()</a></code> or
+<code><a href='graded.html'>fail_if_equal()</a></code> messages. Sets the <code>gradethis.fail.encourage</code> option.</p></td>
     </tr>
     <tr>
       <th>pipe_warning</th>
-      <td><p>The default message used in <code><a href='pipe_warning.html'>pipe_warning()</a></code>. Sets
-<code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.pipe_warning")</a></code>.</p></td>
+      <td><p>The default message used in <code><a href='pipe_warning.html'>pipe_warning()</a></code>. Sets the
+<code>gradethis.pipe_warning</code> option.</p></td>
     </tr>
     <tr>
       <th>allow_partial_matching</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether
-partial matching is allowed in <code><a href='grade_this_code.html'>grade_this_code()</a></code>. Sets
-<code><a href='https://rdrr.io/r/base/options.html'>options("gradethis.allow_partial_matching")</a></code>.</p></td>
+partial matching is allowed in <code><a href='grade_this_code.html'>grade_this_code()</a></code>. Sets the
+<code>gradethis.allow_partial_matching</code> option.</p></td>
     </tr>
     <tr>
       <th>exercise.checker</th>
