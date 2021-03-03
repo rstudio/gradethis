@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipe_warning.R
 \name{pipe_warning}
 \alias{pipe_warning}
-\title{Pipe Warning Message}
+\title{Inform the user about how gradethis interprets piped code}
 \usage{
 pipe_warning(message = getOption("gradethis.pipe_warning"), .user_code = NULL)
 }
@@ -26,7 +26,8 @@ when referenced against an un-piped version of the student's code.
 \section{Options}{
 
 \itemize{
-\item \code{gradethis.pipe_warning}: The default pipe warning message is set via this option.
+\item \code{gradethis.pipe_warning}: The default pipe warning message is set via this
+option.
 }
 }
 

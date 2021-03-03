@@ -2,7 +2,7 @@
 % Please edit documentation in R/grade_this.R
 \name{grade_this}
 \alias{grade_this}
-\title{Grade expression}
+\title{Grade a student's submission using custom logic}
 \usage{
 grade_this(
   expr,
@@ -33,7 +33,7 @@ contains all necessary information to execute the expression.  The
 evaluation of the expression should return a \code{\link[=graded]{graded()}} object.
 }
 \description{
-Grade expression
+Grade a student's submission using custom logic
 }
 \section{Available variables}{
 

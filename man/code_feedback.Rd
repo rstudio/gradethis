@@ -4,7 +4,7 @@
 \alias{code_feedback}
 \alias{maybe_code_feedback}
 \alias{give_code_feedback}
-\title{Code Feedback}
+\title{Provide automated code feedback}
 \usage{
 code_feedback(
   user_code = get0(".user_code", parent.frame()),

@@ -52,3 +52,43 @@ navbar:
     #       href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
     #     - text: "Version 0.1"
     #       href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
+
+reference:
+- title: Exercise Checking Functions
+  description: |
+    Choose one of these functions to use in the `*-check` chunk of your exercise.
+  contents:
+  - '`grade_this`'
+  - '`grade_this_code`'
+  - '`debug_this`'
+- title: Signal A Final Grade
+  description: |
+    Helper functions to create and signal a final grade when used in custom
+    checking logic in `grade_this()`.
+  contents:
+  - '`graded`'
+- title: Generate Feedback Messages
+  description: |
+    Create feedback messages for use in `graded()` grades or in the exercise 
+    checking functions.
+  contents:
+  - '`code_feedback`'
+  - '`praise`'
+  - '`pipe_warning`'
+- title: Setup gradethis
+  description: |
+    Setup `learnr` to work with `gradethis` or change the default values of many
+    of the exercise checking or grading function arguments.
+  contents:
+  - '`gradethis_setup`'
+  - '`gradethis_demo`'
+- title: Helper Functions and Utilities
+  description: |
+    These functions are used by `gradethis` to work within `learnr` tutorials,
+    or are available to help tutorial authors test their grading logic.
+    Most users of `gradethis` will not need to use these functions.
+  contents:
+  - '`gradethis_exercise_checker`'
+  - '`mock_this_exercise`'
+  - '`eval_gradethis`'
+  - '`evaluate_condition`'

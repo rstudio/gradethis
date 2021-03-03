@@ -1,4 +1,4 @@
-#' Pipe Warning Message
+#' Inform the user about how gradethis interprets piped code
 #' 
 #' Creates a warning message when user code contains the `%>%`. When feedback
 #' is automatically generated via [code_feedback()] or in [grade_this_code()],
@@ -7,7 +7,8 @@
 #' 
 #' @section Options:
 #' 
-#' - `gradethis.pipe_warning`: The default pipe warning message is set via this option.
+#' - `gradethis.pipe_warning`: The default pipe warning message is set via this 
+#'   option.
 #' 
 #' @section Glue Variables:
 #' 

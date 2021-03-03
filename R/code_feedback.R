@@ -1,5 +1,5 @@
 
-#' Code Feedback
+#' Provide automated code feedback
 #'
 #' Generate a message describing the first instance of a code mismatch. Three
 #' functions are provided for working with code feedback: `code_feedback()` does

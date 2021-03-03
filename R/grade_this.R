@@ -1,4 +1,4 @@
-#' Grade expression
+#' Grade a student's submission using custom logic
 #'
 #' @section Available variables:
 #'
