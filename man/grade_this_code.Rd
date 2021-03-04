@@ -31,58 +31,133 @@ default is set via the \code{gradethis.allow_partial_matching} option, or by
 \code{\link[=gradethis_setup]{gradethis_setup()}}.}
 }
 \value{
-a function whose first parameter should be an environment that contains
-all necessary information to compare the code.  The result of the returned function will be a \code{\link[=graded]{graded()}} object.
+Returns a function whose first parameter will be an environment
+containing objects specific to the exercise and submission (see \strong{Available
+variables}). For local testing, you can create a version of the expected
+environment for a mock exercise submission with \code{\link[=mock_this_exercise]{mock_this_exercise()}}.
+Calling the returned function on the exercise-checking environment will
+evaluate the grade-checking \code{expr} and return a final grade via \code{\link[=graded]{graded()}}.
 }
 \description{
-Checks the code expression or the code result against a solution.
-}
-\details{
 \code{grade_this_code()} compares student code to a solution (i.e. model code) and
-describes the first way that the student code differs. If the student code
-exactly matches the solution, \code{grade_this_code()} returns a customizable success
-message (\code{correct}). If the student code does not match the solution, a
-customizable incorrect message (\code{incorrect}) can also be provided.
+describes the first way in which the student code differs. If the student
+code exactly matches the solution, \code{grade_this_code()} returns a customizable
+success message (\code{correct}). If the student code does not match the solution,
+a customizable incorrect message (\code{incorrect}) can also be provided.
 
-\code{grade_this_code()} only inspects for code differences between the student's
-code and the solution code. The final result of the student code and solution
-code is ignored. See \code{\link[=code_feedback]{code_feedback()}} for implementation details on how code
-is determined to be different.
+In most cases, to use \code{grade_this_code()}, ensure that your exercise has a
+\code{-solution} chunk:
 
-You can provide solution code for \code{grade_this_code()} to use in two ways:
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-solution\}
+sqrt(log(1))
+```
+}
+
+\if{html}{\out{</div>}}
+
+Then, call \code{grade_this_code()} in your exercise's \code{-check} chunk:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
+grade_this_code()
+```
+}
+
+\if{html}{\out{</div>}}
+
+Learn more about how to use \code{grade_this_code()} in the \strong{Details} section
+}
+\section{Details}{
+
+
+\code{grade_this_code()} only inspects for code differences between the
+student's code and the solution code. The final result of the student code
+and solution code is ignored. See the \strong{Code differences} section of
+\code{\link[=code_feedback]{code_feedback()}} for implementation details on how code is determined to
+be different.
+
+You can call \code{grade_this_code()} in two ways:
 \enumerate{
-\item Pass code as a character string or a quoted expression to the solution
-argument of \code{grade_code()}
-\item Make a "-solution" code chunk for the exercise to be checked in a learnr
-document. There is no need to supply a solution argument for \code{grade_code()}
-if you call it from the "-check" chunk of the same exercise. Likewise, there
-is no need to supply a student submitted code argument when you call
-\code{grade_code()} from a learnr document (learnr will provide the code that the
-student submits when it runs \code{grade_code()}.
+\item If you want to check the student's code without evaluating it, call
+\code{grade_this_code()} in the \verb{*-code-check} chunk.
+\item To return grading feedback in along with the resulting output of the
+student's code, call \code{grade_this_code()} in the \verb{*-check} chunk of the
+exercise.
 }
 
-For best results, name all arguments provided in the solution code.
+To provide the solution code, include a \verb{*-solution} code chunk in the
+learnr document for the exercise to be checked. When used in this way,
+\code{grade_this_code()} will automatically find and use the student's
+submitted code — \code{.user_code} in \code{\link[=grade_this]{grade_this()}} — as well as the solution
+code — \code{.solution_code} in \code{\link[=grade_this]{grade_this()}}.
 }
+
+\section{Custom messages}{
+
+
+You can customize the \code{correct} and \code{incorrect} messages shown to the user
+by \code{grade_this_code()}. Both arguments accept template strings that are
+processed by \code{\link[glue:glue]{glue::glue()}}. There are four helper functions used in the
+default messages that you may want to include in your custom messages. To
+use the output of any of the following, include them inside braces in the
+template string. For example use \code{{code_feedback()}} to add the code
+feedback to your custom \code{incorrect} message.
+\enumerate{
+\item \code{\link[=code_feedback]{code_feedback()}}: Adds feedback about the first observed difference
+between the student's submitted code and the model solution code.
+\item \code{\link[=pipe_warning]{pipe_warning()}}: Informs the user that their code was unpiped prior to
+comparison. This message is included by default to help clarify cases
+when the code feedback makes more sense in the unpiped context.
+\item \code{\link[=random_praise]{random_praise()}} and \code{\link[=random_encouragement]{random_encouragement()}}: These praising and
+encouraging messages are included by default in correct and incorrect
+grades, by default.
+}
+}
+
 \examples{
+# For an interactive example run: gradethis_demo()
 
-# These are manual examples, see grading demo for `learnr` tutorial usage
 
-grade_this_code()(list(
-  .user_code = "sqrt(log(2))",
-  .solution_code = "sqrt(log(1))"
-))
+grade_this_code()(
+  mock_this_exercise(
+    .user_code     = "sqrt(log(2))", # user submitted code
+    .solution_code = "sqrt(log(1))"  # from -solution chunk
+  )
+)
 
-grade_this_code()(list(
-  .user_code = rlang::quo(sqrt(log(2))),
-  .solution_code = rlang::quo(sqrt(log(1)))
-))
+grade_this_code()(
+  mock_this_exercise(
+    # user submitted code
+    .user_code     = "runif(1, 0, 10)",
+    # from -solution chunk
+    .solution_code = "runif(n = 1, min = 0, max = 1)"
+  )
+)
 
-# Remember, only `grade_this_code(correct, incorrect)` should be used.
-# The followup `list()` and values will be called by 
-# `gradethis_exercise_checker()`.
-# To learn more about using `grade_this_code()` with learnr, see:
-\dontrun{gradethis_demo()}
+# By default, grade_this_code() informs the user that piped code is unpiped
+# when comparing to the solution
+grade_this_code()(
+  mock_this_exercise(
+    # user submitted code
+    .user_code     = "storms \%>\% select(year, month, hour)",
+    # from -solution chunk
+    .solution_code = "storms \%>\% select(year, month, day)"
+  )
+)
+
+# By setting `correct` or `incorrect` you can change the default message
+grade_this_code(
+  correct = "Good work!",
+  incorrect = "Not quite. {code_feedback()} {random_encouragement()}"
+)(
+  mock_this_exercise(
+    # user submitted code
+    .user_code     = "storms \%>\% select(year, month, hour)",
+    # from -solution chunk
+    .solution_code = "storms \%>\% select(year, month, day)"
+  )
+)
+
 }
 \seealso{
-\code{\link[=code_feedback]{code_feedback()}}, \code{\link[=grade_this]{grade_this()}}
+\code{\link[=code_feedback]{code_feedback()}}, \code{\link[=grade_this]{grade_this()}}, \code{\link[=mock_this_exercise]{mock_this_exercise()}}
 }

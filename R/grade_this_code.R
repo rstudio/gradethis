@@ -1,37 +1,128 @@
 
-
 #' Grade student code against a solution
 #'
-#' Checks the code expression or the code result against a solution.
-#'
+#' @description
 #' `grade_this_code()` compares student code to a solution (i.e. model code) and
-#' describes the first way that the student code differs. If the student code
-#' exactly matches the solution, `grade_this_code()` returns a customizable success
-#' message (`correct`). If the student code does not match the solution, a
-#' customizable incorrect message (`incorrect`) can also be provided.
+#' describes the first way in which the student code differs. If the student
+#' code exactly matches the solution, `grade_this_code()` returns a customizable
+#' success message (`correct`). If the student code does not match the solution,
+#' a customizable incorrect message (`incorrect`) can also be provided.
+#' 
+#' In most cases, to use `grade_this_code()`, ensure that your exercise has a
+#' `-solution` chunk:
+#' 
+#' \if{html}{\out{<div class="sourceCode">}}
+#' ````
+#' ```{r example-solution}
+#' sqrt(log(1))
+#' ```
+#' ````
+#' \if{html}{\out{</div>}}
+#' 
+#' Then, call `grade_this_code()` in your exercise's `-check` chunk:
+#' 
+#' \if{html}{\out{<div class="sourceCode">}}
+#' ````
+#' ```{r example-check}
+#' grade_this_code()
+#' ```
+#' ````
+#' \if{html}{\out{</div>}}
+#' 
+#' Learn more about how to use `grade_this_code()` in the **Details** section
+#' 
 #'
-#' `grade_this_code()` only inspects for code differences between the student's
-#' code and the solution code. The final result of the student code and solution
-#' code is ignored. See [code_feedback()] for implementation details on how code
-#' is determined to be different.
+#' @section Details:
 #'
-#' You can provide solution code for `grade_this_code()` to use in two ways:
+#'   `grade_this_code()` only inspects for code differences between the
+#'   student's code and the solution code. The final result of the student code
+#'   and solution code is ignored. See the **Code differences** section of
+#'   [code_feedback()] for implementation details on how code is determined to
+#'   be different.
+#'   
+#'   You can call `grade_this_code()` in two ways:
+#'   
+#'   1. If you want to check the student's code without evaluating it, call
+#'      `grade_this_code()` in the `*-code-check` chunk.
+#'     
+#'   1. To return grading feedback in along with the resulting output of the
+#'      student's code, call `grade_this_code()` in the `*-check` chunk of the
+#'      exercise.
 #'
-#' 1. Pass code as a character string or a quoted expression to the solution
-#' argument of `grade_code()`
+#'   To provide the solution code, include a `*-solution` code chunk in the
+#'   learnr document for the exercise to be checked. When used in this way,
+#'   `grade_this_code()` will automatically find and use the student's
+#'   submitted code — `.user_code` in [grade_this()] — as well as the solution
+#'   code — `.solution_code` in [grade_this()].
+#'   
+#' @section Custom messages:
+#' 
+#'   You can customize the `correct` and `incorrect` messages shown to the user
+#'   by `grade_this_code()`. Both arguments accept template strings that are
+#'   processed by [glue::glue()]. There are four helper functions used in the
+#'   default messages that you may want to include in your custom messages. To
+#'   use the output of any of the following, include them inside braces in the
+#'   template string. For example use `{code_feedback()}` to add the code
+#'   feedback to your custom `incorrect` message.
+#'   
+#'   1. [code_feedback()]: Adds feedback about the first observed difference
+#'      between the student's submitted code and the model solution code.
+#'      
+#'   2. [pipe_warning()]: Informs the user that their code was unpiped prior to
+#'      comparison. This message is included by default to help clarify cases
+#'      when the code feedback makes more sense in the unpiped context.
+#'      
+#'   3. [random_praise()] and [random_encouragement()]: These praising and
+#'      encouraging messages are included by default in correct and incorrect
+#'      grades, by default.
+#'   
+#' @examples
+#' # For an interactive example run: gradethis_demo()
+#' 
+#  # These are manual examples, see grading demo for `learnr` tutorial usage
+#' 
+#' grade_this_code()(
+#'   mock_this_exercise(
+#'     .user_code     = "sqrt(log(2))", # user submitted code
+#'     .solution_code = "sqrt(log(1))"  # from -solution chunk
+#'   )
+#' )
 #'
-#' 2. Make a "-solution" code chunk for the exercise to be checked in a learnr
-#' document. There is no need to supply a solution argument for `grade_code()`
-#' if you call it from the "-check" chunk of the same exercise. Likewise, there
-#' is no need to supply a student submitted code argument when you call
-#' `grade_code()` from a learnr document (learnr will provide the code that the
-#' student submits when it runs `grade_code()`.
-#'
-#' For best results, name all arguments provided in the solution code.
-#'
+#' grade_this_code()(
+#'   mock_this_exercise(
+#'     # user submitted code
+#'     .user_code     = "runif(1, 0, 10)",
+#'     # from -solution chunk
+#'     .solution_code = "runif(n = 1, min = 0, max = 1)"
+#'   )
+#' )
+#' 
+#' # By default, grade_this_code() informs the user that piped code is unpiped
+#' # when comparing to the solution
+#' grade_this_code()(
+#'   mock_this_exercise(
+#'     # user submitted code
+#'     .user_code     = "storms %>% select(year, month, hour)",
+#'     # from -solution chunk
+#'     .solution_code = "storms %>% select(year, month, day)"
+#'   )
+#' )
+#' 
+#' # By setting `correct` or `incorrect` you can change the default message
+#' grade_this_code(
+#'   correct = "Good work!",
+#'   incorrect = "Not quite. {code_feedback()} {random_encouragement()}"
+#' )(
+#'   mock_this_exercise(
+#'     # user submitted code
+#'     .user_code     = "storms %>% select(year, month, hour)",
+#'     # from -solution chunk
+#'     .solution_code = "storms %>% select(year, month, day)"
+#'   )
+#' )
+#' 
 #' @param correct A `glue`-able character string to display if the student 
 #'   answer matches a known correct answer.
-#'
 #' @param incorrect A `glue`-able character string to display if the student
 #'   answer does not match the known correct answer. Use `code_feedback()` in 
 #'   this string to control the placement of the auto-generated feedback message
@@ -39,28 +130,14 @@
 #' @param ... Ignored
 #' @inheritParams code_feedback
 #'
-#' @return a function whose first parameter should be an environment that contains
-#' all necessary information to compare the code.  The result of the returned function will be a [graded()] object.
-#' @seealso [code_feedback()], [grade_this()]
-#' @examples
-#'
-#' # These are manual examples, see grading demo for `learnr` tutorial usage
-#'
-#' grade_this_code()(list(
-#'   .user_code = "sqrt(log(2))",
-#'   .solution_code = "sqrt(log(1))"
-#' ))
-#'
-#' grade_this_code()(list(
-#'   .user_code = rlang::quo(sqrt(log(2))),
-#'   .solution_code = rlang::quo(sqrt(log(1)))
-#' ))
-#'
-#' # Remember, only `grade_this_code(correct, incorrect)` should be used.
-#' # The followup `list()` and values will be called by 
-#' # `gradethis_exercise_checker()`.
-#' # To learn more about using `grade_this_code()` with learnr, see:
-#' \dontrun{gradethis_demo()}
+#' @return Returns a function whose first parameter will be an environment
+#'   containing objects specific to the exercise and submission (see **Available
+#'   variables**). For local testing, you can create a version of the expected
+#'   environment for a mock exercise submission with [mock_this_exercise()].
+#'   Calling the returned function on the exercise-checking environment will
+#'   evaluate the grade-checking `expr` and return a final grade via [graded()].
+#' 
+#' @seealso [code_feedback()], [grade_this()], [mock_this_exercise()]
 #' @export
 grade_this_code <- function(
   correct = getOption("gradethis.code_correct", getOption("gradethis.pass", "Correct!")),
