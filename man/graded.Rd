@@ -130,7 +130,9 @@ The immediate return behavior can be helpful when you have to perform
 complicated or long-running tests to determine if a student's code
 submission is correct. We recommend that you perform the easiest tests
 first, progressing to the most complicated tests. By taking advantage of
-early grade returns, you can simplify your checking code:\preformatted{```\{r\}
+early grade returns, you can simplify your checking code:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r\}
 grade_this(\{
   # is the answer a tibble?
   if (!inherits(.result, "tibble")) \{
@@ -152,6 +154,8 @@ grade_this(\{
 \})
 ```
 }
+
+\if{html}{\out{</div>}}
 
 Notice that it's important to choose a final fallback grade as the last
 value in your \code{\link[=grade_this]{grade_this()}} checking code. This last value is the default
