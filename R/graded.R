@@ -95,11 +95,11 @@
 #' # submission.
 #' #
 #' # Because we are demonstrating these functions inside R documentation, we'll
-#' # save the function returned by `grade_this()` as `this_grader()`. Calling
-#' # `this_grader()` on a mock exercise submission is equivalent to running the
+#' # save the function returned by `grade_this()` as `grader()`. Calling
+#' # `grader()` on a mock exercise submission is equivalent to running the
 #' # check code when the student clicks "Submit Answer" in a learnr tutorial.
 #'
-#' this_grader <-
+#' grader <-
 #' # ```{r example-check}
 #'   grade_this({
 #'     # Automatically use .result to compare to an expected value
@@ -136,25 +136,25 @@
 #' # Now lets try with a few different student submissions ----
 #'
 #' # Correct!
-#' this_grader(mock_this_exercise(.user_code = 42))
+#' grader(mock_this_exercise(.user_code = 42))
 #'
 #' # These were close...
-#' this_grader(mock_this_exercise(.user_code = 41))
-#' this_grader(mock_this_exercise(.user_code = 43))
+#' grader(mock_this_exercise(.user_code = 41))
+#' grader(mock_this_exercise(.user_code = 43))
 #'
 #' # Automatically use .solution if you have a *-solution chunk...
-#' this_grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
 #'
 #' # Floating point arithmetic is tricky...
-#' this_grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
-#' this_grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
 #'
 #' # Complicated checking situations...
-#' this_grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
-#' this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 #'
 #' # Finally fall back to the final answer...
-#' this_grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
+#' grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
 #'
 #' @param message A character string of the message to be displayed. In all
 #'   grading helper functions other than [graded()], `message` is a template
@@ -260,10 +260,52 @@ fail <- function(
 
 #' Signal a passing or failing grade if two values are equal
 #' 
+#' @description
 #' `pass_if_equal()` and `fail_if_equal()` are two [graded()] helper functions
 #' that signal a passing or a failing grade if two values are equal. They are
 #' designed to easily compare the returned value of the student's submitted
-#' code with the value returned by the solution or another known value.
+#' code with the value returned by the solution or another known value:
+#' 
+#' - Both functions find and use `.result` as the default for `x`, the first
+#'   item in the comparison. `.result` is the last value returned from the 
+#'   user's submitted code.
+#' - `pass_if_equal()` additionally finds and uses `.solution` as the default
+#'   expected value `y`.
+#'   
+#' See [graded()] for more information on \pkg{gradethis} grade-signaling 
+#' functions.
+#' 
+#' @examples
+#' # Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
+#' 
+#' grader <- 
+#' # ```{r example-check}
+#'   grade_this({
+#'     # Automatically pass if .result equal to .solution
+#'     pass_if_equal()
+#'     
+#'     fail_if_equal(mtcars[mtcars$cyl == 4, ], message = "Not four cylinders")
+#'     fail_if_equal(mtcars[mtcars$cyl == 8, ], message = "Not eight cylinders")
+#'     
+#'     # Default to failing grade with feedback
+#'     fail()
+#'   })
+#' # ```
+#' 
+#' .solution <- 
+#' # ```{r example-solution}
+#'   mtcars[mtcars$cyl == 6, ]
+#' # ```
+#' 
+#' # Correct!
+#' grader(mock_this_exercise(mtcars[mtcars$cyl == 6, ], !!.solution))
+#' 
+#' # These fail with specific messages
+#' grader(mock_this_exercise(mtcars[mtcars$cyl == 4, ], !!.solution))
+#' grader(mock_this_exercise(mtcars[mtcars$cyl == 8, ], !!.solution))
+#' 
+#' # This fails with default feedback message
+#' grader(mock_this_exercise(mtcars[mtcars$mpg == 8, ], !!.solution))
 #' 
 #' @inheritParams graded
 #' @param x First item in the comparison. By default, when used inside
@@ -372,7 +414,8 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
 #' 
 #' @description
 #' `pass_if()` and `fail_if()` both create passing or failing grades if a given
-#' condition is `TRUE`. 
+#' condition is `TRUE`. See [graded()] for more information on \pkg{gradethis}
+#' grade-signaling functions.
 #' 
 #' These functions are also used in legacy \pkg{gradethis} code, in particular
 #' in the superseded function [grade_result()]. While previous versions of
@@ -381,7 +424,45 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
 #' or `FALSE`.
 #' 
 #' @examples 
-#' # TODO: examples
+#' # Suppose the prompt is to find landmasses in `islands` with land area of
+#' # less than 20,000 square miles. (`islands` reports land mass in units of
+#' # 10,000 sq. miles.)
+#' 
+#' grader <- 
+#' # ```{r example-check}
+#'   grade_this({
+#'     fail_if(any(is.na(.result)), "You shouldn't have missing values.")
+#'     
+#'     diff_len <- length(.result) - length(.solution)
+#'     fail_if(diff_len < 0, "You missed {abs(diff_len)} island(s).")
+#'     fail_if(diff_len > 0, "You included {diff_len} too many islands.")
+#'     
+#'     pass_if(all(.result < 20), "Great work!")
+#'     
+#'     # Fall back grade
+#'     fail()
+#'   })
+#' # ```
+#' 
+#' .solution <- 
+#' # ```{r example-solution}
+#'     islands[islands < 20]
+#' # ```
+#' 
+#' # Peek at the right answer
+#' .solution
+#' 
+#' # Has missing values somehow
+#' grader(mock_this_exercise(islands["foo"], !!.solution))
+#' 
+#' # Has too many islands
+#' grader(mock_this_exercise(islands[islands < 29], !!.solution))
+#' 
+#' # Has too few islands
+#' grader(mock_this_exercise(islands[islands < 16], !!.solution))
+#' 
+#' # Just right!
+#' grader(mock_this_exercise(islands[islands < 20], !!.solution))
 #'
 #' @param cond A logical value or an expression that will evaluate to a `TRUE`
 #'   or `FALSE` value. If the value is `TRUE`, or would be considered `TRUE` in
@@ -477,14 +558,58 @@ fail_if <- function(
 
 #' Signal a failing grade if mistakes are detected in the submitted code
 #' 
+#' @description
 #' `fail_if_code_feedback()` uses [code_feedback()] to detect if there are
 #' differences between the user's submitted code and the solution code (if
 #' available). If the exercise does not have an associated solution, or if there
 #' are no detected differences between the user's and the solution code, no
 #' grade is returned.
 #' 
+#' See [graded()] for more information on \pkg{gradethis} grade-signaling
+#' functions.
+#' 
 #' @examples
-#' # TODO: examples
+#' # Suppose the exercise prompt is to generate 5 random numbers, sampled from
+#' # a uniform distribution between 0 and 1. In this exercise, you know that
+#' # you shouldn't have values outside of the range of 0 or 1, but you'll
+#' # otherwise need to check the submitted code to know that the student has
+#' # chosen the correct sampling function.
+#' 
+#' grader <-
+#' # ```{r example-check}
+#'   grade_this({
+#'     fail_if(length(.result) != 5, "I expected 5 numbers.")
+#'     fail_if(
+#'       any(.result < 0 || .result > 1), 
+#'       "I expected all numbers to be between 0 and 1."
+#'     )
+#'     
+#'     # Specific checks passed, but now we want to check the code.
+#'     fail_if_code_feedback()
+#'     
+#'     # All good!
+#'     pass()
+#'   })
+#' # ```
+#' 
+#' .solution_code <- "
+#' # ```{r example-check}
+#'   runif(5)
+#' # ```
+#' "
+#' 
+#' # Not 5 numbers...
+#' grader(mock_this_exercise(runif(1), !!.solution_code))
+#' 
+#' # Not within [0, 1]...
+#' grader(mock_this_exercise(rnorm(5), !!.solution_code))
+#' 
+#' # Passes specific checks, but hard to tell so check the code...
+#' grader(mock_this_exercise(runif(5, 0.25, 0.75), !!.solution_code))
+#' grader(mock_this_exercise(rbinom(5, 1, 0.5), !!.solution_code))
+#' 
+#' # Perfect!
+#' grader(mock_this_exercise(runif(n = 5), !!.solution_code))
 #' 
 #' @inheritParams code_feedback
 #' @inheritParams graded

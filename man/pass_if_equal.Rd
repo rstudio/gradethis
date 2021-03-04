@@ -66,7 +66,17 @@ Returns a passing or failing grade if \code{x} and \code{y} are equal.
 \code{pass_if_equal()} and \code{fail_if_equal()} are two \code{\link[=graded]{graded()}} helper functions
 that signal a passing or a failing grade if two values are equal. They are
 designed to easily compare the returned value of the student's submitted
-code with the value returned by the solution or another known value.
+code with the value returned by the solution or another known value:
+\itemize{
+\item Both functions find and use \code{.result} as the default for \code{x}, the first
+item in the comparison. \code{.result} is the last value returned from the
+user's submitted code.
+\item \code{pass_if_equal()} additionally finds and uses \code{.solution} as the default
+expected value \code{y}.
+}
+
+See \code{\link[=graded]{graded()}} for more information on \pkg{gradethis} grade-signaling
+functions.
 }
 \section{Functions}{
 \itemize{
@@ -77,6 +87,39 @@ equal.
 equal.
 }}
 
+\examples{
+# Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
+
+grader <- 
+# ```{r example-check}
+  grade_this({
+    # Automatically pass if .result equal to .solution
+    pass_if_equal()
+    
+    fail_if_equal(mtcars[mtcars$cyl == 4, ], message = "Not four cylinders")
+    fail_if_equal(mtcars[mtcars$cyl == 8, ], message = "Not eight cylinders")
+    
+    # Default to failing grade with feedback
+    fail()
+  })
+# ```
+
+.solution <- 
+# ```{r example-solution}
+  mtcars[mtcars$cyl == 6, ]
+# ```
+
+# Correct!
+grader(mock_this_exercise(mtcars[mtcars$cyl == 6, ], !!.solution))
+
+# These fail with specific messages
+grader(mock_this_exercise(mtcars[mtcars$cyl == 4, ], !!.solution))
+grader(mock_this_exercise(mtcars[mtcars$cyl == 8, ], !!.solution))
+
+# This fails with default feedback message
+grader(mock_this_exercise(mtcars[mtcars$mpg == 8, ], !!.solution))
+
+}
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},
 \code{\link[=pass_if]{pass_if()}}, \code{\link[=fail_if]{fail_if()}}, \code{\link[=pass_if_equal]{pass_if_equal()}}, \code{\link[=fail_if_equal]{fail_if_equal()}}.

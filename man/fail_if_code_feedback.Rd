@@ -83,9 +83,52 @@ differences between the user's submitted code and the solution code (if
 available). If the exercise does not have an associated solution, or if there
 are no detected differences between the user's and the solution code, no
 grade is returned.
+
+See \code{\link[=graded]{graded()}} for more information on \pkg{gradethis} grade-signaling
+functions.
 }
 \examples{
-# TODO: examples
+# Suppose the exercise prompt is to generate 5 random numbers, sampled from
+# a uniform distribution between 0 and 1. In this exercise, you know that
+# you shouldn't have values outside of the range of 0 or 1, but you'll
+# otherwise need to check the submitted code to know that the student has
+# chosen the correct sampling function.
+
+grader <-
+# ```{r example-check}
+  grade_this({
+    fail_if(length(.result) != 5, "I expected 5 numbers.")
+    fail_if(
+      any(.result < 0 || .result > 1), 
+      "I expected all numbers to be between 0 and 1."
+    )
+    
+    # Specific checks passed, but now we want to check the code.
+    fail_if_code_feedback()
+    
+    # All good!
+    pass()
+  })
+# ```
+
+.solution_code <- "
+# ```{r example-check}
+  runif(5)
+# ```
+"
+
+# Not 5 numbers...
+grader(mock_this_exercise(runif(1), !!.solution_code))
+
+# Not within [0, 1]...
+grader(mock_this_exercise(rnorm(5), !!.solution_code))
+
+# Passes specific checks, but hard to tell so check the code...
+grader(mock_this_exercise(runif(5, 0.25, 0.75), !!.solution_code))
+grader(mock_this_exercise(rbinom(5, 1, 0.5), !!.solution_code))
+
+# Perfect!
+grader(mock_this_exercise(runif(n = 5), !!.solution_code))
 
 }
 \seealso{

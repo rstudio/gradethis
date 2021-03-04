@@ -61,7 +61,8 @@ the provided condition is \code{TRUE}.
 }
 \description{
 \code{pass_if()} and \code{fail_if()} both create passing or failing grades if a given
-condition is \code{TRUE}.
+condition is \code{TRUE}. See \code{\link[=graded]{graded()}} for more information on \pkg{gradethis}
+grade-signaling functions.
 
 These functions are also used in legacy \pkg{gradethis} code, in particular
 in the superseded function \code{\link[=grade_result]{grade_result()}}. While previous versions of
@@ -77,7 +78,45 @@ or \code{FALSE}.
 }}
 
 \examples{
-# TODO: examples
+# Suppose the prompt is to find landmasses in `islands` with land area of
+# less than 20,000 square miles. (`islands` reports land mass in units of
+# 10,000 sq. miles.)
+
+grader <- 
+# ```{r example-check}
+  grade_this({
+    fail_if(any(is.na(.result)), "You shouldn't have missing values.")
+    
+    diff_len <- length(.result) - length(.solution)
+    fail_if(diff_len < 0, "You missed {abs(diff_len)} island(s).")
+    fail_if(diff_len > 0, "You included {diff_len} too many islands.")
+    
+    pass_if(all(.result < 20), "Great work!")
+    
+    # Fall back grade
+    fail()
+  })
+# ```
+
+.solution <- 
+# ```{r example-solution}
+    islands[islands < 20]
+# ```
+
+# Peek at the right answer
+.solution
+
+# Has missing values somehow
+grader(mock_this_exercise(islands["foo"], !!.solution))
+
+# Has too many islands
+grader(mock_this_exercise(islands[islands < 29], !!.solution))
+
+# Has too few islands
+grader(mock_this_exercise(islands[islands < 16], !!.solution))
+
+# Just right!
+grader(mock_this_exercise(islands[islands < 20], !!.solution))
 
 }
 \seealso{

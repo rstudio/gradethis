@@ -168,11 +168,11 @@ phrase.
 # submission.
 #
 # Because we are demonstrating these functions inside R documentation, we'll
-# save the function returned by `grade_this()` as `this_grader()`. Calling
-# `this_grader()` on a mock exercise submission is equivalent to running the
+# save the function returned by `grade_this()` as `grader()`. Calling
+# `grader()` on a mock exercise submission is equivalent to running the
 # check code when the student clicks "Submit Answer" in a learnr tutorial.
 
-this_grader <-
+grader <-
 # ```{r example-check}
   grade_this({
     # Automatically use .result to compare to an expected value
@@ -209,25 +209,25 @@ this_grader <-
 # Now lets try with a few different student submissions ----
 
 # Correct!
-this_grader(mock_this_exercise(.user_code = 42))
+grader(mock_this_exercise(.user_code = 42))
 
 # These were close...
-this_grader(mock_this_exercise(.user_code = 41))
-this_grader(mock_this_exercise(.user_code = 43))
+grader(mock_this_exercise(.user_code = 41))
+grader(mock_this_exercise(.user_code = 43))
 
 # Automatically use .solution if you have a *-solution chunk...
-this_grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
+grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
 
 # Floating point arithmetic is tricky...
-this_grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
-this_grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
+grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
+grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
 
 # Complicated checking situations...
-this_grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
-this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
+grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
+grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 
 # Finally fall back to the final answer...
-this_grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
+grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
 
 }
 \seealso{
