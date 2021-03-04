@@ -38,10 +38,10 @@
 #'      `hint = TRUE`, a code feedback hint is added to the custom `message`.
 #'      You can also control `hint` globally with [gradethis_setup()].
 #'
-#'   4. All helper functions include an `env` parameters. You can generally
-#'      ignore this argument. It's used internally to help `pass()` and `fail()`
-#'      _et al._ find the default argument values and to build the `message`
-#'      using [glue::glue()].
+#'   4. All helper functions include an `env` parameter, that you can generally
+#'      ignore. It's used internally to help `pass()` and `fail()` _et al._ find
+#'      the default argument values and to build the `message` using 
+#'      [glue::glue()].
 #'
 #' @section Return a grade immediately:
 #'

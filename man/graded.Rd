@@ -110,10 +110,10 @@ the \code{.solution} code, if available.
 \item All \code{fail} helper functions have an additional \code{hint} parameter. If
 \code{hint = TRUE}, a code feedback hint is added to the custom \code{message}.
 You can also control \code{hint} globally with \code{\link[=gradethis_setup]{gradethis_setup()}}.
-\item All helper functions include an \code{env} parameters. You can generally
-ignore this argument. It's used internally to help \code{pass()} and \code{fail()}
-\emph{et al.} find the default argument values and to build the \code{message}
-using \code{\link[glue:glue]{glue::glue()}}.
+\item All helper functions include an \code{env} parameter, that you can generally
+ignore. It's used internally to help \code{pass()} and \code{fail()} \emph{et al.} find
+the default argument values and to build the \code{message} using
+\code{\link[glue:glue]{glue::glue()}}.
 }
 }
 
