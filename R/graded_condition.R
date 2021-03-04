@@ -15,11 +15,16 @@ conditionMessage.gradethis_graded <- function(c) {
   } else {
     "[Neutral]"
   }
-
-  paste(
-    correct,
-    paste(as.character(condition_obj$message), collapse = " ")
-  )
+  
+  message <- paste(as.character(condition_obj$message), collapse = " ")
+  len_message <- nchar(message) + nchar(correct) + 3 + nchar("<gradethis_graded>")
+  
+  if (len_message > (0.9 * getOption("width"))) {
+    message <- c(strwrap(message, indent = 2, exdent = 2), "")
+    paste(c(correct, message), collapse = "\n")
+  } else {
+    paste(correct, message, collapse = " ")
+  }
 }
 
 # Turn errors into `fail()`ures
