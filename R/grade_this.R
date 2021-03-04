@@ -1,21 +1,61 @@
 #' Grade a student's submission using custom logic
+#' 
+#' @description
+#' `grade_this()` allows instructors to write custom logic to evaluate, grade
+#' and give feedback to students. To use `grade_this()`, call it directly in
+#' your `*-check` chunk:
+#' 
+#' ````
+#' ```{r example-check}
+#' grade_this({
+#'   # custom checking code appears here
+#'   if (identical(.result, .solution)) {
+#'     pass("Great work!")
+#'   }
+#'   fail("Try again!")
+#' })
+#' ```
+#' ````
+#' 
+#' `grade_this()` makes available a number of objects based on the exercise and
+#' the student's submission that can be used to evaluate the student's submitted
+#' code. See the **Available variables** section below for more information.
+#' 
+#' A final grade is signaled from `grade_this()` using the [graded()] helper
+#' functions, which include [pass()], [fail()], among others. `grade_this()`
+#' uses condition handling to short-circuit further evaluation when a grade is
+#' reached. This means that you may also signal a failing grade using any of the
+#' `expect_*()` functions from \pkg{testthat}, other functions designed to work
+#' with \pkg{testthat}, such as \pkg{checkmate}, or standard R errors via
+#' `stop()`. Learn more about this behavior in [graded()] in the section
+#' **Return a grade immediately**.
 #'
 #' @section Available variables:
 #'
-#'   `grade_this()` allows instructors to create an expression to grade. Within
-#'   the expression, all `learnr` tutorial variables variables are available for
-#'   inspection with a `.` prepended to the name:
+#'   `grade_this()` allows instructors to determine a grade and to create custom
+#'   feedback messages using custom R code. To facilitate evaluating the
+#'   exercise, `grade_this()` makes available a number of objects that can be
+#'   referenced within the `{ ... }` expression.
+#'   
+#'   All of the objects provided by `learnr` to an exercise checking function
+#'   are available for inspection. To avoid name collisions with user or 
+#'   instructor code, the names of these objects all start with `.`:
 #'
 #'   * `.label`: Label for exercise chunk 
-#'   * `.solution_code`: Code provided within the "-solution" chunk for the exercise 
+#'   * `.solution_code`: Code provided within the `*-solution` chunk for the 
+#'     exercise 
 #'   * `.user_code`: R code submitted by the user 
-#'   * `.check_code`: Code provided within the "-check" (or "-code-check") chunk for the exercise. 
-#'   * `.envir_prep`: A copy of the R environment before the execution of the chunk. 
+#'   * `.check_code`: Code provided within the `*-check` (or `*-code-check`)
+#'     chunk for the exercise. 
+#'   * `.envir_prep`: A copy of the R environment before the execution of the 
+#'     chunk. 
 #'   * `.envir_result`: The R environment after the execution of the chunk. 
-#'   * `.evaluate_result`: The return value from the `evaluate::evaluate` function. 
-#'   * `.last_value` The last value from evaluating the user's exercise submission. 
+#'   * `.evaluate_result`: The return value from the `evaluate::evaluate` 
+#'     function. 
+#'   * `.last_value` The last value from evaluating the user's exercise 
+#'     submission. 
 #'   
-#'   In addition, \pkg{gradethis} has provided some extra variables: 
+#'   In addition, \pkg{gradethis} has provided some extra objects: 
 #'   
 #'   * `.user`, `.result`: A direct copy of `.last_value` for friendlier naming 
 #'   * `.solution`: When accessed, will be the result of evaluating the 
@@ -26,59 +66,85 @@
 #'   contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
 #'   will be turned into [fail()]ed grades with the corresponding message.
 #'
-#' @param expr Expression to be evaluated. MUST either signal a grade via
-#'   [pass()] or [fail()] like \pkg{gradethis} functions or throw an error (via
-#'   \pkg{testthat} or [stop()]). Errors will be converted to [fail()] calls
-#'   with the corresponding error message.
-#' @param ... ignored
-#' @param maybe_code_feedback Logical that determines if `maybe_code_feedback()`
-#'   should provide code feedback when used in a [graded()] message. The default
-#'   value can be set with [gradethis_setup()].
-#'   
-#'   Typically, [maybe_code_feedback()] is called in the default [fail()] 
-#'   message (the default can be customized the `fail` argument of 
-#'   [gradethis_setup()]). If the `maybe_code_feedback` argument is `FALSE`, 
-#'   `maybe_code_feedback()` returns an empty string.
-#'   
-#' @return a function whose first parameter should be an environment that
-#'   contains all necessary information to execute the expression.  The
-#'   evaluation of the expression should return a [graded()] object.
-#'   
-#' @seealso [grade_this_code()], [eval_gradethis()]
-#' @export
 #' @examples
+#' # For an interactive example run: gradethis_demo()
+#' 
+#' # Suppose we have an exercise that prompts students to calculate the
+#' # average height of Loblolly pine trees using the `Loblolly` data set.
+#' # We might write an exercise `-check` chunk like the one below.
+#' # 
+#' # Since grade_this() returns a function, we'll save the result of this
+#' # "chunk" as `grader()`, which can be called on an exercise submission
+#' # to evaluate the student's code, which we'll simulate with
+#' # `mock_this_exercise()`.
+#' 
+#' grader <- 
+#'   # ```{r example-check}
+#'   grade_this({
+#'     if (length(.result) != 1) {
+#'       fail("I expected a single value instead of {length(.result)} values.")
+#'     }
+#'     
+#'     if (is.na(.result)) {
+#'       fail("I expected a number, but your code returned a missing value.")
+#'     }
+#'     
+#'     avg_height <- mean(Loblolly$height)
+#'     if (identical(.result, avg_height)) {
+#'       pass("Great work! The average height is {round(avg_height, 2)}.")
+#'     }
+#'     
+#'     # Always end grade_this() with a default grade.
+#'     # By default fail() will also give code feedback, 
+#'     # if a solution is available.
+#'     fail()
+#'   })
+#' # ```
+#' 
+#' # Simulate an incorrect answer: too many values...
+#' grader(mock_this_exercise(.user_code = Loblolly$height[1:2]))
+#' 
+#' # This student submission returns a missing value...
+#' grader(mock_this_exercise(mean(Loblolly$Seed)))
+#' # This student submission isn't caught by any specific tests,
+#' # the final grade is determined by the default (last) value in grade_this()
+#' grader(mock_this_exercise(mean(Loblolly$age)))
+#' 
+#' # If you have a *-solution chunk, 
+#' # fail() without arguments gives code feedback...
+#' grader(
+#'   mock_this_exercise(
+#'     .user_code = mean(Loblolly$age),
+#'     .solution_code = mean(Loblolly$height)
+#'   )
+#' )
+#' 
+#' # Finally, the "student" gets the correct answer!
+#' grader(mock_this_exercise(mean(Loblolly$height)))
+#' 
+#' @param expr The grade-checking expression to be evaluated. This expression
+#'   must either signal a grade via [pass()] or [fail()] functions or throw an
+#'   error (via \pkg{testthat} or [stop()]). Errors will be converted to
+#'   [fail()] calls and will use the error message as the feedback `message`.
+#' @param maybe_code_feedback Should `maybe_code_feedback()` provide code
+#'   feedback when used in a [graded()] message? The default value can be set
+#'   with [gradethis_setup()].
 #'
-#' # These are manual examples, see grading demo for `learnr` tutorial usage
-#'
-#' grade_this({
-#'   fail_if_equal(4, "Try adding 1")
-#'   pass_if_equal(5, "You got 5, great!")
-#'   fail()
-#' })(list(
-#'   .result = 4
-#' ))
-#'
-#' grade_this({
-#'   testthat::expect_type(.result, "integer") # will `fail()` if not an integer
-#'   testthat::expect_equal(.result, 5L)        # will `fail()` if not equal to 5
-#'   pass() # returns default message
-#' })(list(
-#'   .result = 5L
-#' ))
-#'
-#' grade_this({
-#'   testthat::expect_true(is.function(.result))
-#'   testthat::expect_equal(.result(1), 3)
-#'   pass()
-#' })(list(
-#'   .result = function(x) {x + 2}
-#' ))
-#'
-#' # Remember, only `grade_this(expr)` should be used.
-#' # The followup `list()` and values will be called by 
-#' # `gradethis_exercise_checker()`
-#' # To learn more about using `grade_this()` with learnr, see:
-#' \dontrun{gradethis_demo()}
+#'   Typically, [maybe_code_feedback()] is called in the default [fail()]
+#'   message (the default can be customized the `fail` argument of
+#'   [gradethis_setup()]). If the `maybe_code_feedback` argument is `FALSE`,
+#'   `maybe_code_feedback()` returns an empty string.
+#' @param ... Ignored
+#'   
+#' @return Returns a function whose first parameter will be an environment
+#'   containing objects specific to the exercise and submission (see **Available
+#'   variables**). For local testing, you can create a version of the expected
+#'   environment for a mock exercise submission with [mock_this_exercise()].
+#'   Calling the returned function on the exercise-checking environment will
+#'   evaluate the grade-checking `expr` and return a final grade via [graded()].
+#'   
+#' @seealso [grade_this_code()], [mock_this_exercise()], [gradethis_demo()]
+#' @export
 grade_this <- function(
   expr,
   ...,

@@ -11,16 +11,16 @@ grade_this(
 )
 }
 \arguments{
-\item{expr}{Expression to be evaluated. MUST either signal a grade via
-\code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} like \pkg{gradethis} functions or throw an error (via
-\pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to \code{\link[=fail]{fail()}} calls
-with the corresponding error message.}
+\item{expr}{The grade-checking expression to be evaluated. This expression
+must either signal a grade via \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} functions or throw an
+error (via \pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to
+\code{\link[=fail]{fail()}} calls and will use the error message as the feedback \code{message}.}
 
-\item{...}{ignored}
+\item{...}{Ignored}
 
-\item{maybe_code_feedback}{Logical that determines if \code{maybe_code_feedback()}
-should provide code feedback when used in a \code{\link[=graded]{graded()}} message. The default
-value can be set with \code{\link[=gradethis_setup]{gradethis_setup()}}.
+\item{maybe_code_feedback}{Should \code{maybe_code_feedback()} provide code
+feedback when used in a \code{\link[=graded]{graded()}} message? The default value can be set
+with \code{\link[=gradethis_setup]{gradethis_setup()}}.
 
 Typically, \code{\link[=maybe_code_feedback]{maybe_code_feedback()}} is called in the default \code{\link[=fail]{fail()}}
 message (the default can be customized the \code{fail} argument of
@@ -28,31 +28,68 @@ message (the default can be customized the \code{fail} argument of
 \code{maybe_code_feedback()} returns an empty string.}
 }
 \value{
-a function whose first parameter should be an environment that
-contains all necessary information to execute the expression.  The
-evaluation of the expression should return a \code{\link[=graded]{graded()}} object.
+Returns a function whose first parameter will be an environment
+containing objects specific to the exercise and submission (see \strong{Available
+variables}). For local testing, you can create a version of the expected
+environment for a mock exercise submission with \code{\link[=mock_this_exercise]{mock_this_exercise()}}.
+Calling the returned function on the exercise-checking environment will
+evaluate the grade-checking \code{expr} and return a final grade via \code{\link[=graded]{graded()}}.
 }
 \description{
-Grade a student's submission using custom logic
+\code{grade_this()} allows instructors to write custom logic to evaluate, grade
+and give feedback to students. To use \code{grade_this()}, call it directly in
+your \verb{*-check} chunk:\preformatted{```\{r example-check\}
+grade_this(\{
+  # custom checking code appears here
+  if (identical(.result, .solution)) \{
+    pass("Great work!")
+  \}
+  fail("Try again!")
+\})
+```
+}
+
+\code{grade_this()} makes available a number of objects based on the exercise and
+the student's submission that can be used to evaluate the student's submitted
+code. See the \strong{Available variables} section below for more information.
+
+A final grade is signaled from \code{grade_this()} using the \code{\link[=graded]{graded()}} helper
+functions, which include \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}}, among others. \code{grade_this()}
+uses condition handling to short-circuit further evaluation when a grade is
+reached. This means that you may also signal a failing grade using any of the
+\verb{expect_*()} functions from \pkg{testthat}, other functions designed to work
+with \pkg{testthat}, such as \pkg{checkmate}, or standard R errors via
+\code{stop()}. Learn more about this behavior in \code{\link[=graded]{graded()}} in the section
+\strong{Return a grade immediately}.
 }
 \section{Available variables}{
 
 
-\code{grade_this()} allows instructors to create an expression to grade. Within
-the expression, all \code{learnr} tutorial variables variables are available for
-inspection with a \code{.} prepended to the name:
+\code{grade_this()} allows instructors to determine a grade and to create custom
+feedback messages using custom R code. To facilitate evaluating the
+exercise, \code{grade_this()} makes available a number of objects that can be
+referenced within the \code{{ ... }} expression.
+
+All of the objects provided by \code{learnr} to an exercise checking function
+are available for inspection. To avoid name collisions with user or
+instructor code, the names of these objects all start with \code{.}:
 \itemize{
 \item \code{.label}: Label for exercise chunk
-\item \code{.solution_code}: Code provided within the "-solution" chunk for the exercise
+\item \code{.solution_code}: Code provided within the \verb{*-solution} chunk for the
+exercise
 \item \code{.user_code}: R code submitted by the user
-\item \code{.check_code}: Code provided within the "-check" (or "-code-check") chunk for the exercise.
-\item \code{.envir_prep}: A copy of the R environment before the execution of the chunk.
+\item \code{.check_code}: Code provided within the \verb{*-check} (or \verb{*-code-check})
+chunk for the exercise.
+\item \code{.envir_prep}: A copy of the R environment before the execution of the
+chunk.
 \item \code{.envir_result}: The R environment after the execution of the chunk.
-\item \code{.evaluate_result}: The return value from the \code{evaluate::evaluate} function.
-\item \code{.last_value} The last value from evaluating the user's exercise submission.
+\item \code{.evaluate_result}: The return value from the \code{evaluate::evaluate}
+function.
+\item \code{.last_value} The last value from evaluating the user's exercise
+submission.
 }
 
-In addition, \pkg{gradethis} has provided some extra variables:
+In addition, \pkg{gradethis} has provided some extra objects:
 \itemize{
 \item \code{.user}, \code{.result}: A direct copy of \code{.last_value} for friendlier naming
 \item \code{.solution}: When accessed, will be the result of evaluating the
@@ -66,39 +103,62 @@ will be turned into \code{\link[=fail]{fail()}}ed grades with the corresponding 
 }
 
 \examples{
+# For an interactive example run: gradethis_demo()
 
-# These are manual examples, see grading demo for `learnr` tutorial usage
+# Suppose we have an exercise that prompts students to calculate the
+# average height of Loblolly pine trees using the `Loblolly` data set.
+# We might write an exercise `-check` chunk like the one below.
+# 
+# Since grade_this() returns a function, we'll save the result of this
+# "chunk" as `grader()`, which can be called on an exercise submission
+# to evaluate the student's code, which we'll simulate with
+# `mock_this_exercise()`.
 
-grade_this({
-  fail_if_equal(4, "Try adding 1")
-  pass_if_equal(5, "You got 5, great!")
-  fail()
-})(list(
-  .result = 4
-))
+grader <- 
+  # ```{r example-check}
+  grade_this({
+    if (length(.result) != 1) {
+      fail("I expected a single value instead of {length(.result)} values.")
+    }
+    
+    if (is.na(.result)) {
+      fail("I expected a number, but your code returned a missing value.")
+    }
+    
+    avg_height <- mean(Loblolly$height)
+    if (identical(.result, avg_height)) {
+      pass("Great work! The average height is {round(avg_height, 2)}.")
+    }
+    
+    # Always end grade_this() with a default grade.
+    # By default fail() will also give code feedback, 
+    # if a solution is available.
+    fail()
+  })
+# ```
 
-grade_this({
-  testthat::expect_type(.result, "integer") # will `fail()` if not an integer
-  testthat::expect_equal(.result, 5L)        # will `fail()` if not equal to 5
-  pass() # returns default message
-})(list(
-  .result = 5L
-))
+# Simulate an incorrect answer: too many values...
+grader(mock_this_exercise(.user_code = Loblolly$height[1:2]))
 
-grade_this({
-  testthat::expect_true(is.function(.result))
-  testthat::expect_equal(.result(1), 3)
-  pass()
-})(list(
-  .result = function(x) {x + 2}
-))
+# This student submission returns a missing value...
+grader(mock_this_exercise(mean(Loblolly$Seed)))
+# This student submission isn't caught by any specific tests,
+# the final grade is determined by the default (last) value in grade_this()
+grader(mock_this_exercise(mean(Loblolly$age)))
 
-# Remember, only `grade_this(expr)` should be used.
-# The followup `list()` and values will be called by 
-# `gradethis_exercise_checker()`
-# To learn more about using `grade_this()` with learnr, see:
-\dontrun{gradethis_demo()}
+# If you have a *-solution chunk, 
+# fail() without arguments gives code feedback...
+grader(
+  mock_this_exercise(
+    .user_code = mean(Loblolly$age),
+    .solution_code = mean(Loblolly$height)
+  )
+)
+
+# Finally, the "student" gets the correct answer!
+grader(mock_this_exercise(mean(Loblolly$height)))
+
 }
 \seealso{
-\code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=eval_gradethis]{eval_gradethis()}}
+\code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=mock_this_exercise]{mock_this_exercise()}}, \code{\link[=gradethis_demo]{gradethis_demo()}}
 }
