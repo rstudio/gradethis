@@ -582,7 +582,7 @@ fail_if <- function(
 #'   grade_this({
 #'     fail_if(length(.result) != 5, "I expected 5 numbers.")
 #'     fail_if(
-#'       any(.result < 0 || .result > 1), 
+#'       any(.result < 0 | .result > 1), 
 #'       "I expected all numbers to be between 0 and 1."
 #'     )
 #'     
