@@ -624,9 +624,9 @@ fail_if <- function(
 #' @template graded-family
 #' @export
 fail_if_code_feedback <- function(
+  message = NULL,
   user_code = missing_arg(),
   solution_code = missing_arg(),
-  message = NULL,
   ...,
   env = parent.frame(),
   hint = TRUE,

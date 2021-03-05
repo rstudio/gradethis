@@ -121,7 +121,7 @@ test_that("fail_if_equal() in grade_this()", {
 test_that("fail_if_code_feedback() returns grade if code feedback", {
   # code feedback message by default
   expect_graded(
-    fail_if_code_feedback("x + y", "x + z"),
+    fail_if_code_feedback(user_code = "x + y", solution_code = "x + z"),
     is_correct = FALSE,
     msg = code_feedback("x + y", "x + z")
   )
@@ -247,7 +247,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
   
   
   testthat::expect_message(
-    expect_null(fail_if_code_feedback("2")),
+    expect_null(fail_if_code_feedback(user_code = "2")),
     "expected `.solution_code` to be found",
     fixed = TRUE
   )

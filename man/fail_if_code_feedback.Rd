@@ -5,9 +5,9 @@
 \title{Signal a failing grade if mistakes are detected in the submitted code}
 \usage{
 fail_if_code_feedback(
+  message = NULL,
   user_code = missing_arg(),
   solution_code = missing_arg(),
-  message = NULL,
   ...,
   env = parent.frame(),
   hint = TRUE,
@@ -16,6 +16,10 @@ fail_if_code_feedback(
 )
 }
 \arguments{
+\item{message}{A character string of the message to be displayed. In all
+grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
+string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
+
 \item{user_code}{String containing user or solution code. For
 ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
 default retrieved from the calling environment.}
@@ -23,10 +27,6 @@ default retrieved from the calling environment.}
 \item{solution_code}{String containing user or solution code. For
 ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
 default retrieved from the calling environment.}
-
-\item{message}{A character string of the message to be displayed. In all
-grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
-string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
 \item{...}{
   Arguments passed on to \code{\link[=graded]{graded}}
