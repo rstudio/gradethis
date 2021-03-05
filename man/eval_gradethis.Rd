@@ -7,7 +7,7 @@
 eval_gradethis(expr, on_error = NULL, on_graded = NULL)
 }
 \arguments{
-\item{expr}{Code block to evaluate}
+\item{expr}{The expression or code block to evaluate}
 
 \item{on_error}{A \code{\link[=withCallingHandlers]{withCallingHandlers()}} handler for class \code{error} with
 signature \verb{function(error, this_env)} that receives the error object and
@@ -26,25 +26,32 @@ Capture the first \code{\link[=graded]{graded()}} signal or error thrown when ev
 \code{expr}.
 }
 \examples{
-ans1 <- eval_gradethis({
+# Passes with "message 1", short-circuiting evaluation
+eval_gradethis({
   pass("message 1")
   pass("message 2")
   pass("message 3")
 })
-ans1 # passing - message 1
 
-ans2 <- eval_gradethis({
+# Fails with message from fail()
+eval_gradethis({
+  fail("incorrect")
+  pass("correct")
+})
+
+# Fails with message from expect_true()
+eval_gradethis({
   testthat::expect_true(FALSE)
   pass("message 2")
   pass("message 3")
 })
-ans2 # failing - FALSE isn't true.
 
-ans3 <- eval_gradethis({
+# Fails immediately with message "boom"
+eval_gradethis({
   stop("boom")
   pass("message 2")
   pass("message 3")
 })
-ans3 # failing - boom
-
+  
 }
+\keyword{internal}
