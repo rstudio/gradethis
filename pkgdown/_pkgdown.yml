@@ -55,6 +55,15 @@ navbar:
     #       href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
 
 reference:
+- title: Setup gradethis
+  description: |
+    To use `gradethis` in your `learnr` tutorial, you only need to load the
+    `gradethis` package. Still, you can use `gradethis_setup()` to change the
+    default values of many of the exercise checking or grading function
+    arguments.
+  contents:
+  - '`gradethis_setup`'
+  - '`gradethis_demo`'
 - title: Exercise Checking Functions
   description: |
     Choose one of these functions to use in the `*-check` chunk of your exercise.
@@ -79,13 +88,6 @@ reference:
   - '`code_feedback`'
   - '`praise`'
   - '`pipe_warning`'
-- title: Setup gradethis
-  description: |
-    Setup `learnr` to work with `gradethis` or change the default values of many
-    of the exercise checking or grading function arguments.
-  contents:
-  - '`gradethis_setup`'
-  - '`gradethis_demo`'
 - title: Helper Functions and Utilities
   description: |
     These functions are used by `gradethis` to work within `learnr` tutorials,

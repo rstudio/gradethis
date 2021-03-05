@@ -2,10 +2,23 @@
 
 #' Setup gradethis for use within learnr
 #'
-#' Use this function to change the default options suggested by gradethis. This
-#' function also describes in detail each of the global options available for
-#' customization in the gradethis package. Note that you most likely do not want
-#' to change the defaults values for the learnr tutorial options that are
+#' @description 
+#' To use \pkg{gradethis} in your \pkg{learnr} tutorial, you only need to call
+#' `library(gradethis)` in your tutorial's setup chunk.
+#' 
+#' \if{html}{\out{<div class="sourceCode">}}
+#' ````
+#' ```{r setup}
+#' library(learnr)
+#' library(gradethis)
+#' ```
+#' ````
+#' \if{html}{\out{</div>}}
+#' 
+#' Use `gradethis_setup()` to change the default options suggested by gradethis.
+#' This function also describes in detail each of the global options available
+#' for customization in the gradethis package. Note that you most likely do not
+#' want to change the defaults values for the learnr tutorial options that are
 #' prefixed with `exercise.`. Each of the gradethis-specific arguments sets a
 #' global option with the same name, prefixed with `gradethis.`. For example,
 #' `pass` sets `gradethis.pass`.
