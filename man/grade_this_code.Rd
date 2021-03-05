@@ -96,11 +96,16 @@ code — \code{.solution_code} in \code{\link[=grade_this]{grade_this()}}.
 
 You can customize the \code{correct} and \code{incorrect} messages shown to the user
 by \code{grade_this_code()}. Both arguments accept template strings that are
-processed by \code{\link[glue:glue]{glue::glue()}}. There are four helper functions used in the
-default messages that you may want to include in your custom messages. To
-use the output of any of the following, include them inside braces in the
-template string. For example use \code{{code_feedback()}} to add the code
-feedback to your custom \code{incorrect} message.
+processed by \code{\link[glue:glue]{glue::glue()}}. If you provide a custom template string, it
+completely overwrites the default string, but you can include the
+components used by the default message by adding them to your custom
+message.
+
+There are four helper functions used in the default messages that you may
+want to include in your custom messages. To use the output of any of the
+following, include them inside braces in the template string. For example
+use \code{{code_feedback()}} to add the code feedback to your custom \code{incorrect}
+message.
 \enumerate{
 \item \code{\link[=code_feedback]{code_feedback()}}: Adds feedback about the first observed difference
 between the student's submitted code and the model solution code.
