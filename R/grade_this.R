@@ -226,27 +226,30 @@ detect_grade_this <- function(env = parent.frame()) {
 #' # Call `debug_this()` inside your *-check chunk, is equivalent to
 #' debug_this()(submission)$message
 #' 
-#' # Or you can call `debug_this()` inside a `grade_this()` call
-#' # at the point where you want to get debug feedback.
-#' grade_this({
-#'   pass_if_equal(42, "Good stuff!")
-#' 
-#'   # Find out why this is failing??
-#'   debug_this()
-#' })(submission)
-#' 
-#' # Set default `fail()` message to show debug information
-#' # (for tutorial development only!)
-#' old_opts <- options(gradethis.fail = "{debug_this()}")
-#' 
-#' grade_this({
-#'   pass_if_equal(42, "Good stuff!")
-#' 
-#'   fail()
-#' })(submission)
-#' 
-#' # default fail() will show debug until you reset gradethis.fail option
-#' options(old_opts)
+#' # We won't run the remaining examples since they produce equivalent output
+#' if (interactive()) {
+#'   # Or you can call `debug_this()` inside a `grade_this()` call
+#'   # at the point where you want to get debug feedback.
+#'   grade_this({
+#'     pass_if_equal(42, "Good stuff!")
+#'   
+#'     # Find out why this is failing??
+#'     debug_this()
+#'   })(submission)
+#'   
+#'   # Set default `fail()` message to show debug information
+#'   # (for tutorial development only!)
+#'   old_opts <- options(gradethis.fail = "{debug_this()}")
+#'   
+#'   grade_this({
+#'     pass_if_equal(42, "Good stuff!")
+#'   
+#'     fail()
+#'   })(submission)
+#'   
+#'   # default fail() will show debug until you reset gradethis.fail option
+#'   options(old_opts)
+#' }
 #' 
 #' @param check_env A grade checking environment. You can use
 #'   [mock_this_exercise()] to prepare a mocked exercise submission
@@ -254,13 +257,13 @@ detect_grade_this <- function(env = parent.frame()) {
 #'   
 #' @return Returns a neutral grade containing a message that includes any
 #'   and all information available about the exercise and the current 
-#'   submission. This information is all available for use within
-#'   [grade_this()].
+#'   submission. The output lets you visually explore the objects available for
+#'   use within your [grade_this()] grading code.
 #' 
 #' @export
 debug_this <- function(check_env = parent.frame()) {
   
-  if (!exists(".result", check_env)) {
+  if (!exists(".result", envir = check_env)) {
     # most likely called outside of grade_this(), so return
     # debug_this directly to be used as a checking function
     return(debug_this)

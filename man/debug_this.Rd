@@ -14,8 +14,8 @@ environment. Otherwise, you don't need to use or set this argument.}
 \value{
 Returns a neutral grade containing a message that includes any
 and all information available about the exercise and the current
-submission. This information is all available for use within
-\code{\link[=grade_this]{grade_this()}}.
+submission. The output lets you visually explore the objects available for
+use within your \code{\link[=grade_this]{grade_this()}} grading code.
 }
 \description{
 When used in a \verb{*-check} chunk or inside \code{\link[=grade_this]{grade_this()}}, \code{debug_this()}
@@ -122,26 +122,29 @@ submission <- mock_this_exercise(.user_code = 40, .solution_code = 11 + 31)
 # Call `debug_this()` inside your *-check chunk, is equivalent to
 debug_this()(submission)$message
 
-# Or you can call `debug_this()` inside a `grade_this()` call
-# at the point where you want to get debug feedback.
-grade_this({
-  pass_if_equal(42, "Good stuff!")
-
-  # Find out why this is failing??
-  debug_this()
-})(submission)
-
-# Set default `fail()` message to show debug information
-# (for tutorial development only!)
-old_opts <- options(gradethis.fail = "{debug_this()}")
-
-grade_this({
-  pass_if_equal(42, "Good stuff!")
-
-  fail()
-})(submission)
-
-# default fail() will show debug until you reset gradethis.fail option
-options(old_opts)
+# We won't run the remaining examples since they produce equivalent output
+if (interactive()) {
+  # Or you can call `debug_this()` inside a `grade_this()` call
+  # at the point where you want to get debug feedback.
+  grade_this({
+    pass_if_equal(42, "Good stuff!")
+  
+    # Find out why this is failing??
+    debug_this()
+  })(submission)
+  
+  # Set default `fail()` message to show debug information
+  # (for tutorial development only!)
+  old_opts <- options(gradethis.fail = "{debug_this()}")
+  
+  grade_this({
+    pass_if_equal(42, "Good stuff!")
+  
+    fail()
+  })(submission)
+  
+  # default fail() will show debug until you reset gradethis.fail option
+  options(old_opts)
+}
 
 }
