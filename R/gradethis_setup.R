@@ -9,6 +9,11 @@
 #' prefixed with `exercise.`. Each of the gradethis-specific arguments sets a
 #' global option with the same name, prefixed with `gradethis.`. For example,
 #' `pass` sets `gradethis.pass`.
+#' 
+#' @section Global package options:
+#' 
+#'   ```{r child="man/fragments/gradethis-setup.Rmd"}
+#'   ```
 #'
 #' @examples
 #' # Not run in package documentation because this function changes global opts
