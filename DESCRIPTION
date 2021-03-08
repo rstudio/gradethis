@@ -51,7 +51,10 @@ Imports:
     waldo
 Suggests:
     knitr,
+    rmarkdown,
     tidyr
+VignetteBuilder: 
+    knitr
 Remotes: 
     rstudio/learnr
 Encoding: UTF-8
