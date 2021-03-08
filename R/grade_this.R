@@ -48,14 +48,14 @@
 #'     exercise 
 #'   * `.user_code`: R code submitted by the user 
 #'   * `.check_code`: Code provided within the `*-check` (or `*-code-check`)
-#'     chunk for the exercise. 
+#'     chunk for the exercise 
 #'   * `.envir_prep`: A copy of the R environment before the execution of the 
-#'     chunk. 
+#'     chunk 
 #'   * `.envir_result`: The R environment after the execution of the chunk. 
 #'   * `.evaluate_result`: The return value from the `evaluate::evaluate` 
-#'     function. 
+#'     function 
 #'   * `.last_value` The last value from evaluating the user's exercise 
-#'     submission. 
+#'     submission 
 #'   
 #'   In addition, \pkg{gradethis} has provided some extra objects: 
 #'   

@@ -83,14 +83,14 @@ instructor code, the names of these objects all start with \code{.}:
 exercise
 \item \code{.user_code}: R code submitted by the user
 \item \code{.check_code}: Code provided within the \verb{*-check} (or \verb{*-code-check})
-chunk for the exercise.
+chunk for the exercise
 \item \code{.envir_prep}: A copy of the R environment before the execution of the
-chunk.
+chunk
 \item \code{.envir_result}: The R environment after the execution of the chunk.
 \item \code{.evaluate_result}: The return value from the \code{evaluate::evaluate}
-function.
+function
 \item \code{.last_value} The last value from evaluating the user's exercise
-submission.
+submission
 }
 
 In addition, \pkg{gradethis} has provided some extra objects:
