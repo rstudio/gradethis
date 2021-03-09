@@ -78,7 +78,7 @@ gradethis provides two grading modalities. You can:
 1. Write custom grading logic with [`grade_this()`](#).
 
 To use gradethis in a learnr tutorial,
-load `gradethis` after `learnr` in the `setup` chunk of your tutorial:
+load gradethis after learnr in the `setup` chunk of your tutorial:
 
 ````markdown
 ```{r setup}`r ''`
@@ -107,9 +107,13 @@ ____(1:10)
 Our hope is that students will replace the `____` with the correct R function,
 in this case `mean()`.
 
-To grade the exercise, we need to associate checking code with the exercise.
+To grade an exercise, we need to associate checking code with the exercise.
 In learnr, this code is written in a chunk named `<exercise label>-check`, where
 `<exercise label>` is the label of the chunk with `exercise = TRUE`.
+
+To use gradethis to grade the `average` exercise,
+we create a new chunk named `average-check`
+and we call either `grade_this()` or `grade_this_code()` inside the chunk.
 
 ### Custom Grading Logic
 
