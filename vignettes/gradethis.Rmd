@@ -111,7 +111,7 @@ To grade an exercise, we need to associate checking code with the exercise.
 In learnr, this code is written in a chunk named `<exercise label>-check`, where
 `<exercise label>` is the label of the chunk with `exercise = TRUE`.
 
-To use gradethis to grade the `average` exercise,
+To use gradethis to grade our `average` exercise,
 we create a new chunk named `average-check`
 and we call either `grade_this()` or `grade_this_code()` inside the chunk.
 
@@ -186,6 +186,7 @@ If you want to provide custom feedback
 for specific errors that students may be likely to make
 in your exercise,
 `grade_this()` provides a high level of flexibility.
+
 When using `grade_this()`,
 your goal is to write a series of tests around the student's submission
 to determine whether or not it passes or fails.
@@ -210,14 +211,15 @@ grade_this({
 ```
 ````
 
-If a hypothetical student submitted `mean(1:10)` for their exercise code,
-this checking code will return:
+If a hypothetical student submitted `mean(1:10)` for this exercise,
+our checking code will return:
 
 ```{r average-check-manual, echo=FALSE}
 grade_html(pass("Great work! You calculated the average of the first ten integers."))
 ```
 
-If the student submits an incorrect answer, the default `fail()` message is encouraging:
+If the student submits an incorrect answer,
+the default `fail()` message is encouraging and helpful:
 
 ```{r average-check-fail, echo=FALSE}
 grade_html(grade_this(fail())(mock_this_exercise("min(1:10)", "mean(1:10)")))
@@ -264,7 +266,7 @@ the names of these objects all start with `.`:
 | `.envir_result` | The R environment after the execution of the chunk
 | `.evaluate_result` | The return value from the `evaluate::evaluate` function
 
-You can reference any of these functions in your grading logic.
+You can reference any of these objects in your grading logic.
 Additionally,
 you can use `debug_this()` as your exercise checker
 or in lieu of a grade to return an informative message in the tutorial
@@ -294,14 +296,17 @@ later tests presume earlier tests in the grading code were not triggered.
 If you are familiar with writing R functions,
 the `pass()` and `fail()` helper functions are similar to early `return()` statements.
 
-Be certain to include a final grade in case no other grades are returned.
+Be careful to end your `grade_this()` grading code
+with a final fallback grade in case no other grades are returned.
 Typically, 
-you'll want to end your `grade_this()` grading code
-with a single `pass()` or `fail()` statement.
+this fallback grade will be
+a call to `pass()` or `fail()` without any arguments.
 
 ### Feedback Messages
 
-The `pass()` and `fail()` functions all use the `glue` package for custom message templating.
+The `pass()` and `fail()` functions all use 
+the [glue package](https://glue.tidyverse.org)
+for custom message templating.
 With a `glue::glue()` template string,
 you can easily interleave R values with the feedback.
 
@@ -323,7 +328,7 @@ grade_html(
 )
 ```
 
-Notice that you may include R code wrapped in `{ }` inside the template string,
+Notice that you may include R code wrapped in `{ }` inside the template string
 and you may reference any of the [exercise objects](#exercise-objects)
 in that string.
 
@@ -337,8 +342,35 @@ that you may want to consistently include in your feedback:
   feedback to the failing message (if a solution is available) and `encourage`
   appends `random_encouragement()` to the end of the feedback message.
 
-Each of these arguments — `praise`, `encourage`, and `hint` —
-can be enabled or disabled via global options set by `gradethis_setup()`.
+```{r pass-praise, eval=FALSE, echo=TRUE}
+pass("That's exactly the average of 1 through 10.")
+```
+
+```{r pass-praise-feedback-1, echo=FALSE}
+set.seed(1234567)
+grade_html(
+  grade_this({
+    pass("That's exactly the average of 1 through 10.")
+  })(mock_this_exercise("mean(1:10)", "mean(1:10)"))
+)
+```
+
+```{r pass-praise-2, eval=FALSE, echo=TRUE}
+pass("That's exactly the average of 1 through 10.", praise = TRUE)
+```
+
+```{r pass-praise-2-feedback, echo=FALSE}
+set.seed(1234567)
+grade_html(
+  grade_this({
+    pass("That's exactly the average of 1 through 10.", praise = TRUE)
+  })(mock_this_exercise("mean(1:10)", "mean(1:10)"))
+)
+```
+
+Each of the `praise`, `encourage`, and `hint` arguments
+can be enabled or disabled for all `pass()` or `fail()` grades
+via the global options set by `gradethis_setup()`.
 
 ```{r options-set, echo=TRUE}
 gradethis_setup(
@@ -348,11 +380,11 @@ gradethis_setup(
 )
 ```
 
-```{r pass-praise, eval=FALSE}
-pass("That's exactly the average of 1 through 10.")
+```{r pass-praise-3, eval=FALSE}
+<<pass-praise>>
 ```
 
-```{r pass-praise-feedback, echo=FALSE}
+```{r pass-praise-3-feedback, echo=FALSE}
 set.seed(1234567)
 grade_html(
   grade_this({
