@@ -32,10 +32,10 @@ navbar:
     # examples:
     #   text: Examples
     #   href: articles/articles/examples.html
-    articles:
-      text: Articles
-      menu:
-        - text: "No vignettes"
+    # articles:
+    #   text: Articles
+    #   menu:
+    #     - text: "No vignettes"
     reference:
       text: Reference
       href: reference/index.html
@@ -63,7 +63,7 @@ reference:
     arguments.
   contents:
   - '`gradethis_setup`'
-  - '`gradethis_demo`'
+  # - '`gradethis_demo`'
 - title: Exercise Checking Functions
   description: |
     Choose one of these functions to use in the `*-check` chunk of your exercise.
