@@ -50,7 +50,7 @@
 #' # `mock_this_exercise()`.
 #' 
 #' grader <- 
-#'   # ```{r example-check}
+#' # ```{r example-check}
 #'   grade_this({
 #'     if (length(.result) != 1) {
 #'       fail("I expected a single value instead of {length(.result)} values.")
