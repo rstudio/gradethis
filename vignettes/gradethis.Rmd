@@ -73,9 +73,9 @@ before incorporating gradethis.
 
 gradethis provides two grading modalities. You can:
 
-1. Compare student code to model solution code with [`grade_this_code()`](#), or
+1. Compare student code to model solution code with [`grade_this_code()`](#compare-with-solution-code), or
 
-1. Write custom grading logic with [`grade_this()`](#).
+1. Write custom grading logic with [`grade_this()`](#custom-grading-logic).
 
 To use gradethis in a learnr tutorial,
 load gradethis after learnr in the `setup` chunk of your tutorial:
