@@ -27,3 +27,4 @@ you may provide custom \code{correct} and \code{incorrect} messages.
 If you are not using RStudio IDE, you can access the demo file at
 \code{system.file("extdata", "grading-demo/grading-demo.Rmd", package = "grader")}.
 }
+\keyword{internal}
