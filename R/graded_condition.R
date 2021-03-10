@@ -19,7 +19,7 @@ conditionMessage.gradethis_graded <- function(c) {
   message <- paste(as.character(condition_obj$message), collapse = " ")
   len_message <- nchar(message) + nchar(correct) + 3 + nchar("<gradethis_graded>")
   
-  if (len_message > (0.9 * getOption("width"))) {
+  if (len_message > (0.9 * getOption("width")) || grepl("\n", message)) {
     message <- strsplit(message, "\n")
     message <- lapply(message, strwrap, indent = 2, exdent = 2)
     message <- c(unlist(message), "")
