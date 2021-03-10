@@ -627,14 +627,14 @@ fail_if_code_feedback <- function(
   encourage = getOption("gradethis.fail.encourage", FALSE),
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
-  if (identical(rlang::enexpr(user_code), rlang::expr(.user_code))) {
+  if (is_placeholder(user_code, ".user_code")) {
     user_code <- get_from_env(".user_code", env)
     assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
     if (is.null(user_code) || length(user_code) == 0 || !nzchar(user_code)) {
       graded(logical(), "I didn't receive your code. Did you write any?", type = "info")
     }
   }
-  if (identical(rlang::enexpr(solution_code), rlang::expr(.solution_code))) {
+  if (is_placeholder(solution_code, ".solution_code")) {
     solution_code <- get_from_env(".solution_code", env)
     assert_object_found_in_env(solution_code, env, "fail_if_code_feedback", throw_grade = FALSE)
     if (
