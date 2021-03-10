@@ -87,10 +87,5 @@ In addition, \pkg{gradethis} has provided some extra objects:
 \item \code{.user}, \code{.result}: The last value returned from evaluating the user's exercise submission.
 \item \code{.solution}: The last value returned from evaluating the \code{.solution_code} for the exercise (evaluated in \code{.envir_prep}).
 }
-
-As the instructor, you are free to use any logic to determine a student's
-grade as long as a \code{\link[=graded]{graded()}} object is signaled. The check code can also
-contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
-will be turned into \code{\link[=fail]{fail()}}ed grades with the corresponding message.
 }
 \keyword{datasets}

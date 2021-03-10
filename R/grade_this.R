@@ -23,6 +23,11 @@
 #' the student's submission that can be used to evaluate the student's submitted
 #' code. See `?"grade_this-objects"` for more information about these objects.
 #' 
+#' As the instructor, you are free to use any logic to determine a student's
+#' grade as long as a [graded()] object is signaled. The check code can also
+#' contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
+#' will be turned into [fail()]ed grades with the corresponding message.
+#' 
 #' A final grade is signaled from `grade_this()` using the [graded()] helper
 #' functions, which include [pass()], [fail()], among others. `grade_this()`
 #' uses condition handling to short-circuit further evaluation when a grade is
@@ -230,11 +235,6 @@ placeholder_definition <- function(x) {
 #'   
 #' * `.user`, `.result`: `r placeholder_definition(".user")`
 #' * `.solution`: `r placeholder_definition(".solution")`
-#'
-#' As the instructor, you are free to use any logic to determine a student's
-#' grade as long as a [graded()] object is signaled. The check code can also
-#' contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
-#' will be turned into [fail()]ed grades with the corresponding message.
 #'
 #' @name grade_this-objects
 NULL

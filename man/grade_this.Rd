@@ -57,6 +57,11 @@ grade_this(\{
 the student's submission that can be used to evaluate the student's submitted
 code. See \code{?"grade_this-objects"} for more information about these objects.
 
+As the instructor, you are free to use any logic to determine a student's
+grade as long as a \code{\link[=graded]{graded()}} object is signaled. The check code can also
+contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
+will be turned into \code{\link[=fail]{fail()}}ed grades with the corresponding message.
+
 A final grade is signaled from \code{grade_this()} using the \code{\link[=graded]{graded()}} helper
 functions, which include \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}}, among others. \code{grade_this()}
 uses condition handling to short-circuit further evaluation when a grade is
