@@ -1,6 +1,4 @@
 on:
-  push:
-    branches: pkgdown-quillt
   workflow_run:
     workflows: ["R-CMD-check"]
     branches: [main,master]
@@ -64,6 +62,7 @@ jobs:
           git config --local user.name "GitHub Actions"
           Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
 
+      # TODO: Fix when gradethis moves to rstudio org
       - name: Deploy to Netlify
         # only deploy on the fork for now
         if: github.repository_owner == 'gadenbuie'

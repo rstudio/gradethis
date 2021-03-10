@@ -1,4 +1,5 @@
-url: https://friendly-golick-0771f8.netlify.app/
+# TODO: fix when gradethis moves to rstudio org
+url: https://rstudio-education.github.io/gradethis
 
 template:
   package: quillt
