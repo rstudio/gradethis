@@ -33,3 +33,4 @@ tmp
 inst/tutorials/*/rsconnect/
 inst/tutorials/*/*.html
 docs/*
+inst/doc

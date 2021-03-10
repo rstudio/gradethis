@@ -1,0 +1,19 @@
+These global package options can be set by [gradethis_setup()] or by
+directly setting the global option. The default values set for each option
+when gradethis is loaded are shown below.
+
+```{r options-table, echo=FALSE, results="asis"}
+opts <- lapply(names(gradethis_default_options), function(opt) {
+  text <- gradethis_default_options[[opt]]
+  if (!is.null(text) && is.character(text)) {
+    text <- paste0('"', text, '"')
+  }
+  text <- gsub("\n", "\\\\n", text %||% "NULL")
+  list(
+    option = paste0("`gradethis.", opt, "`"), 
+    default_value = paste0("`", text, "`")
+  )
+})
+opts <- as.data.frame(do.call(rbind, opts), stringsAsFactors = FALSE)
+knitr::kable(opts, col.names = c("Option", "Default Value"))
+```

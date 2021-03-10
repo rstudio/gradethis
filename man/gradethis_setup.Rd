@@ -99,14 +99,47 @@ Invisibly returns the global options as they were prior to setting
 them with \code{gradethis_setup()}.
 }
 \description{
-Use this function to change the default options suggested by gradethis. This
-function also describes in detail each of the global options available for
-customization in the gradethis package. Note that you most likely do not want
-to change the defaults values for the learnr tutorial options that are
+To use \pkg{gradethis} in your \pkg{learnr} tutorial, you only need to call
+\code{library(gradethis)} in your tutorial's setup chunk.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r setup\}
+library(learnr)
+library(gradethis)
+```
+}
+
+\if{html}{\out{</div>}}
+
+Use \code{gradethis_setup()} to change the default options suggested by gradethis.
+This function also describes in detail each of the global options available
+for customization in the gradethis package. Note that you most likely do not
+want to change the defaults values for the learnr tutorial options that are
 prefixed with \code{exercise.}. Each of the gradethis-specific arguments sets a
 global option with the same name, prefixed with \code{gradethis.}. For example,
 \code{pass} sets \code{gradethis.pass}.
 }
+\section{Global package options}{
+
+
+These global package options can be set by \code{\link[=gradethis_setup]{gradethis_setup()}} or by
+directly setting the global option. The default values set for each option
+when gradethis is loaded are shown below.\tabular{ll}{
+   Option \tab Default Value \cr
+   \code{gradethis.pass} \tab \code{"{random_praise()} Correct!"} \cr
+   \code{gradethis.pass.praise} \tab \code{FALSE} \cr
+   \code{gradethis.fail} \tab \code{"Incorrect.{maybe_code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.fail.hint} \tab \code{FALSE} \cr
+   \code{gradethis.fail.encourage} \tab \code{FALSE} \cr
+   \code{gradethis.maybe_code_feedback} \tab \code{TRUE} \cr
+   \code{gradethis.maybe_code_feedback.before} \tab \code{" "} \cr
+   \code{gradethis.maybe_code_feedback.after} \tab \code{NULL} \cr
+   \code{gradethis.code_correct} \tab \code{NULL} \cr
+   \code{gradethis.code_incorrect} \tab \code{"{pipe_warning()}{code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
+   \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
+}
+}
+
 \examples{
 # Not run in package documentation because this function changes global opts
 if (FALSE) {

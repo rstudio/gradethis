@@ -19,6 +19,8 @@
 #' If you are not using RStudio IDE, you can access the demo file at
 #' `system.file("extdata", "grading-demo/grading-demo.Rmd", package = "grader")`.
 #'
+#  TODO: rewrite gradethis_demo() and delete the line below
+#' @keywords internal
 #' @export
 gradethis_demo <- function() {
   gradethis_demo_path <- system.file("tutorials", "grading-demo/grading-demo.Rmd",

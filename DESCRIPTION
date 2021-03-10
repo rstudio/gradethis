@@ -2,24 +2,24 @@ Type: Package
 Package: gradethis
 Title: Automated Feedback for Student Exercises in 'learnr'
     Tutorials
-Version: 0.2.3.9000
+Version: 0.2.3.9001
 Authors@R:
-    c(person(given = "Daniel",
-             family = "Chen",
-             role = "aut",
-             email = "daniel.chen@rstudio.com"),
-      person(given = "Barret",
-             family = "Schloerke",
-             role = "aut",
-             email = "barret@rstudio.com"),
-      person(given = "Garrick",
+    c(person(given = "Garrick",
              family = "Aden-Buie",
              role = c("aut", "cre"),
              email = "garrick@rstudio.com"),
+      person(given = "Daniel",
+             family = "Chen",
+             role = "aut",
+             email = "daniel.chen@rstudio.com"),
       person(given = "Garrett",
              family = "Grolemund",
              role = c("ccp", "aut"),
              email = "garrett@rstudio.com"),
+      person(given = "Barret",
+             family = "Schloerke",
+             role = "aut",
+             email = "barret@rstudio.com"),
       person(family = "RStudio, PBC",
              role = c("cph", "fnd")))
 Description: Pairing with the 'learnr' R package, 'gradethis'
@@ -51,7 +51,10 @@ Imports:
     waldo
 Suggests:
     knitr,
+    rmarkdown,
     tidyr
+VignetteBuilder: 
+    knitr
 Remotes: 
     rstudio/learnr
 Encoding: UTF-8

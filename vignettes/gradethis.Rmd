@@ -1,0 +1,414 @@
+---
+title: "gradethis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{gradethis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+[learnr]: https://rstudio.github.io/learnr/
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  message = FALSE,
+  comment = "#>"
+)
+
+library(gradethis)
+
+grade_html <- function(grade) {
+  htmltools::tags$div(
+    role = "alert",
+    class = if (!length(grade$correct)) {
+      "alert" 
+    } else if (isTRUE(grade$correct)) {
+      "alert alert-success"
+    } else {
+      "alert alert-danger"
+    },
+    htmltools::HTML(commonmark::markdown_html(grade$message))
+  )
+}
+```
+
+```{css echo=FALSE}
+.alert {
+  padding: 0.5em 1em;
+  margin: 1em 2em;
+  border: 1px #eee solid;
+  border-radius: 5px;
+}
+.alert.alert-success {
+  background-color: #e4f2dc;
+  border-color: #ddedcf;
+}
+.alert.alert-success,
+.alert.alert-success code,
+.alert.alert-success code a:not(.close):not(.btn) {
+  color: #5c9653;
+}
+.alert.alert-danger {
+  background-color: #f2e2e2;
+  border-color: #eed9dc;
+}
+.alert.alert-danger,
+.alert.alert-danger code,
+.alert.alert-danger code a:not(.close):not(.btn) {
+  color: #ad3532;
+}
+.alert code {
+  background-color: #ffffff55;
+}
+```
+
+## Overview
+
+gradethis helps instructors provide automated feedback
+for interactive exercises in [learnr] tutorials.
+If you are new to writing learnr tutorials,
+we recommend that you get comfortable with the [learnr tutorial format][learnr]
+before incorporating gradethis.
+
+gradethis provides two grading modalities. You can:
+
+1. Compare student code to model solution code with [`grade_this_code()`](#compare-with-solution-code), or
+
+1. Write custom grading logic with [`grade_this()`](#custom-grading-logic).
+
+To use gradethis in a learnr tutorial,
+load gradethis after learnr in the `setup` chunk of your tutorial:
+
+````markdown
+```{r setup}`r ''`
+library(learnr)
+library(gradethis)
+```
+````
+
+To help authors provide consistent feedback,
+gradethis uses global options to control the default behavior of many of its functions.
+You can set or change these default values using `gradethis_setup()`.
+
+## Checking Student Code
+
+Suppose we ask our students to calculate the average of the first ten integers.
+In our tutorial's R Markdown, we include a prompt, followed by an `exercise` chunk.
+
+````markdown
+**Calculate the average of all of the integers from 1 to 10.**
+
+```{r average, exercise = TRUE}`r ''`
+____(1:10)
+```
+````
+
+Our hope is that students will replace the `____` with the correct R function,
+in this case `mean()`.
+
+To grade an exercise, we need to associate checking code with the exercise.
+In learnr, this code is written in a chunk named `<exercise label>-check`, where
+`<exercise label>` is the label of the chunk with `exercise = TRUE`.
+
+To use gradethis to grade our `average` exercise,
+we create a new chunk named `average-check`
+and we call either `grade_this()` or `grade_this_code()` inside the chunk.
+
+### Custom Grading Logic
+
+In the `average-check` chunk, we can either call `grade_this()` or `grade_this_code()`.
+The first gives authors control over the grading logic,
+which is typically written inside curly braces as the first argument of `grade_this()`:
+
+````markdown
+**Calculate the average of all of the integers from 1 to 10.**
+
+```{r average, exercise = TRUE}`r ''`
+____(1:10)
+```
+
+```{r average-check}`r ''`
+grade_this({
+  # custom grading code
+})
+```
+````
+
+<!-- TODO LINK -->
+We'll cover custom grading logic in more detail below.
+
+### Compare with Solution Code
+
+On the other hand, 
+`grade_this_code()` requires authors to include a model solution
+to which the student's submission will be compared.
+The solution is written in the `<exercise label>-solution` chunk,
+while `grade_this_code()` is called in the `<exercise label>-check` chunk:
+
+````markdown
+**Calculate the average of all of the integers from 1 to 10.**
+
+```{r average, exercise = TRUE}`r ''`
+____(1:10)
+```
+
+```{r average-solution}`r ''`
+mean(1:10)
+```
+
+```{r average-check}`r ''`
+grade_this_code()
+```
+````
+
+When a student submits their exercise solution,
+it is automatically compared to the model solution in the `-solution` chunk,
+and the first encountered difference is reported to the student.
+If there are no differences, a positive statement is returned to the student.
+
+```{r average-code-correct, echo=FALSE}
+set.seed(4242)
+grade_html(grade_this_code()(mock_this_exercise("mean(1:10)", "mean(1:10)")))
+```
+
+If the student submits an incorrect answer, such as `max(1:10)`,
+the feedback message attempts to point the student in the right direction.
+
+```{r average-code-incorrect, echo=FALSE}
+set.seed(3232)
+grade_html(grade_this_code()(mock_this_exercise("max(1:10)", "mean(1:10)")))
+```
+
+## Writing Custom Logic
+
+If you want to provide custom feedback
+for specific errors that students may be likely to make
+in your exercise,
+`grade_this()` provides a high level of flexibility.
+
+When using `grade_this()`,
+your goal is to write a series of tests around the student's submission
+to determine whether or not it passes or fails.
+A passing or failing grade is signaled with `pass()` or `fail()`.
+You may provide a custom message or rely on the gradethis default passing or failing message.
+
+In the case of our `average` exercise,
+a simple version of exercise grading
+might check that the student's `.result` is equal to `mean(1:10)`.
+If it is,
+the grading code returns a passing grade,
+otherwise a failing grade is returned.
+
+````markdown
+```{r average-check}`r ''`
+grade_this({
+  if (identical(.result, mean(1:10))) {
+    pass("Great work! You calculated the average of the first ten integers.")
+  }
+  fail()
+})
+```
+````
+
+If a hypothetical student submitted `mean(1:10)` for this exercise,
+our checking code will return:
+
+```{r average-check-manual, echo=FALSE}
+grade_html(pass("Great work! You calculated the average of the first ten integers."))
+```
+
+If the student submits an incorrect answer,
+the default `fail()` message is encouraging and helpful:
+
+```{r average-check-fail, echo=FALSE}
+grade_html(grade_this(fail())(mock_this_exercise("min(1:10)", "mean(1:10)")))
+```
+
+This example highlights three important aspects of custom grading logic
+that we will cover in more detail:
+
+1. `grade_this()` makes available a [set of objects](#exercise-objects)
+   related to the exercise and the student's submission, such as `.result`.
+   
+1. `pass()` and `fail()` signal a final grade _as soon as they are called_.
+   There are also [additional grade-signalling functions](#grading-helper-functions)
+   for common scenarios.
+
+1. The default `fail()` message includes code feedback, if a solution is available.
+   Code feedback, encouragement, and praise can be [enabled or disabled](#feedback-messages)
+   for `pass()` and `fail()` grades directly or via global options.
+   
+
+### Exercise Objects
+
+The checking code you write inside `grade_this()`
+will be executed in an environment
+where a number of submission- and exercise-specific objects have been added.
+
+Among these objects,
+`grade_this()` includes all of the objects provided by `learnr`
+to an exercise checking function. 
+For convenience, gradethis also includes a few additional ojects.
+To avoid name collisions with user or instructor code, 
+the names of these objects all start with `.`:
+
+| Object | Description |
+|:-------|:------------|
+| `.label` | Label for exercise chunk 
+| `.solution_code` | Code provided within the `*-solution` chunk for the exercise 
+| `.user_code` | R code submitted by the user 
+| `.last_value` | The last value from evaluating the user's exercise submission
+| `.result`, `.user` | A direct copy of `.last_value` for friendlier naming 
+| `.solution` | When accessed, will be the result of evaluating the `.solution_code` in a child environment of `.envir_prep`
+| `.check_code` | Code provided within the `*-check` (or `*-code-check`) chunk for the exercise
+| `.envir_prep` | A copy of the R environment before the execution of the chunk
+| `.envir_result` | The R environment after the execution of the chunk
+| `.evaluate_result` | The return value from the `evaluate::evaluate` function
+
+You can reference any of these objects in your grading logic.
+Additionally,
+you can use `debug_this()` as your exercise checker
+or in lieu of a grade to return an informative message in the tutorial
+for your visual inspection of the value of each of these objects.
+This is useful when debugging or writing exercises.
+
+### Grading Helper Functions
+
+There are a number of grading helper functions
+in addition to `pass()` and `fail()`:
+
+- `pass_if_equal()` and `fail_if_equal()` compare the submitted `.result`
+  (or another object) to an expected value and pass or fail if the two values
+  are equal.
+  
+- `pass_if()` and `fail_if()` pass or fail if their first argument, a condition,
+  is `TRUE`.
+  
+- `fail_if_code_feedback()` fails if there are differences between the submitted
+  code and the model solution code. This is useful when you want to use custom
+  logic to check specific failure modes, but want to fall back to code comparison
+  for modes you may not have anticipated.
+
+Each of these functions signals a final grade as soon as they are called.
+This allows tutorial authors to construct grading logic in such a way that
+later tests presume earlier tests in the grading code were not triggered.
+If you are familiar with writing R functions,
+the `pass()` and `fail()` helper functions are similar to early `return()` statements.
+
+Be careful to end your `grade_this()` grading code
+with a final fallback grade in case no other grades are returned.
+Typically, 
+this fallback grade will be
+a call to `pass()` or `fail()` without any arguments.
+
+### Feedback Messages
+
+The `pass()` and `fail()` functions all use 
+the [glue package](https://glue.tidyverse.org)
+for custom message templating.
+With a `glue::glue()` template string,
+you can easily interleave R values with the feedback.
+
+```{r glue-template, eval=FALSE, echo=TRUE}
+fail(
+  "Your code returned {round(.result, 2)}, but the average of `1:10` is 
+  {if (.result > .solution) 'lower' else 'higher'} than that value."
+)
+```
+
+```{r glue-template-feedback, echo=FALSE}
+grade_html(
+  grade_this({
+    fail(
+      "Your code returned {round(.result, 2)}, but the average of `1:10` is 
+       {if (.result > .solution) 'lower' else 'higher'} than that value."
+    )
+  })(mock_this_exercise("median(1:10)", "mean(1:10)"))
+)
+```
+
+Notice that you may include R code wrapped in `{ }` inside the template string
+and you may reference any of the [exercise objects](#exercise-objects)
+in that string.
+
+There are a number of message components
+that you may want to consistently include in your feedback:
+
+- `pass()` includes an additional `praise` argument to prepend `random_praise()`
+  to the feedback
+  
+- `fail()` includes both `hint` and `encouarge`. When `TRUE`, `hint` adds code
+  feedback to the failing message (if a solution is available) and `encourage`
+  appends `random_encouragement()` to the end of the feedback message.
+
+```{r pass-praise, eval=FALSE, echo=TRUE}
+pass("That's exactly the average of 1 through 10.")
+```
+
+```{r pass-praise-feedback-1, echo=FALSE}
+set.seed(1234567)
+grade_html(
+  grade_this({
+    pass("That's exactly the average of 1 through 10.")
+  })(mock_this_exercise("mean(1:10)", "mean(1:10)"))
+)
+```
+
+```{r pass-praise-2, eval=FALSE, echo=TRUE}
+pass("That's exactly the average of 1 through 10.", praise = TRUE)
+```
+
+```{r pass-praise-2-feedback, echo=FALSE}
+set.seed(1234567)
+grade_html(
+  grade_this({
+    pass("That's exactly the average of 1 through 10.", praise = TRUE)
+  })(mock_this_exercise("mean(1:10)", "mean(1:10)"))
+)
+```
+
+Each of the `praise`, `encourage`, and `hint` arguments
+can be enabled or disabled for all `pass()` or `fail()` grades
+via the global options set by `gradethis_setup()`.
+
+```{r options-set, echo=TRUE}
+gradethis_setup(
+  pass.praise = TRUE,
+  fail.encourage = TRUE,
+  fail.hint = TRUE
+)
+```
+
+```{r pass-praise-3, eval=FALSE}
+<<pass-praise>>
+```
+
+```{r pass-praise-3-feedback, echo=FALSE}
+set.seed(1234567)
+grade_html(
+  grade_this({
+    pass("That's exactly the average of 1 through 10.")
+  })(mock_this_exercise("mean(1:10)", "mean(1:10)"))
+)
+```
+
+```{r fail-encourage-hint, eval=FALSE}
+fail("Your answer was not the number I expected.")
+```
+
+```{r fail-encourage-hint-feedback, echo=FALSE}
+set.seed(4321)
+grade_html(
+  grade_this({
+    fail("Your answer was not the number I expected.")
+  })(mock_this_exercise("min(1:10)", "mean(1:10)"))
+)
+```
+
+Notice that by globally turning on `praise`, `encourage`, and `hint`,
+custom feedback messages will contain
+the same components as the default pass and fail messages.
+(You can control those defaults with the `pass` and `fail` arguments of `gradethis_setup()`.)
+Without those options enabled globally,
+custom messages will only contain the text included in the message.

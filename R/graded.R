@@ -38,10 +38,10 @@
 #'      `hint = TRUE`, a code feedback hint is added to the custom `message`.
 #'      You can also control `hint` globally with [gradethis_setup()].
 #'
-#'   4. All helper functions include an `env` parameters. You can generally
-#'      ignore this argument. It's used internally to help `pass()` and `fail()`
-#'      _et al._ find the default argument values and to build the `message`
-#'      using [glue::glue()].
+#'   4. All helper functions include an `env` parameter, that you can generally
+#'      ignore. It's used internally to help `pass()` and `fail()` _et al._ find
+#'      the default argument values and to build the `message` using 
+#'      [glue::glue()].
 #'
 #' @section Return a grade immediately:
 #'
@@ -57,6 +57,7 @@
 #'   first, progressing to the most complicated tests. By taking advantage of
 #'   early grade returns, you can simplify your checking code:
 #'
+#'   \if{html}{\out{<div class="sourceCode">}}
 #'   ````
 #'   ```{r}
 #'   grade_this({
@@ -80,6 +81,7 @@
 #'   })
 #'   ```
 #'   ````
+#'   \if{html}{\out{</div>}}
 #'
 #'   Notice that it's important to choose a final fallback grade as the last
 #'   value in your [grade_this()] checking code. This last value is the default
@@ -95,11 +97,11 @@
 #' # submission.
 #' #
 #' # Because we are demonstrating these functions inside R documentation, we'll
-#' # save the function returned by `grade_this()` as `this_grader()`. Calling
-#' # `this_grader()` on a mock exercise submission is equivalent to running the
+#' # save the function returned by `grade_this()` as `grader()`. Calling
+#' # `grader()` on a mock exercise submission is equivalent to running the
 #' # check code when the student clicks "Submit Answer" in a learnr tutorial.
 #'
-#' this_grader <-
+#' grader <-
 #' # ```{r example-check}
 #'   grade_this({
 #'     # Automatically use .result to compare to an expected value
@@ -136,40 +138,31 @@
 #' # Now lets try with a few different student submissions ----
 #'
 #' # Correct!
-#' this_grader(mock_this_exercise(.user_code = 42))
+#' grader(mock_this_exercise(.user_code = 42))
 #'
 #' # These were close...
-#' this_grader(mock_this_exercise(.user_code = 41))
-#' this_grader(mock_this_exercise(.user_code = 43))
+#' grader(mock_this_exercise(.user_code = 41))
+#' grader(mock_this_exercise(.user_code = 43))
 #'
 #' # Automatically use .solution if you have a *-solution chunk...
-#' this_grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
 #'
 #' # Floating point arithmetic is tricky...
-#' this_grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
-#' this_grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 42.000001, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 64.123456, .solution_code = 42))
 #'
 #' # Complicated checking situations...
-#' this_grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
-#' this_grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 101, .solution_code = 42))
+#' grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 #'
 #' # Finally fall back to the final answer...
-#' this_grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
+#' grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
 #'
-#' @param message A character string of the message to be displayed.
+#' @param message A character string of the message to be displayed. In all
+#'   grading helper functions other than [graded()], `message` is a template
+#'   string that will be processed with [glue::glue()].
 #' @param correct A logical value of whether or not the checked code is correct.
-#' @param x First item in the comparison. By default, when used inside
-#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
-#'   other words the result of running the student's submitted code. `x` is not
-#'   the first argument since you will often want to compare the final value of
-#'   the student's submission against a specific value, `y`.
-#' @param y The expected value against which `x` is compared using
-#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
-#'   exercise `.solution`, or the result of evaluating the code in the
-#'   exercise's `*-solution` chunk, will be used for the comparison.
 #' @param ... Additional arguments passed to `graded()` or otherwise ignored.
-#'   Ignored by `pass_if()` and `fail_if()`. In `fail_if_code_feedback()`, 
-#'   additional arguments `...` are passed to [code_feedback()].
 #' @param type,location The `type` and `location` of the feedback object
 #'   provided to \pkg{learnr}. See
 #'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for more
@@ -180,23 +173,11 @@
 #'
 #'   `location` may be one of "append", "prepend", or "replace".
 #'
-#' @return
-#'   - `pass()` and `pass_if_equal()` signal a _correct_ grade with a
-#'     glue-able `message`.
+#' @return `pass()` signals a _correct_ submission, `fail()` signals an
+#'   _incorrect_ submission, and `graded()` returns a correct or incorrect
+#'   submission according to the value of `correct`.
 #'
-#'   - `fail()` and `fail_if_equal()` signal an _incorrect_ grade with a
-#'     glue-able `message`.
-#'
-#'   - `pass_if()` and `fail_if()` signal a correct or incorrect grade if the
-#'     provided condition is `TRUE`, with a glue-able `message`.
-#'
-#'   - `graded()` signals a correct or incorrect grade according to the logical
-#'     value of `correct`, with a standard character (unglued) `message`.
-#'     
-#'   - `fail_if_code_feedback()` compares the user code to the solution code
-#'     (if available) and signals an incorrect grade with feedback if there are
-#'     differences.
-#'
+#' @template graded-family
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
 graded <- function(correct, message = NULL, ..., type = NULL, location = NULL) {
@@ -279,28 +260,88 @@ fail <- function(
   )
 }
 
-
-#' @describeIn graded Signal a _passing_ grade only if `x` and `y` are equal.
+#' Signal a passing or failing grade if two values are equal
+#' 
+#' @description
+#' `pass_if_equal()` and `fail_if_equal()` are two [graded()] helper functions
+#' that signal a passing or a failing grade if two values are equal. They are
+#' designed to easily compare the returned value of the student's submitted
+#' code with the value returned by the solution or another known value:
+#' 
+#' - Both functions find and use `.result` as the default for `x`, the first
+#'   item in the comparison. `.result` is the last value returned from the 
+#'   user's submitted code.
+#' - `pass_if_equal()` additionally finds and uses `.solution` as the default
+#'   expected value `y`.
+#'   
+#' See [graded()] for more information on \pkg{gradethis} grade-signaling 
+#' functions.
+#' 
+#' @examples
+#' # Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
+#' 
+#' grader <- 
+#' # ```{r example-check}
+#'   grade_this({
+#'     # Automatically pass if .result equal to .solution
+#'     pass_if_equal()
+#'     
+#'     fail_if_equal(mtcars[mtcars$cyl == 4, ], message = "Not four cylinders")
+#'     fail_if_equal(mtcars[mtcars$cyl == 8, ], message = "Not eight cylinders")
+#'     
+#'     # Default to failing grade with feedback
+#'     fail()
+#'   })
+#' # ```
+#' 
+#' .solution <- 
+#' # ```{r example-solution}
+#'   mtcars[mtcars$cyl == 6, ]
+#' # ```
+#' 
+#' # Correct!
+#' grader(mock_this_exercise(mtcars[mtcars$cyl == 6, ], !!.solution))
+#' 
+#' # These fail with specific messages
+#' grader(mock_this_exercise(mtcars[mtcars$cyl == 4, ], !!.solution))
+#' grader(mock_this_exercise(mtcars[mtcars$cyl == 8, ], !!.solution))
+#' 
+#' # This fails with default feedback message
+#' grader(mock_this_exercise(mtcars[mtcars$mpg == 8, ], !!.solution))
+#' 
+#' @inheritParams graded
+#' @param x First item in the comparison. By default, when used inside
+#'   [grade_this()], `x` is automatically assigned the value of `.result` — in
+#'   other words the result of running the student's submitted code. `x` is not
+#'   the first argument since you will often want to compare the final value of
+#'   the student's submission against a specific value, `y`.
+#' @param y The expected value against which `x` is compared using
+#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
+#'   exercise `.solution`, or the result of evaluating the code in the
+#'   exercise's `*-solution` chunk, will be used for the comparison.
+#' @param ... Additional arguments passed to [graded()]
+#' 
+#' @return Returns a passing or failing grade if `x` and `y` are equal.
+#' 
+#' @template graded-family
+#' @describeIn pass_if_equal Signal a _passing_ grade only if `x` and `y` are
+#'   equal.
 #' @export
 pass_if_equal <- function(
-  y = missing_arg(),
+  y = .solution,
   message = getOption("gradethis.pass", "Correct!"),
-  x = missing_arg(),
+  x = .result,
   ...,
   env = parent.frame(),
   praise = getOption("gradethis.pass.praise", FALSE)
 ) {
-  if (is_missing(x)) {
+  if (is_placeholder(x, ".result")) {
     x <- get_from_env(".result", env)
-    if (is_missing(x)) {
-      return(missing_object_in_env(".result", env, "pass_if_equal"))
-    }
+    assert_object_found_in_env(x, env, "pass_if_equal")
   }
-  if (is_missing(y)) {
+  if (is_placeholder(y, ".solution")) {
     y <- get_from_env(".solution", env)
-    if (is_missing(y)) {
-      return(missing_object_in_env(".solution", env, "pass_if_equal"))
-    }
+    assert_object_found_in_env(y, env, "pass_if_equal")
   }
   maybe_extras(
     grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...),
@@ -308,22 +349,21 @@ pass_if_equal <- function(
   )
 }
 
-#' @describeIn graded Signal a _failing_ grade only if `x` and `y` are equal.
+#' @describeIn pass_if_equal Signal a _failing_ grade only if `x` and `y` are
+#'   equal.
 #' @export
 fail_if_equal <- function(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = missing_arg(),
+  x = .result,
   ...,
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
-  if (is_missing(x)) {
+  if (is_placeholder(x, ".result")) {
     x <- get_from_env(".result", env)
-    if (is_missing(x)) {
-      return(missing_object_in_env(".result", env, "fail_if_equal"))
-    }
+    assert_object_found_in_env(x, env, "fail_if_equal")
   }
   maybe_extras(
     grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...),
@@ -366,12 +406,73 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
   graded(message = glue_message_with_env(env, message), correct = correct, ...)
 }
 
-
-#' @describeIn graded Pass if `cond` is `TRUE`.
-#' @param cond For `pass_if()` and `fail_if()`: A logical value or an expression
-#'   that will evaluate to a `TRUE` or `FALSE` value. If the value is `TRUE`, or
-#'   would be considered `TRUE` in an `if (cond)` statement, then a passing or
-#'   failing grade is returned to the user.
+#' Signal a passing or failing grade if a condition is TRUE
+#' 
+#' @description
+#' `pass_if()` and `fail_if()` both create passing or failing grades if a given
+#' condition is `TRUE`. See [graded()] for more information on \pkg{gradethis}
+#' grade-signaling functions.
+#' 
+#' These functions are also used in legacy \pkg{gradethis} code, in particular
+#' in the superseded function [grade_result()]. While previous versions of
+#' \pkg{gradethis} allowed the condition to be determined by a function or
+#' formula, when used in [grade_this()] the condition must be a logical `TRUE`
+#' or `FALSE`.
+#' 
+#' @examples 
+#' # Suppose the prompt is to find landmasses in `islands` with land area of
+#' # less than 20,000 square miles. (`islands` reports land mass in units of
+#' # 10,000 sq. miles.)
+#' 
+#' grader <- 
+#' # ```{r example-check}
+#'   grade_this({
+#'     fail_if(any(is.na(.result)), "You shouldn't have missing values.")
+#'     
+#'     diff_len <- length(.result) - length(.solution)
+#'     fail_if(diff_len < 0, "You missed {abs(diff_len)} island(s).")
+#'     fail_if(diff_len > 0, "You included {diff_len} too many islands.")
+#'     
+#'     pass_if(all(.result < 20), "Great work!")
+#'     
+#'     # Fall back grade
+#'     fail()
+#'   })
+#' # ```
+#' 
+#' .solution <- 
+#' # ```{r example-solution}
+#'     islands[islands < 20]
+#' # ```
+#' 
+#' # Peek at the right answer
+#' .solution
+#' 
+#' # Has missing values somehow
+#' grader(mock_this_exercise(islands["foo"], !!.solution))
+#' 
+#' # Has too many islands
+#' grader(mock_this_exercise(islands[islands < 29], !!.solution))
+#' 
+#' # Has too few islands
+#' grader(mock_this_exercise(islands[islands < 16], !!.solution))
+#' 
+#' # Just right!
+#' grader(mock_this_exercise(islands[islands < 20], !!.solution))
+#'
+#' @param cond A logical value or an expression that will evaluate to a `TRUE`
+#'   or `FALSE` value. If the value is `TRUE`, or would be considered `TRUE` in
+#'   an `if (cond)` statement, then a passing or failing grade is returned to
+#'   the user.
+#' @param x Deprecated. Replaced with `cond`.
+#' @param ... Ignored
+#' @inheritParams graded
+#' 
+#' @return `pass_if()` and `fail_if()` signal a correct or incorrect grade if
+#'   the provided condition is `TRUE`.
+#'   
+#' @template graded-family
+#' @describeIn pass_if Pass if `cond` is `TRUE`.
 #' @export
 pass_if <- function(
   cond,
@@ -405,7 +506,7 @@ pass_if <- function(
   }
 }
 
-#' @describeIn graded Fail if `cond` is `TRUE`.
+#' @describeIn pass_if Fail if `cond` is `TRUE`.
 #' @export
 fail_if <- function(
   cond,
@@ -451,39 +552,94 @@ fail_if <- function(
   }
 }
 
-#' @describeIn graded Signal a _failing_ grade if mistakes are detected in the
-#'   submitted code.
-#'   
+#' Signal a failing grade if mistakes are detected in the submitted code
+#' 
+#' @description
+#' `fail_if_code_feedback()` uses [code_feedback()] to detect if there are
+#' differences between the user's submitted code and the solution code (if
+#' available). If the exercise does not have an associated solution, or if there
+#' are no detected differences between the user's and the solution code, no
+#' grade is returned.
+#' 
+#' See [graded()] for more information on \pkg{gradethis} grade-signaling
+#' functions.
+#' 
+#' @examples
+#' # Suppose the exercise prompt is to generate 5 random numbers, sampled from
+#' # a uniform distribution between 0 and 1. In this exercise, you know that
+#' # you shouldn't have values outside of the range of 0 or 1, but you'll
+#' # otherwise need to check the submitted code to know that the student has
+#' # chosen the correct sampling function.
+#' 
+#' grader <-
+#' # ```{r example-check}
+#'   grade_this({
+#'     fail_if(length(.result) != 5, "I expected 5 numbers.")
+#'     fail_if(
+#'       any(.result < 0 | .result > 1), 
+#'       "I expected all numbers to be between 0 and 1."
+#'     )
+#'     
+#'     # Specific checks passed, but now we want to check the code.
+#'     fail_if_code_feedback()
+#'     
+#'     # All good!
+#'     pass()
+#'   })
+#' # ```
+#' 
+#' .solution_code <- "
+#' # ```{r example-check}
+#'   runif(5)
+#' # ```
+#' "
+#' 
+#' # Not 5 numbers...
+#' grader(mock_this_exercise(runif(1), !!.solution_code))
+#' 
+#' # Not within [0, 1]...
+#' grader(mock_this_exercise(rnorm(5), !!.solution_code))
+#' 
+#' # Passes specific checks, but hard to tell so check the code...
+#' grader(mock_this_exercise(runif(5, 0.25, 0.75), !!.solution_code))
+#' grader(mock_this_exercise(rbinom(5, 1, 0.5), !!.solution_code))
+#' 
+#' # Perfect!
+#' grader(mock_this_exercise(runif(n = 5), !!.solution_code))
+#' 
 #' @inheritParams code_feedback
+#' @inheritParams graded
+#' @inheritDotParams graded
+#' 
+#' @return Signals an incorrect grade with feedback if there are differences
+#'   between the submitted user code and the solution code. If solution code is
+#'   not available, no grade is returned.
 #'
+#' @template graded-family
 #' @export
 fail_if_code_feedback <- function(
-  user_code = missing_arg(),
-  solution_code = missing_arg(),
   message = NULL,
+  user_code = .user_code,
+  solution_code = .solution_code,
   ...,
   env = parent.frame(),
   hint = TRUE,
   encourage = getOption("gradethis.fail.encourage", FALSE),
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
-  if (is_missing(user_code)) {
+  if (is_placeholder(user_code, ".user_code")) {
     user_code <- get_from_env(".user_code", env)
-    if (is_missing(user_code)) {
-      return(missing_object_in_env(".user_code", env, "fail_if_code_feedback"))
-    }
+    assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
     if (is.null(user_code) || length(user_code) == 0 || !nzchar(user_code)) {
       graded(logical(), "I didn't receive your code. Did you write any?", type = "info")
     }
   }
-  if (is_missing(solution_code)) {
+  if (is_placeholder(solution_code, ".solution_code")) {
     solution_code <- get_from_env(".solution_code", env)
-    if (is_missing(solution_code)) {
-      # warn about missing solution code, but don't emit grade
-      capture_graded(missing_object_in_env(".solution_code", env, "fail_if_code_feedback"))
-    }
+    assert_object_found_in_env(solution_code, env, "fail_if_code_feedback", throw_grade = FALSE)
     if (
-      is_missing(solution_code) || 
+      is_placeholder(solution_code) ||
+        is_missing(solution_code) || 
         is.null(solution_code) || 
         length(solution_code) == 0 || 
         !nzchar(solution_code)
@@ -514,7 +670,6 @@ fail_if_code_feedback <- function(
     message <- paste0(message, " ")
   }
   
-
   maybe_extras(
     graded(FALSE, glue::glue("{message}{feedback}"), ...),
     env = env,
@@ -547,18 +702,34 @@ get_from_env <- function(x, env) {
   get0(x, envir = env, ifnotfound = missing_arg())
 }
 
-missing_object_in_env <- function(obj, env, caller) {
-  label <- get0(".label", env, ifnotfound = NULL)
+assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
+  obj_expr <- rlang::enexpr(obj)
+  
+  if (!is_placeholder(obj) && !is_missing(obj)) {
+    return(invisible(NULL))
+  }
+  
+  obj_name <- 
+    if (is_placeholder(obj)) {
+      class(obj)[1]
+    } else {
+      rlang::expr_text(obj_expr)
+    }
+  
+  label <- env$.label
   label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
   message(
     label,
-    "`", caller, "()`: expected `", obj, "` to be found",
+    "`", caller, "()`: expected `", obj_name, "` to be found",
     " in its calling environment or the environment specified by `env`.",
     " Did you call `", caller, "()`",
     " inside `grade_this()` or `grade_this_code()`?"
   )
-  # Signal problem with grading code
-  graded(FALSE, feedback_grading_problem()$message)
+  
+  if (isTRUE(throw_grade)) {
+    # Signal problem with grading code
+    signal_grade(graded(FALSE, feedback_grading_problem()$message), parent.frame())
+  }
 }
 
 maybe_extras <- function(

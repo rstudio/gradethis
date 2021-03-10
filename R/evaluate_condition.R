@@ -1,17 +1,11 @@
 #' Evaluates a condition
 #'
-#' `r lifecycle::badge("superseded")` Please use [grade_this()] mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()]. Can also use [eval_gradethis()].
+#' @description
+#' `r lifecycle::badge("superseded")` Please use [grade_this()] mixed with
+#' [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()]. Can also use
+#' [eval_gradethis()].
 #'
 #' Evaluates the [condition()] object to return a [graded()] value.
-#'
-#' @param condition a [condition()] object
-#' @param ... ignored
-#' @inheritParams gradethis_exercise_checker
-#' @param env environment to evaluate the condition
-#'
-#' @return a [graded()] value if `condi$x` is `TRUE` or
-#'   `NULL` if `condi$x` is `FALSE`
-#' @export
 #'
 #' @examples
 #' condi_formula_t <- condition(
@@ -24,6 +18,16 @@
 #'   last_value = 5,
 #'   env = new.env()
 #' )
+#' 
+#' @param condition a [condition()] object
+#' @param env environment to evaluate the condition
+#' @param ... ignored
+#' @inheritParams gradethis_exercise_checker
+#'
+#' @return a [graded()] value if `condi$x` is `TRUE` or `NULL` if `condi$x` is
+#'   `FALSE`
+#' @keywords internal
+#' @export
 evaluate_condition <- function(condition, ..., last_value, env) {
   checkmate::assert_class(condition, "gradethis_condition")
   ellipsis::check_dots_empty()

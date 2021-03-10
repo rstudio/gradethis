@@ -1,5 +1,5 @@
 
-#' Code Feedback
+#' Provide automated code feedback
 #'
 #' Generate a message describing the first instance of a code mismatch. Three
 #' functions are provided for working with code feedback: `code_feedback()` does
@@ -157,14 +157,30 @@
 #'   code to the solution.
 #' @export
 code_feedback <- function(
-  user_code = get0(".user_code", parent.frame()),
-  solution_code = get0(".solution_code", parent.frame()),
-  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  user_code = .user_code,
+  solution_code = .solution_code,
+  env = .envir_prep,
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
-
+  
+  if (is_placeholder(env, ".envir_prep")) {
+    env <- get0(".envir_prep", parent.frame(), ifnotfound = .envir_prep)
+    if (is_placeholder(env)) {
+      env <- parent.frame()
+    }
+    assert_not_placeholder(env)
+  }
+  if (is_placeholder(user_code, ".user_code")) {
+    user_code <- get0(".user_code", parent.frame())
+    assert_not_placeholder(user_code)
+  }
+  if (is_placeholder(solution_code, ".solution_code")) {
+    solution_code <- get0(".solution_code", parent.frame())
+    assert_not_placeholder(solution_code)
+  }
+  
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
   checkmate::assert_environment(env, null.ok = FALSE, .var.name = "env")
@@ -187,7 +203,7 @@ to_expr <- function(x, name) {
   if (rlang::is_quosure(x)) {
     as.expression(rlang::get_expr(x))
   } else {
-    checkmate::assert_character(x, null.ok = FALSE, min.len = 1L, .var.name = name)
+    checkmate::assert_character(x, null.ok = FALSE, min.chars = 1L, min.len = 1, .var.name = name)
     str2expression(x)
   }
 }

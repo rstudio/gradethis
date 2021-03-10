@@ -1,7 +1,100 @@
-url: https://rstudio-education.github.io/gradethis/
+# TODO: fix when gradethis moves to rstudio org
+url: https://rstudio-education.github.io/gradethis
 
 template:
+  package: quillt
+  opengraph:
+    image:
+      src: https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png
+      alt: "gradethis package"
+    twitter:
+      creator: "@rstudio"
+      card: summary
   params:
+    relocate_functions: true
     docsearch:
       api_key: 6e6350018f3204fb7cb6f4e7d3487cce
       index_name: rstudio-education
+
+development:
+  version_tooltip: "auto"
+
+home:
+  strip_header: false
+
+navbar:
+  title: ~
+  type: default
+  structure:
+    left:  [intro, examples, articles]
+    right: [reference, news, github]
+  components:
+    home: ~
+    # examples:
+    #   text: Examples
+    #   href: articles/articles/examples.html
+    # articles:
+    #   text: Articles
+    #   menu:
+    #     - text: "No vignettes"
+    reference:
+      text: Reference
+      href: reference/index.html
+    github:
+      icon: fab fa-github fa-lg
+      href: https://github.com/rstudio-education/gradethis
+    # news:
+    #   text: News
+    #   menu:
+    #     - text: "Changelog"
+    #       href: news/index.html
+    #     - text: "------------------"
+    #     - text: "Blog posts"
+    #     - text: "Version 1.0"
+    #       href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
+    #     - text: "Version 0.1"
+    #       href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
+
+reference:
+- title: Setup gradethis
+  description: |
+    To use gradethis in your learnr tutorial, you only need to load the
+    gradethis package. Still, you can use `gradethis_setup()` to change the
+    default values of many of the exercise checking or grading function
+    arguments.
+  contents:
+  - '`gradethis_setup`'
+  # - '`gradethis_demo`'
+- title: Exercise Checking Functions
+  description: |
+    Choose one of these functions to use in the `*-check` chunk of your exercise.
+  contents:
+  - '`grade_this`'
+  - '`grade_this_code`'
+  - '`debug_this`'
+  - '`grade_this-objects`'
+- title: Signal A Final Grade
+  description: |
+    Helper functions to create and signal a final grade when used in custom
+    checking logic in `grade_this()`.
+  contents:
+  - '`graded`'
+  - '`pass_if_equal`'
+  - starts_with("pass_")
+  - starts_with("fail_")
+- title: Generate Feedback Messages
+  description: |
+    Create feedback messages for use in `graded()` grades or in the exercise 
+    checking functions.
+  contents:
+  - '`code_feedback`'
+  - '`praise`'
+  - '`pipe_warning`'
+- title: Helper Functions and Utilities
+  description: |
+    These functions are used by gradethis to work within learnr tutorials,
+    or are available to help tutorial authors test their grading logic.
+    Most users of gradethis will not need to use these functions.
+  contents:
+  - '`gradethis_exercise_checker`'
+  - '`mock_this_exercise`'
