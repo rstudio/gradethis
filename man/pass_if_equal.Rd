@@ -6,9 +6,9 @@
 \title{Signal a passing or failing grade if two values are equal}
 \usage{
 pass_if_equal(
-  y = missing_arg(),
+  y = .solution,
   message = getOption("gradethis.pass", "Correct!"),
-  x = missing_arg(),
+  x = .result,
   ...,
   env = parent.frame(),
   praise = getOption("gradethis.pass.praise", FALSE)
@@ -17,7 +17,7 @@ pass_if_equal(
 fail_if_equal(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = missing_arg(),
+  x = .result,
   ...,
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),

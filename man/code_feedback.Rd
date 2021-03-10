@@ -7,9 +7,9 @@
 \title{Provide automated code feedback}
 \usage{
 code_feedback(
-  user_code = get0(".user_code", parent.frame()),
-  solution_code = get0(".solution_code", parent.frame()),
-  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  user_code = .user_code,
+  solution_code = .solution_code,
+  env = .envir_prep,
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 )

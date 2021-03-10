@@ -6,8 +6,8 @@
 \usage{
 fail_if_code_feedback(
   message = NULL,
-  user_code = missing_arg(),
-  solution_code = missing_arg(),
+  user_code = .user_code,
+  solution_code = .solution_code,
   ...,
   env = parent.frame(),
   hint = TRUE,

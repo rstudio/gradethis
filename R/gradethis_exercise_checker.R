@@ -158,7 +158,7 @@ check_exercise <- function(
     # if an unhandled error occurs while checking...
     on_error = function(e, ignore) {
       # notify author of their mistake
-      message("Error while executing checking `", check_label, "` chunk: ", e)
+      message("Error while checking `", check_label, "` chunk: ", e)
       # return from main function (even though in a inner function! voodoo!)
       rlang::return_from(checking_envir, feedback_grading_problem())
     }

@@ -194,6 +194,41 @@ detect_grade_this <- function(env = parent.frame()) {
   get0(".__gradethis_check_env", envir = env, ifnotfound = FALSE)
 }
 
+
+# Sentinel Values ----
+placeholder <- function(class, ...) {
+  structure(list(), class = c(class, ..., "gradethis_placeholder"))
+}
+
+is_placeholder <- function(x, which = "gradethis_placeholder") {
+  inherits(x, which)
+}
+
+assert_not_placeholder <- function(x) {
+  if (is_placeholder(x)) {
+    rlang::abort(glue::glue("Unable to find value for placeholder `{class(x)[1]}`"))
+  }
+}
+
+# @export
+print.gradethis_placeholder <- function(x, ...) {
+  type <- class(x)[1]
+  cat(glue::glue("A placeholder for `{type}` for use in `grade_this()`."))
+}
+
+.result          <- placeholder(".result")
+.user            <- placeholder(".user", ".result")
+.last_value      <- placeholder(".last_value", ".result")
+.result          <- placeholder(".result")
+.solution        <- placeholder(".solution")
+.user_code       <- placeholder(".user_code")
+.solution_code   <- placeholder(".solution_code")
+.envir_prep      <- placeholder(".envir_prep")
+.envir_result    <- placeholder(".envir_result")
+.evaluate_result <- placeholder(".evaluate_result")
+.label           <- placeholder(".label")
+
+
 #' Debug an exercise submission
 #' 
 #' When used in a `*-check` chunk or inside [grade_this()], `debug_this()`

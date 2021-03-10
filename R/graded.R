@@ -328,24 +328,20 @@ fail <- function(
 #'   equal.
 #' @export
 pass_if_equal <- function(
-  y = missing_arg(),
+  y = .solution,
   message = getOption("gradethis.pass", "Correct!"),
-  x = missing_arg(),
+  x = .result,
   ...,
   env = parent.frame(),
   praise = getOption("gradethis.pass.praise", FALSE)
 ) {
-  if (is_missing(x)) {
+  if (is_placeholder(x, ".result")) {
     x <- get_from_env(".result", env)
-    if (is_missing(x)) {
-      return(missing_object_in_env(".result", env, "pass_if_equal"))
-    }
+    assert_object_found_in_env(x, env, "pass_if_equal")
   }
-  if (is_missing(y)) {
+  if (is_placeholder(y, ".solution")) {
     y <- get_from_env(".solution", env)
-    if (is_missing(y)) {
-      return(missing_object_in_env(".solution", env, "pass_if_equal"))
-    }
+    assert_object_found_in_env(y, env, "pass_if_equal")
   }
   maybe_extras(
     grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...),
@@ -359,17 +355,15 @@ pass_if_equal <- function(
 fail_if_equal <- function(
   y,
   message = getOption("gradethis.fail", "Incorrect"),
-  x = missing_arg(),
+  x = .result,
   ...,
   env = parent.frame(),
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
-  if (is_missing(x)) {
+  if (is_placeholder(x, ".result")) {
     x <- get_from_env(".result", env)
-    if (is_missing(x)) {
-      return(missing_object_in_env(".result", env, "fail_if_equal"))
-    }
+    assert_object_found_in_env(x, env, "fail_if_equal")
   }
   maybe_extras(
     grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...),
@@ -625,31 +619,27 @@ fail_if <- function(
 #' @export
 fail_if_code_feedback <- function(
   message = NULL,
-  user_code = missing_arg(),
-  solution_code = missing_arg(),
+  user_code = .user_code,
+  solution_code = .solution_code,
   ...,
   env = parent.frame(),
   hint = TRUE,
   encourage = getOption("gradethis.fail.encourage", FALSE),
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
-  if (is_missing(user_code)) {
+  if (identical(rlang::enexpr(user_code), rlang::expr(.user_code))) {
     user_code <- get_from_env(".user_code", env)
-    if (is_missing(user_code)) {
-      return(missing_object_in_env(".user_code", env, "fail_if_code_feedback"))
-    }
+    assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
     if (is.null(user_code) || length(user_code) == 0 || !nzchar(user_code)) {
       graded(logical(), "I didn't receive your code. Did you write any?", type = "info")
     }
   }
-  if (is_missing(solution_code)) {
+  if (identical(rlang::enexpr(solution_code), rlang::expr(.solution_code))) {
     solution_code <- get_from_env(".solution_code", env)
-    if (is_missing(solution_code)) {
-      # warn about missing solution code, but don't emit grade
-      capture_graded(missing_object_in_env(".solution_code", env, "fail_if_code_feedback"))
-    }
+    assert_object_found_in_env(solution_code, env, "fail_if_code_feedback", throw_grade = FALSE)
     if (
-      is_missing(solution_code) || 
+      is_placeholder(solution_code) ||
+        is_missing(solution_code) || 
         is.null(solution_code) || 
         length(solution_code) == 0 || 
         !nzchar(solution_code)
@@ -712,18 +702,34 @@ get_from_env <- function(x, env) {
   get0(x, envir = env, ifnotfound = missing_arg())
 }
 
-missing_object_in_env <- function(obj, env, caller) {
-  label <- get0(".label", env, ifnotfound = NULL)
+assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
+  obj_expr <- rlang::enexpr(obj)
+  
+  if (!is_placeholder(obj) && !is_missing(obj)) {
+    return(invisible(NULL))
+  }
+  
+  obj_name <- 
+    if (is_placeholder(obj)) {
+      class(obj)[1]
+    } else {
+      rlang::expr_text(obj_expr)
+    }
+  
+  label <- env$.label
   label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
   message(
     label,
-    "`", caller, "()`: expected `", obj, "` to be found",
+    "`", caller, "()`: expected `", obj_name, "` to be found",
     " in its calling environment or the environment specified by `env`.",
     " Did you call `", caller, "()`",
     " inside `grade_this()` or `grade_this_code()`?"
   )
-  # Signal problem with grading code
-  graded(FALSE, feedback_grading_problem()$message)
+  
+  if (isTRUE(throw_grade)) {
+    # Signal problem with grading code
+    signal_grade(graded(FALSE, feedback_grading_problem()$message), parent.frame())
+  }
 }
 
 maybe_extras <- function(

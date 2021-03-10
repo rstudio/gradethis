@@ -61,10 +61,10 @@ message_feedback_grading_problem <- feedback_grading_problem()$message
 test_that("length 0 solution code", {
   expect_exercise_checker(
     is_correct = FALSE,
-    msg = message_feedback_grading_problem,
-    msg_type = "error",
+    msg = "No solution is provided for this exercise.",
+    msg_type = "info",
     user_code = "1",
-    check_code = ".solution; grade_this_code()",
+    check_code = "grade_this({pass(.solution)})",
     solution_code = ""
   )
 })
@@ -102,7 +102,7 @@ test_that("check parsing error is caught", {
       solution_code = "1",
       check_code = "4 +"
     ),
-    "Error while executing checking `test-check` chunk: "
+    "Error while checking `test-check` chunk: "
   )
 })
 
