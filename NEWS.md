@@ -1,4 +1,4 @@
-# gradethis 0.2.3.9000
+# gradethis 0.2.3.9001
 
 * New function: `grade_this(expr)`. Evaluates the expression and returns the first grade that is called or error that is thrown.
 * New function: `grade_this_code(correct, incorrect)`. Makes a grade from comparing the user code against the solution code. This is a simplified version of `grade_code()`.

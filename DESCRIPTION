@@ -2,7 +2,7 @@ Type: Package
 Package: gradethis
 Title: Automated Feedback for Student Exercises in 'learnr'
     Tutorials
-Version: 0.2.3.9000
+Version: 0.2.3.9001
 Authors@R:
     c(person(given = "Garrick",
              family = "Aden-Buie",
