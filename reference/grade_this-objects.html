@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Random praise and encouragement — praise • gradethis</title>
+<title>Checking environment objects for use in grade_this() — grade_this-objects • gradethis</title>
 
 
 <!-- jquery -->
@@ -47,10 +47,30 @@
 
 
 
-<meta property="og:title" content="Random praise and encouragement — praise" />
-<meta property="og:description" content="Generate a random praise or encouragement phrase. These functions are
-designed for use within pass() or fail() messages, or anywhere else that
-gradethis provides feedback to the student." />
+<meta property="og:title" content="Checking environment objects for use in grade_this() — grade_this-objects" />
+<meta property="og:description" content="grade_this() allows instructors to determine a grade and to create custom
+feedback messages using custom R code. To facilitate evaluating the
+exercise, grade_this() makes available a number of objects that can be
+referenced within the { ... } expression.
+All of the objects provided by learnr to an exercise checking function
+are available for inspection. To avoid name collisions with user or
+instructor code, the names of these objects all start with ..
+.label: The exercise label.
+.engine: The exercise engine, typically 'r'.
+.last_value: The last value returned from evaluating the user's exercise submission.
+.solution_code: A string containing the code provided within the *-solution chunk for the exercise.
+.user_code: A string containing the code submitted by the user.
+.check_code: A string containing the code provided within the *-check or *-code-check chunk for the exercise.
+.envir_prep: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.
+.envir_result: The R environemnt after running the student's submitted code.
+.evaluate_result: The return value from the evaluate::evaluate() function (see learnr's documentation).
+
+
+In addition, gradethis has provided some extra objects:
+.user, .result: The last value returned from evaluating the user's exercise submission.
+.solution: The last value returned from evaluating the .solution_code for the exercise (evaluated in .envir_prep).
+
+" />
 <meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
 <meta property="og:image:alt" content="gradethis package" />
 <meta name="twitter:card" content="summary" />
@@ -153,90 +173,74 @@ gradethis provides feedback to the student." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Random praise and encouragement</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/praise.R'><code>R/praise.R</code></a></small>
-    <div class="hidden name"><code>praise.Rd</code></div>
+    <h1>Checking environment objects for use in <code>grade_this()</code></h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/grade_this.R'><code>R/grade_this.R</code></a></small>
+    <div class="hidden name"><code>grade_this-objects.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a random praise or encouragement phrase. These functions are
-designed for use within <code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> messages, or anywhere else that
-<span class="pkg">gradethis</span> provides feedback to the student.</p>
+    <p><code><a href='grade_this.html'>grade_this()</a></code> allows instructors to determine a grade and to create custom
+feedback messages using custom R code. To facilitate evaluating the
+exercise, <code><a href='grade_this.html'>grade_this()</a></code> makes available a number of objects that can be
+referenced within the <code>{ ... }</code> expression.</p>
+<p>All of the objects provided by <code>learnr</code> to an exercise checking function
+are available for inspection. To avoid name collisions with user or
+instructor code, the names of these objects all start with <code>.</code>.</p><ul>
+<li><p><code>.label</code>: The exercise label.</p></li>
+<li><p><code>.engine</code>: The exercise engine, typically 'r'.</p></li>
+<li><p><code>.last_value</code>: The last value returned from evaluating the user's exercise submission.</p></li>
+<li><p><code>.solution_code</code>: A string containing the code provided within the <code>*-solution</code> chunk for the exercise.</p></li>
+<li><p><code>.user_code</code>: A string containing the code submitted by the user.</p></li>
+<li><p><code>.check_code</code>: A string containing the code provided within the <code>*-check</code> or <code>*-code-check</code> chunk for the exercise.</p></li>
+<li><p><code>.envir_prep</code>: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.</p></li>
+<li><p><code>.envir_result</code>: The R environemnt after running the student's submitted code.</p></li>
+<li><p><code>.evaluate_result</code>: The return value from the <code><a href='https://rdrr.io/pkg/evaluate/man/evaluate.html'>evaluate::evaluate()</a></code> function (see learnr's documentation).</p></li>
+</ul>
+
+<p>In addition, <span class="pkg">gradethis</span> has provided some extra objects:</p><ul>
+<li><p><code>.user</code>, <code>.result</code>: The last value returned from evaluating the user's exercise submission.</p></li>
+<li><p><code>.solution</code>: The last value returned from evaluating the <code>.solution_code</code> for the exercise (evaluated in <code>.envir_prep</code>).</p></li>
+</ul>
+
     </div>
 
-    <pre class="usage"><span class='fu'>random_praise</span><span class='op'>(</span><span class='op'>)</span>
+    <pre class="usage"><span class='va'>.result</span>
 
-<span class='fu'>random_encouragement</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>.user</span>
 
-<span class='fu'>give_praise</span><span class='op'>(</span><span class='va'>expr</span>, <span class='va'>...</span>, location <span class='op'>=</span> <span class='st'>"before"</span>, before <span class='op'>=</span> <span class='cn'>NULL</span>, after <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+<span class='va'>.last_value</span>
 
-<span class='fu'>give_encouragement</span><span class='op'>(</span><span class='va'>expr</span>, <span class='va'>...</span>, location <span class='op'>=</span> <span class='st'>"after"</span>, before <span class='op'>=</span> <span class='cn'>NULL</span>, after <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+<span class='va'>.solution</span>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>expr</th>
-      <td><p>A <code><a href='graded.html'>graded()</a></code> grade or helper function, or a grading function —
-like <code><a href='grade_this.html'>grade_this()</a></code> or <code><a href='grade_result.html'>grade_result()</a></code> — or a character string. Praise
-will be added to any passing grades and encouragement will be added to any
-failing grade. If <code>expr</code> is a character string, then <code>"{random_praise()}"</code>
-or <code>"{random_encouragement()}"</code> is pasted before or after the string
-according to <code>location</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Ignored.</p></td>
-    </tr>
-    <tr>
-      <th>location</th>
-      <td><p>Should the praise or encouragement be added before or after
-the grade message?</p></td>
-    </tr>
-    <tr>
-      <th>before, after</th>
-      <td><p>Text to be added before or after the praise or
-encouragement phrase.</p></td>
-    </tr>
-    </table>
+<span class='va'>.user_code</span>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+<span class='va'>.solution_code</span>
 
-    
-<ul>
-<li><p><code>random_praise()</code> and <code>random_encouragement()</code> each return a length-one
-string with a praising or encouraging phrase.</p></li>
-<li><p><code>give_praise()</code> and <code>give_encouragment()</code> add praise or encouragement
-phrases to passing and failing grades, respectively.</p></li>
-</ul>
+<span class='va'>.envir_prep</span>
 
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+<span class='va'>.envir_result</span>
 
-    
-<ul>
-<li><p><code>random_praise</code>: Random praising phrase</p></li>
-<li><p><code>random_encouragement</code>: Random encouraging phrase</p></li>
-<li><p><code>give_praise</code>: Add praising message to a passing grade.</p></li>
-<li><p><code>give_encouragement</code>: Add encouraging message to a failing grade.</p></li>
-</ul>
+<span class='va'>.evaluate_result</span>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random praise: {random_praise()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random praise: Success!"             "Random praise: Well done!"          
-#&gt; [3] "Random praise: Absolutely fabulous!" "Random praise: Cool job!"           
-#&gt; [5] "Random praise: Wonderful!"          </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random encouragement: {random_encouragement()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random encouragement: Let's try it again."                              
-#&gt; [2] "Random encouragement: Please try again."                                
-#&gt; [3] "Random encouragement: Try it again. Perseverence is the key to success."
-#&gt; [4] "Random encouragement: Give it another try."                             
-#&gt; [5] "Random encouragement: Don't give up now, try it one more time."         </div><div class='input'>
-<span class='co'># give_praise() adds praise to passing grade messages</span>
-<span class='fu'>give_praise</span><span class='op'>(</span><span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"That's absolutely correct."</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Excellent! That's absolutely correct.&gt;</div><div class='input'>
-<span class='co'># give_encouragement() encouragement to failing grade messages</span>
-<span class='fu'>give_encouragement</span><span class='op'>(</span><span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='st'>"Sorry, but no."</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Sorry, but no. Please try again.&gt;</div><div class='input'>
-</div></pre>
+<span class='va'>.label</span>
+
+<span class='va'>.engine</span></pre>
+
+
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>An object of class <code>.result</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.user</code> (inherits from <code>.result</code>, <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.last_value</code> (inherits from <code>.result</code>, <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.solution</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.user_code</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.solution_code</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.envir_prep</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.envir_result</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.evaluate_result</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.label</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+<p>An object of class <code>.engine</code> (inherits from <code>gradethis_placeholder</code>) of length 0.</p>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

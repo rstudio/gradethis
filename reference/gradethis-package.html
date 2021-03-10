@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Random praise and encouragement — praise • gradethis</title>
+<title>gradethis: Automated Feedback for Student Exercises in 'learnr'
+    Tutorials — gradethis-package • gradethis</title>
 
 
 <!-- jquery -->
@@ -47,10 +48,12 @@
 
 
 
-<meta property="og:title" content="Random praise and encouragement — praise" />
-<meta property="og:description" content="Generate a random praise or encouragement phrase. These functions are
-designed for use within pass() or fail() messages, or anywhere else that
-gradethis provides feedback to the student." />
+<meta property="og:title" content="gradethis: Automated Feedback for Student Exercises in 'learnr'
+    Tutorials — gradethis-package" />
+<meta property="og:description" content="Pairing with the 'learnr' R package, 'gradethis'
+    provides multiple methods to grade 'learnr' exercises.  To learn more
+    about 'learnr' tutorials, please visit
+    &amp;lt;http://rstudio.github.io/learnr/&amp;gt;." />
 <meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
 <meta property="og:image:alt" content="gradethis package" />
 <meta name="twitter:card" content="summary" />
@@ -153,90 +156,46 @@ gradethis provides feedback to the student." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Random praise and encouragement</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/praise.R'><code>R/praise.R</code></a></small>
-    <div class="hidden name"><code>praise.Rd</code></div>
+    <h1>gradethis: Automated Feedback for Student Exercises in 'learnr'
+    Tutorials</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/gradethis-package.R'><code>R/gradethis-package.R</code></a></small>
+    <div class="hidden name"><code>gradethis-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a random praise or encouragement phrase. These functions are
-designed for use within <code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> messages, or anywhere else that
-<span class="pkg">gradethis</span> provides feedback to the student.</p>
+    <p>Pairing with the 'learnr' R package, 'gradethis'
+    provides multiple methods to grade 'learnr' exercises.  To learn more
+    about 'learnr' tutorials, please visit
+    &lt;http://rstudio.github.io/learnr/&gt;.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>random_praise</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='fu'>random_encouragement</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='fu'>give_praise</span><span class='op'>(</span><span class='va'>expr</span>, <span class='va'>...</span>, location <span class='op'>=</span> <span class='st'>"before"</span>, before <span class='op'>=</span> <span class='cn'>NULL</span>, after <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-<span class='fu'>give_encouragement</span><span class='op'>(</span><span class='va'>expr</span>, <span class='va'>...</span>, location <span class='op'>=</span> <span class='st'>"after"</span>, before <span class='op'>=</span> <span class='cn'>NULL</span>, after <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>expr</th>
-      <td><p>A <code><a href='graded.html'>graded()</a></code> grade or helper function, or a grading function —
-like <code><a href='grade_this.html'>grade_this()</a></code> or <code><a href='grade_result.html'>grade_result()</a></code> — or a character string. Praise
-will be added to any passing grades and encouragement will be added to any
-failing grade. If <code>expr</code> is a character string, then <code>"{random_praise()}"</code>
-or <code>"{random_encouragement()}"</code> is pasted before or after the string
-according to <code>location</code>.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Ignored.</p></td>
-    </tr>
-    <tr>
-      <th>location</th>
-      <td><p>Should the praise or encouragement be added before or after
-the grade message?</p></td>
-    </tr>
-    <tr>
-      <th>before, after</th>
-      <td><p>Text to be added before or after the praise or
-encouragement phrase.</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    
-<ul>
-<li><p><code>random_praise()</code> and <code>random_encouragement()</code> each return a length-one
-string with a praising or encouraging phrase.</p></li>
-<li><p><code>give_praise()</code> and <code>give_encouragment()</code> add praise or encouragement
-phrases to passing and failing grades, respectively.</p></li>
+    <div class='dont-index'><p>Useful links:</p><ul>
+<li><p><a href='https://rstudio-education.github.io/gradethis/'>https://rstudio-education.github.io/gradethis/</a></p></li>
+<li><p><a href='https://rstudio.github.io/learnr/'>https://rstudio.github.io/learnr/</a></p></li>
+<li><p><a href='https://github.com/rstudio-education/gradethis'>https://github.com/rstudio-education/gradethis</a></p></li>
+<li><p>Report bugs at <a href='https://github.com/rstudio-education/gradethis/issues'>https://github.com/rstudio-education/gradethis/issues</a></p></li>
 </ul>
 
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+</div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    
-<ul>
-<li><p><code>random_praise</code>: Random praising phrase</p></li>
-<li><p><code>random_encouragement</code>: Random encouraging phrase</p></li>
-<li><p><code>give_praise</code>: Add praising message to a passing grade.</p></li>
-<li><p><code>give_encouragement</code>: Add encouraging message to a failing grade.</p></li>
+    <p><strong>Maintainer</strong>: Garrick Aden-Buie <a href='mailto:garrick@rstudio.com'>garrick@rstudio.com</a></p>
+<p>Authors:</p><ul>
+<li><p>Daniel Chen <a href='mailto:daniel.chen@rstudio.com'>daniel.chen@rstudio.com</a></p></li>
+<li><p>Garrett Grolemund <a href='mailto:garrett@rstudio.com'>garrett@rstudio.com</a> [conceptor]</p></li>
+<li><p>Barret Schloerke <a href='mailto:barret@rstudio.com'>barret@rstudio.com</a></p></li>
 </ul>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random praise: {random_praise()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random praise: Success!"             "Random praise: Well done!"          
-#&gt; [3] "Random praise: Absolutely fabulous!" "Random praise: Cool job!"           
-#&gt; [5] "Random praise: Wonderful!"          </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random encouragement: {random_encouragement()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random encouragement: Let's try it again."                              
-#&gt; [2] "Random encouragement: Please try again."                                
-#&gt; [3] "Random encouragement: Try it again. Perseverence is the key to success."
-#&gt; [4] "Random encouragement: Give it another try."                             
-#&gt; [5] "Random encouragement: Don't give up now, try it one more time."         </div><div class='input'>
-<span class='co'># give_praise() adds praise to passing grade messages</span>
-<span class='fu'>give_praise</span><span class='op'>(</span><span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"That's absolutely correct."</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Excellent! That's absolutely correct.&gt;</div><div class='input'>
-<span class='co'># give_encouragement() encouragement to failing grade messages</span>
-<span class='fu'>give_encouragement</span><span class='op'>(</span><span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='st'>"Sorry, but no."</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Sorry, but no. Please try again.&gt;</div><div class='input'>
-</div></pre>
+<p>Other contributors:</p><ul>
+<li><p>RStudio, PBC [copyright holder, funder]</p></li>
+</ul>
+
+
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

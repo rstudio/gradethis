@@ -11,10 +11,9 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,24 +34,39 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 
 <meta property="og:title" content="Setup gradethis for use within learnr — gradethis_setup" />
-<meta property="og:description" content="Use this function to change the default options suggested by gradethis. This
-function also describes in detail each of the global options available for
-customization in the gradethis package. Note that you most likely do not want
-to change the defaults values for the learnr tutorial options that are
+<meta property="og:description" content="To use gradethis in your learnr tutorial, you only need to call
+library(gradethis) in your tutorial's setup chunk.
+```{r setup}
+library(learnr)
+library(gradethis)
+```
+
+
+
+Use gradethis_setup() to change the default options suggested by gradethis.
+This function also describes in detail each of the global options available
+for customization in the gradethis package. Note that you most likely do not
+want to change the defaults values for the learnr tutorial options that are
 prefixed with exercise.. Each of the gradethis-specific arguments sets a
 global option with the same name, prefixed with gradethis.. For example,
 pass sets gradethis.pass." />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -66,11 +80,30 @@ pass sets gradethis.pass." />
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -82,37 +115,41 @@ pass sets gradethis.pass." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -135,10 +172,19 @@ pass sets gradethis.pass." />
     </div>
 
     <div class="ref-description">
-    <p>Use this function to change the default options suggested by gradethis. This
-function also describes in detail each of the global options available for
-customization in the gradethis package. Note that you most likely do not want
-to change the defaults values for the learnr tutorial options that are
+    <p>To use <span class="pkg">gradethis</span> in your <span class="pkg">learnr</span> tutorial, you only need to call
+<code><a href='https://rstudio-education.github.io/gradethis/'>library(gradethis)</a></code> in your tutorial's setup chunk.</p>
+<p><div class="sourceCode"></p><pre>```{r setup}
+library(learnr)
+library(gradethis)
+```
+</pre>
+
+<p></div></p>
+<p>Use <code>gradethis_setup()</code> to change the default options suggested by gradethis.
+This function also describes in detail each of the global options available
+for customization in the gradethis package. Note that you most likely do not
+want to change the defaults values for the learnr tutorial options that are
 prefixed with <code>exercise.</code>. Each of the gradethis-specific arguments sets a
 global option with the same name, prefixed with <code>gradethis.</code>. For example,
 <code>pass</code> sets <code>gradethis.pass</code>.</p>
@@ -223,19 +269,19 @@ returned. Sets the default values of the <code>before</code> and <code>after</co
       <th>pass.praise</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether a praising
 phrase should be automatically prepended to any <code><a href='graded.html'>pass()</a></code> or
-<code><a href='graded.html'>pass_if_equal()</a></code> messages. Sets the <code>gradethis.pass.praise</code> option.</p></td>
+<code><a href='pass_if_equal.html'>pass_if_equal()</a></code> messages. Sets the <code>gradethis.pass.praise</code> option.</p></td>
     </tr>
     <tr>
       <th>fail.hint</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether an automated
-code feedback hint should be shown with a <code><a href='graded.html'>fail()</a></code> or <code><a href='graded.html'>fail_if_equal()</a></code>
+code feedback hint should be shown with a <code><a href='graded.html'>fail()</a></code> or <code><a href='pass_if_equal.html'>fail_if_equal()</a></code>
 message. Sets the <code>gradethis.fail.hint</code> option.</p></td>
     </tr>
     <tr>
       <th>fail.encourage</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether an
 encouraging phrase should be automatically appended to any <code><a href='graded.html'>fail()</a></code> or
-<code><a href='graded.html'>fail_if_equal()</a></code> messages. Sets the <code>gradethis.fail.encourage</code> option.</p></td>
+<code><a href='pass_if_equal.html'>fail_if_equal()</a></code> messages. Sets the <code>gradethis.fail.encourage</code> option.</p></td>
     </tr>
     <tr>
       <th>pipe_warning</th>
@@ -273,6 +319,30 @@ code when an exercise evaluation error occurs (e.g., <code>"gradethis::grade_cod
 
     <p>Invisibly returns the global options as they were prior to setting
 them with <code>gradethis_setup()</code>.</p>
+    <h2 class="hasAnchor" id="global-package-options"><a class="anchor" href="#global-package-options"></a>Global package options</h2>
+
+    
+
+
+<p>These global package options can be set by <code>gradethis_setup()</code> or by
+directly setting the global option. The default values set for each option
+when gradethis is loaded are shown below.</p><table class='table'>
+<tr><td>Option</td><td>Default Value</td></tr>
+<tr><td><code>gradethis.pass</code></td><td><code>"{random_praise()} Correct!"</code></td></tr>
+<tr><td><code>gradethis.pass.praise</code></td><td><code>FALSE</code></td></tr>
+<tr><td><code>gradethis.fail</code></td><td><code>"Incorrect.{maybe_code_feedback()} {random_encouragement()}"</code></td></tr>
+<tr><td><code>gradethis.fail.hint</code></td><td><code>FALSE</code></td></tr>
+<tr><td><code>gradethis.fail.encourage</code></td><td><code>FALSE</code></td></tr>
+<tr><td><code>gradethis.maybe_code_feedback</code></td><td><code>TRUE</code></td></tr>
+<tr><td><code>gradethis.maybe_code_feedback.before</code></td><td><code>" "</code></td></tr>
+<tr><td><code>gradethis.maybe_code_feedback.after</code></td><td><code>NULL</code></td></tr>
+<tr><td><code>gradethis.code_correct</code></td><td><code>NULL</code></td></tr>
+<tr><td><code>gradethis.code_incorrect</code></td><td><code>"{pipe_warning()}{code_feedback()} {random_encouragement()}"</code></td></tr>
+<tr><td><code>gradethis.pipe_warning</code></td><td><code>"I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n"</code></td></tr>
+<tr><td><code>gradethis.allow_partial_matching</code></td><td><code>NULL</code></td></tr>
+</table>
+
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='gradethis_exercise_checker.html'>gradethis_exercise_checker()</a></code></p></div>
@@ -301,12 +371,15 @@ them with <code>gradethis_setup()</code>.</p>
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -331,6 +404,8 @@ them with <code>gradethis_setup()</code>.</p>
 </script>
 
 
+
+  
 
   </body>
 </html>

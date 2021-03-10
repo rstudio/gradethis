@@ -11,10 +11,9 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,18 +34,27 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 
 <meta property="og:title" content="Evaluates a condition — evaluate_condition" />
-<meta property="og:description" content=" Please use grade_this() mixed with pass(), pass_if_equal(), fail(), and/or fail_if_equal(). Can also use eval_gradethis()." />
+<meta property="og:description" content=" Please use grade_this() mixed with
+pass(), pass_if_equal(), fail(), and/or fail_if_equal(). Can also use
+eval_gradethis().
+Evaluates the condition() object to return a graded() value." />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,11 +68,30 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,37 +103,41 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -129,7 +160,10 @@
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#superseded'><img src='figures/lifecycle-superseded.svg' alt='[Superseded]' /></a> Please use <code><a href='grade_this.html'>grade_this()</a></code> mixed with <code><a href='graded.html'>pass()</a></code>, <code><a href='graded.html'>pass_if_equal()</a></code>, <code><a href='graded.html'>fail()</a></code>, and/or <code><a href='graded.html'>fail_if_equal()</a></code>. Can also use <code><a href='eval_gradethis.html'>eval_gradethis()</a></code>.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#superseded'><img src='figures/lifecycle-superseded.svg' alt='[Superseded]' /></a> Please use <code><a href='grade_this.html'>grade_this()</a></code> mixed with
+<code><a href='graded.html'>pass()</a></code>, <code><a href='pass_if_equal.html'>pass_if_equal()</a></code>, <code><a href='graded.html'>fail()</a></code>, and/or <code><a href='pass_if_equal.html'>fail_if_equal()</a></code>. Can also use
+<code><a href='eval_gradethis.html'>eval_gradethis()</a></code>.</p>
+<p>Evaluates the <code><a href='grade_result.html'>condition()</a></code> object to return a <code><a href='graded.html'>graded()</a></code> value.</p>
     </div>
 
     <pre class="usage"><span class='fu'>evaluate_condition</span><span class='op'>(</span><span class='va'>condition</span>, <span class='va'>...</span>, <span class='va'>last_value</span>, <span class='va'>env</span><span class='op'>)</span></pre>
@@ -158,11 +192,8 @@ submission.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code><a href='graded.html'>graded()</a></code> value if <code>condi$x</code> is <code>TRUE</code> or
-<code>NULL</code> if <code>condi$x</code> is <code>FALSE</code></p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Evaluates the <code><a href='grade_result.html'>condition()</a></code> object to return a <code><a href='graded.html'>graded()</a></code> value.</p>
+    <p>a <code><a href='graded.html'>graded()</a></code> value if <code>condi$x</code> is <code>TRUE</code> or <code>NULL</code> if <code>condi$x</code> is
+<code>FALSE</code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>condi_formula_t</span> <span class='op'>&lt;-</span> <span class='fu'><a href='grade_result.html'>condition</a></span><span class='op'>(</span>
@@ -175,7 +206,8 @@ submission.</p></td>
   last_value <span class='op'>=</span> <span class='fl'>5</span>,
   env <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>new.env</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] my correct message&gt;</div></pre>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] my correct message&gt;</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -186,12 +218,15 @@ submission.</p></td>
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -216,6 +251,8 @@ submission.</p></td>
 </script>
 
 
+
+  
 
   </body>
 </html>

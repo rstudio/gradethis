@@ -6,15 +6,14 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Grade expression — grade_this • gradethis</title>
+<title>Grade a student's submission using custom logic — grade_this • gradethis</title>
 
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,18 +34,53 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 
-<meta property="og:title" content="Grade expression — grade_this" />
-<meta property="og:description" content="Grade expression" />
+<meta property="og:title" content="Grade a student's submission using custom logic — grade_this" />
+<meta property="og:description" content="grade_this() allows instructors to write custom logic to evaluate, grade
+and give feedback to students. To use grade_this(), call it directly in
+your *-check chunk:
+```{r example-check}
+grade_this({
+  # custom checking code appears here
+  if (identical(.result, .solution)) {
+    pass(&quot;Great work!&quot;)
+  }
+  fail(&quot;Try again!&quot;)
+})
+```
+
+
+
+grade_this() makes available a number of objects based on the exercise and
+the student's submission that can be used to evaluate the student's submitted
+code. See ?&quot;grade_this-objects&quot; for more information about these objects.
+As the instructor, you are free to use any logic to determine a student's
+grade as long as a graded() object is signaled. The check code can also
+contain testthat expectation code. Failed testthat expectations
+will be turned into fail()ed grades with the corresponding message.
+A final grade is signaled from grade_this() using the graded() helper
+functions, which include pass(), fail(), among others. grade_this()
+uses condition handling to short-circuit further evaluation when a grade is
+reached. This means that you may also signal a failing grade using any of the
+expect_*() functions from testthat, other functions designed to work
+with testthat, such as checkmate, or standard R errors via
+stop(). Learn more about this behavior in graded() in the section
+Return a grade immediately." />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,11 +94,30 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,37 +129,41 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -123,13 +180,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Grade expression</h1>
+    <h1>Grade a student's submission using custom logic</h1>
     <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/grade_this.R'><code>R/grade_this.R</code></a></small>
     <div class="hidden name"><code>grade_this.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Grade expression</p>
+    <p><code>grade_this()</code> allows instructors to write custom logic to evaluate, grade
+and give feedback to students. To use <code>grade_this()</code>, call it directly in
+your <code>*-check</code> chunk:</p>
+<p><div class="sourceCode"></p><pre>```{r example-check}
+grade_this({
+  # custom checking code appears here
+  if (identical(.result, .solution)) {
+    pass("Great work!")
+  }
+  fail("Try again!")
+})
+```
+</pre>
+
+<p></div></p>
+<p><code>grade_this()</code> makes available a number of objects based on the exercise and
+the student's submission that can be used to evaluate the student's submitted
+code. See <code><a href='grade_this-objects.html'>?"grade_this-objects"</a></code> for more information about these objects.</p>
+<p>As the instructor, you are free to use any logic to determine a student's
+grade as long as a <code><a href='graded.html'>graded()</a></code> object is signaled. The check code can also
+contain <span class="pkg">testthat</span> expectation code. Failed <span class="pkg">testthat</span> expectations
+will be turned into <code><a href='graded.html'>fail()</a></code>ed grades with the corresponding message.</p>
+<p>A final grade is signaled from <code>grade_this()</code> using the <code><a href='graded.html'>graded()</a></code> helper
+functions, which include <code><a href='graded.html'>pass()</a></code>, <code><a href='graded.html'>fail()</a></code>, among others. <code>grade_this()</code>
+uses condition handling to short-circuit further evaluation when a grade is
+reached. This means that you may also signal a failing grade using any of the
+<code>expect_*()</code> functions from <span class="pkg">testthat</span>, other functions designed to work
+with <span class="pkg">testthat</span>, such as <span class="pkg">checkmate</span>, or standard R errors via
+<code><a href='https://rdrr.io/r/base/stop.html'>stop()</a></code>. Learn more about this behavior in <code><a href='graded.html'>graded()</a></code> in the section
+<strong>Return a grade immediately</strong>.</p>
     </div>
 
     <pre class="usage"><span class='fu'>grade_this</span><span class='op'>(</span>
@@ -143,20 +229,20 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>expr</th>
-      <td><p>Expression to be evaluated. MUST either signal a grade via
-<code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> like <span class="pkg">gradethis</span> functions or throw an error (via
-<span class="pkg">testthat</span> or <code><a href='https://rdrr.io/r/base/stop.html'>stop()</a></code>). Errors will be converted to <code><a href='graded.html'>fail()</a></code> calls
-with the corresponding error message.</p></td>
+      <td><p>The grade-checking expression to be evaluated. This expression
+must either signal a grade via <code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> functions or throw an
+error (via <span class="pkg">testthat</span> or <code><a href='https://rdrr.io/r/base/stop.html'>stop()</a></code>). Errors will be converted to
+<code><a href='graded.html'>fail()</a></code> calls and will use the error message as the feedback <code>message</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>ignored</p></td>
+      <td><p>Ignored</p></td>
     </tr>
     <tr>
       <th>maybe_code_feedback</th>
-      <td><p>Logical that determines if <code><a href='code_feedback.html'>maybe_code_feedback()</a></code>
-should provide code feedback when used in a <code><a href='graded.html'>graded()</a></code> message. The default
-value can be set with <code><a href='gradethis_setup.html'>gradethis_setup()</a></code>.</p>
+      <td><p>Should <code><a href='code_feedback.html'>maybe_code_feedback()</a></code> provide code
+feedback when used in a <code><a href='graded.html'>graded()</a></code> message? The default value can be set
+with <code><a href='gradethis_setup.html'>gradethis_setup()</a></code>.</p>
 <p>Typically, <code><a href='code_feedback.html'>maybe_code_feedback()</a></code> is called in the default <code><a href='graded.html'>fail()</a></code>
 message (the default can be customized the <code>fail</code> argument of
 <code><a href='gradethis_setup.html'>gradethis_setup()</a></code>). If the <code>maybe_code_feedback</code> argument is <code>FALSE</code>,
@@ -166,74 +252,81 @@ message (the default can be customized the <code>fail</code> argument of
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a function whose first parameter should be an environment that
-contains all necessary information to execute the expression.  The
-evaluation of the expression should return a <code><a href='graded.html'>graded()</a></code> object.</p>
-    <h2 class="hasAnchor" id="available-variables"><a class="anchor" href="#available-variables"></a>Available variables</h2>
-
-    
-
-
-<p><code>grade_this()</code> allows instructors to create an expression to grade. Within
-the expression, all <code>learnr</code> tutorial variables variables are available for
-inspection with a <code>.</code> prepended to the name:</p><ul>
-<li><p><code>.label</code>: Label for exercise chunk</p></li>
-<li><p><code>.solution_code</code>: Code provided within the "-solution" chunk for the exercise</p></li>
-<li><p><code>.user_code</code>: R code submitted by the user</p></li>
-<li><p><code>.check_code</code>: Code provided within the "-check" (or "-code-check") chunk for the exercise.</p></li>
-<li><p><code>.envir_prep</code>: A copy of the R environment before the execution of the chunk.</p></li>
-<li><p><code>.envir_result</code>: The R environment after the execution of the chunk.</p></li>
-<li><p><code>.evaluate_result</code>: The return value from the <code><a href='https://rdrr.io/pkg/evaluate/man/evaluate.html'>evaluate::evaluate</a></code> function.</p></li>
-<li><p><code>.last_value</code> The last value from evaluating the user's exercise submission.</p></li>
-</ul>
-
-<p>In addition, <span class="pkg">gradethis</span> has provided some extra variables:</p><ul>
-<li><p><code>.user</code>, <code>.result</code>: A direct copy of <code>.last_value</code> for friendlier naming</p></li>
-<li><p><code>.solution</code>: When accessed, will be the result of evaluating the
-<code>.solution_code</code> in a child environment of <code>.envir_prep</code></p></li>
-</ul>
-
-<p>As the instructor, you are free to use any logic to determine a student's
-grade as long as a <code><a href='graded.html'>graded()</a></code> object is signaled. The check code can also
-contain <span class="pkg">testthat</span> expectation code. Failed <span class="pkg">testthat</span> expectations
-will be turned into <code><a href='graded.html'>fail()</a></code>ed grades with the corresponding message.</p>
+    <p>Returns a function whose first parameter will be an environment
+containing objects specific to the exercise and submission (see <strong>Available
+variables</strong>). For local testing, you can create a version of the expected
+environment for a mock exercise submission with <code><a href='mock_this_exercise.html'>mock_this_exercise()</a></code>.
+Calling the returned function on the exercise-checking environment will
+evaluate the grade-checking <code>expr</code> and return a final grade via <code><a href='graded.html'>graded()</a></code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='grade_this_code.html'>grade_this_code()</a></code>, <code><a href='eval_gradethis.html'>eval_gradethis()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='grade_this_code.html'>grade_this_code()</a></code>, <code><a href='mock_this_exercise.html'>mock_this_exercise()</a></code>, <code><a href='gradethis_demo.html'>gradethis_demo()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># These are manual examples, see grading demo for `learnr` tutorial usage</span>
+    <pre class="examples"><div class='input'><span class='co'># For an interactive example run: gradethis_demo()</span>
 
-<span class='fu'>grade_this</span><span class='op'>(</span><span class='op'>{</span>
-  <span class='fu'><a href='graded.html'>fail_if_equal</a></span><span class='op'>(</span><span class='fl'>4</span>, <span class='st'>"Try adding 1"</span><span class='op'>)</span>
-  <span class='fu'><a href='graded.html'>pass_if_equal</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>
-  <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .result <span class='op'>=</span> <span class='fl'>4</span>
-<span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Try adding 1&gt;</div><div class='input'>
-<span class='fu'>grade_this</span><span class='op'>(</span><span class='op'>{</span>
-  <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/inheritance-expectations.html'>expect_type</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='st'>"integer"</span><span class='op'>)</span> <span class='co'># will `fail()` if not an integer</span>
-  <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/equality-expectations.html'>expect_equal</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5L</span><span class='op'>)</span>        <span class='co'># will `fail()` if not equal to 5</span>
-  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='op'>)</span> <span class='co'># returns default message</span>
-<span class='op'>}</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .result <span class='op'>=</span> <span class='fl'>5L</span>
-<span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Fantastic! Correct!&gt;</div><div class='input'>
-<span class='fu'>grade_this</span><span class='op'>(</span><span class='op'>{</span>
-  <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/logical-expectations.html'>expect_true</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/is.function.html'>is.function</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='fu'>testthat</span><span class='fu'>::</span><span class='fu'><a href='https://testthat.r-lib.org/reference/equality-expectations.html'>expect_equal</a></span><span class='op'>(</span><span class='fu'>.result</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span>, <span class='fl'>3</span><span class='op'>)</span>
-  <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='op'>}</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .result <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span><span class='va'>x</span> <span class='op'>+</span> <span class='fl'>2</span><span class='op'>}</span>
-<span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Bravo! Correct!&gt;</div><div class='input'>
-<span class='co'># Remember, only `grade_this(expr)` should be used.</span>
-<span class='co'># The followup `list()` and values will be called by </span>
-<span class='co'># `gradethis_exercise_checker()`</span>
-<span class='co'># To learn more about using `grade_this()` with learnr, see:</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='fu'><a href='gradethis_demo.html'>gradethis_demo</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='co'># Suppose we have an exercise that prompts students to calculate the</span>
+<span class='co'># average height of Loblolly pine trees using the `Loblolly` data set.</span>
+<span class='co'># We might write an exercise `-check` chunk like the one below.</span>
+<span class='co'># </span>
+<span class='co'># Since grade_this() returns a function, we'll save the result of this</span>
+<span class='co'># "chunk" as `grader()`, which can be called on an exercise submission</span>
+<span class='co'># to evaluate the student's code, which we'll simulate with</span>
+<span class='co'># `mock_this_exercise()`.</span>
+
+<span class='va'>grader</span> <span class='op'>&lt;-</span> 
+  <span class='co'># ```{r example-check}</span>
+  <span class='fu'>grade_this</span><span class='op'>(</span><span class='op'>{</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>{</span>
+      <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='st'>"I expected a single value instead of {length(.result)} values."</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    
+    <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+      <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='st'>"I expected a number, but your code returned a missing value."</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    
+    <span class='va'>avg_height</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>height</span><span class='op'>)</span>
+    <span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='va'>avg_height</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+      <span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"Great work! The average height is {round(avg_height, 2)}."</span><span class='op'>)</span>
+    <span class='op'>}</span>
+    
+    <span class='co'># Always end grade_this() with a default grade.</span>
+    <span class='co'># By default fail() will also give code feedback, </span>
+    <span class='co'># if a solution is available.</span>
+    <span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='op'>)</span>
+  <span class='op'>}</span><span class='op'>)</span>
+<span class='co'># ```</span>
+
+<span class='co'># Simulate an incorrect answer: too many values...</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>.user_code <span class='op'>=</span> <span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>height</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect]
+#&gt;   I expected a single value instead of 2 values.
+#&gt; &gt;</div><div class='input'>
+<span class='co'># This student submission returns a missing value...</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>Seed</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: argument is not numeric or logical: returning NA</span></div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect]
+#&gt;   I expected a number, but your code returned a missing value.
+#&gt; &gt;</div><div class='input'><span class='co'># This student submission isn't caught by any specific tests,</span>
+<span class='co'># the final grade is determined by the default (last) value in grade_this()</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>age</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect]
+#&gt;   Incorrect. But no need to fret, try it again.
+#&gt; &gt;</div><div class='input'>
+<span class='co'># If you have a *-solution chunk, </span>
+<span class='co'># fail() without arguments gives code feedback...</span>
+<span class='fu'>grader</span><span class='op'>(</span>
+  <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+    .user_code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>age</span><span class='op'>)</span>,
+    .solution_code <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>height</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect]
+#&gt;   Incorrect. In `Loblolly$age`, I expected `height` where you wrote
+#&gt;   `age`. Try it again. I have a good feeling about this.
+#&gt; &gt;</div><div class='input'>
+<span class='co'># Finally, the "student" gets the correct answer!</span>
+<span class='fu'>grader</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Loblolly</span><span class='op'>$</span><span class='va'>height</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Great work! The average height is 32.36.&gt;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -245,12 +338,15 @@ will be turned into <code><a href='graded.html'>fail()</a></code>ed grades with 
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -275,6 +371,8 @@ will be turned into <code><a href='graded.html'>fail()</a></code>ed grades with 
 </script>
 
 
+
+  
 
   </body>
 </html>

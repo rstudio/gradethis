@@ -11,10 +11,9 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,17 +34,23 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 
 <meta property="og:title" content="Changelog" />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,11 +64,30 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -75,37 +99,41 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -126,6 +154,98 @@
       <small>Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="gradethis-0239001" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.3.9001">
+<a href="#gradethis-0239001" class="anchor"></a>gradethis 0.2.3.9001</h1>
+<ul>
+<li>New function: <code><a href="../reference/grade_this.html">grade_this(expr)</a></code>. Evaluates the expression and returns the first grade that is called or error that is thrown.</li>
+<li>New function: <code><a href="../reference/grade_this_code.html">grade_this_code(correct, incorrect)</a></code>. Makes a grade from comparing the user code against the solution code. This is a simplified version of <code><a href="../reference/grade_code.html">grade_code()</a></code>.</li>
+<li>New function: <code><a href="../reference/code_feedback.html">code_feedback()</a></code>. Compares the user code against the solution code.</li>
+<li>Checking exercise code with blanks, e.g. <code>____</code>, now returns clear feedback that students should replace the <code>____</code> with code. (<a href='https://github.com/rstudio-education/gradethis/issues/153'>#153</a>)</li>
+<li>The <code>exercise.parse.error</code> global option now accepts a function with one argument. The function is given the gradethis check environment with an additional <code>.error</code> object containing the parse error condition. (<a href='https://github.com/rstudio-education/gradethis/issues/153'>#153</a>)</li>
+<li>Improved code feedback for function definitions will detect mistakes in function arguments (<a href='https://github.com/rstudio-education/gradethis/issues/178'>#178</a>)</li>
+<li>gradethis now accepts markdown or an htmltools <code>tags</code> or a <code>tagList()</code> object for feedback messages. Markdown processing is handled via commonmark. Internally, all code feedback messages now use markdown. (<a href='https://github.com/rstudio-education/gradethis/issues/189'>#189</a>)</li>
+<li>
+<code><a href="../reference/pass_if_equal.html">pass_if_equal()</a></code> now compares the submitted <code>.result</code> to the exercise <code>.solution</code> by default (<a href='https://github.com/rstudio-education/gradethis/issues/203'>#203</a>).</li>
+<li>New function: <code><a href="../reference/debug_this.html">debug_this()</a></code> returns information about the various objects available for use by grading code. It is designed for tutorial authors to use during development and can be used in <code>*-check</code> chunks or inside <code><a href="../reference/grade_this.html">grade_this()</a></code> grading code and the feedback is shown in the tutorial when clicking on <strong>Submit Answer</strong>. See <code><a href="../reference/debug_this.html">?debug_this</a></code> for more information. (<a href='https://github.com/rstudio-education/gradethis/issues/203'>#203</a>)</li>
+<li>
+<code><a href="../reference/graded.html">graded()</a></code> and its pass/fail helper functions now accept <code>type</code> and <code>location</code> parameters that specify how the feedback is displayed (see <a href="https://rstudio.github.io/learnr/exercises.html#Custom_checking" class="external-link">learnr Custom Checking</a> for more details about these options).</li>
+<li>Calling <code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code> is no longer required if you want to use the default gradethis setup. Simply call <code><a href="https://rstudio-education.github.io/gradethis/">library(gradethis)</a></code>. You can use <code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code> to adjust the default values of any options. (<a href='https://github.com/rstudio-education/gradethis/issues/210'>#210</a>)</li>
+<li>New function: <code><a href="../reference/code_feedback.html">give_code_feedback()</a></code>. When applied to a <code><a href="../reference/grade_this.html">grade_this()</a></code> or <code><a href="../reference/grade_result.html">grade_result()</a></code> grading function, code feedback is added to the messages of any <code><a href="../reference/graded.html">fail()</a></code> grades. (<a href='https://github.com/rstudio-education/gradethis/issues/219'>#219</a>)</li>
+<li>All <em>failing</em> <code><a href="../reference/graded.html">graded()</a></code> helper functions, like <code><a href="../reference/graded.html">fail()</a></code> etc, now take a <code>hint</code> argument that when <code>TRUE</code> adds a code feedback hint to the custom feedback message. The default value of this argument can be set via <code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code>. (<a href='https://github.com/rstudio-education/gradethis/issues/216'>#216</a>)</li>
+<li>Passing and failing <code><a href="../reference/graded.html">graded()</a></code> helper functions gain a <code>praise</code> or <code>encourage</code> argument (respectively) to prepend a random praising phrase when passing or append a random encouraging phrase when failing. The default values of these arguments can be set via <code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code>. (<a href='https://github.com/rstudio-education/gradethis/issues/227'>#227</a>)</li>
+<li>New functions: <code><a href="../reference/praise.html">give_praise()</a></code> and <code><a href="../reference/praise.html">give_encouragement()</a></code>. Follow the same pattern as <code><a href="../reference/code_feedback.html">give_code_feedback()</a></code> to automatically add praise or encouragement to <code><a href="../reference/graded.html">pass()</a></code> or <code><a href="../reference/graded.html">fail()</a></code> grades, respectively. (<a href='https://github.com/rstudio-education/gradethis/issues/227'>#227</a>)</li>
+<li>New function: <code><a href="../reference/fail_if_code_feedback.html">fail_if_code_feedback()</a></code>. Returns an <em>incorrect</em> grade when there are differences between the user code and solution code (if it exists). (<a href='https://github.com/rstudio-education/gradethis/issues/228'>#228</a>)</li>
+<li>We now use placeholder sentinel objects as function argument defaults to signal that a function will find the object in the <code><a href="../reference/grade_this.html">grade_this()</a></code> check environment. The help page <code>?grade_this-objects</code> describes these objects and documents their purpose, which you can also find by calling one of the placeholders, e.g. <code>.result</code>. (<a href='https://github.com/rstudio-education/gradethis/issues/232'>#232</a>)</li>
+</ul>
+<div id="breaking-changes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#breaking-changes" class="anchor"></a>Breaking changes</h3>
+<ul>
+<li>Deprecated <code><a href="../reference/gradethis-deprecated.html">grade_feedback()</a></code>
+</li>
+<li>
+<code><a href="../reference/graded.html">graded()</a></code> now returns and signals a condition with class <code>"gradethis_graded"</code> instead of returning an object with class <code>"grader_graded"</code>
+</li>
+<li>
+<code><a href="../reference/grade_code.html">grade_code()</a></code>, <code><a href="../reference/grade_result.html">grade_result()</a></code>, and <code><a href="../reference/grade_result.html">grade_result_strict()</a></code> now return a function that accepts checking arguments to be supplied by <code><a href="../reference/gradethis-deprecated.html">grade_learnr()</a></code>
+</li>
+<li>
+<code><a href="../reference/grade_code.html">grade_code()</a></code> will now throw an error (rather than returning <code>NULL</code>) if no solution code is provided</li>
+<li>
+<code><a href="../reference/evaluate_condition.html">evaluate_condition()</a></code> now accepts <code>last_value</code> and <code>env</code> rather than <code>grader_args</code> and <code>learnr_args</code>
+</li>
+<li>
+<code><a href="../reference/grade_result.html">condition()</a></code>s now have a class of <code>"gradethis_condition"</code>
+</li>
+<li>gradethis now uses learnr for <code><a href="../reference/praise.html">random_praise()</a></code> and <code><a href="../reference/praise.html">random_encouragement()</a></code>. <code><a href="../reference/gradethis-deprecated.html">random_encourage()</a></code> has been soft-deprecated (<a href='https://github.com/rstudio-education/gradethis/issues/183'>#183</a>).</li>
+<li>The <code>gradethis.glue_pipe</code> option is now called <code>gradethis.pipe_warning</code> as it sets the default value of the <code><a href="../reference/pipe_warning.html">pipe_warning()</a></code> function. <code><a href="../reference/pipe_warning.html">pipe_warning()</a></code> can be included in the glue strings of other messages, such as those set by <code>gradethis.code.incorrect</code> (<a href='https://github.com/rstudio-education/gradethis/issues/193'>#193</a>).</li>
+<li>The <code>glue_pipe</code> argument of <code>glue_code()</code> is now deprecated (<a href='https://github.com/rstudio-education/gradethis/issues/193'>#193</a>).</li>
+<li>The “Insert Exercise …” RStudio Addins were removed from gradethis (<a href='https://github.com/rstudio-education/gradethis/issues/196'>#196</a>).</li>
+<li>The names of several global options were changed in <a href='https://github.com/rstudio-education/gradethis/issues/210'>#210</a>. This will only affect users who were setting the options directly rather than using <code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code>. The name changes are:
+<ul>
+<li>
+<code>gradethis.code.partial_matching</code> is now <code>gradethis.allow_partial_matching</code>
+</li>
+<li>
+<code>gradethis.code.feedback</code> is now <code>gradethis.maybe_code_feedback</code>
+</li>
+<li>
+<code>gradethis.code.correct</code> is now <code>gradethis.code_correct</code>
+</li>
+<li>
+<code>gradethis.code.incorrect</code> is now <code>gradethis.code_incorrect</code>
+</li>
+<li>
+<code>gradethis_glue_correct</code> is now <code>gradethis.glue_correct</code>
+</li>
+<li>
+<code>gradethis_glue_incorrect</code> is now <code>gradethis.glue_incorrect</code>
+</li>
+<li>
+<code>gradethis_glue_correct_test</code> is now <code>gradethis.glue_correct_test</code>
+</li>
+<li>
+<code>gradethis_glue_incorrect_test</code> is now <code>gradethis.glue_incorrect_test</code>
+</li>
+</ul>
+</li>
+<li>
+<code><a href="../reference/gradethis-deprecated.html">grade_learnr()</a></code> is now called <code><a href="../reference/gradethis_exercise_checker.html">gradethis_exercise_checker()</a></code>. <code><a href="../reference/gradethis-deprecated.html">grade_learnr()</a></code> will continue to work but will issue a deprecation warning (<a href='https://github.com/rstudio-education/gradethis/issues/204'>#204</a>).</li>
+<li>
+<code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code> now uses a new argument order that favors the gradethis-specific options (<a href='https://github.com/rstudio-education/gradethis/issues/212'>#212</a>).</li>
+<li>The <code>space_before</code> and <code>space_after</code> arguments of <code><a href="../reference/code_feedback.html">maybe_code_feedback()</a></code> have been deprecated in favor of more flexible arguments <code>before</code> and <code>after</code> that accept arbitrary strings to add before or after the message. (<a href='https://github.com/rstudio-education/gradethis/issues/219'>#219</a>)</li>
+<li>The <code>x</code> argument of <code><a href="../reference/pass_if.html">pass_if()</a></code> and <code><a href="../reference/pass_if.html">fail_if()</a></code> has been renamed <code>cond</code> and both functions now work inside <code><a href="../reference/grade_this.html">grade_this()</a></code>, although the function and formula versions are not supported there. (<a href='https://github.com/rstudio-education/gradethis/issues/216'>#216</a>)</li>
+</ul>
+</div>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a>Bug fixes</h3>
+<ul>
+<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+</ul>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -138,12 +258,15 @@
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -168,6 +291,8 @@
 </script>
 
 
+
+  
 
   </body>
 </html>

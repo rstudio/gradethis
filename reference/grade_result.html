@@ -11,10 +11,9 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,11 +34,14 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
@@ -55,6 +57,9 @@ every pass_if() condition must be met, and every fail_if() condition must
 not be met. On the other hand, grade_result()'s final grade reflects the
 first satisfied condition (if no conditions are met, the final grade can be
 controlled by default_correct and default_message)." />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -68,11 +73,30 @@ controlled by default_correct and default_message)." />
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -84,37 +108,41 @@ controlled by default_correct and default_message)." />
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -138,11 +166,11 @@ controlled by default_correct and default_message)." />
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#superseded'><img src='figures/lifecycle-superseded.svg' alt='[Superseded]' /></a> Please use <code><a href='grade_this.html'>grade_this()</a></code>
-mixed with <code><a href='graded.html'>pass()</a></code>, <code><a href='graded.html'>pass_if_equal()</a></code>, <code><a href='graded.html'>fail()</a></code>, and/or <code><a href='graded.html'>fail_if_equal()</a></code>.</p>
+mixed with <code><a href='graded.html'>pass()</a></code>, <code><a href='pass_if_equal.html'>pass_if_equal()</a></code>, <code><a href='graded.html'>fail()</a></code>, and/or <code><a href='pass_if_equal.html'>fail_if_equal()</a></code>.</p>
 <p><code>grade_result()</code> and <code>grade_result_strict()</code> both take a set of
-<code><a href='graded.html'>pass_if()</a></code>/<code><a href='graded.html'>fail_if()</a></code> conditions, evaluate them, and return a final
+<code><a href='pass_if.html'>pass_if()</a></code>/<code><a href='pass_if.html'>fail_if()</a></code> conditions, evaluate them, and return a final
 <code><a href='graded.html'>graded()</a></code> object. For <code>grade_result_strict()</code> to return a correct grade,
-every <code><a href='graded.html'>pass_if()</a></code> condition must be met, and every <code><a href='graded.html'>fail_if()</a></code> condition must
+every <code><a href='pass_if.html'>pass_if()</a></code> condition must be met, and every <code><a href='pass_if.html'>fail_if()</a></code> condition must
 not be met. On the other hand, <code>grade_result()</code>'s final grade reflects the
 first satisfied condition (if no conditions are met, the final grade can be
 controlled by <code>default_correct</code> and <code>default_message</code>).</p>
@@ -177,7 +205,7 @@ controlled by <code>default_correct</code> and <code>default_message</code>).</p
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>...</th>
-      <td><p><code><a href='graded.html'>pass_if()</a></code>/<code><a href='graded.html'>fail_if()</a></code> <code>condition()</code>s to check.</p></td>
+      <td><p><code><a href='pass_if.html'>pass_if()</a></code>/<code><a href='pass_if.html'>fail_if()</a></code> <code>condition()</code>s to check.</p></td>
     </tr>
     <tr>
       <th>correct</th>
@@ -201,7 +229,7 @@ displayed. Defaults to <code><a href='https://rdrr.io/r/base/options.html'>getOp
     <tr>
       <th>default_correct</th>
       <td><p>In the event that no <code>condition()</code>s are met, should the end result
-be correct? When <code>"auto"</code>, this will be <code>TRUE</code> when all the <code><a href='https://rdrr.io/r/base/conditions.html'>conditions()</a></code> are <code><a href='graded.html'>fail_if()</a></code>
+be correct? When <code>"auto"</code>, this will be <code>TRUE</code> when all the <code><a href='https://rdrr.io/r/base/conditions.html'>conditions()</a></code> are <code><a href='pass_if.html'>fail_if()</a></code>
 (and <code>FALSE</code> otherwise).</p></td>
     </tr>
     <tr>
@@ -239,7 +267,7 @@ It is advised that the user use <code><a href='https://rdrr.io/r/base/identical.
     <tr>
       <th>message</th>
       <td><p>character string for message returned (usually passed in from
-<code><a href='graded.html'>pass_if()</a></code> or <code><a href='graded.html'>fail_if()</a></code>.</p></td>
+<code><a href='pass_if.html'>pass_if()</a></code> or <code><a href='pass_if.html'>fail_if()</a></code>.</p></td>
     </tr>
     </table>
 
@@ -263,16 +291,16 @@ will be a <code><a href='graded.html'>graded()</a></code> object containing a fo
 <span class='co'># `(submitted_5)`, we're using that notation here to preview what this</span>
 <span class='co'># `grade_result()` will do with the mock submission.</span>
 <span class='fu'>grade_result</span><span class='op'>(</span>
-  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='st'>"Try adding 1"</span><span class='op'>)</span>,
-  <span class='fu'><a href='graded.html'>pass_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
-  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='cn'>TRUE</span>, <span class='st'>"Some generic failing message."</span><span class='op'>)</span>
+  <span class='fu'><a href='pass_if.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='st'>"Try adding 1"</span><span class='op'>)</span>,
+  <span class='fu'><a href='pass_if.html'>pass_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
+  <span class='fu'><a href='pass_if.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='cn'>TRUE</span>, <span class='st'>"Some generic failing message."</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>(</span><span class='va'>submitted_5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Well done! You got 5, great! &gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Wonderful! You got 5, great! &gt;</div><div class='input'>
 <span class='fu'>grade_result_strict</span><span class='op'>(</span>
-  <span class='fu'><a href='graded.html'>pass_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
-  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected an integer"</span><span class='op'>)</span>
+  <span class='fu'><a href='pass_if.html'>pass_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>.result</span>, <span class='fl'>5</span><span class='op'>)</span>, <span class='st'>"You got 5, great!"</span><span class='op'>)</span>,
+  <span class='fu'><a href='pass_if.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/integer.html'>is.integer</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected an integer"</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>(</span><span class='va'>submitted_5</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] 1/2 correct! Try it again; next time's the charm!&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] 1/2 correct! Let's try it again.&gt;</div><div class='input'>
 <span class='co'># Suppose our exercise asks the student to write a function that adds 1 to</span>
 <span class='co'># the value of its only argument. The student submits:</span>
 <span class='va'>submitted_fn</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
@@ -284,10 +312,13 @@ will be a <code><a href='graded.html'>graded()</a></code> object containing a fo
 <span class='co'># the student's submission passes all of the checks, then `grade_result()`</span>
 <span class='co'># will return a correct grade.</span>
 <span class='fu'>grade_result</span><span class='op'>(</span>
-  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/is.function.html'>is.function</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected a function."</span><span class='op'>)</span>,
-  <span class='fu'><a href='graded.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'>.result</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Your function should add one."</span><span class='op'>)</span>
+  <span class='fu'><a href='pass_if.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/is.function.html'>is.function</a></span><span class='op'>(</span><span class='va'>.result</span><span class='op'>)</span>, <span class='st'>"I expected a function."</span><span class='op'>)</span>,
+  <span class='fu'><a href='pass_if.html'>fail_if</a></span><span class='op'>(</span><span class='op'>~</span> <span class='fu'><a href='grade_this-objects.html'>.result</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>2</span>, <span class='st'>"Your function should add one."</span><span class='op'>)</span>
 <span class='op'>)</span><span class='op'>(</span><span class='va'>submitted_fn</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect] Your function should add one.  But no need to fret, try it again.&gt;</div><div class='input'>
+</div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect]
+#&gt;   Your function should add one.  Try it again. Perseverence is the key
+#&gt;   to success.
+#&gt; &gt;</div><div class='input'>
 <span class='co'># To learn more about using grade_result() and grade_code() with learnr, see:</span>
 <span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='fu'><a href='gradethis_demo.html'>gradethis_demo</a></span><span class='op'>(</span><span class='op'>)</span>
 </div></pre>
@@ -301,12 +332,15 @@ will be a <code><a href='graded.html'>graded()</a></code> object containing a fo
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -331,6 +365,8 @@ will be a <code><a href='graded.html'>graded()</a></code> object containing a fo
 </script>
 
 
+
+  
 
   </body>
 </html>

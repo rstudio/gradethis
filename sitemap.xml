@@ -1,57 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//index.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/index.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/code_feedback.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/code_feedback.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/debug_this.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/debug_this.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/eval_gradethis.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/eval_gradethis.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/evaluate_condition.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/evaluate_condition.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/grade_code.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/fail_if_code_feedback.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/grade_result.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/grade_code.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/grade_this.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/grade_result.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/grade_this_code.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/grade_this-objects.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/graded.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/grade_this.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/gradethis-deprecated.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/grade_this_code.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_demo.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/graded.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_exercise_checker.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/gradethis-deprecated.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/gradethis_setup.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/gradethis-package.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/mock_this_exercise.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/gradethis_demo.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/pipe.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/gradethis_exercise_checker.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/pipe_warning.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/gradethis_setup.html</loc>
   </url>
   <url>
-    <loc>https://rstudio-education.github.io/gradethis//reference/praise.html</loc>
+    <loc>https://rstudio-education.github.io/gradethis/reference/mock_this_exercise.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis/reference/pass_if.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis/reference/pass_if_equal.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis/reference/pipe_warning.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis/reference/praise.html</loc>
+  </url>
+  <url>
+    <loc>https://rstudio-education.github.io/gradethis/articles/gradethis.html</loc>
   </url>
 </urlset>

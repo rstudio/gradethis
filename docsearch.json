@@ -2,21 +2,21 @@
   "index_name": "rstudio-education",
   "start_urls": [
     {
-      "url": "https://rstudio-education.github.io/gradethis//index.html",
+      "url": "https://rstudio-education.github.io/gradethis/index.html",
       "selectors_key": "homepage",
       "tags": [
         "homepage"
       ]
     },
     {
-      "url": "https://rstudio-education.github.io/gradethis//reference",
+      "url": "https://rstudio-education.github.io/gradethis/reference",
       "selectors_key": "reference",
       "tags": [
         "reference"
       ]
     },
     {
-      "url": "https://rstudio-education.github.io/gradethis//articles",
+      "url": "https://rstudio-education.github.io/gradethis/articles",
       "selectors_key": "articles",
       "tags": [
         "articles"
@@ -30,7 +30,7 @@
     "/articles/index.html"
   ],
   "sitemap_urls": [
-    "https://rstudio-education.github.io/gradethis//sitemap.xml"
+    "https://rstudio-education.github.io/gradethis/sitemap.xml"
   ],
   "selectors": {
     "homepage": {

@@ -11,10 +11,9 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,18 +34,44 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 
 <meta property="og:title" content="Grade student code against a solution — grade_this_code" />
-<meta property="og:description" content="Checks the code expression or the code result against a solution." />
+<meta property="og:description" content="grade_this_code() compares student code to a solution (i.e. model code) and
+describes the first way in which the student code differs. If the student
+code exactly matches the solution, grade_this_code() returns a customizable
+success message (correct). If the student code does not match the solution,
+a customizable incorrect message (incorrect) can also be provided.
+In most cases, to use grade_this_code(), ensure that your exercise has a
+-solution chunk:
+```{r example-solution}
+sqrt(log(1))
+```
+
+
+
+Then, call grade_this_code() in your exercise's -check chunk:
+```{r example-check}
+grade_this_code()
+```
+
+
+
+Learn more about how to use grade_this_code() in the Details section" />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,11 +85,30 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,37 +120,41 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -129,7 +177,27 @@
     </div>
 
     <div class="ref-description">
-    <p>Checks the code expression or the code result against a solution.</p>
+    <p><code>grade_this_code()</code> compares student code to a solution (i.e. model code) and
+describes the first way in which the student code differs. If the student
+code exactly matches the solution, <code>grade_this_code()</code> returns a customizable
+success message (<code>correct</code>). If the student code does not match the solution,
+a customizable incorrect message (<code>incorrect</code>) can also be provided.</p>
+<p>In most cases, to use <code>grade_this_code()</code>, ensure that your exercise has a
+<code>-solution</code> chunk:</p>
+<p><div class="sourceCode"></p><pre>```{r example-solution}
+sqrt(log(1))
+```
+</pre>
+
+<p></div></p>
+<p>Then, call <code>grade_this_code()</code> in your exercise's <code>-check</code> chunk:</p>
+<p><div class="sourceCode"></p><pre>```{r example-check}
+grade_this_code()
+```
+</pre>
+
+<p></div></p>
+<p>Learn more about how to use <code>grade_this_code()</code> in the <strong>Details</strong> section</p>
     </div>
 
     <pre class="usage"><span class='fu'>grade_this_code</span><span class='op'>(</span>
@@ -172,57 +240,131 @@ default is set via the <code>gradethis.allow_partial_matching</code> option, or 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a function whose first parameter should be an environment that contains
-all necessary information to compare the code.  The result of the returned function will be a <code><a href='graded.html'>graded()</a></code> object.</p>
+    <p>Returns a function whose first parameter will be an environment
+containing objects specific to the exercise and submission (see <strong>Available
+variables</strong>). For local testing, you can create a version of the expected
+environment for a mock exercise submission with <code><a href='mock_this_exercise.html'>mock_this_exercise()</a></code>.
+Calling the returned function on the exercise-checking environment will
+evaluate the grade-checking <code>expr</code> and return a final grade via <code><a href='graded.html'>graded()</a></code>.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>grade_this_code()</code> compares student code to a solution (i.e. model code) and
-describes the first way that the student code differs. If the student code
-exactly matches the solution, <code>grade_this_code()</code> returns a customizable success
-message (<code>correct</code>). If the student code does not match the solution, a
-customizable incorrect message (<code>incorrect</code>) can also be provided.</p>
-<p><code>grade_this_code()</code> only inspects for code differences between the student's
-code and the solution code. The final result of the student code and solution
-code is ignored. See <code><a href='code_feedback.html'>code_feedback()</a></code> for implementation details on how code
-is determined to be different.</p>
-<p>You can provide solution code for <code>grade_this_code()</code> to use in two ways:</p><ol>
-<li><p>Pass code as a character string or a quoted expression to the solution
-argument of <code><a href='grade_code.html'>grade_code()</a></code></p></li>
-<li><p>Make a "-solution" code chunk for the exercise to be checked in a learnr
-document. There is no need to supply a solution argument for <code><a href='grade_code.html'>grade_code()</a></code>
-if you call it from the "-check" chunk of the same exercise. Likewise, there
-is no need to supply a student submitted code argument when you call
-<code><a href='grade_code.html'>grade_code()</a></code> from a learnr document (learnr will provide the code that the
-student submits when it runs <code><a href='grade_code.html'>grade_code()</a></code>.</p></li>
+    
+
+
+<p><code>grade_this_code()</code> only inspects for code differences between the
+student's code and the solution code. The final result of the student code
+and solution code is ignored. See the <strong>Code differences</strong> section of
+<code><a href='code_feedback.html'>code_feedback()</a></code> for implementation details on how code is determined to
+be different.</p>
+<p>You can call <code>grade_this_code()</code> in two ways:</p><ol>
+<li><p>If you want to check the student's code without evaluating it, call
+<code>grade_this_code()</code> in the <code>*-code-check</code> chunk.</p></li>
+<li><p>To return grading feedback in along with the resulting output of the
+student's code, call <code>grade_this_code()</code> in the <code>*-check</code> chunk of the
+exercise.</p></li>
 </ol>
 
-<p>For best results, name all arguments provided in the solution code.</p>
+<p>To provide the solution code, include a <code>*-solution</code> code chunk in the
+learnr document for the exercise to be checked. When used in this way,
+<code>grade_this_code()</code> will automatically find and use the student's
+submitted code — <code>.user_code</code> in <code><a href='grade_this.html'>grade_this()</a></code> — as well as the solution
+code — <code>.solution_code</code> in <code><a href='grade_this.html'>grade_this()</a></code>.</p>
+    <h2 class="hasAnchor" id="custom-messages"><a class="anchor" href="#custom-messages"></a>Custom messages</h2>
+
+    
+
+
+<p>You can customize the <code>correct</code> and <code>incorrect</code> messages shown to the user
+by <code>grade_this_code()</code>. Both arguments accept template strings that are
+processed by <code><a href='https://glue.tidyverse.org/reference/glue.html'>glue::glue()</a></code>. If you provide a custom template string, it
+completely overwrites the default string, but you can include the
+components used by the default message by adding them to your custom
+message.</p>
+<p>There are four helper functions used in the default messages that you may
+want to include in your custom messages. To use the output of any of the
+following, include them inside braces in the template string. For example
+use <code>{code_feedback()}</code> to add the code feedback to your custom <code>incorrect</code>
+message.</p><ol>
+<li><p><code><a href='code_feedback.html'>code_feedback()</a></code>: Adds feedback about the first observed difference
+between the student's submitted code and the model solution code.</p></li>
+<li><p><code><a href='pipe_warning.html'>pipe_warning()</a></code>: Informs the user that their code was unpiped prior to
+comparison. This message is included by default to help clarify cases
+when the code feedback makes more sense in the unpiped context.</p></li>
+<li><p><code><a href='praise.html'>random_praise()</a></code> and <code><a href='praise.html'>random_encouragement()</a></code>: These praising and
+encouraging messages are included by default in correct and incorrect
+grades, by default.</p></li>
+</ol>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='code_feedback.html'>code_feedback()</a></code>, <code><a href='grade_this.html'>grade_this()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='code_feedback.html'>code_feedback()</a></code>, <code><a href='grade_this.html'>grade_this()</a></code>, <code><a href='mock_this_exercise.html'>mock_this_exercise()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
-<span class='co'># These are manual examples, see grading demo for `learnr` tutorial usage</span>
+    <pre class="examples"><div class='input'><span class='co'># For an interactive example run: gradethis_demo()</span>
 
-<span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .user_code <span class='op'>=</span> <span class='st'>"sqrt(log(2))"</span>,
-  .solution_code <span class='op'>=</span> <span class='st'>"sqrt(log(1))"</span>
-<span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. Don't give up now, try it one more time.&gt;</div><div class='input'>
-<span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-  .user_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>,
-  .solution_code <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>quo</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: Using `as.character()` on a quosure is deprecated as of rlang 0.3.0.</span>
-#&gt; <span class='warning'>Please use `as_label()` or `as_name()` instead.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once per session.</span><span></span></div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect] In `log(2)`, I expected `1` where you wrote `2`. Try it again. You get better each time.&gt;</div><div class='input'>
-<span class='co'># Remember, only `grade_this_code(correct, incorrect)` should be used.</span>
-<span class='co'># The followup `list()` and values will be called by </span>
-<span class='co'># `gradethis_exercise_checker()`.</span>
-<span class='co'># To learn more about using `grade_this_code()` with learnr, see:</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='fu'><a href='gradethis_demo.html'>gradethis_demo</a></span><span class='op'>(</span><span class='op'>)</span>
-</div></span></pre>
+
+<span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span>
+  <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+    .user_code     <span class='op'>=</span> <span class='st'>"sqrt(log(2))"</span>, <span class='co'># user submitted code</span>
+    .solution_code <span class='op'>=</span> <span class='st'>"sqrt(log(1))"</span>  <span class='co'># from -solution chunk</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect]
+#&gt;   In `log(2)`, I expected `1` where you wrote `2`. Don't give up now,
+#&gt;   try it one more time.
+#&gt; &gt;</div><div class='input'>
+<span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span>
+  <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+    <span class='co'># user submitted code</span>
+    .user_code     <span class='op'>=</span> <span class='st'>"runif(1, 0, 10)"</span>,
+    <span class='co'># from -solution chunk</span>
+    .solution_code <span class='op'>=</span> <span class='st'>"runif(n = 1, min = 0, max = 1)"</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect]
+#&gt;   In `runif(1, 0, 10)`, I expected `1` where you wrote `10`. Try it
+#&gt;   again. Perseverence is the key to success.
+#&gt; &gt;</div><div class='input'>
+<span class='co'># By default, grade_this_code() informs the user that piped code is unpiped</span>
+<span class='co'># when comparing to the solution</span>
+<span class='fu'>grade_this_code</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span>
+  <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+    <span class='co'># user submitted code</span>
+    .user_code     <span class='op'>=</span> <span class='st'>"storms %&gt;% select(year, month, hour)"</span>,
+    <span class='co'># from -solution chunk</span>
+    .solution_code <span class='op'>=</span> <span class='st'>"storms %&gt;% select(year, month, day)"</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect]
+#&gt;   I see that you are using pipe operators (e.g. %&gt;%), so I want to let
+#&gt;   you know that this is how I am interpretting your code before I check
+#&gt;   it:
+#&gt; 
+#&gt;   ```r
+#&gt;   select(storms, year, month, hour)
+#&gt;   ```
+#&gt; 
+#&gt;   In `storms %&gt;% select(year, month, hour)`, I expected `day` where you
+#&gt;   wrote `hour`. But no need to fret, try it again.
+#&gt; &gt;</div><div class='input'>
+<span class='co'># By setting `correct` or `incorrect` you can change the default message</span>
+<span class='fu'>grade_this_code</span><span class='op'>(</span>
+  correct <span class='op'>=</span> <span class='st'>"Good work!"</span>,
+  incorrect <span class='op'>=</span> <span class='st'>"Not quite. {code_feedback()} {random_encouragement()}"</span>
+<span class='op'>)</span><span class='op'>(</span>
+  <span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span>
+    <span class='co'># user submitted code</span>
+    .user_code     <span class='op'>=</span> <span class='st'>"storms %&gt;% select(year, month, hour)"</span>,
+    <span class='co'># from -solution chunk</span>
+    .solution_code <span class='op'>=</span> <span class='st'>"storms %&gt;% select(year, month, day)"</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect]
+#&gt;   Not quite. In `storms %&gt;% select(year, month, hour)`, I expected
+#&gt;   `day` where you wrote `hour`. That's okay: you learn more from
+#&gt;   mistakes than successes. Let's do it one more time.
+#&gt; &gt;</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -233,12 +375,15 @@ student submits when it runs <code><a href='grade_code.html'>grade_code()</a></c
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -263,6 +408,8 @@ student submits when it runs <code><a href='grade_code.html'>grade_code()</a></c
 </script>
 
 
+
+  
 
   </body>
 </html>

@@ -11,10 +11,9 @@
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
 <!-- Bootstrap -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
-
+<link href="../tidyverse.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
 
 <!-- bootstrap-toc -->
@@ -26,7 +25,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
@@ -35,17 +34,23 @@
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
+<link href="../tidyverse-2.css" rel="stylesheet">
+<link href="../rmd.css" rel="stylesheet">
+
 
 
 <!-- docsearch -->
 <script src="../docsearch.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.3/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/docsearch.js/2.6.1/docsearch.min.css" integrity="sha256-QOSRU/ra9ActyXkIBbiIB144aDBdtvXBcNc3OTNuX/Q=" crossorigin="anonymous" />
 <link href="../docsearch.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
 
 
 
 <meta property="og:title" content="Function reference" />
+<meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
+<meta property="og:image:alt" content="gradethis package" />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -59,11 +64,30 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-115082821-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'UA-115082821-1');
+</script>
+
+<!-- javascript assets for rmarkdown -->
+<script src="../ace-1.2.3/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../holder-2.9.0/holder.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../snippets/snippets.js" type="text/javascript" charset="utf-8"></script>
+
+  
+
+  
 
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-index">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -75,37 +99,41 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
+
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gradethis</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
       </span>
+
+      <!--<div class="navbar-brand-container">
+        <a class="navbar-brand" href="../index.html">gradethis</a>
+        <div class="info hidden-xs hidden-sm">
+          <span class="partof">part of  <a href=""></a></span>
+          <span class="version version-default" data-toggle="tooltip" data-placement="bottom" title="auto">0.2.3.9001</span>
+        </div>
+      </div>-->
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
+  <a href="../articles/gradethis.html">Get started</a>
 </li>
-<li>
+        <li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/rstudio-education/gradethis/">
+<li>
+  <a href="https://github.com/rstudio-education/gradethis">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
       </ul>
       
-      <form class="navbar-form navbar-right hidden-xs hidden-sm" role="search">
+      <form class="navbar-form navbar-right" role="search">
         <div class="form-group">
           <input type="search" class="form-control" name="search-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off">
         </div>
@@ -136,8 +164,101 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-setup-gradethis" class="hasAnchor"><a href="#section-setup-gradethis" class="anchor"></a>Setup gradethis</h2>
+          <p class="section-desc"><p>To use gradethis in your learnr tutorial, you only need to load the gradethis package. Still, you can use <code><a href="../reference/gradethis_setup.html">gradethis_setup()</a></code> to change the default values of many of the exercise checking or grading function arguments.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="gradethis_setup.html">gradethis_setup()</a></code> </p>
+        </td>
+        <td><p>Setup gradethis for use within learnr</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-exercise-checking-functions" class="hasAnchor"><a href="#section-exercise-checking-functions" class="anchor"></a>Exercise Checking Functions</h2>
+          <p class="section-desc"><p>Choose one of these functions to use in the <code>*-check</code> chunk of your exercise.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="grade_this.html">grade_this()</a></code> </p>
+        </td>
+        <td><p>Grade a student's submission using custom logic</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="grade_this_code.html">grade_this_code()</a></code> </p>
+        </td>
+        <td><p>Grade student code against a solution</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="debug_this.html">debug_this()</a></code> </p>
+        </td>
+        <td><p>Debug an exercise submission</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="grade_this-objects.html">.result</a></code> <code><a href="grade_this-objects.html">.user</a></code> <code><a href="grade_this-objects.html">.last_value</a></code> <code><a href="grade_this-objects.html">.solution</a></code> <code><a href="grade_this-objects.html">.user_code</a></code> <code><a href="grade_this-objects.html">.solution_code</a></code> <code><a href="grade_this-objects.html">.envir_prep</a></code> <code><a href="grade_this-objects.html">.envir_result</a></code> <code><a href="grade_this-objects.html">.evaluate_result</a></code> <code><a href="grade_this-objects.html">.label</a></code> <code><a href="grade_this-objects.html">.engine</a></code> </p>
+        </td>
+        <td><p>Checking environment objects for use in <code>grade_this()</code></p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-signal-a-final-grade" class="hasAnchor"><a href="#section-signal-a-final-grade" class="anchor"></a>Signal A Final Grade</h2>
+          <p class="section-desc"><p>Helper functions to create and signal a final grade when used in custom checking logic in <code><a href="../reference/grade_this.html">grade_this()</a></code>.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="graded.html">graded()</a></code> <code><a href="graded.html">pass()</a></code> <code><a href="graded.html">fail()</a></code> </p>
+        </td>
+        <td><p>Signal a final grade for a student's submission</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pass_if_equal.html">pass_if_equal()</a></code> <code><a href="pass_if_equal.html">fail_if_equal()</a></code> </p>
+        </td>
+        <td><p>Signal a passing or failing grade if two values are equal</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pass_if.html">pass_if()</a></code> <code><a href="pass_if.html">fail_if()</a></code> </p>
+        </td>
+        <td><p>Signal a passing or failing grade if a condition is TRUE</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fail_if_code_feedback.html">fail_if_code_feedback()</a></code> </p>
+        </td>
+        <td><p>Signal a failing grade if mistakes are detected in the submitted code</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-generate-feedback-messages" class="hasAnchor"><a href="#section-generate-feedback-messages" class="anchor"></a>Generate Feedback Messages</h2>
+          <p class="section-desc"><p>Create feedback messages for use in <code><a href="../reference/graded.html">graded()</a></code> grades or in the exercise checking functions.</p></p>
         </th>
       </tr>
       
@@ -150,50 +271,33 @@
         <td>
           <p><code><a href="code_feedback.html">code_feedback()</a></code> <code><a href="code_feedback.html">maybe_code_feedback()</a></code> <code><a href="code_feedback.html">give_code_feedback()</a></code> </p>
         </td>
-        <td><p>Code Feedback</p></td>
+        <td><p>Provide automated code feedback</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="debug_this.html">debug_this()</a></code> </p>
+          <p><code><a href="praise.html">random_praise()</a></code> <code><a href="praise.html">random_encouragement()</a></code> <code><a href="praise.html">give_praise()</a></code> <code><a href="praise.html">give_encouragement()</a></code> </p>
         </td>
-        <td><p>Debug an exercise submission</p></td>
+        <td><p>Random praise and encouragement</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="eval_gradethis.html">eval_gradethis()</a></code> </p>
+          <p><code><a href="pipe_warning.html">pipe_warning()</a></code> </p>
         </td>
-        <td><p>Capture grades and errors</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="evaluate_condition.html">evaluate_condition()</a></code> </p>
-        </td>
-        <td><p>Evaluates a condition</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="grade_this.html">grade_this()</a></code> </p>
-        </td>
-        <td><p>Grade expression</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="grade_this_code.html">grade_this_code()</a></code> </p>
-        </td>
-        <td><p>Grade student code against a solution</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="graded.html">graded()</a></code> <code><a href="graded.html">pass()</a></code> <code><a href="graded.html">fail()</a></code> <code><a href="graded.html">pass_if_equal()</a></code> <code><a href="graded.html">fail_if_equal()</a></code> <code><a href="graded.html">pass_if()</a></code> <code><a href="graded.html">fail_if()</a></code> <code><a href="graded.html">fail_if_code_feedback()</a></code> </p>
-        </td>
-        <td><p>Signal a final grade for a student's submission</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gradethis_demo.html">gradethis_demo()</a></code> </p>
-        </td>
-        <td><p>Grading Demo</p></td>
-      </tr><tr>
+        <td><p>Inform the user about how gradethis interprets piped code</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-helper-functions-and-utilities" class="hasAnchor"><a href="#section-helper-functions-and-utilities" class="anchor"></a>Helper Functions and Utilities</h2>
+          <p class="section-desc"><p>These functions are used by gradethis to work within learnr tutorials, or are available to help tutorial authors test their grading logic. Most users of gradethis will not need to use these functions.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
         
         <td>
           <p><code><a href="gradethis_exercise_checker.html">gradethis_exercise_checker()</a></code> </p>
@@ -202,27 +306,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="gradethis_setup.html">gradethis_setup()</a></code> </p>
-        </td>
-        <td><p>Setup gradethis for use within learnr</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="mock_this_exercise.html">mock_this_exercise()</a></code> </p>
         </td>
         <td><p>Mock a user submission to an exercise</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pipe_warning.html">pipe_warning()</a></code> </p>
-        </td>
-        <td><p>Pipe Warning Message</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="praise.html">random_praise()</a></code> <code><a href="praise.html">random_encouragement()</a></code> <code><a href="praise.html">give_praise()</a></code> <code><a href="praise.html">give_encouragement()</a></code> </p>
-        </td>
-        <td><p>Random praise and encouragement</p></td>
       </tr>
     </tbody>
     </table>
@@ -237,12 +323,15 @@
 
 
       <footer>
-      <div class="copyright">
-  <p>Developed by Daniel Chen, Barret Schloerke, Garrick Aden-Buie, Garrett Grolemund,  RStudio, PBC.</p>
+      <div class="tidyverse">
+  <p>gradethis is built for <strong>R Markdown</strong>, an ecosystem of packages for creating computational documents in R. Learn more at <a href="https://rmarkdown.rstudio.com">rmarkdown.rstudio.com</a>.</p>
 </div>
 
-<div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+<div class="author">
+  <p>
+    Developed by Garrick Aden-Buie, Daniel Chen, Garrett Grolemund, Barret Schloerke,  RStudio, PBC.
+    Site built with <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+  </p>
 </div>
 
       </footer>
@@ -267,6 +356,8 @@
 </script>
 
 
+
+  
 
   </body>
 </html>
