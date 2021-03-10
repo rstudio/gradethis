@@ -13,7 +13,8 @@
 \alias{.envir_result}
 \alias{.evaluate_result}
 \alias{.label}
-\title{Checking environment objects}
+\alias{.engine}
+\title{Checking environment objects for use in \code{grade_this()}}
 \format{
 An object of class \code{.result} (inherits from \code{gradethis_placeholder}) of length 0.
 
@@ -34,6 +35,8 @@ An object of class \code{.envir_result} (inherits from \code{gradethis_placehold
 An object of class \code{.evaluate_result} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.label} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) of length 0.
 }
 \usage{
 .result
@@ -55,6 +58,8 @@ An object of class \code{.label} (inherits from \code{gradethis_placeholder}) of
 .evaluate_result
 
 .label
+
+.engine
 }
 \description{
 \code{\link[=grade_this]{grade_this()}} allows instructors to determine a grade and to create custom
@@ -66,26 +71,21 @@ All of the objects provided by \code{learnr} to an exercise checking function
 are available for inspection. To avoid name collisions with user or
 instructor code, the names of these objects all start with \code{.}.
 \itemize{
-\item \code{.label}: Label for exercise chunk
-\item \code{.last_value} The last value from evaluating the user's exercise
-submission
-\item \code{.solution_code}: A string containing the code provided within the
-\verb{*-solution} chunk for the exercise
-\item \code{.user_code}: A string containing the code submitted by the user
-\item \code{.check_code}: A string containiner the code provided within the
-\verb{*-check} (or \verb{*-code-check}) chunk for the exercise
-\item \code{.envir_prep}: A copy of the R environment before the execution of the
-chunk
-\item \code{.envir_result}: The R environment after the execution of the chunk.
-\item \code{.evaluate_result}: The return value from the \code{evaluate::evaluate}
-function
+\item \code{.label}: The exercise label.
+\item \code{.engine}: The exercise engine, typically 'r'.
+\item \code{.last_value}: The last value returned from evaluating the user's exercise submission.
+\item \code{.solution_code}: A string containing the code provided within the \verb{*-solution} chunk for the exercise.
+\item \code{.user_code}: A string containing the code submitted by the user.
+\item \code{.check_code}: A string containing the code provided within the \verb{*-check} or \verb{*-code-check} chunk for the exercise.
+\item \code{.envir_prep}: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.
+\item \code{.envir_result}: The R environemnt after running the student's submitted code.
+\item \code{.evaluate_result}: The return value from the \code{\link[evaluate:evaluate]{evaluate::evaluate()}} function (see learnr's documentation).
 }
 
 In addition, \pkg{gradethis} has provided some extra objects:
 \itemize{
-\item \code{.user}, \code{.result}: A direct copy of \code{.last_value} for friendlier naming
-\item \code{.solution}: When accessed, will be the result of evaluating the
-\code{.solution_code} in a child environment of \code{.envir_prep}
+\item \code{.user}, \code{.result}: The last value returned from evaluating the user's exercise submission.
+\item \code{.solution}: The last value returned from evaluating the \code{.solution_code} for the exercise (evaluated in \code{.envir_prep}).
 }
 
 As the instructor, you are free to use any logic to determine a student's
