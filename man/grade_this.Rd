@@ -55,7 +55,7 @@ grade_this(\{
 
 \code{grade_this()} makes available a number of objects based on the exercise and
 the student's submission that can be used to evaluate the student's submitted
-code. See the \strong{Available variables} section below for more information.
+code. See \code{?"grade_this-objects"} for more information about these objects.
 
 A final grade is signaled from \code{grade_this()} using the \code{\link[=graded]{graded()}} helper
 functions, which include \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}}, among others. \code{grade_this()}
@@ -66,46 +66,6 @@ with \pkg{testthat}, such as \pkg{checkmate}, or standard R errors via
 \code{stop()}. Learn more about this behavior in \code{\link[=graded]{graded()}} in the section
 \strong{Return a grade immediately}.
 }
-\section{Available variables}{
-
-
-\code{grade_this()} allows instructors to determine a grade and to create custom
-feedback messages using custom R code. To facilitate evaluating the
-exercise, \code{grade_this()} makes available a number of objects that can be
-referenced within the \code{{ ... }} expression.
-
-All of the objects provided by \code{learnr} to an exercise checking function
-are available for inspection. To avoid name collisions with user or
-instructor code, the names of these objects all start with \code{.}:
-\itemize{
-\item \code{.label}: Label for exercise chunk
-\item \code{.solution_code}: Code provided within the \verb{*-solution} chunk for the
-exercise
-\item \code{.user_code}: R code submitted by the user
-\item \code{.check_code}: Code provided within the \verb{*-check} (or \verb{*-code-check})
-chunk for the exercise
-\item \code{.envir_prep}: A copy of the R environment before the execution of the
-chunk
-\item \code{.envir_result}: The R environment after the execution of the chunk.
-\item \code{.evaluate_result}: The return value from the \code{evaluate::evaluate}
-function
-\item \code{.last_value} The last value from evaluating the user's exercise
-submission
-}
-
-In addition, \pkg{gradethis} has provided some extra objects:
-\itemize{
-\item \code{.user}, \code{.result}: A direct copy of \code{.last_value} for friendlier naming
-\item \code{.solution}: When accessed, will be the result of evaluating the
-\code{.solution_code} in a child environment of \code{.envir_prep}
-}
-
-As the instructor, you are free to use any logic to determine a student's
-grade as long as a \code{\link[=graded]{graded()}} object is signaled. The check code can also
-contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
-will be turned into \code{\link[=fail]{fail()}}ed grades with the corresponding message.
-}
-
 \examples{
 # For an interactive example run: gradethis_demo()
 

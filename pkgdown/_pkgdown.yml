@@ -71,6 +71,7 @@ reference:
   - '`grade_this`'
   - '`grade_this_code`'
   - '`debug_this`'
+  - '`grade_this-objects`'
 - title: Signal A Final Grade
   description: |
     Helper functions to create and signal a final grade when used in custom

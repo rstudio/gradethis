@@ -21,7 +21,7 @@
 #' 
 #' `grade_this()` makes available a number of objects based on the exercise and
 #' the student's submission that can be used to evaluate the student's submitted
-#' code. See the **Available variables** section below for more information.
+#' code. See `?"grade_this-objects"` for more information about these objects.
 #' 
 #' A final grade is signaled from `grade_this()` using the [graded()] helper
 #' functions, which include [pass()], [fail()], among others. `grade_this()`
@@ -31,42 +31,6 @@
 #' with \pkg{testthat}, such as \pkg{checkmate}, or standard R errors via
 #' `stop()`. Learn more about this behavior in [graded()] in the section
 #' **Return a grade immediately**.
-#'
-#' @section Available variables:
-#'
-#'   `grade_this()` allows instructors to determine a grade and to create custom
-#'   feedback messages using custom R code. To facilitate evaluating the
-#'   exercise, `grade_this()` makes available a number of objects that can be
-#'   referenced within the `{ ... }` expression.
-#'   
-#'   All of the objects provided by `learnr` to an exercise checking function
-#'   are available for inspection. To avoid name collisions with user or 
-#'   instructor code, the names of these objects all start with `.`:
-#'
-#'   * `.label`: Label for exercise chunk 
-#'   * `.solution_code`: Code provided within the `*-solution` chunk for the 
-#'     exercise 
-#'   * `.user_code`: R code submitted by the user 
-#'   * `.check_code`: Code provided within the `*-check` (or `*-code-check`)
-#'     chunk for the exercise 
-#'   * `.envir_prep`: A copy of the R environment before the execution of the 
-#'     chunk 
-#'   * `.envir_result`: The R environment after the execution of the chunk. 
-#'   * `.evaluate_result`: The return value from the `evaluate::evaluate` 
-#'     function 
-#'   * `.last_value` The last value from evaluating the user's exercise 
-#'     submission 
-#'   
-#'   In addition, \pkg{gradethis} has provided some extra objects: 
-#'   
-#'   * `.user`, `.result`: A direct copy of `.last_value` for friendlier naming 
-#'   * `.solution`: When accessed, will be the result of evaluating the 
-#'      `.solution_code` in a child environment of `.envir_prep`
-#'
-#'   As the instructor, you are free to use any logic to determine a student's
-#'   grade as long as a [graded()] object is signaled. The check code can also
-#'   contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
-#'   will be turned into [fail()]ed grades with the corresponding message.
 #'
 #' @examples
 #' # For an interactive example run: gradethis_demo()
@@ -216,17 +180,85 @@ print.gradethis_placeholder <- function(x, ...) {
   cat(glue::glue("A placeholder for `{type}` for use in `grade_this()`."))
 }
 
-.result          <- placeholder(".result")
-.user            <- placeholder(".user", ".result")
-.last_value      <- placeholder(".last_value", ".result")
-.result          <- placeholder(".result")
-.solution        <- placeholder(".solution")
-.user_code       <- placeholder(".user_code")
-.solution_code   <- placeholder(".solution_code")
-.envir_prep      <- placeholder(".envir_prep")
-.envir_result    <- placeholder(".envir_result")
+#' Checking environment objects for use in `grade_this()`
+#'
+#' @description
+#' [grade_this()] allows instructors to determine a grade and to create custom
+#' feedback messages using custom R code. To facilitate evaluating the
+#' exercise, [grade_this()] makes available a number of objects that can be
+#' referenced within the `{ ... }` expression.
+#'   
+#' All of the objects provided by `learnr` to an exercise checking function
+#' are available for inspection. To avoid name collisions with user or 
+#' instructor code, the names of these objects all start with `.`.
+#' 
+#' * `.label`: Label for exercise chunk 
+#' * `.last_value` The last value from evaluating the user's exercise 
+#'   submission 
+#' * `.solution_code`: A string containing the code provided within the 
+#'   `*-solution` chunk for the exercise 
+#' * `.user_code`: A string containing the code submitted by the user
+#' * `.check_code`: A string containiner the code provided within the 
+#'   `*-check` (or `*-code-check`) chunk for the exercise 
+#' * `.envir_prep`: A copy of the R environment before the execution of the 
+#'   chunk 
+#' * `.envir_result`: The R environment after the execution of the chunk. 
+#' * `.evaluate_result`: The return value from the `evaluate::evaluate` 
+#'   function 
+#'   
+#' In addition, \pkg{gradethis} has provided some extra objects: 
+#'   
+#' * `.user`, `.result`: A direct copy of `.last_value` for friendlier naming 
+#' * `.solution`: When accessed, will be the result of evaluating the 
+#'    `.solution_code` in a child environment of `.envir_prep`
+#'
+#' As the instructor, you are free to use any logic to determine a student's
+#' grade as long as a [graded()] object is signaled. The check code can also
+#' contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
+#' will be turned into [fail()]ed grades with the corresponding message.
+#'
+#' @name grade_this-objects
+NULL
+
+#' @rdname grade_this-objects
+#' @export
+.result <- placeholder(".result")
+
+#' @rdname grade_this-objects
+#' @export
+.user <- placeholder(".user", ".result")
+
+#' @rdname grade_this-objects
+#' @export
+.last_value <- placeholder(".last_value", ".result")
+
+#' @rdname grade_this-objects
+#' @export
+.solution <- placeholder(".solution")
+
+#' @rdname grade_this-objects
+#' @export
+.user_code <- placeholder(".user_code")
+
+#' @rdname grade_this-objects
+#' @export
+.solution_code <- placeholder(".solution_code")
+
+#' @rdname grade_this-objects
+#' @export
+.envir_prep <- placeholder(".envir_prep")
+
+#' @rdname grade_this-objects
+#' @export
+.envir_result <- placeholder(".envir_result")
+
+#' @rdname grade_this-objects
+#' @export
 .evaluate_result <- placeholder(".evaluate_result")
-.label           <- placeholder(".label")
+
+#' @rdname grade_this-objects
+#' @export
+.label <- placeholder(".label")
 
 
 #' Debug an exercise submission
@@ -298,7 +330,7 @@ print.gradethis_placeholder <- function(x, ...) {
 #' @export
 debug_this <- function(check_env = parent.frame()) {
   
-  if (!exists(".result", envir = check_env)) {
+  if (!exists(".result", envir = check_env) || is_placeholder(get(".result", envir = check_env))) {
     # most likely called outside of grade_this(), so return
     # debug_this directly to be used as a checking function
     return(debug_this)
