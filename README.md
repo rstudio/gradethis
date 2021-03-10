@@ -8,29 +8,40 @@
 [![DOI](https://zenodo.org/badge/126734088.svg)](https://zenodo.org/badge/latestdoi/126734088)
 <!-- badges: end -->
 
+gradethis helps scale feedback for [learnr] exercises. Instructors can use a model solution as a template or write highly customized testing logic to provide specific feedback for common mistakes.
 
-Pairing with the `learnr` R package, `gradethis` provides multiple methods to grade `learnr` exercises.  To learn more about `learnr` tutorials, please visit [https://rstudio.github.io/learnr/](https://rstudio.github.io/learnr/).
+gradethis is designed for use in [learnr] tutorials. We recommend that you first be comfortable writing learnr tutorials before you begin incorporating exercise feedback with gradethis. You can learn more about learnr tutorials with the [learnr package documentation][learnr].
 
 <img src="man/figures/missing_sqrt.png" style="border: 1px solid black; box-shadow: 5px 5px 5px #eee; max-width: 66%; display: block; margin: 1em auto;">
 
-To view the latest grading demo of the different checking methods:
-
-``` r
-library(gradethis)
-gradethis::gradethis_demo()
-```
-
-You can also view a deployed version of this demo [here](https://minecr.shinyapps.io/gradethis_demo/).
-
 ## Installation
 
-`gradethis` is still in development and not on [CRAN](https://CRAN.R-project.org) yet.
-The development version of `gradethis` can be installed from GitHub with:
+gradethis is still in development and not on [CRAN](https://CRAN.R-project.org) yet.
+The development version of gradethis can be installed from GitHub with:
 
 ```r
 # install.packages("remotes")
 remotes::install_github("rstudio-education/gradethis")
 ```
+
+## Usage
+
+To use gradethis in a learnr tutorial, start by loading gradethis after learnr in the `setup` chunk of your tutorial:
+
+````markdown
+```{r setup}
+library(learnr)
+library(gradethis)
+```
+````
+
+gradethis provides two grading modalities. You can:
+
+1. Compare student code to model solution code with `grade_this_code()`, or
+
+1. Write custom grading logic with `grade_this()`.
+
+Learn more about where and how to write exercise-checking code in `vignette("gradethis")`.
 
 ## Getting help
 
@@ -48,3 +59,6 @@ There are two main places to get help:
 <!-- TODO FIX URL -->
 
 Please note that the gradethis project is released with a [Contributor Code of Conduct](https://friendly-golick-0771f8.netlify.app/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
+
+[learnr]: https://rstudio.github.io/learnr/
