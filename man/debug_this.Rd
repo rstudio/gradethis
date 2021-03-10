@@ -122,8 +122,8 @@ submission <- mock_this_exercise(.user_code = 40, .solution_code = 11 + 31)
 # Call `debug_this()` inside your *-check chunk, is equivalent to
 debug_this()(submission)$message
 
-# We won't run the remaining examples since they produce equivalent output
-if (interactive()) {
+# The remaining examples produce equivalent output
+\dontrun{
   # Or you can call `debug_this()` inside a `grade_this()` call
   # at the point where you want to get debug feedback.
   grade_this({
