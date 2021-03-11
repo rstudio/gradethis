@@ -23,13 +23,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Garrick Aden-Buie \email{garrick@rstudio.com}
+\strong{Maintainer}: Garrick Aden-Buie \email{garrick@rstudio.com} (\href{https://orcid.org/0000-0002-7111-0077}{ORCID})
 
 Authors:
 \itemize{
-  \item Daniel Chen \email{daniel.chen@rstudio.com}
-  \item Garrett Grolemund \email{garrett@rstudio.com} [conceptor]
-  \item Barret Schloerke \email{barret@rstudio.com}
+  \item Daniel Chen \email{daniel.chen@rstudio.com} (\href{https://orcid.org/0000-0003-3857-1741}{ORCID})
+  \item Garrett Grolemund \email{garrett@rstudio.com} (\href{https://orcid.org/0000-0002-7765-6011}{ORCID}) [conceptor]
+  \item Barret Schloerke \email{barret@rstudio.com} (\href{https://orcid.org/0000-0001-9986-114X}{ORCID})
 }
 
 Other contributors:
