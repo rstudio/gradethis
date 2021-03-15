@@ -203,6 +203,7 @@ global option with the same name, prefixed with <code>gradethis.</code>. For exa
   fail.hint <span class='op'>=</span> <span class='cn'>NULL</span>,
   fail.encourage <span class='op'>=</span> <span class='cn'>NULL</span>,
   pipe_warning <span class='op'>=</span> <span class='cn'>NULL</span>,
+  error_checker.message <span class='op'>=</span> <span class='cn'>NULL</span>,
   allow_partial_matching <span class='op'>=</span> <span class='cn'>NULL</span>,
   exercise.checker <span class='op'>=</span> <span class='va'>gradethis_exercise_checker</span>,
   exercise.timelimit <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -289,6 +290,12 @@ encouraging phrase should be automatically appended to any <code><a href='graded
 <code>gradethis.pipe_warning</code> option.</p></td>
     </tr>
     <tr>
+      <th>error_checker.message</th>
+      <td><p>The default message used by gradethis's default
+error checker, <code><a href='gradethis_error_checker.html'>gradethis_error_checker()</a></code>. Sets the
+<code>gradethis.error_checker.message</code> option.</p></td>
+    </tr>
+    <tr>
       <th>allow_partial_matching</th>
       <td><p>Logical <code>TRUE</code> or <code>FALSE</code> to determine whether
 partial matching is allowed in <code><a href='grade_this_code.html'>grade_this_code()</a></code>. Sets the
@@ -340,6 +347,7 @@ when gradethis is loaded are shown below.</p><table class='table'>
 <tr><td><code>gradethis.code_incorrect</code></td><td><code>"{pipe_warning()}{code_feedback()} {random_encouragement()}"</code></td></tr>
 <tr><td><code>gradethis.pipe_warning</code></td><td><code>"I see that you are using pipe operators (e.g. %&gt;%), so I want to let you know that this is how I am interpretting your code before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n"</code></td></tr>
 <tr><td><code>gradethis.allow_partial_matching</code></td><td><code>NULL</code></td></tr>
+<tr><td><code>gradethis.error_checker.message</code></td><td><code>"An error occurred with your R code:\n\n```\n{.error$message}\n```\n\n\n"</code></td></tr>
 </table>
 
 

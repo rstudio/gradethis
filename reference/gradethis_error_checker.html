@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Random praise and encouragement — praise • gradethis</title>
+<title>An error checking function for use with learnr — gradethis_error_checker • gradethis</title>
 
 
 <!-- jquery -->
@@ -47,10 +47,17 @@
 
 
 
-<meta property="og:title" content="Random praise and encouragement — praise" />
-<meta property="og:description" content="Generate a random praise or encouragement phrase. These functions are
-designed for use within pass() or fail() messages, or anywhere else that
-gradethis provides feedback to the student." />
+<meta property="og:title" content="An error checking function for use with learnr — gradethis_error_checker" />
+<meta property="og:description" content="learnr uses the checking code in exercise.error.check.code when the
+user's submission produces an error during evaluation.
+gradethis_error_checker() provides default error checking suitable for most
+situations where an error was not expected.
+If a solution for the exercise is available, the user's submission will be
+compared to the example solution and the message to the student will include
+code feedback. Otherwise, the error message from R is returned.
+If you are expecting the user to submit code that throws an error, use the
+*-error-check chunk to write custom grading code that validates that the
+correct error was created." />
 <meta property="og:image" content="https://github.com/rstudio/hex-stickers/raw/master/thumbs/RStudio.png" />
 <meta property="og:image:alt" content="gradethis package" />
 <meta name="twitter:card" content="summary" />
@@ -153,91 +160,83 @@ gradethis provides feedback to the student." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Random praise and encouragement</h1>
-    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/praise.R'><code>R/praise.R</code></a></small>
-    <div class="hidden name"><code>praise.Rd</code></div>
+    <h1>An error checking function for use with learnr</h1>
+    <small class="dont-index">Source: <a href='https://github.com/rstudio-education/gradethis/blob/master/R/gradethis_error_checker.R'><code>R/gradethis_error_checker.R</code></a></small>
+    <div class="hidden name"><code>gradethis_error_checker.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate a random praise or encouragement phrase. These functions are
-designed for use within <code><a href='graded.html'>pass()</a></code> or <code><a href='graded.html'>fail()</a></code> messages, or anywhere else that
-<span class="pkg">gradethis</span> provides feedback to the student.</p>
+    <p><span class="pkg">learnr</span> uses the checking code in <code>exercise.error.check.code</code> when the
+user's submission produces an error during evaluation.
+<code>gradethis_error_checker()</code> provides default error checking suitable for most
+situations where an error was <em>not expected</em>.</p>
+<p>If a solution for the exercise is available, the user's submission will be
+compared to the example solution and the message to the student will include
+code feedback. Otherwise, the error message from R is returned.</p>
+<p>If you <em>are expecting</em> the user to submit code that throws an error, use the
+<code>*-error-check</code> chunk to write custom grading code that validates that the
+correct error was created.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>random_praise</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='fu'>random_encouragement</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='fu'>give_praise</span><span class='op'>(</span><span class='va'>expr</span>, <span class='va'>...</span>, location <span class='op'>=</span> <span class='st'>"before"</span>, before <span class='op'>=</span> <span class='cn'>NULL</span>, after <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-
-<span class='fu'>give_encouragement</span><span class='op'>(</span><span class='va'>expr</span>, <span class='va'>...</span>, location <span class='op'>=</span> <span class='st'>"after"</span>, before <span class='op'>=</span> <span class='cn'>NULL</span>, after <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>gradethis_error_checker</span><span class='op'>(</span>
+  <span class='va'>...</span>,
+  message <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.error_checker.message"</span>, <span class='cn'>NULL</span><span class='op'>)</span>,
+  encourage <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/options.html'>getOption</a></span><span class='op'>(</span><span class='st'>"gradethis.fail.encourage"</span>, <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>expr</th>
-      <td><p>A <code><a href='graded.html'>graded()</a></code> grade or helper function, or a grading function —
-like <code><a href='grade_this.html'>grade_this()</a></code> or <code><a href='grade_result.html'>grade_result()</a></code> — or a character string. Praise
-will be added to any passing grades and encouragement will be added to any
-failing grade. If <code>expr</code> is a character string, then <code>"{random_praise()}"</code>
-or <code>"{random_encouragement()}"</code> is pasted before or after the string
-according to <code>location</code>.</p></td>
-    </tr>
-    <tr>
       <th>...</th>
-      <td><p>Ignored.</p></td>
+      <td><p>Ignored but included for future compatibility.</p></td>
     </tr>
     <tr>
-      <th>location</th>
-      <td><p>Should the praise or encouragement be added before or after
-the grade message?</p></td>
+      <th>message</th>
+      <td><p>The feedback message when an error occurred and no solution is
+provided for the exercise. May reference <code>.error</code> or any of the
+<a href='grade_this-objects.html'>grade_this-objects</a>. The default value is set by <code><a href='gradethis_setup.html'>gradethis_setup()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>before, after</th>
-      <td><p>Text to be added before or after the praise or
-encouragement phrase.</p></td>
+      <th>encourage</th>
+      <td><p>Incude a random encouraging phrase with
+<code><a href='praise.html'>random_encouragement()</a></code>? The default value of <code>encourage</code> can be set
+using <code><a href='gradethis_setup.html'>gradethis_setup()</a></code> or the <code>gradethis.fail.encourage</code> option.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    
-<ul>
-<li><p><code>random_praise()</code> and <code>random_encouragement()</code> each return a length-one
-string with a praising or encouraging phrase.</p></li>
-<li><p><code>give_praise()</code> and <code>give_encouragment()</code> add praise or encouragement
-phrases to passing and failing grades, respectively.</p></li>
-</ul>
+    <p>A checking function compatible with <code><a href='gradethis_exercise_checker.html'>gradethis_exercise_checker()</a></code>.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
-
-    
-<ul>
-<li><p><code>random_praise</code>: Random praising phrase</p></li>
-<li><p><code>random_encouragement</code>: Random encouraging phrase</p></li>
-<li><p><code>give_praise</code>: Add praising message to a passing grade.</p></li>
-<li><p><code>give_encouragement</code>: Add encouraging message to a failing grade.</p></li>
-</ul>
+    <div class='dont-index'><p><code><a href='gradethis_setup.html'>gradethis_setup()</a></code>, <code><a href='gradethis_exercise_checker.html'>gradethis_exercise_checker()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random praise: {random_praise()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random praise: Wonderful!"           "Random praise: Absolutely fabulous!"
-#&gt; [3] "Random praise: Swell job!"           "Random praise: You should be proud."
-#&gt; [5] "Random praise: Excellent!"          </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>replicate</a></span><span class='op'>(</span><span class='fl'>5</span>, <span class='fu'>glue</span><span class='fu'>::</span><span class='fu'><a href='https://glue.tidyverse.org/reference/glue.html'>glue</a></span><span class='op'>(</span><span class='st'>"Random encouragement: {random_encouragement()}"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Random encouragement: Please try again."                                                                   
-#&gt; [2] "Random encouragement: Let's try it again."                                                                 
-#&gt; [3] "Random encouragement: That's okay: you learn more from mistakes than successes. Let's do it one more time."
-#&gt; [4] "Random encouragement: Let's try it again."                                                                 
-#&gt; [5] "Random encouragement: Give it another try."                                                                </div><div class='input'>
-<span class='co'># give_praise() adds praise to passing grade messages</span>
-<span class='fu'>give_praise</span><span class='op'>(</span><span class='fu'><a href='graded.html'>pass</a></span><span class='op'>(</span><span class='st'>"That's absolutely correct."</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;gradethis_graded: [Correct] Super job! That's absolutely correct.&gt;</div><div class='input'>
-<span class='co'># give_encouragement() encouragement to failing grade messages</span>
-<span class='fu'>give_encouragement</span><span class='op'>(</span><span class='fu'><a href='graded.html'>fail</a></span><span class='op'>(</span><span class='st'>"Sorry, but no."</span><span class='op'>)</span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='co'># The default error checker is run on an exercise that produces an error.</span>
+<span class='co'># In the following example, the object `b` is not defined.</span>
+
+<span class='co'># This is the error that the user's submission creates:</span>
+<span class='kw'><a href='https://rdrr.io/r/base/conditions.html'>tryCatch</a></span><span class='op'>(</span>
+  <span class='va'>b</span>,
+  error <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>e</span><span class='op'>)</span> <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='va'>e</span><span class='op'>$</span><span class='va'>message</span><span class='op'>)</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>object 'b' not found</span></div><div class='input'>
+<span class='co'># If you haven't provided a model solution:</span>
+<span class='fu'>gradethis_error_checker</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span><span class='va'>b</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; &lt;gradethis_graded: [Incorrect]
-#&gt;   Sorry, but no. That's okay: you learn more from mistakes than
-#&gt;   successes. Let's do it one more time.
+#&gt;   An error occurred with your R code:
+#&gt; 
+#&gt;   ```
+#&gt;   object 'b' not found
+#&gt;   ```
+#&gt; 
+#&gt;   Don't give up now, try it one more time.
+#&gt; &gt;</div><div class='input'>
+<span class='co'># If a model solution is available:</span>
+<span class='fu'>gradethis_error_checker</span><span class='op'>(</span><span class='op'>)</span><span class='op'>(</span><span class='fu'><a href='mock_this_exercise.html'>mock_this_exercise</a></span><span class='op'>(</span><span class='va'>b</span>, <span class='va'>a</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; &lt;gradethis_graded_this_code: [Incorrect]
+#&gt;   I expected `a` where you wrote `b`. Give it another try.
 #&gt; &gt;</div><div class='input'>
 </div></pre>
   </div>
