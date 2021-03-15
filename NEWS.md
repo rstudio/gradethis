@@ -17,6 +17,7 @@
 * New functions: `give_praise()` and `give_encouragement()`. Follow the same pattern as `give_code_feedback()` to automatically add praise or encouragement to `pass()` or `fail()` grades, respectively. (#227)
 * New function: `fail_if_code_feedback()`. Returns an _incorrect_ grade when there are differences between the user code and solution code (if it exists). (#228)
 * We now use placeholder sentinel objects as function argument defaults to signal that a function will find the object in the `grade_this()` check environment. The help page `?grade_this-objects` describes these objects and documents their purpose, which you can also find by calling one of the placeholders, e.g. `.result`. (#232)
+* Added `gradethis_error_checker()`, a more robust checking function for general use when the student's submission _should not_ throw an error. (#234)
 
 ### Breaking changes
 

@@ -73,6 +73,9 @@
 #'   `gradethis.allow_partial_matching` option.
 #' @param pipe_warning The default message used in [pipe_warning()]. Sets the
 #'   `gradethis.pipe_warning` option.
+#' @param error_checker.message The default message used by gradethis's default
+#'   error checker, [gradethis_error_checker()]. Sets the 
+#'   `gradethis.error_checker.message` option.
 #' @param fail_code_feedback Deprecated. Use `maybe_code_feedback`.
 #' @inheritParams learnr::tutorial_options
 #' @inheritDotParams learnr::tutorial_options
@@ -95,6 +98,7 @@ gradethis_setup <- function(
   fail.hint = NULL,
   fail.encourage = NULL,
   pipe_warning = NULL,
+  error_checker.message = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
@@ -201,7 +205,10 @@ gradethis_default_options <- list(
   ),
   
   # Default value for grade_this_code(allow_partial_matching)
-  allow_partial_matching = NULL
+  allow_partial_matching = NULL,
+  
+  # Default error checker message
+  error_checker.message = "An error occurred with your R code:\n\n```\n{.error$message}\n```\n\n\n"
 )
 
 # Legacy Options ----------------------------------------------------------
@@ -225,5 +232,5 @@ names(gradethis_legacy_options) <- paste0(
 gradethis_default_learnr_options <- list(
   exercise.timelimit = 60,
   exercise.checker = gradethis_exercise_checker,
-  exercise.error.check.code = "grade_this_code()"
+  exercise.error.check.code = "gradethis_error_checker()"
 )

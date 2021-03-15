@@ -238,18 +238,21 @@ test_that("Spots differences in long calls", {
   # original discussion here:
   # https://github.com/rstudio-education/grader/issues/28
 
-  testthat::skip_if_not_installed("tidyr")
+  # stub tidyr::gather()
+  gather <- function(key = "key", value = "value", ..., na.rm = FALSE) {
+    NULL
+  }
 
   expect_grade_code(
-    user_code = expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
-    solution_code = expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)), # nolint
+    user_code = expression(gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
+    solution_code = expression(gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)), # nolint
     is_correct = FALSE,
     msg = "I expected `na.rm = FALSE` where you wrote `na.rm = TRUE`"
   )
 
   expect_grade_code(
-    user_code = expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
-    solution_code = expression(tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
+    user_code = expression(gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
+    solution_code = expression(gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)), # nolint
     is_correct = TRUE
   )
 })

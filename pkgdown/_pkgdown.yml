@@ -97,4 +97,5 @@ reference:
     Most users of gradethis will not need to use these functions.
   contents:
   - '`gradethis_exercise_checker`'
+  - '`gradethis_error_checker`'
   - '`mock_this_exercise`'
