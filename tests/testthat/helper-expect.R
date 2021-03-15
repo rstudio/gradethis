@@ -209,7 +209,10 @@ expect_exercise_checker <- function(
   eval(parse(text = prep_code), envir = envir_prep)
 
   envir_result <- new.env(parent = envir_prep)
-  last_value <- try(eval(parse(text = user_code), envir = envir_result), silent = TRUE)
+  last_value <- tryCatch(
+    eval(parse(text = user_code), envir = envir_result),
+    error = identity
+  )
 
   feedback <- gradethis_exercise_checker(
     label = "test",

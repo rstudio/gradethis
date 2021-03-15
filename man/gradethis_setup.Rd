@@ -17,6 +17,7 @@ gradethis_setup(
   fail.hint = NULL,
   fail.encourage = NULL,
   pipe_warning = NULL,
+  error_checker.message = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
@@ -79,6 +80,10 @@ encouraging phrase should be automatically appended to any \code{\link[=fail]{fa
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
 \code{gradethis.pipe_warning} option.}
 
+\item{error_checker.message}{The default message used by gradethis's default
+error checker, \code{\link[=gradethis_error_checker]{gradethis_error_checker()}}. Sets the
+\code{gradethis.error_checker.message} option.}
+
 \item{allow_partial_matching}{Logical \code{TRUE} or \code{FALSE} to determine whether
 partial matching is allowed in \code{grade_this_code()}. Sets the
 \code{gradethis.allow_partial_matching} option.}
@@ -137,6 +142,7 @@ when gradethis is loaded are shown below.\tabular{ll}{
    \code{gradethis.code_incorrect} \tab \code{"{pipe_warning()}{code_feedback()} {random_encouragement()}"} \cr
    \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
+   \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
 }
 }
 
