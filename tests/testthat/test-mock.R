@@ -82,3 +82,15 @@ test_that("mock_this_exercise() works with length-1 expressions", {
   expect_equal(ex$.user_code, "a")
   expect_equal(ex$.solution_code, "b")
 })
+
+test_that("user error populates .error, .result, .last_value, .user", {
+  expect_condition_message <- function(cond, message, ...) {
+    expect_s3_class(cond, "condition")
+    expect_match(cond$message, message, ...)
+  }
+  ex <- mock_this_exercise(stop("boom"))
+  expect_condition_message(ex$.error, "boom")
+  expect_condition_message(ex$.result, "boom")
+  expect_condition_message(ex$.last_value, "boom")
+  expect_condition_message(ex$.user, "boom")
+})

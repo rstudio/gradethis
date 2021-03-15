@@ -103,8 +103,12 @@ mock_this_exercise <- function(
     { 
       .result <- eval_code(.user_code, env_result)
     },
-    error = function(e) .error <- e
+    error = function(e) .error <<- e
   )
+  
+  if (!is.null(.error)) {
+    .result <- .error
+  }
   
   check_env <- list2env(list(
     .result = .result,
