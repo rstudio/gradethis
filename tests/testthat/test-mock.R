@@ -72,3 +72,13 @@ test_that("mock_this_exercise()", {
     fail(I("No solution is provided for this exercise."))
   )
 })
+
+test_that("mock_this_exercise() works with length-1 expressions", {
+  ex <- mock_this_exercise(a, b)
+  expect_equal(ex$.user_code, "a")
+  expect_equal(ex$.solution_code, "b")
+  
+  ex2 <- mock_this_exercise({a}, {b})
+  expect_equal(ex$.user_code, "a")
+  expect_equal(ex$.solution_code, "b")
+})

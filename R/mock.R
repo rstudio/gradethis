@@ -156,7 +156,7 @@ expr_text <- function(expr) {
   if (rlang::is_string(expr)) {
     return(expr)
   }
-  if (identical(expr[[1]], rlang::sym("{"))) {
+  if (length(expr) > 1 && identical(expr[[1]], rlang::sym("{"))) {
     # unwrap one level of braces
     x <- vapply(as.list(expr[-1]), FUN.VALUE = character(1), rlang::expr_text)
     paste(x, collapse = "\n")
