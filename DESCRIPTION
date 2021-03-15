@@ -55,8 +55,7 @@ Imports:
     waldo
 Suggests:
     knitr,
-    rmarkdown,
-    tidyr
+    rmarkdown
 VignetteBuilder: 
     knitr
 Remotes: 

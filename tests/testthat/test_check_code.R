@@ -150,11 +150,14 @@ test_that("Spot differences when pipes are involved", {
 test_that("Spots differences in long calls", {
   # original discussion here:
   # https://github.com/rstudio-education/grader/issues/28
+  
+  # stub tidyr::gather()
+  gather <- function(key = "key", value = "value", ..., na.rm = FALSE) {
+    NULL
+  }
 
-  testthat::skip_if_not_installed("tidyr")
-
-  user <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
-  solution <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)" # nolint
+  user <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
+  solution <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = FALSE)" # nolint
 
   expect_this_code(
     user, solution,
@@ -162,8 +165,8 @@ test_that("Spots differences in long calls", {
     msg = wrong_value(quote(TRUE), that = quote(FALSE), this_name = quote(na.rm))
   )
 
-  user <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
-  solution <- "tidyr::gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
+  user <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
+  solution <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
   expect_this_code(user, solution, is_correct = TRUE)
 
 })
