@@ -69,7 +69,7 @@ check_exercise <- function(
   last_value = NULL,
   ...
 ) {
-
+  
   learnr_args <- list(
     label = label,
     solution_code = solution_code,
@@ -82,7 +82,7 @@ check_exercise <- function(
     ...
   )
   
-  if (!(length(user_code) && nzchar(trimws(user_code)))) {
+  if (length(user_code) == 0 || !any(nzchar(trimws(user_code)))) {
     return(feedback(
       fail("I didn't receive your code. Did you write any?"),
       type = "info"
@@ -104,13 +104,15 @@ check_exercise <- function(
 
   # Copy over all learnr args into the checking environment
   for (name in names(learnr_args)) {
+    learnr_arg <- learnr_args[[name]]
+    name <- paste0(".", name)
+    
     # Ensure that code objects are always a length-1 character string
-    transform <- identity
-    if (grepl("code", name) && is.character(learnr_args[[name]])) {
-      transform <- function(x) paste(x, collapse = "\n")
+    if (length(learnr_arg) > 1 && grepl("code", name) && is.character(learnr_arg)) {
+      learnr_arg <- paste(learnr_arg, collapse = "\n")
     }
     
-    check_obj_envir[[paste0(".", name)]] <- transform(learnr_args[[name]])
+    check_obj_envir[[name]] <- learnr_arg
   }
 
   # Add gradethis specific check objects
