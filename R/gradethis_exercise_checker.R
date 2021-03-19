@@ -104,7 +104,13 @@ check_exercise <- function(
 
   # Copy over all learnr args into the checking environment
   for (name in names(learnr_args)) {
-    check_obj_envir[[paste0(".", name)]] <- learnr_args[[name]]
+    # Ensure that code objects are always a length-1 character string
+    transform <- identity
+    if (grepl("code", name) && is.character(learnr_args[[name]])) {
+      transform <- function(x) paste(x, collapse = "\n")
+    }
+    
+    check_obj_envir[[paste0(".", name)]] <- transform(learnr_args[[name]])
   }
 
   # Add gradethis specific check objects
