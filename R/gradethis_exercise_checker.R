@@ -69,7 +69,7 @@ check_exercise <- function(
   last_value = NULL,
   ...
 ) {
-
+  
   learnr_args <- list(
     label = label,
     solution_code = solution_code,
@@ -82,7 +82,7 @@ check_exercise <- function(
     ...
   )
   
-  if (!(length(user_code) && nzchar(trimws(user_code)))) {
+  if (length(user_code) == 0 || !any(nzchar(trimws(user_code)))) {
     return(feedback(
       fail("I didn't receive your code. Did you write any?"),
       type = "info"
@@ -96,44 +96,15 @@ check_exercise <- function(
       paste0(label, "-check")
     }
 
-  ## setup an environment for checking
+  ## setup environments for checking
   # envir for function call
   chunk_envir <- learnr::duplicate_env(envir_prep)
-  # object to pass to checking function that should contain all of the information
-  check_obj_envir <- new.env(parent = chunk_envir)
-
-  # Copy over all learnr args into the checking environment
-  for (name in names(learnr_args)) {
-    check_obj_envir[[paste0(".", name)]] <- learnr_args[[name]]
-  }
-
-  # Add gradethis specific check objects
-  check_obj_envir[[".result"]] <- last_value
-  check_obj_envir[[".user"]] <- last_value
-  delayedAssign(
-    assign.env = check_obj_envir,
-    x = ".solution",
-    {
-      # Delayed evaluation of `.solution!`
-      solution_expr <- parse(text = solution_code)
-      if (length(solution_expr) == 0) {
-        rlang::return_from(checking_envir, feedback(
-          fail("No solution is provided for this exercise."),
-          type = "info"
-        ))
-      } else {
-        # solution code exists...
-        # Using eval_tidy does not evaluate the expression. Using eval() instead
-        eval(
-          solution_expr,
-          envir = learnr::duplicate_env(envir_prep)
-        )
-      }
-    }
-  )
+  # envir where checking is called (checking returns from here)
+  checking_envir <- rlang::current_env()
+  # envir to use for evaluating grade_this checking code
+  check_obj_envir <- prepare_check_obj_envir(learnr_args, chunk_envir, checking_envir)
 
   # evaluate all checking code
-  checking_envir <- rlang::current_env()
   to_check_fn <- capture_errors(
     {
       parsed_check_code <- parse(text = check_code %||% "")
@@ -216,6 +187,51 @@ check_exercise <- function(
     graded_result,
     type = "auto"
   )
+}
+
+
+prepare_check_obj_envir <- function(learnr_args, envir_base, envir_caller = parent.frame()) {
+  check_obj_envir <- new.env(parent = envir_base)
+  
+  # Copy over all learnr args into the checking environment
+  for (name in names(learnr_args)) {
+    learnr_arg <- learnr_args[[name]]
+    name <- paste0(".", name)
+    
+    # Ensure that code objects are always a length-1 character string
+    if (length(learnr_arg) > 1 && grepl("code", name) && is.character(learnr_arg)) {
+      learnr_arg <- paste(learnr_arg, collapse = "\n")
+    }
+    
+    check_obj_envir[[name]] <- learnr_arg
+  }
+  
+  # Add gradethis specific check objects
+  check_obj_envir[[".result"]] <- learnr_args[["last_value"]]
+  check_obj_envir[[".user"]] <- learnr_args[["last_value"]]
+  
+  # Delayed evaluation of `.solution`
+  solution_expr <- parse(text = learnr_args[["solution_code"]])
+  delayedAssign(
+    assign.env = check_obj_envir,
+    x = ".solution",
+    {
+      if (length(solution_expr) == 0) {
+        rlang::return_from(envir_caller, feedback(
+          fail("No solution is provided for this exercise."),
+          type = "info"
+        ))
+      } else {
+        # solution code exists...
+        # Using eval_tidy does not evaluate the expression. Using eval() instead
+        eval(
+          solution_expr,
+          envir = learnr::duplicate_env(envir_base)
+        )
+      }
+    }
+  )
+  check_obj_envir
 }
 
 grade_parse_error <- function(check_obj) {
