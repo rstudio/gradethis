@@ -96,7 +96,7 @@ check_exercise <- function(
       paste0(label, "-check")
     }
 
-  ## setup environemtns for checking
+  ## setup environments for checking
   # envir for function call
   chunk_envir <- learnr::duplicate_env(envir_prep)
   # envir where checking is called (checking returns from here)
