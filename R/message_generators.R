@@ -367,7 +367,7 @@ wrong_value <- function(this,
     if (is_infix_assign(that_original)) {
       "you to assign something to something else with "
     } else if (grepl("\\(\\)", that)) {
-      "you to "
+      "you to call "
     }
 
   glue::glue_data(
