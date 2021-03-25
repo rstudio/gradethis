@@ -97,12 +97,12 @@ check_exercise <- function(
     }
 
   ## setup environments for checking
-  # envir for function call
-  chunk_envir <- learnr::duplicate_env(envir_prep)
-  # envir where checking is called (checking returns from here)
-  checking_envir <- rlang::current_env()
-  # envir to use for evaluating grade_this checking code
-  check_obj_envir <- prepare_check_obj_envir(learnr_args, chunk_envir, checking_envir)
+  # Errors in setup of exercise checking return from here
+  check_exercise_env <- rlang::current_env()
+  
+  # Envir to use for evaluating grade_this checking code,
+  # using a clone of envir_prep as parent env
+  check_env <- prepare_check_env(learnr_args)
 
   # evaluate all checking code
   to_check_fn <- capture_errors(
@@ -110,7 +110,7 @@ check_exercise <- function(
       parsed_check_code <- parse(text = check_code %||% "")
       capture_graded(
         {
-          eval(parsed_check_code, envir = chunk_envir)
+          eval(parsed_check_code, envir = rlang::env_parent(check_env))
         },
         # if a `pass()`/`fail()` is used in the regular check chunk with no user submission context, it should be an error
         on_graded = function(grade, ignore) {
@@ -122,7 +122,7 @@ check_exercise <- function(
             "Remember to only call ", fn_used, " inside your checking function (ex: `grade_this({})`"
           )
           # return from main function (even though in a inner function! voodoo!)
-          rlang::return_from(checking_envir, feedback_grading_problem())
+          rlang::return_from(check_exercise_env, feedback_grading_problem())
         }
       )
     },
@@ -131,7 +131,7 @@ check_exercise <- function(
       # notify author of their mistake
       message("Error while checking `", check_label, "` chunk: ", e)
       # return from main function (even though in a inner function! voodoo!)
-      rlang::return_from(checking_envir, feedback_grading_problem())
+      rlang::return_from(check_exercise_env, feedback_grading_problem())
     }
   )
 
@@ -139,7 +139,7 @@ check_exercise <- function(
     parse(text = user_code %||% ""),
     error = function(e) {
       # Add the error object to the checking object
-      check_obj_envir$.error <- e
+      check_env$.error <- e
       # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
       to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
     }
@@ -170,7 +170,7 @@ check_exercise <- function(
   # evaluate the function with the check envir passed in. (Passing an environment allows for `.solution` to be calculated on demand)
   # evaluation should handle errors themselves, but wrap in eval_gradethis to be sure
   graded_result <- eval_gradethis(
-    to_check_fn(check_obj_envir)
+    to_check_fn(check_env)
   )
 
   # make sure the result is a pass or fail
@@ -190,7 +190,10 @@ check_exercise <- function(
 }
 
 
-prepare_check_obj_envir <- function(learnr_args, envir_base, envir_caller = parent.frame()) {
+prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
+  envir_base <- learnr::duplicate_env(learnr_args[["envir_prep"]])
+  force(envir_caller)
+  
   check_obj_envir <- new.env(parent = envir_base)
   
   # Copy over all learnr args into the checking environment
@@ -211,7 +214,7 @@ prepare_check_obj_envir <- function(learnr_args, envir_base, envir_caller = pare
   check_obj_envir[[".user"]] <- learnr_args[["last_value"]]
   
   # Delayed evaluation of `.solution`
-  solution_expr <- parse(text = learnr_args[["solution_code"]])
+  solution_expr <- parse(text = learnr_args[["solution_code"]] %||% "")
   delayedAssign(
     assign.env = check_obj_envir,
     x = ".solution",
@@ -226,7 +229,7 @@ prepare_check_obj_envir <- function(learnr_args, envir_base, envir_caller = pare
         # Using eval_tidy does not evaluate the expression. Using eval() instead
         eval(
           solution_expr,
-          envir = learnr::duplicate_env(envir_base)
+          envir = envir_base
         )
       }
     }
