@@ -195,7 +195,7 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
   # evaluating all of exercise setup code, duplicated to avoid the possibility
   # of the checking code changing the prep environment
   envir_base <- learnr::duplicate_env(learnr_args[["envir_prep"]])
-  check_obj_envir <- new.env(parent = envir_base)
+  check_env <- new.env(parent = envir_base)
   
   force(envir_caller)
   
@@ -209,17 +209,17 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
       learnr_arg <- paste(learnr_arg, collapse = "\n")
     }
     
-    check_obj_envir[[name]] <- learnr_arg
+    check_env[[name]] <- learnr_arg
   }
   
   # Add gradethis specific check objects
-  check_obj_envir[[".result"]] <- learnr_args[["last_value"]]
-  check_obj_envir[[".user"]] <- learnr_args[["last_value"]]
+  check_env[[".result"]] <- learnr_args[["last_value"]]
+  check_env[[".user"]] <- learnr_args[["last_value"]]
   
   # Delayed evaluation of `.solution`
   solution_expr <- parse(text = learnr_args[["solution_code"]] %||% "")
   delayedAssign(
-    assign.env = check_obj_envir,
+    assign.env = check_env,
     x = ".solution",
     {
       if (length(solution_expr) == 0) {
@@ -237,7 +237,7 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
       }
     }
   )
-  check_obj_envir
+  check_env
 }
 
 grade_parse_error <- function(check_obj) {
