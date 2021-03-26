@@ -191,10 +191,13 @@ check_exercise <- function(
 
 
 prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
+  # The check_env starts from a copy of envir_prep which is the result of
+  # evaluating all of exercise setup code, duplicated to avoid the possibility
+  # of the checking code changing the prep environment
   envir_base <- learnr::duplicate_env(learnr_args[["envir_prep"]])
-  force(envir_caller)
-  
   check_obj_envir <- new.env(parent = envir_base)
+  
+  force(envir_caller)
   
   # Copy over all learnr args into the checking environment
   for (name in names(learnr_args)) {
