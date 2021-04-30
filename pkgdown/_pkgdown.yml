@@ -1,5 +1,5 @@
 # TODO: fix when gradethis moves to rstudio org
-url: https://rstudio-education.github.io/gradethis
+url: https://pkgs.rstudio.com/gradethis
 
 template:
   package: quillt
@@ -42,7 +42,7 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/rstudio-education/gradethis
+      href: https://github.com/rstudio/gradethis
     # news:
     #   text: News
     #   menu:
