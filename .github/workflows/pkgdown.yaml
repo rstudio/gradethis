@@ -8,6 +8,7 @@ name: pkgdown
 
 jobs:
   pkgdown:
+    if: ${{ github.event_name == 'push' || startsWith(github.head_ref, 'pkgdown/') }}
     runs-on: ubuntu-18.04
     env:
       RSPM: https://packagemanager.rstudio.com/cran/__linux__/bionic/latest
@@ -54,22 +55,20 @@ jobs:
       - name: Build pkgdown site
         run: pkgdown::build_site(new_process = FALSE)
         shell: Rscript {0}
-        
-      - name: Deploy pkgdown to gh-pages
-        if: github.ref == 'refs/heads/master'
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
 
-      # TODO: Fix when gradethis moves to rstudio org
       - name: Deploy to Netlify
-        # only deploy on the fork for now
-        if: github.repository_owner == 'gadenbuie'
-        # NETLIFY_AUTH_TOKEN added in the repo's secrets
+        id: netlify-deploy
+        uses: nwtgck/actions-netlify@v1.1
+        with:
+          publish-dir: 'reference'
+          production-branch: master
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message:
+            'Deploy from GHA: ${{ github.event.head_commit.message }} (${{ github.sha }})'
+          enable-pull-request-comment: false
+          enable-commit-comment: false
+          enable-commit-status: true
+          alias: deploy-preview-${{ github.event.number }}
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --prod --dir docs

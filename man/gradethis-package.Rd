@@ -15,10 +15,10 @@ Pairing with the 'learnr' R package, 'gradethis'
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://rstudio-education.github.io/gradethis/}
+  \item \url{https://pkgs.rstudio.com/gradethis/}
   \item \url{https://rstudio.github.io/learnr/}
-  \item \url{https://github.com/rstudio-education/gradethis}
-  \item Report bugs at \url{https://github.com/rstudio-education/gradethis/issues}
+  \item \url{https://github.com/rstudio/gradethis}
+  \item Report bugs at \url{https://github.com/rstudio/gradethis/issues}
 }
 
 }

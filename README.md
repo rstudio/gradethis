@@ -2,8 +2,8 @@
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/gradethis)](https://CRAN.R-project.org/package=gradethis)
-[![R build status](https://github.com/rstudio-education/gradethis/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio-education/gradethis/actions)
-[![Codecov test coverage](https://codecov.io/gh/rstudio-education/gradethis/branch/master/graph/badge.svg)](https://codecov.io/gh/rstudio-education/gradethis?branch=master)
+[![R build status](https://github.com/rstudio/gradethis/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/gradethis/actions)
+[![Codecov test coverage](https://codecov.io/gh/rstudio/gradethis/branch/master/graph/badge.svg)](https://codecov.io/gh/rstudio/gradethis?branch=master)
 [![gradethis downloads per month](http://cranlogs.r-pkg.org/badges/gradethis)](http://www.rpackages.io/package/gradethis)
 [![DOI](https://zenodo.org/badge/126734088.svg)](https://zenodo.org/badge/latestdoi/126734088)
 <!-- badges: end -->
@@ -21,7 +21,7 @@ The development version of gradethis can be installed from GitHub with:
 
 ```r
 # install.packages("remotes")
-remotes::install_github("rstudio-education/gradethis")
+remotes::install_github("rstudio/gradethis")
 ```
 
 ## Usage

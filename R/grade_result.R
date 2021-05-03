@@ -87,7 +87,7 @@ grade_result <- function(
   chkm8_item_class(conditions, "gradethis_condition")
 
   # If there is at least one pass_if() condition, then default to an incorrect grade;
-  # otherwise, default to a correct grade https://github.com/rstudio-education/gradethis/issues/118
+  # otherwise, default to a correct grade https://github.com/rstudio/gradethis/issues/118
   if (identical(default_correct, "auto")) {
     default_correct <- !any(vapply(conditions, `[[`, logical(1), "correct"))
   }
