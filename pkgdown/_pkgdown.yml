@@ -1,4 +1,5 @@
-# TODO: fix when gradethis moves to rstudio org
+destination: reference
+
 url: https://pkgs.rstudio.com/gradethis
 
 template:
