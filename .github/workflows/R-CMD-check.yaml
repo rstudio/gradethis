@@ -69,6 +69,7 @@ jobs:
       - name: Install system dependencies
         if: runner.os == 'Linux'
         run: |
+          system("apt-get install libcurl4-openssl-dev", wait = TRUE)
           pak::local_system_requirements(execute = TRUE)
           pak::pkg_system_requirements("rcmdcheck", execute = TRUE)
         shell: Rscript {0}
@@ -115,7 +116,7 @@ jobs:
         if: matrix.config.os == 'macOS-latest' && matrix.config.r == 'release'
         shell: Rscript {0}
         run: |
-          remotes::install_cran("covr")
+          pak::pkg_install("covr")
           covr::codecov()
 
       - name: Upload check results
