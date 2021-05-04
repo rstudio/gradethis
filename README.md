@@ -1,4 +1,4 @@
-# gradethis
+# gradethis <a href='https://pkgs.rstudio.com/gradethis'><img src='man/figures/logo.png' align="right" height="138" /></a>
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/gradethis)](https://CRAN.R-project.org/package=gradethis)
