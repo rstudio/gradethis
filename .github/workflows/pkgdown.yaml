@@ -1,8 +1,12 @@
 on:
-  workflow_run:
-    workflows: ["R-CMD-check"]
-    branches: [main,master]
-    types: completed
+  push:
+    branches:
+     - main
+     - master
+  pull_request:
+    branches:
+     - main
+     - master
 
 name: pkgdown
 
