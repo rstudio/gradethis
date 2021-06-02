@@ -651,3 +651,125 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
     )
   )
 })
+
+test_that("fail() message doesn't duplicate hints", {
+  ex <- mock_this_exercise(.user_code = 2, .solution_code = 1)
+  ex_feedback <- code_feedback("2", "1")
+  
+  expect_fail_message <- function(expr, global_hint_true, global_hint_false = global_hint_true) {
+    expr <- rlang::enexpr(expr)
+    msg <- list(
+      global_hint_true = withr::with_options(
+        list(
+          gradethis.fail.hint = TRUE, 
+          gradethis.fail = "PREFACE.{maybe_code_feedback()} CONCLUSION"
+        ),
+        rlang::eval_bare(expr)$message
+      ),
+      global_hint_false = withr::with_options(
+        list(
+          gradethis.fail.hint = FALSE, 
+          gradethis.fail = "PREFACE.{maybe_code_feedback()} CONCLUSION"
+        ),
+        rlang::eval_bare(expr)$message
+      )
+    )
+    msg <- lapply(msg, as.character)
+    
+    global_hint_true <- as.character(glue::glue(global_hint_true, .envir = parent.frame()))
+    global_hint_false <- as.character(glue::glue(global_hint_false, .envir = parent.frame()))
+    
+    expect_equal(!!msg$global_hint_true, !!global_hint_true)
+    expect_equal(!!msg$global_hint_false, !!global_hint_false)
+  }
+  
+  # default message, fall back on global fail.hint option
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail()
+    })(ex),
+    "PREFACE. {ex_feedback} CONCLUSION"
+  )
+  
+  # default message but hint = FALSE locally
+  # => hint = FALSE wins
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail(hint = FALSE)
+    })(ex),
+    global_hint_true = "PREFACE. CONCLUSION"
+  )
+  
+  # default fail message, but hint = TRUE locally
+  # => hint is added by default message
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail(hint = TRUE)
+    })(ex),
+    global_hint_true = "PREFACE. {ex_feedback} CONCLUSION"
+  )
+  
+  # custom fail message with feedback, inherit hint
+  # => template wins in both
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail("Nice try, but{maybe_code_feedback()}")
+    })(ex),
+    global_hint_true = "Nice try, but {ex_feedback}"
+  )
+  
+  # custom fail message with feedback, with local hint = FALSE
+  # => template wins in all
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail("Nice try, but{maybe_code_feedback()}", hint = FALSE)
+    })(ex),
+    global_hint_true = "Nice try, but {ex_feedback}"
+  )
+  
+  # custom fail message with feedback, with local hint = TRUE
+  # => template wins in all
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail("Nice try, but{maybe_code_feedback()}", hint = TRUE)
+    })(ex),
+    global_hint_true = "Nice try, but {ex_feedback}"
+  )
+  
+  # custom fail message without feedback, inherit hint
+  # => global option decides
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail("Nice try!")
+    })(ex),
+    global_hint_true = "Nice try! {ex_feedback}",
+    global_hint_false = "Nice try!"
+  )
+  
+  # custom fail message without feedback, with local hint = FALSE
+  # => local option overrides global option
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail("Nice try!", hint = FALSE)
+    })(ex),
+    global_hint_true = "Nice try!"
+  )
+  
+  # custom fail message without feedback, with local hint = TRUE
+  # => local option overrides global option
+  expect_fail_message(
+    grade_this({
+      pass_if_equal()
+      fail("Nice try!", hint = TRUE)
+    })(ex),
+    global_hint_true = "Nice try! {ex_feedback}"
+  )
+})
