@@ -659,14 +659,14 @@ test_that("fail() message doesn't duplicate hints", {
   expect_fail_message <- function(expr, global_hint_true, global_hint_false = global_hint_true) {
     expr <- rlang::enexpr(expr)
     msg <- list(
-      global_hint_true = withr::with_options(
+      global_hint_true = with_options(
         list(
           gradethis.fail.hint = TRUE, 
           gradethis.fail = "PREFACE.{maybe_code_feedback()} CONCLUSION"
         ),
         rlang::eval_bare(expr)$message
       ),
-      global_hint_false = withr::with_options(
+      global_hint_false = with_options(
         list(
           gradethis.fail.hint = FALSE, 
           gradethis.fail = "PREFACE.{maybe_code_feedback()} CONCLUSION"
