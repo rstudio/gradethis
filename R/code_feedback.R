@@ -372,7 +372,11 @@ give_code_feedback_.gradethis_graded <- function(
     maybe_code_feedback(user_code, solution_code, ...)
   )
   
-  if (identical(feedback, "")) signal_grade(grade)
+  # If there isn't any feedback or if the feedback message has already been
+  # added to the grade message, then just re-throw the grade
+  if (identical(feedback, "") || grepl(feedback, grade$message, fixed = TRUE)) {
+    signal_grade(grade)
+  }
   
   before <- identical(location, "before")
   grade$message <- paste0(

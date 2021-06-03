@@ -252,8 +252,23 @@ fail <- function(
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
+  user_provided_hint <- !missing(hint)
+  user_provided_message <- !missing(message)
+  
+  this_fail_grade <- function() {
+    if (user_provided_hint && !user_provided_message) {
+      # allow hint = FALSE, provided by the user, to override the default message
+      with_maybe_code_feedback(
+        isTRUE(hint),
+        graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
+      )
+    } else {
+      graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
+    }
+  }
+  
   maybe_extras(
-    graded(message = glue_message_with_env(env, message), correct = FALSE, ...),
+    this_fail_grade(),
     env = env,
     hint = hint,
     encourage = encourage
