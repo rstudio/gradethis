@@ -232,3 +232,31 @@ test_that("feedback() prefers graded options over feedback options", {
     msg = "test"
   )
 })
+
+test_that("feedback() passes along extra information in the from graded()", {
+  expect_equal(feedback(graded(TRUE, "foo", arg = "boom!"))$arg, "boom!")
+  expect_equal(feedback(graded(TRUE, "foo", prop = list(a = "apple")))$prop, list(a = "apple"))
+  expect_equal(feedback(pass("msg", prop = 42))$prop, 42)
+  expect_equal(feedback(fail("msg", prop = 42))$prop, 42)
+  
+  gradethis_env <- rlang::env(".__gradethis_check_env" = TRUE)
+  expect_equal(feedback(pass_if(TRUE, "msg", prop = 42, env = gradethis_env))$prop, 42)
+  expect_equal(feedback(fail_if(TRUE, "msg", prop = 42, env = gradethis_env))$prop, 42)
+  
+  expect_equal(feedback(pass_if_equal(x = 1, y = 1, "msg", prop = 42))$prop, 42)
+  expect_equal(feedback(fail_if_equal(x = 1, y = 1, "msg", prop = 42))$prop, 42)
+  expect_equal(feedback(fail_if_code_feedback("msg", "a", "b", prop = 42))$prop, 42)
+  
+  # ... need to be named (if we somehow get around checks in graded())
+  grade <- graded(TRUE, "foo", foo = "boom!")
+  names(grade)[5] <- NA_character_
+  expect_error(feedback(grade))
+  names(grade)[5] <- ""
+  expect_error(feedback(grade))
+  
+  # ... need to be unique (if we somehow get around checks in graded())
+  grade <- graded(TRUE, "foo", prop = 2, prop2 = 3)
+  names(grade)[6] <- "prop"
+  expect_error(feedback(grade))
+})
+

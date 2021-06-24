@@ -292,9 +292,24 @@ test_that("graded() returns correct, incorrect, neutral", {
   expect_error(graded("boom", I("bad")))
 })
 
-test_that("graded() ensures that ... are empty", {
-  expect_error(graded(TRUE, "foo", arg = "boom!"))
+test_that("graded() passes along extra information in the ...", {
+  expect_equal(graded(TRUE, "foo", arg = "boom!")$arg, "boom!")
+  expect_equal(graded(TRUE, "foo", prop = list(a = "apple"))$prop, list(a = "apple"))
+  expect_equal(pass("msg", prop = 42)$prop, 42)
+  expect_equal(fail("msg", prop = 42)$prop, 42)
+  
+  gradethis_env <- rlang::env(".__gradethis_check_env" = TRUE)
+  expect_equal(pass_if(TRUE, "msg", prop = 42, env = gradethis_env)$prop, 42)
+  expect_equal(fail_if(TRUE, "msg", prop = 42, env = gradethis_env)$prop, 42)
+    
+  expect_equal(pass_if_equal(x = 1, y = 1, "msg", prop = 42)$prop, 42)
+  expect_equal(fail_if_equal(x = 1, y = 1, "msg", prop = 42)$prop, 42)
+  expect_equal(fail_if_code_feedback("msg", "a", "b", prop = 42)$prop, 42)
+  
+  # ... need to be named
   expect_error(graded(TRUE, "foo", "boom!"))
+  # ... need to be unique
+  expect_error(graded(TRUE, "foo", prop = 2, prop = 3))
 })
 
 test_that("pass_if() and fail_if() use default pass/fail message in grade_this()", {

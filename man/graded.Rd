@@ -30,7 +30,8 @@ fail(
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
 string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
-\item{...}{Additional arguments passed to \code{graded()} or otherwise ignored.}
+\item{...}{Additional arguments passed to \code{graded()} or additional data to be
+included in the feedback object.}
 
 \item{type, location}{The \code{type} and \code{location} of the feedback object
 provided to \pkg{learnr}. See
