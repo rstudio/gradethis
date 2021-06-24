@@ -41,16 +41,23 @@ feedback <- function(
         "custom"
       }
   }
-
-  structure(
-    list(
-      message = message_md(grade$message),
-      correct = grade$correct,
-      type = type,
-      location = location
-    ),
-    class = "gradethis_feedback"
+  
+  feedback <- list(
+    message = message_md(grade$message),
+    correct = grade$correct,
+    type = type,
+    location = location
   )
+  
+  learnr_std_feedback <- which(names(grade) %in% c("message", "correct", "type", "location"))
+  extra <- grade[-learnr_std_feedback]
+  
+  if (length(extra)) {
+    checkmate::assert_names(names(extra), "unique", .var.name = "extra data in `grade`")
+    feedback <- c(feedback, extra)
+  }
+
+  structure(feedback, class = "gradethis_feedback")
 }
 
 

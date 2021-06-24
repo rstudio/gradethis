@@ -181,17 +181,21 @@
 #' @describeIn graded Prepare and signal a graded result.
 #' @export
 graded <- function(correct, message = NULL, ..., type = NULL, location = NULL) {
-  ellipsis::check_dots_empty()
-
+  if (length(list(...))) {
+    # ... must be unique and named
+    checkmate::assert_names(names(list(...)), "unique", .var.name = "...")
+  }
+  
   # allow logical(0) to signal a neutral grade
-  checkmate::expect_logical(correct, any.missing = FALSE, max.len = 1, null.ok = FALSE)
+  checkmate::assert_logical(correct, any.missing = FALSE, max.len = 1, null.ok = FALSE)
 
   obj <- structure(
     list(
       message = message %||% "",
       correct = correct,
       type = type,
-      location = location
+      location = location,
+      ...
     ),
     class = c("gradethis_graded", "condition")
   )
@@ -480,7 +484,7 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
 #'   an `if (cond)` statement, then a passing or failing grade is returned to
 #'   the user.
 #' @param x Deprecated. Replaced with `cond`.
-#' @param ... Ignored
+#' @param ... Passed to [graded()] in [grade_this()].
 #' @inheritParams graded
 #' 
 #' @return `pass_if()` and `fail_if()` signal a correct or incorrect grade if
@@ -497,7 +501,6 @@ pass_if <- function(
   praise = getOption("gradethis.pass.praise", FALSE),
   x = deprecated()
 ) {
-  ellipsis::check_dots_empty()
 
   if (is_present(x)) {
     deprecate_warn(
@@ -514,7 +517,7 @@ pass_if <- function(
     assert_gradethis_condition_type_is_value(cond, "pass_if")
     if (cond) {
       message <- message %||% getOption("gradethis.pass", "Correct!")
-      maybe_extras(pass(message, env = env), praise = praise)
+      maybe_extras(pass(message, env = env, ...), praise = praise)
     }
   } else {
     condition(cond, message, correct = TRUE)
@@ -532,8 +535,6 @@ fail_if <- function(
   encourage = getOption("gradethis.fail.encourage", FALSE),
   x = deprecated()
 ) {
-  ellipsis::check_dots_empty()
-
   if (is_present(x)) {
     deprecate_warn(
       "0.2.3",
@@ -550,7 +551,7 @@ fail_if <- function(
     if (cond) {
       message <- message %||% getOption("gradethis.fail", "Inorrect.")
       maybe_extras(
-        fail(message, env = env),
+        fail(message, env = env, ...),
         env = env,
         hint = hint,
         encourage = encourage

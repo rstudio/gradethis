@@ -34,7 +34,7 @@ the user.}
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
 string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
-\item{...}{Ignored}
+\item{...}{Passed to \code{\link[=graded]{graded()}}.}
 
 \item{env}{environment to evaluate the glue \code{message}. Most users of
 \pkg{gradethis} will not need to use this argument.}
