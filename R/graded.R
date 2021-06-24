@@ -162,7 +162,8 @@
 #'   grading helper functions other than [graded()], `message` is a template
 #'   string that will be processed with [glue::glue()].
 #' @param correct A logical value of whether or not the checked code is correct.
-#' @param ... Additional arguments passed to `graded()` or otherwise ignored.
+#' @param ... Additional arguments passed to `graded()` or additional data to be
+#'   included in the feedback object.
 #' @param type,location The `type` and `location` of the feedback object
 #'   provided to \pkg{learnr}. See
 #'   <https://rstudio.github.io/learnr/exercises.html#Custom_checking> for more
