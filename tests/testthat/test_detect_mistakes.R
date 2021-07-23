@@ -7,9 +7,9 @@ test_that("detect_mistakes detects surplus code", {
   user <-     quote(a(b(1)))
   solution <- quote(b(1))
   expect_equal(
-               detect_mistakes(user, solution),
-               wrong_call(this = user, that = solution)
-               )
+    detect_mistakes(user, solution),
+    wrong_call(submitted = user, solution = solution)
+  )
 
   user <-     quote(b(b(1)))
   solution <- quote(b(1))
@@ -34,7 +34,7 @@ test_that("detect_mistakes detects surplus code", {
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   # internal atomic
@@ -64,7 +64,7 @@ test_that("detect_mistakes detects missing code", {
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
 
@@ -73,7 +73,7 @@ test_that("detect_mistakes detects missing code", {
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   # internal atomic - NEEDS TO CATCH UNNAMED ARGUMENT HANDLING
@@ -104,7 +104,7 @@ test_that("detect_mistakes detects mis-matched code", {
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   # non-function
@@ -112,7 +112,7 @@ test_that("detect_mistakes detects mis-matched code", {
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   # internal atomic
@@ -128,7 +128,7 @@ test_that("detect_mistakes detects mis-matched code", {
   solution <- quote(a(c(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_call(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
   )
 
   # internal non-function
@@ -136,7 +136,7 @@ test_that("detect_mistakes detects mis-matched code", {
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_call(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
   )
 
 })
@@ -225,7 +225,7 @@ test_that("detect_mistakes works with infix operators", {
   solution <- quote(x <- sample(1:6, size = 1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
 #   # surplus
@@ -488,7 +488,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]][[3]], that = solution[[2]][[3]], enclosing_call = user)
+    wrong_call(submitted = user[[2]][[3]], solution = solution[[2]][[3]], enclosing_call = user)
   )
 
   ## TODO infix operator
@@ -505,7 +505,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(a(2 %>% log()))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]][[3]], that = solution[[2]][[3]], enclosing_call = user)
+    wrong_call(submitted = user[[2]][[3]], solution = solution[[2]][[3]], enclosing_call = user)
   )
 
   # DOES MESSAGE AUTOMATICALLY UNPIPE INNER ARGUMENTS?
@@ -513,7 +513,7 @@ test_that("detect_mistakes works with pipes", {
   # solution <- quote(a(2 %>% log() %>% sqrt())) # nolint
   # expect_equal(
   #   detect_mistakes(user, solution),
-  #   wrong_call(this = user[[2]][[2]][[3]], that = solution[[2]][[2]][[3]], enclosing_call = user[[2]])
+  #   wrong_call(submitted = user[[2]][[2]][[3]], solution = solution[[2]][[2]][[3]], enclosing_call = user[[2]])
   # )
 
   # TODO infix operator
@@ -551,7 +551,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(1 %>% log() %>% abs()) # nolint
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = quote(abs()))
+    wrong_call(submitted = user[[3]], solution = quote(abs()))
   )
 
   ## TODO infix operator
@@ -568,16 +568,18 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(2 %>% log())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = unpipe(user), that = as.name("log()"))
+    wrong_call(submitted = unpipe(user), solution = as.name("log()"))
   )
 
   user <-     quote(2 %>% abs() %>% sqrt()) # nolint
   solution <- quote(2 %>% log() %>% sqrt()) # nolint
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = unpipe(unpipe(user)[[2]]),
-                that = unpipe(unpipe(solution)[[2]]),
-                enclosing_call = user)
+    wrong_call(
+      submitted = unpipe(unpipe(user)[[2]]),
+      solution = unpipe(unpipe(solution)[[2]]),
+      enclosing_call = user
+    )
   )
 
   ## TODO need to look into infix operators
@@ -594,7 +596,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(b(1) %>% a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = as.name("a()"))
+    wrong_call(submitted = user, solution = as.name("a()"))
   )
 
 })
@@ -645,10 +647,12 @@ test_that("detect_mistakes handles argument names correctly", {
   solution <- quote(c(x = b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]],
-                this_name = names(as.list(user))[2],
-                that = solution[[2]],
-               enclosing_call = user)
+    wrong_call(
+      submitted = user[[2]],
+      submitted_name = names(as.list(user))[2],
+      solution = solution[[2]],
+      enclosing_call = user
+    )
   )
 
   user <-     quote(b(x = 1))
@@ -741,7 +745,7 @@ test_that("detect_mistakes checks the call first", {
   solution <- quote(sqrt(log(2)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
 })

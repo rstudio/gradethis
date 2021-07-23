@@ -79,15 +79,9 @@ detect_mistakes <- function(user,
 
   # 2. Check that the user and the solution use the same call
   # SHOULD WE HAVE A TARGETED WRONG CALL FUNCTION?
-  if (!identical(as.list(user)[[1]], as.list(solution)[[1]])) {
-    return(
-      wrong_call(
-        this = user,
-        that = solution,
-        this_name = enclosing_arg,
-        enclosing_call = enclosing_call
-      )
-    )
+  wrong_call <- detect_wrong_call(user, solution, enclosing_arg, enclosing_call)
+  if (!is.null(wrong_call)) {
+    return(wrong_call)
   }
 
   # 3. Check that the user code is not malformed and can be safely passed to

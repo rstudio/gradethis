@@ -23,3 +23,17 @@ detect_mismatched_function_arguments <- function(user, solution) {
     is.pairlist(solution) &&
     length(user) != length(solution)
 }
+
+detect_wrong_call <- function(user, solution, enclosing_arg, enclosing_call) {
+  if (!identical(as.list(user)[[1]], as.list(solution)[[1]])) {
+    return(
+      wrong_call(
+        submitted = user,
+        solution = solution,
+        submitted_name = enclosing_arg,
+        enclosing_call = enclosing_call
+      )
+    )
+  }
+}
+

@@ -279,9 +279,9 @@ too_many_matches <- function(this_call,
 }
 
 # wrong call
-wrong_call <- function(this,
-                       that,
-                       this_name = NULL,
+wrong_call <- function(submitted,
+                       solution,
+                       submitted_name = NULL,
                        enclosing_call = NULL) {
 
   # f(1, g(1, h(a = i(1))))
@@ -289,21 +289,21 @@ wrong_call <- function(this,
 
   # "g(1, h(i(1))), I expected you to call a = j() where you called a = i()."
 
-  # "{intro}I expected you to {action} {that} where you called {this}."
+  # "{intro}I expected you to {action} {solution} where you called {submitted}."
 
   intro <- build_intro(.call = enclosing_call)
 
-  that_original <- that
-  this <- prep(this)
-  that <- prep(that)
+  solution_original <- solution
+  submitted <- prep(submitted)
+  solution <- prep(solution)
 
-  if (!is.null(this_name) && this_name != "") {
-    that <- md_code_prepend(paste(this_name, "= "), that)
-    this <- md_code_prepend(paste(this_name, "= "), this)
+  if (!is.null(submitted_name) && submitted_name != "") {
+    solution <- md_code_prepend(paste(submitted_name, "= "), solution)
+    submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
   }
   
   action <- 
-    if (is_infix_assign(that_original)) {
+    if (is_infix_assign(solution_original)) {
       "assign something to something else with"
     } else {
       "call"
@@ -311,17 +311,17 @@ wrong_call <- function(this,
 
   glue::glue_data(
     list(
-      this = this,
-      that = that,
+      submitted = submitted,
+      solution = solution,
       action = action
     ),
-    "{intro}I expected you to {action} {that} where you called {this}."
+    "{intro}I expected you to {action} {solution} where you called {submitted}."
   )
 }
 
 # wrong value for wrong value and wrong call, the enclosing argument is the
 # argument that appears before the call or value. It should be passed to
-# this_name
+# submitted_name
 wrong_value <- function(submitted,
                         solution,
                         submitted_name = NULL,

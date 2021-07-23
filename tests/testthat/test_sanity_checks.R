@@ -12,7 +12,7 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = quote(a()), that = quote(b()))
+    wrong_call(submitted = quote(a()), solution = quote(b()))
   )
 
   solution <- quote(a())
@@ -26,7 +26,7 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(b(a(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   solution <- quote(a(1))
@@ -47,28 +47,28 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(0 + a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   solution <- quote(a(1))
   user <-     quote(a(1) + 0)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user, that = solution)
+    wrong_call(submitted = user, solution = solution)
   )
 
   solution <- quote(a() + b())
   user <-     quote(a() + a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = solution[[3]], enclosing_call = user)
+    wrong_call(submitted = user[[3]], solution = solution[[3]], enclosing_call = user)
   )
 
   solution <- quote(a() + b())
   user <-     quote(b() + a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_call(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
   )
 
   solution <- quote(a(b(1)))
@@ -81,21 +81,21 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a(1) %>% b())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = solution)
+    wrong_call(submitted = user[[3]], solution = solution)
   )
 
   solution <- quote(a(b(1)))
   user <-     quote(a(1) %>% a())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = solution[[2]], enclosing_call = user)
+    wrong_call(submitted = user[[3]], solution = solution[[2]], enclosing_call = user)
   )
 
   solution <- quote(a(b(1)))
   user <-     quote(b(1) %>% b())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_call(this = user[[3]], that = solution)
+    wrong_call(submitted = user[[3]], solution = solution)
   )
 
   solution <- quote(f(1, y = a(1)))
@@ -103,9 +103,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(
-      this = user[[3]],
-      that = solution[[3]],
-      this_name = "y",
+      submitted = user[[3]],
+      solution = solution[[3]],
+      submitted_name = "y",
       enclosing_call = user
     )
   )
@@ -115,9 +115,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(
-      this = user[[3]],
-      that = solution[[3]],
-      this_name = "y",
+      submitted = user[[3]],
+      solution = solution[[3]],
+      submitted_name = "y",
       enclosing_call = user
     )
   )
@@ -138,9 +138,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(
-      this = user[[3]],
-      that = solution[[3]],
-      this_name = "y",
+      submitted = user[[3]],
+      solution = solution[[3]],
+      submitted_name = "y",
       enclosing_call = user
     )
   )
@@ -167,9 +167,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution, env = testing_env),
     wrong_call(
-      this = user[[3]],
-      that = formals(g)[[2]],
-      this_name = "y",
+      submitted = user[[3]],
+      solution = formals(g)[[2]],
+      submitted_name = "y",
       enclosing_call = user
     )
   )
@@ -179,9 +179,9 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution, env = testing_env),
     wrong_call(
-      this = user[[3]],
-      that = formals(g)[[2]],
-      this_name = "y",
+      submitted = user[[3]],
+      solution = formals(g)[[2]],
+      submitted_name = "y",
       enclosing_call = user
     )
   )

@@ -107,7 +107,7 @@ test_that("Mentions only first non-matching element", {
     user_code = x,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_call(this = quote(log()), that = quote(sqrt()))
+    msg = wrong_call(submitted = quote(log()), solution = quote(sqrt()))
   )
 
   expect_grade_code(

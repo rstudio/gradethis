@@ -69,7 +69,10 @@ test_that("Mentions only first non-matching element", {
     w, z, is_correct = FALSE,
     msg = wrong_value(submitted = quote(1), solution = quote(sqrt()))
   )
-  expect_this_code(x, z, is_correct = FALSE, msg = wrong_call(this = quote(log()), that = quote(sqrt())))
+  expect_this_code(
+    x, z, is_correct = FALSE,
+    msg = wrong_call(submitted = quote(log()), solution = quote(sqrt()))
+  )
   expect_this_code(
     y, z, is_correct = FALSE,
     msg = wrong_value(submitted = quote(2), solution = quote(1))
