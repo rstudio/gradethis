@@ -416,8 +416,8 @@ test_that("detect_mistakes detects too many matches", {
   expect_equal(
     detect_mistakes(user, solution, env = tricky2_env),
     too_many_matches(
-      this_call = user,
-      that_name = names(as.list(solution)[2])
+      submitted_call = user,
+      solution_name = names(as.list(solution)[2])
     )
   )
 
@@ -432,8 +432,8 @@ test_that("detect_mistakes detects too many matches", {
   expect_equal(
     detect_mistakes(user, solution, env = tricky2_env),
     too_many_matches(
-      this_call = user[[3]],
-      that_name = names(as.list(solution)[2])
+      submitted_call = user[[3]],
+      solution_name = names(as.list(solution)[2])
     )
   )
 

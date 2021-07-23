@@ -783,7 +783,7 @@ test_that("detect_mistakes does not throw error for multiple matches of formal",
   solution <- quote(zz(1))
   expect_equal(
     detect_mistakes(user, solution),
-    too_many_matches(this_call = user, that_name = "yab")
+    too_many_matches(submitted_call = user, solution_name = "yab")
   )
 
 })

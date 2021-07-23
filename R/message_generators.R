@@ -241,8 +241,8 @@ pmatches_argument_name <- function(this_call,
 }
 
 # too_many_matches
-too_many_matches <- function(this_call,
-                             that_name,
+too_many_matches <- function(submitted_call,
+                             solution_name,
                              enclosing_call = NULL,
                              enclosing_arg = NULL) {
 
@@ -255,25 +255,25 @@ too_many_matches <- function(this_call,
   # "writing out the full argument names."
 
   # "Double check the argument names you are using. ",
-  # "{intro}{this_call} accepts an argument named {that} and it ",
+  # "{intro}{submitted_call} accepts an argument named {that} and it ",
   # "looks like more than one of your argument names will ",
   # "be matched to {that}, which will cause an error. Try ",
   # "writing out the full argument names."
 
-  this_call <- prep(this_call)
-  that_name <- prep(that_name)
+  submitted_call <- prep(submitted_call)
+  solution_name <- prep(solution_name)
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      that_name = that_name
+      submitted_call = submitted_call,
+      solution_name = solution_name
     ),
-    "{intro}{this_call} accepts an argument named {that_name}. ",
-    "More than one of your argument names in {this_call} will ",
-    "be matched to {that_name}, which will cause an error. Try ",
+    "{intro}{submitted_call} accepts an argument named {solution_name}. ",
+    "More than one of your argument names in {submitted_call} will ",
+    "be matched to {solution_name}, which will cause an error. Try ",
     "writing out the full argument names."
   )
 }

@@ -73,25 +73,12 @@ detect_name_problems <- function(
   remaining_solution_names <- real_names(solution_args)
   
   if (length(remaining_user_names) > 0) {
-    
-    ## Do any non-matched solution names partially match multiple user names?
-    pmatches_per_formal <- function(solution_name) {
-      sum(startsWith(solution_name, remaining_user_names))
-    }
-    
-    matches <- vapply(remaining_solution_names, pmatches_per_formal, 1)
-    offenders <- matches[matches > 1]
-    
-    if (length(offenders) > 0) {
-      overmatched_name <- rlang::names2(offenders[1])
-      return(
-        too_many_matches(
-          this_call = user,
-          that_name = overmatched_name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
-        )
-      )
+    too_many_matches <- detect_too_many_matches(
+      user, remaining_solution_names, remaining_user_names,
+      enclosing_call, enclosing_arg
+    )
+    if (!is.null(too_many_matches)) {
+      return(too_many_matches)
     }
     
     ## How many formals does each remaining user arg partially match?
@@ -204,5 +191,30 @@ detect_duplicate_names <- function(user, user_names, solution_names, enclosing_c
         )
       }
     }
+  }
+}
+
+detect_too_many_matches <- function(
+  user, remaining_solution_names, remaining_user_names,
+  enclosing_call, enclosing_arg
+) {
+  ## Do any non-matched solution names partially match multiple user names?
+  pmatches_per_formal <- function(solution_name) {
+    sum(startsWith(solution_name, remaining_user_names))
+  }
+  
+  matches <- vapply(remaining_solution_names, pmatches_per_formal, 1)
+  offenders <- matches[matches > 1]
+  
+  if (length(offenders) > 0) {
+    overmatched_name <- rlang::names2(offenders[1])
+    return(
+      too_many_matches(
+        submitted_call = user,
+        solution_name = overmatched_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
   }
 }
