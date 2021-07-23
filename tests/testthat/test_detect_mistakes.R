@@ -795,7 +795,7 @@ test_that("detect_mistakes handles duplicated argument names", {
   solution <- quote(dd(a = 1))
   expect_equal(
     detect_mistakes(user, solution),
-    duplicate_name(this_call = user, this_name = "a")
+    duplicate_name(submitted_call = user, submitted_name = "a")
   )
 
 })

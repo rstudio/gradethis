@@ -68,8 +68,8 @@ bad_argument_name <- function(this_call,
 }
 
 # duplicate_name
-duplicate_name <- function(this_call,
-                           this_name,
+duplicate_name <- function(submitted_call,
+                           submitted_name,
                            enclosing_call = NULL,
                            enclosing_arg = NULL) {
 
@@ -79,22 +79,22 @@ duplicate_name <- function(this_call,
   # "You passed multiple arguments named a to f(), which will cause "
   # "an error. Check your spelling, or remove one of the arguments."
 
-  # "You passed multiple arguments named {this_name} to {this_call}, which will cause "
-  # "an error. Check your spelling, or remove one of the arguments."
+  # "You passed multiple arguments named {submitted_name} to {submitted_call},
+  # "which will cause an error. Check your spelling, or remove one of the arguments."
 
-  this_call <- prep(this_call)
-  this_name <- prep(this_name)
+  submitted_call <- prep(submitted_call)
+  submitted_name <- prep(submitted_name)
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      this_name = this_name
+      submitted_call = submitted_call,
+      submitted_name = submitted_name
     ),
-    "You passed multiple arguments named {this_name} ",
-    "to {this_call}, which will cause an error. ",
+    "You passed multiple arguments named {submitted_name} ",
+    "to {submitted_call}, which will cause an error. ",
     "Check your spelling, or remove one of the arguments."
   )
 }

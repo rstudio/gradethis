@@ -187,3 +187,22 @@ detect_name_problems <- function(
   }
 }
 
+detect_duplicate_names <- function(user, user_names, solution_names, enclosing_call, enclosing_arg) {
+  user_arg_ns <- table(user_names)
+  solution_arg_ns <- table(solution_names)
+  if (any(user_arg_ns > 1)) {
+    duplicates <- names(user_arg_ns[user_arg_ns > 1])
+    for (name in duplicates) {
+      if (!identical(user_arg_ns[name], solution_arg_ns[name])) {
+        return(
+          duplicate_name(
+            submitted_call = user,
+            submitted_name = name,
+            enclosing_call = enclosing_call,
+            enclosing_arg = enclosing_arg
+          )
+        )
+      }
+    }
+  }
+}
