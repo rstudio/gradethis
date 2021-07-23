@@ -15,14 +15,18 @@ test_that("detect_mistakes detects surplus code", {
   solution <- quote(b(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(
+      submitted = user[[2]], solution = solution[[2]], enclosing_call = user
+    )
   )
 
   user <-     quote(a(b(1)))
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(
+      submitted = user[[2]], solution = solution[[2]], enclosing_call = user
+    )
   )
 
   # non-function
@@ -47,7 +51,9 @@ test_that("detect_mistakes detects surplus code", {
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(
+      submitted = user[[2]], solution = solution[[2]], enclosing_call = user
+    )
   )
 })
 
@@ -84,7 +90,7 @@ test_that("detect_mistakes detects missing code", {
   solution <- quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(1), that = quote(b()), enclosing_call = user)
+    wrong_value(submitted = quote(1), solution = quote(b()), enclosing_call = user)
   )
 
   # internal non-function would not appear in a solution
@@ -114,7 +120,7 @@ test_that("detect_mistakes detects mis-matched code", {
   solution <- quote(a(2))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(1), that = quote(2), enclosing_call = user)
+    wrong_value(submitted = quote(1), solution = quote(2), enclosing_call = user)
   )
 
   # internal function
@@ -141,7 +147,7 @@ test_that("detect_mistakes works with atomic solutions", {
   solution <- quote(1)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = as.name("2"), that = quote(1))
+    wrong_value(submitted = as.name("2"), solution = quote(1))
   )
 
   # function
@@ -149,21 +155,21 @@ test_that("detect_mistakes works with atomic solutions", {
   solution <- quote(1)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   user <-     quote(a())
   solution <- quote(1)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = as.name("a()"), that = quote(1))
+    wrong_value(submitted = as.name("a()"), solution = quote(1))
   )
 
   user <-     quote(a(1))
   solution <- quote(pi)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   # non-function
@@ -171,7 +177,7 @@ test_that("detect_mistakes works with atomic solutions", {
   solution <- quote(pi)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   # internal atomics, functions, non-functions, infixes,
@@ -187,7 +193,7 @@ test_that("detect_mistakes works with infix operators", {
   solution <- quote(x <- sample(1:6, size = 1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   # changing direction of assign should still work
@@ -195,7 +201,7 @@ test_that("detect_mistakes works with infix operators", {
   solution <- quote(sample(1:6, size = 1) -> x)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   # other variants of assign like <<- should also work
@@ -204,14 +210,14 @@ test_that("detect_mistakes works with infix operators", {
   solution <- quote(x <<- sample(1:6, size = 1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   user <- quote(123)
   solution <- quote(sample(1:6, size = 1) ->> x)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   # call vs assign
@@ -460,7 +466,7 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(b(1))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
     # "In `b(1 %>% abs())`, I expected `1` where you wrote `1 %>% abs()`."
   )
   
@@ -468,14 +474,14 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(sqrt(1 %>% log()))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]][[3]], enclosing_call = user)
+    wrong_value(submitted = user[[2]], solution = solution[[2]][[3]], enclosing_call = user)
   )
 
   user <-     quote(sqrt(1))
   solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]][[3]], enclosing_call = user)
+    wrong_value(submitted = user[[2]], solution = solution[[2]][[3]], enclosing_call = user)
   )
 
   user <-     quote(sqrt(1 %>% log()))
@@ -524,21 +530,21 @@ test_that("detect_mistakes works with pipes", {
   solution <- quote(1)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user, that = solution)
+    wrong_value(submitted = user, solution = solution)
   )
 
   user <-     quote(1)
   solution <- quote(1 %>% log())
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(1), that = quote(log()))
+    wrong_value(submitted = quote(1), solution = quote(log()))
   )
 
   user <-     quote(1)
   solution <- quote(1 %>% log() %>% abs()) # nolint
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(1), that = quote(abs()))
+    wrong_value(submitted = quote(1), solution = quote(abs()))
   )
 
   user <-     quote(1 %>% log())
@@ -715,7 +721,7 @@ test_that("detect_mistakes handles weird cases", {
   solution <- quote(sum(1, 2, 3))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this =  user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
   )
 
   user <-     quote(sum(1, 2))
@@ -798,7 +804,7 @@ test_that("detect_mistakes does not return correct prematurely", {
   solution <- quote(j(x = a(x = 1), y = a(3)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[3]][[2]], that = solution[[3]][[2]], enclosing_call = user[[3]])
+    wrong_value(submitted = user[[3]][[2]], solution = solution[[3]][[2]], enclosing_call = user[[3]])
   )
 
 })
@@ -817,13 +823,13 @@ test_that("detect_mistakes works with multiple lines", {
   user <- rlang::as_quosure(parse(text = "1\n8\n3\n4", new.env()))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(8), that = quote(2))
+    wrong_value(submitted = quote(8), solution = quote(2))
   )
 
   user <- rlang::as_quosure(parse(text = "1\n8\n3\n4", new.env()))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(8), that = quote(2))
+    wrong_value(submitted = quote(8), solution = quote(2))
   )
 
   user <- rlang::as_quosure(parse(text = "1\n2\n3\n4\n5", new.env()))

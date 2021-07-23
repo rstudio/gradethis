@@ -60,26 +60,16 @@ detect_mistakes <- function(user,
     solution <- call_standardise_formals(unpipe_all(solution), env = env)
   }
 
-  # 1. If the code contains a bare value, then the user and solution value
+  # If the code contains a bare value, then the user and solution value
   # should be identical.
   # BUT WHAT IF ONE IS A CALL THAT EVALUATES TO THE VALUE OF THE OTHER?
-  if (!is.call(user) || !is.call(solution)) {
-    if (!identical(user, solution)) {
-      if (detect_mismatched_function_arguments(user, solution)) {
-        submitted <- as.pairlist(user[setdiff(names(user), names(solution))])
-        solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
-      }
-      
-      return(
-        wrong_value(
-          this = submitted,
-          that = solution,
-          this_name = enclosing_arg,
-          enclosing_call = enclosing_call
-        )
-      )
-    }
+  wrong_value <- detect_wrong_value(
+    user, solution, submitted, enclosing_arg, enclosing_call
+  )
+  if (!is.null(wrong_value)) {
+    return(wrong_value)
   }
+  
   # We can assume anything below here is a call
 
   # Dividing cases into groups based on the relative lengths of the user's code
@@ -423,14 +413,7 @@ detect_mistakes <- function(user,
   return(NULL)
 }
 
-
 real_names <- function(x) {
   x_names <- rlang::names2(x)
   x_names[x_names != ""]
-}
-
-detect_mismatched_function_arguments <- function(user, solution) {
-  is.pairlist(user) && 
-    is.pairlist(solution) &&
-    length(user) != length(solution)
 }

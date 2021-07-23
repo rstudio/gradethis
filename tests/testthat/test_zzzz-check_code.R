@@ -29,14 +29,14 @@ test_that("Spots differences in names", {
     user_code = "x",
     solution_code = "y",
     is_correct = FALSE,
-    msg = wrong_value(this = quote(x), that = quote(y))
+    msg = wrong_value(submitted = quote(x), solution = quote(y))
   )
 
   expect_grade_code(
     user_code = "5",
     solution_code = "y",
     is_correct = FALSE,
-    msg = wrong_value(this = quote(5), that = quote(y))
+    msg = wrong_value(submitted = quote(5), solution = quote(y))
   )
 })
 
@@ -58,7 +58,7 @@ test_that("Spots differences in calls", {
     user_code = a,
     solution_code = b,
     is_correct = FALSE,
-    msg = wrong_value(this = quote(lists), that = quote(vecs))
+    msg = wrong_value(submitted = quote(lists), solution = quote(vecs))
   )
 
   expect_grade_code(
@@ -100,7 +100,7 @@ test_that("Mentions only first non-matching element", {
     user_code = w,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_value(this = quote(1), that = quote(sqrt()))
+    msg = wrong_value(submitted = quote(1), solution = quote(sqrt()))
   )
 
   expect_grade_code(
@@ -114,7 +114,7 @@ test_that("Mentions only first non-matching element", {
     user_code = y,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_value(this = quote(2), that = quote(1))
+    msg = wrong_value(submitted = quote(2), solution = quote(1))
   )
 })
 

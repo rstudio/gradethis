@@ -322,9 +322,9 @@ wrong_call <- function(this,
 # wrong value for wrong value and wrong call, the enclosing argument is the
 # argument that appears before the call or value. It should be passed to
 # this_name
-wrong_value <- function(this,
-                        that,
-                        this_name = NULL,
+wrong_value <- function(submitted,
+                        solution,
+                        submitted_name = NULL,
                         enclosing_call = NULL) {
 
   # f(1, g(1, h(1)))
@@ -332,41 +332,41 @@ wrong_value <- function(this,
 
   # "h(1), I expected 2 where you wrote 1."
 
-  # "{intro}I expected {that} where you wrote {this}."
+  # "{intro}I expected {solution} where you wrote {submitted}."
 
   intro <- build_intro(.call = enclosing_call)
 
   expected <- "expected"
-  if (length(this) > length(that)) {
+  if (length(submitted) > length(solution)) {
     expected <- "didn't expect"
-    that <- this
-    this <- NULL
+    solution <- submitted
+    submitted <- NULL
   }
   
   where <- " where you wrote "
   
-  that_original <- that
-  that <- prep(that)
+  solution_original <- solution
+  solution <- prep(solution)
    
-  if (is.null(this)) {
+  if (is.null(submitted)) {
     intro <- ""
-    this <- build_intro(enclosing_call %||% that_original, .open = "", .close = "")
+    submitted <- build_intro(enclosing_call %||% solution_original, .open = "", .close = "")
   } else {
-    this <-prep(this)
+    submitted <-prep(submitted)
   }
       
-  if (!is.null(this_name) && this_name != "") {
-    that <- md_code_prepend(paste(this_name, "= "), that)
-    this <- md_code_prepend(paste(this_name, "= "), this)
+  if (!is.null(submitted_name) && submitted_name != "") {
+    solution <- md_code_prepend(paste(submitted_name, "= "), solution)
+    submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
   }
 
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
   action <- 
-    if (is_infix_assign(that_original)) {
+    if (is_infix_assign(solution_original)) {
       "you to assign something to something else with "
-    } else if (grepl("\\(\\)", that)) {
+    } else if (grepl("\\(\\)", solution)) {
       "you to call "
     }
 
@@ -374,12 +374,12 @@ wrong_value <- function(this,
     list(
       intro = intro,
       expected = expected,
-      that = that,
-      where = if (!identical(this, "")) where else "",
-      this = this,
+      solution = solution,
+      where = if (!identical(submitted, "")) where else "",
+      submitted = submitted,
       action = action %||% ""
     ),
-    "{intro}I {expected} {action}{that}{where}{this}."
+    "{intro}I {expected} {action}{solution}{where}{submitted}."
   )
 }
 

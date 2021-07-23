@@ -19,7 +19,7 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a)
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = quote(a), that = quote(a()))
+    wrong_value(submitted = quote(a), solution = quote(a()))
   )
 
   solution <- quote(a(1))
@@ -33,14 +33,14 @@ test_that("detect_mistakes detects wrong calls", {
   user <-     quote(a(b(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
   )
 
   solution <- quote(a(1))
   user <-     quote(a(a(1)))
   expect_equal(
     detect_mistakes(user, solution),
-    wrong_value(this = user[[2]], that = solution[[2]], enclosing_call = user)
+    wrong_value(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
   )
 
   solution <- quote(a(1))
@@ -127,8 +127,8 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user[[3]][[2]],
-      that = solution[[3]][[2]],
+      submitted = user[[3]][[2]],
+      solution = solution[[3]][[2]],
       enclosing_call = user[[3]]
     )
   )
@@ -150,8 +150,8 @@ test_that("detect_mistakes detects wrong calls", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user[[3]][[2]],
-      that = solution[[3]][[2]],
+      submitted = user[[3]][[2]],
+      solution = solution[[3]][[2]],
       enclosing_call = user[[3]]
     )
   )
@@ -198,8 +198,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user,
-      that = solution
+      submitted = user,
+      solution = solution
     )
   )
 
@@ -208,8 +208,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user,
-      that = solution
+      submitted = user,
+      solution = solution
     )
   )
 
@@ -218,8 +218,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user,
-      that = solution
+      submitted = user,
+      solution = solution
     )
   )
 
@@ -228,8 +228,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user,
-      that = solution
+      submitted = user,
+      solution = solution
     )
   )
 
@@ -238,8 +238,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user,
-      that = solution
+      submitted = user,
+      solution = solution
     )
   )
 
@@ -248,8 +248,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user,
-      that = solution
+      submitted = user,
+      solution = solution
     )
   )
 
@@ -258,8 +258,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[2]])),
-      that = solution[[2]],
+      submitted = as.name(deparse_to_string(user[[2]])),
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -269,8 +269,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = user[[2]],
-      that = solution[[2]],
+      submitted = user[[2]],
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -280,8 +280,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[2]])),
-      that = solution[[2]],
+      submitted = as.name(deparse_to_string(user[[2]])),
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -291,8 +291,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[2]])),
-      that = solution[[2]],
+      submitted = as.name(deparse_to_string(user[[2]])),
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -302,8 +302,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[2]])),
-      that = solution[[2]],
+      submitted = as.name(deparse_to_string(user[[2]])),
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -313,8 +313,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[3]])),
-      that = solution[[3]],
+      submitted = as.name(deparse_to_string(user[[3]])),
+      solution = solution[[3]],
       enclosing_call = user
     )
   )
@@ -324,8 +324,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[2]])),
-      that = solution[[2]],
+      submitted = as.name(deparse_to_string(user[[2]])),
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -335,8 +335,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[2]])),
-      that = solution[[2]],
+      submitted = as.name(deparse_to_string(user[[2]])),
+      solution = solution[[2]],
       enclosing_call = user
     )
   )
@@ -346,8 +346,8 @@ test_that("detect_mistakes detects wrong values", {
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(
-      this = as.name(deparse_to_string(user[[3]][[2]])),
-      that = solution[[3]][[2]],
+      submitted = as.name(deparse_to_string(user[[3]][[2]])),
+      solution = solution[[3]][[2]],
       enclosing_call = user
     )
   )
