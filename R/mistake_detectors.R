@@ -92,17 +92,11 @@ detect_name_problems <- function(
     well_matched <- matches[matches == 1]
     
     # names that match multiple arguments are a syntax error
-    if (length(offenders) > 0) {
-      bad_name <- rlang::names2(offenders[1])
-      return(
-        bad_argument_name(
-          this_call = user,
-          this = user[[bad_name]],
-          this_name = bad_name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
-        )
-      )
+    bad_argument_names <- detect_bad_argument_names(
+      user, offenders, enclosing_call, enclosing_arg
+    )
+    if (!is.null(bad_argument_names)) {
+      return(bad_argument_names)
     }
     
     # Unmatched named arguments are surplus
@@ -212,6 +206,23 @@ detect_too_many_matches <- function(
       too_many_matches(
         submitted_call = user,
         solution_name = overmatched_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+}
+
+detect_bad_argument_names <- function(
+  user, offenders, enclosing_call, enclosing_arg
+) {
+  if (length(offenders) > 0) {
+    bad_name <- rlang::names2(offenders[1])
+    return(
+      bad_argument_name(
+        this_call = user,
+        this = user[[bad_name]],
+        this_name = bad_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )
