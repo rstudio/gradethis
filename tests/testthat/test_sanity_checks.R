@@ -449,9 +449,9 @@ test_that("detect_mistakes detects surplus arguments", {
   expect_equal(
     detect_mistakes(user, solution),
     surplus_argument(
-      this_call = user,
-      this = user[[3]],
-      this_name = names(as.list(user)[3])
+      submitted_call = user,
+      submitted = user[[3]],
+      submitted_name = names(as.list(user)[3])
     )
   )
 
@@ -460,9 +460,9 @@ test_that("detect_mistakes detects surplus arguments", {
   expect_equal(
     detect_mistakes(user, solution),
     surplus_argument(
-      this_call = user,
-      this = user[[3]],
-      this_name = names(as.list(user)[3])
+      submitted_call = user,
+      submitted = user[[3]],
+      submitted_name = names(as.list(user)[3])
     )
   )
 
@@ -471,9 +471,9 @@ test_that("detect_mistakes detects surplus arguments", {
   expect_equal(
     detect_mistakes(user, solution),
     surplus_argument(
-      this_call = user,
-      this = user[[3]],
-      this_name = names(as.list(user)[3])
+      submitted_call = user,
+      submitted = user[[3]],
+      submitted_name = names(as.list(user)[3])
     )
   )
 
@@ -482,9 +482,9 @@ test_that("detect_mistakes detects surplus arguments", {
   expect_equal(
     detect_mistakes(user, solution),
     surplus_argument(
-      this_call = user,
-      this = user[[2]],
-      this_name = names(as.list(user)[2])
+      submitted_call = user,
+      submitted = user[[2]],
+      submitted_name = names(as.list(user)[2])
     )
   )
 
@@ -493,9 +493,9 @@ test_that("detect_mistakes detects surplus arguments", {
   expect_equal(
     detect_mistakes(user, solution),
     surplus_argument(
-      this_call = user[[3]],
-      this = user[[3]][[2]],
-      this_name = names(as.list(as.list(user)[[3]])[2])
+      submitted_call = user[[3]],
+      submitted = user[[3]][[2]],
+      submitted_name = names(as.list(as.list(user)[[3]])[2])
     )
   )
 

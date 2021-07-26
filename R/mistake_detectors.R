@@ -152,9 +152,9 @@ detect_name_problems <- function(
     i <- n_remaining_solution + 1
     return(
       surplus_argument(
-        this_call = user,
-        this = user_args[[i]],
-        this_name = rlang::names2(user_args[i]),
+        submitted_call = user,
+        submitted = user_args[[i]],
+        submitted_name = rlang::names2(user_args[i]),
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )
@@ -231,9 +231,9 @@ detect_surplus_argument <- function(
     surplus_name <- rlang::names2(unused[1])
     return(
       surplus_argument(
-        this_call = user,
-        this = user[[surplus_name]],
-        this_name = surplus_name,
+        submitted_call = user,
+        submitted = user[[surplus_name]],
+        submitted_name = surplus_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )

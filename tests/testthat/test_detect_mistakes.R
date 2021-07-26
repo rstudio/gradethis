@@ -43,7 +43,7 @@ test_that("detect_mistakes detects surplus code", {
   solution <- quote(b())
   expect_equal(
     detect_mistakes(user, solution),
-    surplus_argument(this_call = user, this = user[[2]])
+    surplus_argument(submitted_call = user, submitted = user[[2]])
   )
 
   # internal non-function
@@ -671,18 +671,18 @@ test_that("detect_mistakes handles argument names correctly", {
   solution <- quote(b(x = 1))
   expect_equal(
     detect_mistakes(user, solution),
-    surplus_argument(this_call =  quote(b()),
-                     this = quote(1),
-                     this_name = "y")
+    surplus_argument(submitted_call =  quote(b()),
+                     submitted = quote(1),
+                     submitted_name = "y")
   )
 
   user <-     quote(b(y = a(1)))
   solution <- quote(b(1))
   expect_equal(
     detect_mistakes(user, solution),
-    surplus_argument(this_call =  quote(b()),
-                     this = as.name("a()"),
-                     this_name = "y")
+    surplus_argument(submitted_call =  quote(b()),
+                     submitted = as.name("a()"),
+                     submitted_name = "y")
   )
 
   test_fn <<- function(x, y = 1, z = FALSE, ...) {return(1)}
@@ -695,14 +695,14 @@ test_that("detect_mistakes handles argument names correctly", {
     #             this_name = "cut",
     #             that = quote(1),
     #             that_name = "trim")
-    surplus_argument(this_call = quote(test_fn()), this = quote(1), this_name = "a")
+    surplus_argument(submitted_call = quote(test_fn()), submitted = quote(1), submitted_name = "a")
   )
 
   user <-     quote(test_fn(1:10, a = 1, z = TRUE))
   solution <- quote(test_fn(1:10, 1, z = TRUE))
   expect_equal(
     detect_mistakes(user, solution),
-    surplus_argument(this_call = quote(test_fn()), this = quote(1), this_name = "a")
+    surplus_argument(submitted_call = quote(test_fn()), submitted = quote(1), submitted_name = "a")
   )
 
   # This user code looks correct (and runs!) but na.rm is an argument passed to
@@ -714,7 +714,7 @@ test_that("detect_mistakes handles argument names correctly", {
     # wrong_value(this = quote(1),
     #             this_name = "cut",
     #             that = quote(TRUE))
-    surplus_argument(this_call = quote(mean()), this = quote(TRUE), this_name = "na.rm")
+    surplus_argument(submitted_call = quote(mean()), submitted = quote(TRUE), submitted_name = "na.rm")
   )
 
 })
@@ -757,7 +757,7 @@ test_that("detect_mistakes does not throw error for unused argument", {
   solution <- quote(a(1))
   expect_equal(
     detect_mistakes(user, solution),
-    surplus_argument(this_call = quote(a()), this = quote(2), this_name = "y")
+    surplus_argument(submitted_call = quote(a()), submitted = quote(2), submitted_name = "y")
   )
 
 })

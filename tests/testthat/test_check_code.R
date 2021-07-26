@@ -42,9 +42,9 @@ test_that("Spots differences in calls", {
     a, c,
     is_correct = FALSE,
     msg = surplus_argument(
-      this_call = quote(vapply()),
-      this_name = "na.rm",
-      this = quote(TRUE)
+      submitted_call = quote(vapply()),
+      submitted_name = "na.rm",
+      submitted = quote(TRUE)
     )
   )
 
@@ -93,9 +93,9 @@ test_that("Spots differences in argument names", {
     c, a,
     is_correct = FALSE,
     msg = surplus_argument(
-      this_call = quote(test_fn()),
-      this = 1,
-      this_name = "w"
+      submitted_call = quote(test_fn()),
+      submitted = 1,
+      submitted_name = "w"
     )
   )
 

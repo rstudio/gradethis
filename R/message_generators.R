@@ -142,9 +142,9 @@ missing_argument <- function(this_call,
 }
 
 # surplus argument
-surplus_argument <- function(this_call,
-                             this,
-                             this_name = NULL,
+surplus_argument <- function(submitted_call,
+                             submitted,
+                             submitted_name = NULL,
                              enclosing_call = NULL,
                              enclosing_arg = NULL) {
 
@@ -157,27 +157,27 @@ surplus_argument <- function(this_call,
   # "may have left out or misspelled an important ",
   # "argument name."
 
-  # "{intro}I did not expect your call to {this_call} to ",
-  # "include {this}. You ",
+  # "{intro}I did not expect your call to {submitted_call} to ",
+  # "include {submitted}. You ",
   # "may have included an unnecessary argument, or you ",
   # "may have left out or misspelled an important ",
   # "argument name."
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
-  this_call <- prep(this_call)
-  this      <- prep(this)
+  submitted_call <- prep(submitted_call)
+  submitted      <- prep(submitted)
 
-  if (!is.null(this_name) && this_name != "")
-    this <- md_code_prepend(paste(this_name, "= "), this)
+  if (!is.null(submitted_name) && submitted_name != "")
+    submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
 
   glue::glue_data(
     list(
-      this = this,
-      this_call = this_call
+      submitted = submitted,
+      submitted_call = submitted_call
     ),
-    "{intro}I did not expect your call to {this_call} to ",
-    "include {this}. You ",
+    "{intro}I did not expect your call to {submitted_call} to ",
+    "include {submitted}. You ",
     "may have included an unnecessary argument, or you ",
     "may have left out or misspelled an important ",
     "argument name."
