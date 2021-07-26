@@ -769,9 +769,9 @@ test_that("detect_mistakes does not throw error for multiple matches of argument
   solution <- quote(z(1, ya = 2))
   expect_equal(
     detect_mistakes(user, solution),
-    bad_argument_name(this_call = user,
-                      this = user[[3]],
-                      this_name = names(as.list(user)[3]))
+    bad_argument_name(submitted_call = user,
+                      submitted = user[[3]],
+                      submitted_name = names(as.list(user)[3]))
   )
 
 })

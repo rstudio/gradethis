@@ -28,9 +28,9 @@ missing_answer <- function(this_prior_line) {
 
 
 # bad argument name
-bad_argument_name <- function(this_call,
-                              this,
-                              this_name,
+bad_argument_name <- function(submitted_call,
+                              submitted,
+                              submitted_name,
                               enclosing_call = NULL,
                               enclosing_arg = NULL) { # only if the user supplied one (to match user code)
 
@@ -41,29 +41,29 @@ bad_argument_name <- function(this_call,
   # As a result, R cannot figure out which argument you want to pass i(1) to.
   # Check how you spelled b, or write out the full argument name.
 
-  # {intro}{this_call} accepts more than one argument that begins with {this_name}.
-  # As a result, R cannot figure out which argument you want to pass {this} to.
-  # Check how you spelled {this_name}, or write out the full argument name.
+  # {intro}{submitted_call} accepts more than one argument that begins with {submitted_name}.
+  # As a result, R cannot figure out which argument you want to pass {submitted} to.
+  # Check how you spelled {submitted_name}, or write out the full argument name.
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
-  this <- prep(this)
-  this_call <- prep(this_call)
+  submitted <- prep(submitted)
+  submitted_call <- prep(submitted_call)
 
-  if (grepl("\\(\\)", this))
-    this <- paste("a call to", this)
+  if (grepl("\\(\\)", submitted))
+    submitted <- paste("a call to", submitted)
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      this_name = this_name,
-      this = this
+      submitted_call = submitted_call,
+      submitted_name = submitted_name,
+      submitted = submitted
     ),
-    "{intro}{this_call} accepts more than one argument name that begins ",
-    "with `{this_name}`. As a result, R cannot figure out which ",
-    "argument you want to pass {this} to. Check how you spelled ",
-    "`{this_name}`, or write out the full argument name."
+    "{intro}{submitted_call} accepts more than one argument name that begins ",
+    "with `{submitted_name}`. As a result, R cannot figure out which ",
+    "argument you want to pass {submitted} to. Check how you spelled ",
+    "`{submitted_name}`, or write out the full argument name."
   )
 }
 

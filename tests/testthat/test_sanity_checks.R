@@ -364,9 +364,9 @@ test_that("detect_mistakes detects bad argument names", {
   expect_equal(
     detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
-      this_call = user,
-      this = user[[2]],
-      this_name = names(as.list(user)[2])
+      submitted_call = user,
+      submitted = user[[2]],
+      submitted_name = names(as.list(user)[2])
     )
   )
 
@@ -375,9 +375,9 @@ test_that("detect_mistakes detects bad argument names", {
   expect_equal(
     detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
-      this_call = user,
-      this = user[[4]],
-      this_name = names(as.list(user)[4])
+      submitted_call = user,
+      submitted = user[[4]],
+      submitted_name = names(as.list(user)[4])
     )
   )
 
@@ -386,9 +386,9 @@ test_that("detect_mistakes detects bad argument names", {
   expect_equal(
     detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
-      this_call = user[[3]],
-      this = user[[3]][[2]],
-      this_name = names(as.list(user[[3]])[2])
+      submitted_call = user[[3]],
+      submitted = user[[3]][[2]],
+      submitted_name = names(as.list(user[[3]])[2])
     )
   )
 
@@ -397,9 +397,9 @@ test_that("detect_mistakes detects bad argument names", {
   expect_equal(
     detect_mistakes(user, solution, env = tricky_env),
     bad_argument_name(
-      this_call = user[[3]],
-      this = user[[2]],
-      this_name = names(as.list(user[[3]])[2])
+      submitted_call = user[[3]],
+      submitted = user[[2]],
+      submitted_name = names(as.list(user[[3]])[2])
     )
   )
 
