@@ -100,17 +100,11 @@ detect_name_problems <- function(
     }
     
     # Unmatched named arguments are surplus
-    if (length(unused) > 0) {
-      surplus_name <- rlang::names2(unused[1])
-      return(
-        surplus_argument(
-          this_call = user,
-          this = user[[surplus_name]],
-          this_name = surplus_name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
-        )
-      )
+    surplus_argument <- detect_surplus_argument(
+      user, unused, enclosing_call, enclosing_arg
+    )
+    if (!is.null(surplus_argument)) {
+      return(surplus_argument)
     }
     
     
@@ -223,6 +217,23 @@ detect_bad_argument_names <- function(
         submitted_call = user,
         submitted = user[[bad_name]],
         submitted_name = bad_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+}
+
+detect_surplus_argument <- function(
+  user, unused, enclosing_call, enclosing_arg
+) {
+  if (length(unused) > 0) {
+    surplus_name <- rlang::names2(unused[1])
+    return(
+      surplus_argument(
+        this_call = user,
+        this = user[[surplus_name]],
+        this_name = surplus_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )
