@@ -112,24 +112,15 @@ detect_name_problems <- function(
       matched_user_names <- rlang::names2(well_matched)
       
       if ( !allow_partial_matching ) {
-        ## where does partial matching occur ?
-        where_pmatches <- function(user_name) {
-          which(startsWith(remaining_solution_names, user_name))
-        }
-        
-        matches <- vapply(remaining_user_names, where_pmatches, 1)
-        matched_solution_name <- remaining_solution_names[matches]
-        
-        return(
-          pmatches_argument_name(
-            this_call = user,
-            this = unname(as.list(user)[matched_user_names]),
-            this_name = matched_user_names,
-            correct_name = matched_solution_name,
-            enclosing_call = enclosing_call,
-            enclosing_arg = enclosing_arg
-          )
+        pmatches_argument_name <- detect_pmatches_argument_name(
+          user,
+          remaining_user_names, remaining_solution_names,
+          matched_user_names, matched_solution_names,
+          enclosing_call, enclosing_arg
         )
+        if (!is.null(pmatches_argument_name)) {
+          return(pmatches_argument_name)
+        }
       }
       
       # Remove partially matched arguments from further consideration
@@ -239,4 +230,30 @@ detect_surplus_argument <- function(
       )
     )
   }
+}
+
+detect_pmatches_argument_name <- function(
+  user,
+  remaining_user_names, remaining_solution_names,
+  matched_user_names, matched_solution_names,
+  enclosing_call, enclosing_arg
+) {
+  ## where does partial matching occur ?
+  where_pmatches <- function(user_name) {
+    which(startsWith(remaining_solution_names, user_name))
+  }
+  
+  matches <- vapply(remaining_user_names, where_pmatches, 1)
+  matched_solution_name <- remaining_solution_names[matches]
+  
+  return(
+    pmatches_argument_name(
+      this_call = user,
+      this = unname(as.list(user)[matched_user_names]),
+      this_name = matched_user_names,
+      correct_name = matched_solution_name,
+      enclosing_call = enclosing_call,
+      enclosing_arg = enclosing_arg
+    )
+  )
 }
