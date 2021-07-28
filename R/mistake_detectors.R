@@ -300,3 +300,21 @@ detect_missing_argument <- function(
     )
   }
 }
+
+detect_surplus_dots_argument <- function(
+  user, user_names, solution_names, enclosing_call, enclosing_arg
+) {
+  unmatched_user_names <- user_names[!(user_names %in% solution_names)]
+  if (length(unmatched_user_names) > 0) {
+    surplus_name <- unmatched_user_names[1]
+    return(
+      surplus_argument(
+        submitted_call = user,
+        submitted = user[[surplus_name]],
+        submitted_name = surplus_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+}

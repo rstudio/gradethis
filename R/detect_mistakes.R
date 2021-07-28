@@ -118,19 +118,11 @@ detect_mistakes <- function(user,
   #    named arguments can only be being passed to ... and we should not match by
   #    position a named argument that is passed to ... with an unamed argument
   #    passed to ...
-
-  unmatched_user_names <- user_names[!(user_names %in% solution_names)]
-  if (length(unmatched_user_names) > 0) {
-    surplus_name <- unmatched_user_names[1]
-    return(
-      surplus_argument(
-        submitted_call = user,
-        submitted = user[[surplus_name]],
-        submitted_name = surplus_name,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
-      )
-    )
+  surplus_dots_argument <- detect_surplus_dots_argument(
+    user, user_names, solution_names, enclosing_call, enclosing_arg
+  )
+  if (!is.null(surplus_dots_argument)) {
+    return(surplus_dots_argument)
   }
 
   # 7. Check that every named argument in the solution matches every
