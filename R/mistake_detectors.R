@@ -135,22 +135,14 @@ detect_name_problems <- function(
     
   }
   
-  # Check for unnamed, unused arguments
-  # Any further matching will now be by position not name
-  n_remaining_user <- length(user_args)
-  n_remaining_solution <- length(solution_args)
-  if (n_remaining_user > n_remaining_solution) {
-    i <- n_remaining_solution + 1
-    return(
-      surplus_argument(
-        submitted_call = user,
-        submitted = user_args[[i]],
-        submitted_name = rlang::names2(user_args[i]),
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
-      )
-    )
+  unnamed_surplus_argument <- detect_unnamed_surplus_argument(
+    user, user_args, solution_args, enclosing_call, enclosing_arg
+  )
+  if (!is.null(unnamed_surplus_argument)) {
+    return(unnamed_surplus_argument)
   }
+  
+  invisible()
 }
 
 detect_duplicate_names <- function(user, user_names, solution_names, enclosing_call, enclosing_arg) {
@@ -256,4 +248,25 @@ detect_pmatches_argument_name <- function(
       enclosing_arg = enclosing_arg
     )
   )
+}
+
+detect_unnamed_surplus_argument <- function(
+  user, user_args, solution_args, enclosing_call, enclosing_arg
+) {
+  # Check for unnamed, unused arguments
+  # Any further matching will now be by position not name
+  n_remaining_user <- length(user_args)
+  n_remaining_solution <- length(solution_args)
+  if (n_remaining_user > n_remaining_solution) {
+    i <- n_remaining_solution + 1
+    return(
+      surplus_argument(
+        submitted_call = user,
+        submitted = user_args[[i]],
+        submitted_name = rlang::names2(user_args[i]),
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
 }
