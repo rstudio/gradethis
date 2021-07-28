@@ -100,31 +100,11 @@ detect_mistakes <- function(user,
   #    The outcome of this order is that when a user writes na = TRUE, gradethis
   #    will tell them that it expected an na.rm argument, not that na is a surplus
   #    argument.
-
-  explicit_user <- suppressWarnings(call_standardise_formals(
-    unpipe_all(submitted),
-    env = env,
-    include_defaults = FALSE
-  ))
-  explicit_solution <- call_standardise_formals(
-    unpipe_all(solution_original),
-    env = env,
-    include_defaults = FALSE
+  missing_argument <- detect_missing_argument(
+    submitted, solution_original, env, enclosing_call, enclosing_arg
   )
-  explicit_user_names <- real_names(explicit_user)
-  explicit_solution_names <-  real_names(explicit_solution)
-  missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
-
-  if (length(missing_args) > 0) {
-    missing_name <- missing_args[1]
-    return(
-      missing_argument(
-        this_call = explicit_solution,
-        that_name = missing_name,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
-      )
-    )
+  if (!is.null(missing_argument)) {
+    return(missing_argument)
   }
 
   # It is now safe to call call_standardise_formals on student code

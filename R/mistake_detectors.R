@@ -270,3 +270,33 @@ detect_unnamed_surplus_argument <- function(
     )
   }
 }
+
+detect_missing_argument <- function(
+  submitted, solution_original, env, enclosing_call, enclosing_arg
+) {
+  explicit_user <- suppressWarnings(call_standardise_formals(
+    unpipe_all(submitted),
+    env = env,
+    include_defaults = FALSE
+  ))
+  explicit_solution <- call_standardise_formals(
+    unpipe_all(solution_original),
+    env = env,
+    include_defaults = FALSE
+  )
+  explicit_user_names <- real_names(explicit_user)
+  explicit_solution_names <-  real_names(explicit_solution)
+  missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
+  
+  if (length(missing_args) > 0) {
+    missing_name <- missing_args[1]
+    return(
+      missing_argument(
+        this_call = explicit_solution,
+        that_name = missing_name,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg
+      )
+    )
+  }
+}
