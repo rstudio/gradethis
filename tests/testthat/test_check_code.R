@@ -52,8 +52,8 @@ test_that("Spots differences in calls", {
     c, a,
     is_correct = FALSE,
     msg = missing_argument(
-      this_call = quote(vapply()),
-      that_name = "na.rm"
+      submitted_call = quote(vapply()),
+      solution_name = "na.rm"
     )
   )
 })

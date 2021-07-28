@@ -101,8 +101,8 @@ duplicate_name <- function(submitted_call,
 
 # WHAT TO DO IF THE MISSING ARGUMENT DOESN"T HAVE A NAME IN THE SOLUTION?
 # missing argument
-missing_argument <- function(this_call,
-                             that_name = NULL,
+missing_argument <- function(submitted_call,
+                             solution_name = NULL,
                              enclosing_call = NULL,
                              enclosing_arg = NULL) {
 
@@ -113,29 +113,29 @@ missing_argument <- function(this_call,
   # "as one of its arguments. You may have referred to it ",
   # "in a different way, or left out an important argument name."
 
-  # "{intro}Your call to {this_call} should include {that_name} ",
+  # "{intro}Your call to {submitted_call} should include {solution_name} ",
   # "as one of its arguments. You may have referred to it ",
   # "in a different way, or left out an important argument name."
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
   your_char <- ifelse(intro == "", "Y", "y")
 
-  this_call <- prep(this_call)
-  that_name <- prep(that_name)
+  submitted_call <- prep(submitted_call)
+  solution_name <- prep(solution_name)
 
-  if (grepl("\\(\\)", that_name)) {
-    that_name <- paste0("an argument, possibly unnamed, that calls ", that_name, ".")
+  if (grepl("\\(\\)", solution_name)) {
+    solution_name <- paste0("an argument, possibly unnamed, that calls ", solution_name, ".")
   } else {
-    that_name <- paste(that_name, "as one of its arguments.")
+    solution_name <- paste(solution_name, "as one of its arguments.")
   }
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      that_name = that_name
+      submitted_call = submitted_call,
+      solution_name = solution_name
     ),
-    "{intro}{your_char}our call to {this_call} should include {that_name} ",
+    "{intro}{your_char}our call to {submitted_call} should include {solution_name} ",
     "You may have misspelled an argument name, ",
     "or left out an important argument."
   )

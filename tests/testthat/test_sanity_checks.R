@@ -508,8 +508,8 @@ test_that("detect_mistakes detects missing argument", {
   expect_equal(
     detect_mistakes(user, solution),
     missing_argument(
-      this_call = user,
-      that_name = names(as.list(solution)[3])
+      submitted_call = user,
+      solution_name = names(as.list(solution)[3])
     )
   )
 
@@ -518,8 +518,8 @@ test_that("detect_mistakes detects missing argument", {
   expect_equal(
     detect_mistakes(user, solution),
     missing_argument(
-      this_call = user[[2]],
-      that_name = names(as.list(solution[[2]])[3]),
+      submitted_call = user[[2]],
+      solution_name = names(as.list(solution[[2]])[3]),
       enclosing_call = user
     )
   )
@@ -529,8 +529,8 @@ test_that("detect_mistakes detects missing argument", {
   expect_equal(
     detect_mistakes(user, solution),
     missing_argument(
-      this_call = user,
-      that_name = names(as.list(solution)[2])
+      submitted_call = user,
+      solution_name = names(as.list(solution)[2])
     )
   )
 
@@ -539,8 +539,8 @@ test_that("detect_mistakes detects missing argument", {
   expect_equal(
     detect_mistakes(user, solution, env = testing_env),
     missing_argument(
-      this_call = user,
-      that_name = names(as.list(solution)[3])
+      submitted_call = user,
+      solution_name = names(as.list(solution)[3])
     )
   )
 
@@ -549,8 +549,8 @@ test_that("detect_mistakes detects missing argument", {
   expect_equal(
     detect_mistakes(user, solution, env = testing_env),
     missing_argument(
-      this_call = user[[3]],
-      that_name = names(as.list(solution)[3])
+      submitted_call = user[[3]],
+      solution_name = names(as.list(solution)[3])
     )
   )
 
@@ -559,8 +559,8 @@ test_that("detect_mistakes detects missing argument", {
   expect_equal(
     detect_mistakes(user, solution, env = testing_env),
     missing_argument(
-      this_call = user[[2]][[3]],
-      that_name = names(as.list(solution[[2]])[3]),
+      submitted_call = user[[2]][[3]],
+      solution_name = names(as.list(solution[[2]])[3]),
       enclosing_call = user
     )
   )

@@ -187,8 +187,8 @@ detect_mistakes <- function(user,
 
       return(
         missing_argument(
-          this_call = solution,
-          that_name = name,
+          submitted_call = solution,
+          solution_name = name,
           enclosing_call = enclosing_call,
           enclosing_arg = enclosing_arg
         )

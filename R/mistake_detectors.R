@@ -292,8 +292,8 @@ detect_missing_argument <- function(
     missing_name <- missing_args[1]
     return(
       missing_argument(
-        this_call = explicit_solution,
-        that_name = missing_name,
+        submitted_call = explicit_solution,
+        solution_name = missing_name,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg
       )

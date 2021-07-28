@@ -82,7 +82,7 @@ test_that("detect_mistakes detects missing code", {
 
   expect_equal(
     detect_mistakes(user, solution),
-    missing_argument(this_call = user, that_name = "x")
+    missing_argument(submitted_call = user, solution_name = "x")
   )
 
   # internal function
@@ -732,8 +732,8 @@ test_that("detect_mistakes handles weird cases", {
   solution <- quote(sum(1, 2, 3))
   expect_equal(
     detect_mistakes(user, solution),
-    missing_argument(this_call =  quote(sum()),
-                     that_name = quote(3))
+    missing_argument(submitted_call =  quote(sum()),
+                     solution_name = quote(3))
   )
 
 })
