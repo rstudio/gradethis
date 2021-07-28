@@ -186,16 +186,16 @@ surplus_argument <- function(submitted_call,
 
 
 # partial matching
-pmatches_argument_name <- function(this_call,
-                                   this,
-                                   this_name = NULL,
-                                   correct_name = NULL,
+pmatches_argument_name <- function(submitted_call,
+                                   submitted,
+                                   submitted_name = NULL,
+                                   solution_name = NULL,
                                    enclosing_call = NULL,
                                    enclosing_arg = NULL) {
 
 
-  # "{intro}I did not expect your call to {this_call} to ",
-  # "include {this}. You ",
+  # "{intro}I did not expect your call to {submitted_call} to ",
+  # "include {submitted}. You ",
   # "may have included an unnecessary argument, or you ",
   # "may have left out or misspelled an important ",
   # "argument name."
@@ -203,32 +203,32 @@ pmatches_argument_name <- function(this_call,
 
 
   # "This code seems correct, but please write with full parameter(s) names."
-  # "You wrote {this} please rewrite with {correct_name} ."
-  # "You wrote {this} please rewrite with {correct_name} ."
+  # "You wrote {submitted} please rewrite with {solution_name} ."
+  # "You wrote {submitted} please rewrite with {solution_name} ."
 
 
-  this_call <- prep(this_call)
-  this <- lapply(this, prep) #yes devrait etre quoted
-  this_user <- this
+  submitted_call <- prep(submitted_call)
+  submitted <- lapply(submitted, prep) #yes devrait etre quoted
+  submitted_user <- submitted
 
-  if (!is.null(this_name)) {
-    this_name <- paste(this_name, "= ")
-    this_user <- purrr::map2(this_name, this, md_code_prepend)
+  if (!is.null(submitted_name)) {
+    submitted_name <- paste(submitted_name, "= ")
+    submitted_user <- purrr::map2(submitted_name, submitted, md_code_prepend)
   }
 
-  if (!is.null(correct_name)) {
-    correct_name <- paste(correct_name, "= ")
-    correct_name <- purrr::map2(correct_name, this, md_code_prepend)
+  if (!is.null(solution_name)) {
+    solution_name <- paste(solution_name, "= ")
+    solution_name <- purrr::map2(solution_name, submitted, md_code_prepend)
   }
 
   intro  <- "This code seems correct, but please write using full argument(s) names:\n\n"
   msg <- glue::glue_data(
     list(
-      this = this_user,
-      correct_name = correct_name,
-      this_call = this_call
+      submitted = submitted_user,
+      solution_name = solution_name,
+      submitted_call = submitted_call
     ),
-    "- Where you wrote {this}, please use the full formal name {correct_name}."
+    "- Where you wrote {submitted}, please use the full formal name {solution_name}."
   )
 
   glue::glue_data(
