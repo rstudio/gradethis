@@ -181,10 +181,10 @@ gradethis_setup <- function(
 gradethis_default_options <- list(
   
   # Default message for pass(message)
-  pass = "{random_praise()} Correct!",
+  pass = "{gradethis::random_praise()} Correct!",
   pass.praise = FALSE,
   # Default message for fail(message)
-  fail = "Incorrect.{maybe_code_feedback()} {random_encouragement()}",
+  fail = "Incorrect.{gradethis::maybe_code_feedback()} {gradethis::random_encouragement()}",
   fail.hint = FALSE,
   fail.encourage = FALSE,
   
@@ -196,7 +196,7 @@ gradethis_default_options <- list(
   # Default message for grade_this_code(correct)
   code_correct = NULL,
   # Default message for grade_this_code(incorrect)
-  code_incorrect = "{pipe_warning()}{code_feedback()} {random_encouragement()}",
+  code_incorrect = "{gradethis::pipe_warning()}{gradethis::code_feedback()} {gradethis::random_encouragement()}",
   # Default message used for pipe_warning()
   pipe_warning = paste0(
     "I see that you are using pipe operators (e.g. %>%), ",
@@ -215,12 +215,12 @@ gradethis_default_options <- list(
 
 gradethis_legacy_options <- list(
   ### legacy ###
-  glue_correct = "{random_praise()} {.message} {.correct}",
-  glue_incorrect = "{pipe_warning()}{.message} {.incorrect} {random_encouragement()}",
+  glue_correct = "{gradethis::random_praise()} {.message} {.correct}",
+  glue_incorrect = "{gradethis::pipe_warning()}{.message} {.incorrect} {gradethis::random_encouragement()}",
   
   
-  glue_correct_test = "{.num_correct}/{.num_total} correct! {random_praise()}",
-  glue_incorrect_test = "{.num_correct}/{.num_total} correct! {random_encouragement()}"
+  glue_correct_test = "{.num_correct}/{.num_total} correct! {gradethis::random_praise()}",
+  glue_incorrect_test = "{.num_correct}/{.num_total} correct! {gradethis::random_encouragement()}"
 )
 
 names(gradethis_legacy_options) <- paste0(
