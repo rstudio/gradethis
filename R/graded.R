@@ -700,12 +700,14 @@ assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
   type <- condition_type(x)
   if (!identical(type, "value")) {
     from <- if (!is.null(from)) paste0(from, "() ") else ""
-    warning(
-      from, "does not accept functions or formulas when used inside grade_this().",
-      immediate. = TRUE,
-      call. = !is.null(from)
+    message <- paste0(from, "does not accept functions or formulas when used inside grade_this().")
+    warning(message, immediate. = TRUE, call. = !is.null(from))
+    graded(
+      correct = logical(), 
+      message = feedback_grading_problem()$message, 
+      type = "warning", 
+      error = list(message = message)
     )
-    graded(logical(), feedback_grading_problem()$message, type = "warning")
   }
 }
 
@@ -735,17 +737,21 @@ assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
   
   label <- env$.label
   label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
-  message(
+  message <- paste0(
     label,
     "`", caller, "()`: expected `", obj_name, "` to be found",
     " in its calling environment or the environment specified by `env`.",
     " Did you call `", caller, "()`",
     " inside `grade_this()` or `grade_this_code()`?"
   )
+  message(message)
   
   if (isTRUE(throw_grade)) {
     # Signal problem with grading code
-    signal_grade(graded(FALSE, feedback_grading_problem()$message), parent.frame())
+    signal_grade(
+      graded(FALSE, feedback_grading_problem()$message, error = list(message)), 
+      parent.frame()
+    )
   }
 }
 

@@ -203,7 +203,8 @@ expect_exercise_checker <- function(
   is_correct,
   msg,
   msg_type = NULL,
-  msg_fixed = TRUE
+  msg_fixed = TRUE,
+  error_message = NULL
 ) {
   envir_prep <- new.env(parent = .GlobalEnv)
   eval(parse(text = prep_code), envir = envir_prep)
@@ -225,7 +226,7 @@ expect_exercise_checker <- function(
     last_value = last_value
   )
 
-  checkmate::expect_names(names(feedback), identical.to = c("message", "correct", "type", "location"))
+  checkmate::expect_names(names(feedback), must.include = c("message", "correct", "type", "location"))
   checkmate::expect_string(feedback$message, null.ok = TRUE)
   checkmate::expect_logical(feedback$correct, null.ok = FALSE, max.len = 1)
   checkmate::expect_string(feedback$type, null.ok = FALSE)
@@ -238,6 +239,10 @@ expect_exercise_checker <- function(
   
   msg <- message_md(msg)
   expect_match(feedback$message, msg, fixed = msg_fixed)
+  
+  if (!is.null(error_message)) {
+    expect_match(feedback$error$message, error_message)
+  }
   
   invisible(feedback)
 }
