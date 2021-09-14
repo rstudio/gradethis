@@ -34,9 +34,16 @@ capture_errors <- function(expr, on_error = NULL) {
   if (is.null(on_error)) {
     on_error <- function(e, that_env) {
       # must wrap in ignore statement to retrieve fail object
-      ret <- capture_graded({
-        fail(conditionMessage(e))
-      })
+      ret <- 
+        if (isTRUE(getOption("gradethis.fail_on_error", TRUE))) {
+          capture_graded({
+            fail(conditionMessage(e))
+          })
+        } else {
+          capture_graded({
+            grade_grading_problem(error = e)
+          })
+        }
       rlang::return_from(that_env, ret)
     }
   }

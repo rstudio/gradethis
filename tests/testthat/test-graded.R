@@ -519,3 +519,43 @@ test_that("encourage argument works with failing grades", {
     )
   )
 })
+
+test_that("gradethis.fail_on_error = FALSE returns internal problems on error", {
+  # typically, errors are converted into failing grades
+  expect_graded(
+    grade_this(stop("boom"))(mock_this_exercise("1 + 1")),
+    is_correct = FALSE,
+    msg = "boom"
+  )
+  
+  # with options(gradethis.fail_on_error = FALSE), errors become internal problem grades
+  with_options(list(gradethis.fail_on_error = FALSE, warn = -1), {
+    grade_stop <- 
+      expect_graded(
+        grade_this(stop("boom"))(mock_this_exercise("1 + 1")),
+        is_correct = logical(),
+        msg = "problem occurred"
+      )
+    expect_equal(grade_stop$error$message, "boom")
+    
+    grade_invalid <- 
+      expect_graded(
+        grade_this(runif("boom"))(mock_this_exercise("1 + 1")),
+        is_correct = logical(),
+        msg = "problem occurred"
+      )
+    err_invalid <- tryCatch(runif("boom"), error = identity)
+    expect_equal(grade_invalid$error$message, err_invalid$message)
+    expect_equal(grade_invalid$error$call, deparse(err_invalid$call))
+    
+    grade_syntax <- 
+      expect_graded(
+        grade_this(eval(parse(text = "runif(")))(mock_this_exercise("1 + 1")),
+        is_correct = logical(),
+        msg = "problem occurred"
+      )
+    err_syntax <- tryCatch(eval(parse(text = "runif(")), error = identity)
+    expect_equal(grade_syntax$error$message, err_syntax$message)
+    expect_equal(grade_syntax$error$call, deparse(err_syntax$call))
+  })
+})

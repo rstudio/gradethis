@@ -272,3 +272,4 @@ test_that("pass_if() and fail_if() work in grade_this()", {
   )
   expect_match(err$error$message, "does not accept functions or formulas")
 })
+
