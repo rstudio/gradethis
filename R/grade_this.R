@@ -94,11 +94,13 @@
 #' grader(mock_this_exercise(mean(Loblolly$height)))
 #' 
 #' @param expr The grade-checking expression to be evaluated. This expression
-#'   must either signal a grade via [pass()] or [fail()] functions or throw an
-#'   error (via \pkg{testthat} or [stop()]). By default, errors are converted to
-#'   [fail()] calls and will use the error message as the feedback `message`.
-#'   You can change this behavior by setting `fail_on_error = FALSE` in
-#'   [gradethis_setup()].
+#'   must either signal a grade via [pass()] or [fail()] functions or their 
+#'   sibling functions. 
+#'   
+#'   By default, errors in this expression are converted to "internal problem"
+#'   grades that mask the error for the user. If your grading logic relies on
+#'   unit-test-styled functions, such as those from \pkg{testthat}, you can use
+#'   [fail_if_error()] to convert errors into [fail()] grades.
 #' @param maybe_code_feedback Should `maybe_code_feedback()` provide code
 #'   feedback when used in a [graded()] message? The default value can be set
 #'   with [gradethis_setup()].

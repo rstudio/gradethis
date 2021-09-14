@@ -16,7 +16,6 @@ gradethis_setup(
   pass.praise = NULL,
   fail.hint = NULL,
   fail.encourage = NULL,
-  fail_on_error = NULL,
   pipe_warning = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
@@ -82,16 +81,6 @@ message. Sets the \code{gradethis.fail.hint} option.}
 encouraging phrase should be automatically appended to any \code{\link[=fail]{fail()}} or
 \code{\link[=fail_if_equal]{fail_if_equal()}} messages. Sets the \code{gradethis.fail.encourage} option.}
 
-\item{fail_on_error}{Logical \code{TRUE} or \code{FALSE} to choose whether an error in
-\code{\link[=grade_this]{grade_this()}} is converted into a \code{\link[=fail]{fail()}} grade (default) or returns a
-\emph{problem occurred} message. Sets the \code{gradethis.fail_on_error} option.
-
-The default behavior is useful when you use assertions like those from the
-\pkg{testthat} package to check the submitted code. If you know that your
-grading code always explicitly returns a \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} grade and any
-errors are author errors, set this option to \code{FALSE} to instead return an
-internal error.}
-
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
 \code{gradethis.pipe_warning} option.}
 
@@ -150,7 +139,6 @@ when gradethis is loaded are shown below.\tabular{ll}{
    \code{gradethis.fail} \tab \code{"Incorrect.{gradethis::maybe_code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.fail.hint} \tab \code{FALSE} \cr
    \code{gradethis.fail.encourage} \tab \code{FALSE} \cr
-   \code{gradethis.fail_on_error} \tab \code{TRUE} \cr
    \code{gradethis.maybe_code_feedback} \tab \code{TRUE} \cr
    \code{gradethis.maybe_code_feedback.before} \tab \code{" "} \cr
    \code{gradethis.maybe_code_feedback.after} \tab \code{NULL} \cr
