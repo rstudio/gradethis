@@ -520,27 +520,22 @@ test_that("encourage argument works with failing grades", {
   )
 })
 
-test_that("gradethis.fail_on_error = FALSE returns internal problems on error", {
-  # typically, errors are converted into failing grades
-  expect_graded(
-    grade_this(stop("boom"))(mock_this_exercise("1 + 1")),
-    is_correct = FALSE,
-    msg = "boom"
-  )
-  
-  # with options(gradethis.fail_on_error = FALSE), errors become internal problem grades
-  with_options(list(gradethis.fail_on_error = FALSE, warn = -1), {
-    grade_stop <- 
-      expect_graded(
-        grade_this(stop("boom"))(mock_this_exercise("1 + 1")),
-        is_correct = logical(),
-        msg = "problem occurred"
-      )
-    expect_equal(grade_stop$error$message, "boom")
+test_that("errors in grade_this() are internal errors by default", {
+  ex <- mock_this_exercise("'4'")
     
+  # by default, errors are now turned into internal errors
+  grade <- expect_graded(
+    grade_this(stop("boom"))(ex),
+    is_correct = logical(),
+    msg = "problem occurred"
+  )
+  expect_equal(grade$error$message, "boom")
+  
+  # without fail_if_error() errors become internal problem grades
+  withr::with_options(list(warn = -1), {
     grade_invalid <- 
       expect_graded(
-        grade_this(runif("boom"))(mock_this_exercise("1 + 1")),
+        grade_this(runif("boom"))(ex),
         is_correct = logical(),
         msg = "problem occurred"
       )
@@ -550,7 +545,7 @@ test_that("gradethis.fail_on_error = FALSE returns internal problems on error", 
     
     grade_syntax <- 
       expect_graded(
-        grade_this(eval(parse(text = "runif(")))(mock_this_exercise("1 + 1")),
+        grade_this(eval(parse(text = "runif(")))(ex),
         is_correct = logical(),
         msg = "problem occurred"
       )
@@ -558,4 +553,45 @@ test_that("gradethis.fail_on_error = FALSE returns internal problems on error", 
     expect_equal(grade_syntax$error$message, err_syntax$message)
     expect_equal(grade_syntax$error$call, deparse(err_syntax$call))
   })
+})
+
+test_that("errors in fail_if_error() become fail() grades", {
+  ex <- mock_this_exercise("'4'")
+  
+  expect_graded(
+    grade_this({
+      fail_if_error(stop("boom"))
+    })(ex),
+    is_correct = FALSE,
+    msg = "boom"
+  )
+  
+  expect_graded(
+    grade_this({
+      fail_if_error({
+        expect_length(.result, 1)
+        expect_true(is.numeric(.result))
+        expect_equal(.result, 4)
+      })
+      pass("Good job!")
+    })(ex),
+    is_correct = FALSE,
+    msg = "is not TRUE"
+  )
+
+  expect_graded(
+    grade_this({
+      fail_if_error(
+        message = "Your result isn't a single numeric value.",
+        {
+          testthat::expect_length(.result, 1)
+          testthat::expect_true(is.numeric(.result))
+          testthat::expect_equal(.result, 4)
+        }
+      )
+      pass("Good job!")
+    })(ex),
+    is_correct = FALSE,
+    msg = "Your result isn't a single numeric value."
+  )
 })

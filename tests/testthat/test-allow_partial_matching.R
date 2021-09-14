@@ -328,16 +328,16 @@ test_that("grade_this_code() - allow_partial_matching works with multiple matche
     expect_this_code(
       user_code = "ff(abc = 1)",
       solution_code = "ff(ab = 1, abc = 1)",
-      correct = '{ .message } { .correct }',
-      incorrect = '{ .message } { .incorrect }',
+      correct = "correct",
+      incorrect = "{.message}",
       allow_partial_matching = FALSE,
       is_correct = FALSE
     ),
     expect_this_code(
       user_code = "ff(abc = 1)",
       solution_code = "ff(ab = 1, abc = 1)",
-      correct = '{ .message } { .correct }',
-      incorrect = '{ .message } { .incorrect }',
+      correct = "correct",
+      incorrect = "{.message}",
       allow_partial_matching = TRUE,
       is_correct = FALSE
     )

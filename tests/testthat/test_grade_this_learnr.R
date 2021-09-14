@@ -222,7 +222,7 @@ test_that("a grade is given", {
     msg = "boom",
     user_code = "1",
     solution_code = "1",
-    check_code = "function(...) stop('boom')"
+    check_code = "function(...) fail_if_error(stop('boom'))"
   )
 })
 
