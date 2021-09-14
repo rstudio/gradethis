@@ -532,7 +532,7 @@ test_that("errors in grade_this() are internal errors by default", {
   expect_equal(grade$error$message, "boom")
   
   # without fail_if_error() errors become internal problem grades
-  withr::with_options(list(warn = -1), {
+  with_options(list(warn = -1), {
     grade_invalid <- 
       expect_graded(
         grade_this(runif("boom"))(ex),
