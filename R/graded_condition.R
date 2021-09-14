@@ -31,22 +31,7 @@ conditionMessage.gradethis_graded <- function(c) {
 
 # Turn errors into `fail()`ures
 capture_errors <- function(expr, on_error = NULL) {
-  if (is.null(on_error)) {
-    on_error <- function(e, that_env) {
-      # must wrap in ignore statement to retrieve fail object
-      ret <- 
-        if (isTRUE(getOption("gradethis.fail_on_error", TRUE))) {
-          capture_graded({
-            fail(conditionMessage(e))
-          })
-        } else {
-          capture_graded({
-            grade_grading_problem(error = e)
-          })
-        }
-      rlang::return_from(that_env, ret)
-    }
-  }
+  on_error <- on_error %||% grade_this_default_error_handler
   stopifnot(is.function(on_error))
 
   this_env <- rlang::current_env()
@@ -56,6 +41,20 @@ capture_errors <- function(expr, on_error = NULL) {
     },
     expr
   )
+}
+
+grade_this_default_error_handler <- function(e, that_env) {
+  ret <- 
+    if (isTRUE(getOption("gradethis.fail_on_error", TRUE))) {
+      capture_graded({
+        fail(conditionMessage(e))
+      })
+    } else {
+      capture_graded({
+        grade_grading_problem(error = e)
+      })
+    }
+  rlang::return_from(that_env, ret)
 }
 
 ## This function solves the situation of trying to execute a "single line of code" code block
