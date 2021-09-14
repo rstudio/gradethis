@@ -68,6 +68,15 @@
 #' @param fail.encourage Logical `TRUE` or `FALSE` to determine whether an
 #'   encouraging phrase should be automatically appended to any [fail()] or
 #'   [fail_if_equal()] messages. Sets the `gradethis.fail.encourage` option.
+#' @param fail_on_error Logical `TRUE` or `FALSE` to choose whether an error in
+#'   [grade_this()] is converted into a [fail()] grade (default) or returns a
+#'   _problem occurred_ message. Sets the `gradethis.fail_on_error` option.
+#'   
+#'   The default behavior is useful when you use assertions like those from the
+#'   \pkg{testthat} package to check the submitted code. If you know that your
+#'   grading code always explicitly returns a [pass()] or [fail()] grade and any
+#'   errors are author errors, set this option to `FALSE` to instead return an
+#'   internal error.
 #' @param allow_partial_matching Logical `TRUE` or `FALSE` to determine whether
 #'   partial matching is allowed in `grade_this_code()`. Sets the
 #'   `gradethis.allow_partial_matching` option.
@@ -97,6 +106,7 @@ gradethis_setup <- function(
   pass.praise = NULL,
   fail.hint = NULL,
   fail.encourage = NULL,
+  fail_on_error = NULL,
   pipe_warning = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
@@ -111,7 +121,6 @@ gradethis_setup <- function(
     # default option values ahead of the current gradethis_setup() call
     require(gradethis)
   }
-  
   
   set_opts <- as.list(match.call()[-1])
   set_opts <- lapply(set_opts, eval, envir = new.env())
@@ -187,6 +196,9 @@ gradethis_default_options <- list(
   fail = "Incorrect.{gradethis::maybe_code_feedback()} {gradethis::random_encouragement()}",
   fail.hint = FALSE,
   fail.encourage = FALSE,
+  
+  # Errors in `grade_this()` are converted to `fail()` by default
+  fail_on_error = TRUE,
   
   # Default value for grade_this(maybe_code_feedback). Plays with `maybe_code_feedback()`
   maybe_code_feedback = TRUE,

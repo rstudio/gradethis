@@ -13,8 +13,10 @@ grade_this(
 \arguments{
 \item{expr}{The grade-checking expression to be evaluated. This expression
 must either signal a grade via \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} functions or throw an
-error (via \pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to
-\code{\link[=fail]{fail()}} calls and will use the error message as the feedback \code{message}.}
+error (via \pkg{testthat} or \code{\link[=stop]{stop()}}). By default, errors are converted to
+\code{\link[=fail]{fail()}} calls and will use the error message as the feedback \code{message}.
+You can change this behavior by setting \code{fail_on_error = FALSE} in
+\code{\link[=gradethis_setup]{gradethis_setup()}}.}
 
 \item{...}{Ignored}
 

@@ -16,6 +16,7 @@ gradethis_setup(
   pass.praise = NULL,
   fail.hint = NULL,
   fail.encourage = NULL,
+  fail_on_error = NULL,
   pipe_warning = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
@@ -38,6 +39,10 @@ gradethis_setup(
 see some default output (defaults to \code{FALSE}).}
     \item{\code{exercise.lines}}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
+    \item{\code{exercise.blanks}}{A regular expression to be used to identify blanks in
+submitted code that the user should fill in. If \code{TRUE} (default), blanks
+are three or more underscores in a row. If \code{FALSE}, blank checking is not
+performed.}
     \item{\code{exercise.completion}}{Use code completion in exercise editors.}
     \item{\code{exercise.diagnostics}}{Show diagnostics in exercise editors.}
     \item{\code{exercise.startover}}{Show "Start Over" button on exercise.}
@@ -76,6 +81,16 @@ message. Sets the \code{gradethis.fail.hint} option.}
 \item{fail.encourage}{Logical \code{TRUE} or \code{FALSE} to determine whether an
 encouraging phrase should be automatically appended to any \code{\link[=fail]{fail()}} or
 \code{\link[=fail_if_equal]{fail_if_equal()}} messages. Sets the \code{gradethis.fail.encourage} option.}
+
+\item{fail_on_error}{Logical \code{TRUE} or \code{FALSE} to choose whether an error in
+\code{\link[=grade_this]{grade_this()}} is converted into a \code{\link[=fail]{fail()}} grade (default) or returns a
+\emph{problem occurred} message. Sets the \code{gradethis.fail_on_error} option.
+
+The default behavior is useful when you use assertions like those from the
+\pkg{testthat} package to check the submitted code. If you know that your
+grading code always explicitly returns a \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} grade and any
+errors are author errors, set this option to \code{FALSE} to instead return an
+internal error.}
 
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
 \code{gradethis.pipe_warning} option.}
@@ -130,16 +145,17 @@ These global package options can be set by \code{\link[=gradethis_setup]{gradeth
 directly setting the global option. The default values set for each option
 when gradethis is loaded are shown below.\tabular{ll}{
    Option \tab Default Value \cr
-   \code{gradethis.pass} \tab \code{"{random_praise()} Correct!"} \cr
+   \code{gradethis.pass} \tab \code{"{gradethis::random_praise()} Correct!"} \cr
    \code{gradethis.pass.praise} \tab \code{FALSE} \cr
-   \code{gradethis.fail} \tab \code{"Incorrect.{maybe_code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.fail} \tab \code{"Incorrect.{gradethis::maybe_code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.fail.hint} \tab \code{FALSE} \cr
    \code{gradethis.fail.encourage} \tab \code{FALSE} \cr
+   \code{gradethis.fail_on_error} \tab \code{TRUE} \cr
    \code{gradethis.maybe_code_feedback} \tab \code{TRUE} \cr
    \code{gradethis.maybe_code_feedback.before} \tab \code{" "} \cr
    \code{gradethis.maybe_code_feedback.after} \tab \code{NULL} \cr
    \code{gradethis.code_correct} \tab \code{NULL} \cr
-   \code{gradethis.code_incorrect} \tab \code{"{pipe_warning()}{code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.code_incorrect} \tab \code{"{gradethis::pipe_warning()}{gradethis::code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
    \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
