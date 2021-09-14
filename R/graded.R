@@ -572,6 +572,7 @@ fail_if <- function(
   }
 }
 
+
 #' Signal a failing grade if mistakes are detected in the submitted code
 #' 
 #' @description
@@ -697,6 +698,94 @@ fail_if_code_feedback <- function(
     hint = FALSE,
     encourage = encourage
   )
+}
+
+#' Fail if grading code produces an error
+#' 
+#' When grading code involves unit-style testing, you may want to use
+#' \pkg{testthat} expectation function to test the user's submitted code. In
+#' these cases, to differentiate between expected errors and internal errors
+#' indicative of issues with the grading code, \pkg{gradethis} requires that
+#' authors wrap assertion-style tests in `fail_if_error()`. This function
+#' catches any errors and converts them into [fail()] grades. It also makes the
+#' error and its message available for use in the `message` glue string as
+#' `.error` and `.error_message` respectively.
+#' 
+#' @examples
+#' # The user is asked to add 2 + 2, but they take a shortcut
+#' ex <- mock_this_exercise("'4'")
+#' 
+#' # Normally, grading code with an author error returns an internal problem grade
+#' grade_author_mistake <- grade_this({
+#'   if (identical(4)) {
+#'     pass("Great work!")
+#'   }
+#'   fail()
+#' })(ex)
+#' 
+#' # This returns a "problem occurred" grade
+#' grade_author_mistake
+#' # ...that also includes information about the error (not shown to users)
+#' grade_author_mistake$error
+#' 
+#' # But sometimes we'll want to use unit-testing helper functions where we know
+#' # that an error is indicative of a problem in the users' code
+#' grade_this({
+#'   fail_if_error({
+#'     testthat::expect_length(.result, 1)
+#'     testthat::expect_true(is.numeric(.result))
+#'     testthat::expect_equal(.result, 4)
+#'   })
+#'   pass("Good job!")
+#' })(ex)
+#' 
+#' # Note that you don't need to reveal the error message to the user
+#' grade_this({
+#'   fail_if_error(
+#'     message = "Your result isn't a single numeric value.", 
+#'     {
+#'       testthat::expect_length(.result, 1)
+#'       testthat::expect_true(is.numeric(.result))
+#'       testthat::expect_equal(.result, 4)
+#'     }
+#'   )
+#'   pass("Good job!")
+#' })(ex)
+#' 
+#' @param expr An expression to evaluate that whose errors are safe to be
+#'   converted into failing grades with [fail()].
+#' @param message A glue string containing the feedback message to be returned
+#'   to the user. Additional `.error` and `.error_message` objects are made
+#'   available for use in the message.
+#' @inheritParams fail
+#' 
+#' @return If an error occurs while evaluating `expr`, the error is returned as
+#'   a [fail()] grade. Otherwise, no value is returned.
+#' 
+#' @template graded-family
+#' @export
+fail_if_error <- function(
+  expr,
+  message = "{.error_message}",
+  ...,
+  env = parent.frame(),
+  hint = TRUE,
+  encourage = getOption("gradethis.fail.encourage", FALSE)
+) {
+  grade <- 
+    capture_errors(
+      expr, 
+      on_error = gradethis_fail_error_handler(
+        message = message,
+        env = env,
+        hint = hint,
+        encourage = encourage,
+        ...
+      )
+    )
+  if (is_graded(grade)) {
+    signal_grade(grade)
+  }
 }
 
 assert_gradethis_condition_type_is_value <- function(x, from = NULL) {

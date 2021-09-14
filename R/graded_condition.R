@@ -29,9 +29,15 @@ conditionMessage.gradethis_graded <- function(c) {
   }
 }
 
-# Turn errors into `fail()`ures
+# Capture and handle errors, by default turning them into internal problem grades.
+# Use `fail_if_error()` to convert errors to failing grades.
 capture_errors <- function(expr, on_error = NULL) {
-  on_error <- on_error %||% grade_this_default_error_handler
+  if (is.null(on_error)) {
+    on_error <- function(err, that_env) {
+      grade <- capture_graded(grade_grading_problem(error = err))
+      rlang::return_from(that_env, grade)
+    }
+  }
   stopifnot(is.function(on_error))
 
   this_env <- rlang::current_env()
@@ -43,18 +49,17 @@ capture_errors <- function(expr, on_error = NULL) {
   )
 }
 
-grade_this_default_error_handler <- function(e, that_env) {
-  ret <- 
-    if (isTRUE(getOption("gradethis.fail_on_error", TRUE))) {
-      capture_graded({
-        fail(conditionMessage(e))
-      })
-    } else {
-      capture_graded({
-        grade_grading_problem(error = e)
-      })
-    }
-  rlang::return_from(that_env, ret)
+gradethis_fail_error_handler <- function(message, env = parent.frame(), ...) {
+  function(err, that_env) {
+    # Add condition message as `.error_message` for use in the glue string
+    # but use a child env of `env` so we don't trample anything by accident
+    env_child <- new.env(parent = env)
+    assign(".error", err, envir = env_child)
+    assign(".error_message", conditionMessage(err), envir = env_child)
+    
+    grade <- capture_graded(fail(message, ..., env = env_child, error = err))
+    rlang::return_from(that_env, grade)
+  }
 }
 
 ## This function solves the situation of trying to execute a "single line of code" code block
