@@ -7,7 +7,7 @@ test_that("pass_if_equal() finds .result and .solution automatically", {
   )
   expect_graded(
     pass1,
-    is_correct = FALSE,
+    is_correct = logical(0),
     msg = "problem occurred"
   )
   
@@ -18,7 +18,7 @@ test_that("pass_if_equal() finds .result and .solution automatically", {
   )
   expect_graded(
     pass2,
-    is_correct = FALSE,
+    is_correct = logical(0),
     msg = "problem occurred"
   )
   
@@ -46,7 +46,7 @@ test_that("fail_if_equal() finds .result", {
   )
   expect_graded(
     fail1,
-    is_correct = FALSE,
+    is_correct = logical(),
     msg = "problem occurred"
   )
   
@@ -64,34 +64,49 @@ test_that("pass_if_equal() in grade_this()", {
     fail("NO")
   })
   
-  correct <- grader(mock_this_exercise(42, 42))
-  expect_s3_class(correct, "gradethis_graded")
-  expect_match(correct$message, "YES", fixed = TRUE)
-  expect_true(correct$correct)
-  
-  incorrect <- grader(mock_this_exercise(42, 40))
-  expect_s3_class(incorrect, "gradethis_graded")
-  expect_match(incorrect$message, "NO", fixed = TRUE)
-  expect_false(incorrect$correct)
-  
-  bad <- grader(mock_this_exercise(42))
-  expect_s3_class(bad, "gradethis_graded")
-  expect_match(bad$message, "No solution is provided")
-  expect_false(bad$correct)
-  
-  missing_result <- testthat::expect_message(
-    grader(list(.user_code = "12")), ".result", fixed = TRUE
+  # correct
+  expect_graded(
+    grader(mock_this_exercise(42, 42)),
+    is_correct = TRUE,
+    msg = "YES"
   )
-  expect_s3_class(missing_result, "gradethis_graded")
-  expect_match(missing_result$message, "problem occurred", fixed = TRUE)
-  expect_false(missing_result$correct)
   
-  missing_solution <- testthat::expect_message(
-    grader(list(.result = 12)), ".solution", fixed = TRUE
+  # incorrect
+  expect_graded(
+    grader(mock_this_exercise(42, 40)),
+    is_correct = FALSE,
+    msg = "NO"
   )
-  expect_s3_class(missing_solution, "gradethis_graded")
-  expect_match(missing_solution$message, "problem occurred", fixed = TRUE)
-  expect_false(missing_solution$correct)
+  
+  # bad: no solution
+  expect_graded(
+    grader(mock_this_exercise(42)),
+    is_correct = logical(),
+    msg = "No solution is provided"
+  )
+  
+  
+  # bad: no .result object
+  testthat::expect_message(
+    expect_graded(
+      grader(list(.user_code = "12")),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ), 
+    regexp = ".result", 
+    fixed = TRUE
+  )
+  
+  # bad: no .solution object
+  testthat::expect_message(
+    expect_graded(
+      grader(list(.result = "12")),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ), 
+    regexp = ".solution", 
+    fixed = TRUE
+  )
 })
 
 test_that("fail_if_equal() in grade_this()", {
@@ -100,22 +115,28 @@ test_that("fail_if_equal() in grade_this()", {
     pass("YES")
   })
   
-  correct <- grader(mock_this_exercise(42, 42))
-  expect_s3_class(correct, "gradethis_graded")
-  expect_match(correct$message, "YES", fixed = TRUE)
-  expect_true(correct$correct)
-  
-  incorrect <- grader(mock_this_exercise(40, 42))
-  expect_s3_class(incorrect, "gradethis_graded")
-  expect_match(incorrect$message, "NO", fixed = TRUE)
-  expect_false(incorrect$correct)
-  
-  missing_result <- testthat::expect_message(
-    grader(list(.user_code = "12")), ".result", fixed = TRUE
+  expect_graded(
+    grader(mock_this_exercise(42, 42)),
+    msg = "YES",
+    is_correct = TRUE
   )
-  expect_s3_class(missing_result, "gradethis_graded")
-  expect_match(missing_result$message, "problem occurred", fixed = TRUE)
-  expect_false(missing_result$correct)
+  
+  expect_graded(
+    grader(mock_this_exercise(40, 42)),
+    msg = "NO",
+    is_correct = FALSE
+  )
+  
+  # bad: no .result object
+  testthat::expect_message(
+    expect_graded(
+      grader(list(.user_code = "12")),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ), 
+    regexp = ".result", 
+    fixed = TRUE
+  )
 })
 
 test_that("fail_if_code_feedback() returns grade if code feedback", {
@@ -240,8 +261,8 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
   testthat::expect_message(
     expect_graded(
       fail_if_code_feedback(),
-      is_correct = FALSE,
-      msg = feedback_grading_problem()$message
+      is_correct = logical(),
+      msg = "problem occurred"
     )
   )
   

@@ -129,7 +129,13 @@ mock_this_exercise <- function(
     {
       # Delayed evaluation of `.solution!`
       if (length(expr_text(.solution_code)) == 0) {
-        fail(I("No solution is provided for this exercise."))
+        grade_grading_problem(
+          message = I("No solution is provided for this exercise"),
+          error = list(
+            message = "No solution is provided for this exercise",
+            label = .label
+          )
+        )
       } else {
         # solution code exists...
         # Using eval_tidy does not evaluate the expression. Using eval() instead

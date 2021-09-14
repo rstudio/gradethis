@@ -240,10 +240,17 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     x = ".solution",
     {
       if (length(solution_expr) == 0) {
-        rlang::return_from(envir_caller, feedback(
-          fail("No solution is provided for this exercise."),
-          type = "info"
-        ))
+        rlang::return_from(
+          envir_caller, 
+          feedback(grade_grading_problem(
+            message = "No solution is provided for this exercise.",
+            type = "info",
+            error = list(
+              message = "No solution provided for this exercise",
+              label = learnr_args[["label"]]
+            )
+          ))
+        )
       } else {
         # solution code exists...
         # Using eval_tidy does not evaluate the expression. Using eval() instead

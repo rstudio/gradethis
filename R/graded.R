@@ -410,14 +410,17 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
         "different"
       } else {
         warning("Error in waldo::compare(): ", e$message, call. = FALSE)
-        return(NULL)
+        capture_graded(grade_grading_problem(error = e))
       }
     }
   )
 
-  if (is.null(compare_msg)) {
-    return(graded(logical(), feedback_grading_problem()$message, type = "warning"))
-  } else if (length(compare_msg) > 0) {
+  if (is_graded(compare_msg)) {
+    # an internal grading problem occurred with waldo::compare()
+    return(compare_msg)
+  }
+  
+  if (length(compare_msg) > 0) {
     # not equal! quit early
     return()
   }
@@ -700,14 +703,9 @@ assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
   type <- condition_type(x)
   if (!identical(type, "value")) {
     from <- if (!is.null(from)) paste0(from, "() ") else ""
-    message <- paste0(from, "does not accept functions or formulas when used inside grade_this().")
-    warning(message, immediate. = TRUE, call. = !is.null(from))
-    graded(
-      correct = logical(), 
-      message = feedback_grading_problem()$message, 
-      type = "warning", 
-      error = list(message = message)
-    )
+    msg_internal <- paste0(from, "does not accept functions or formulas when used inside grade_this().")
+    warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
+    grade_grading_problem(error = list(message = msg_internal))
   }
 }
 
@@ -749,7 +747,7 @@ assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
   if (isTRUE(throw_grade)) {
     # Signal problem with grading code
     signal_grade(
-      graded(FALSE, feedback_grading_problem()$message, error = list(message)), 
+      grade_grading_problem(error = list(message = message)),
       parent.frame()
     )
   }

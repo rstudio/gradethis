@@ -92,7 +92,7 @@ message_feedback_grading_problem <- feedback_grading_problem()$message
 
 test_that("length 0 solution code", {
   expect_exercise_checker(
-    is_correct = FALSE,
+    is_correct = logical(),
     msg = "No solution is provided for this exercise.",
     msg_type = "info",
     user_code = "1",
