@@ -44,7 +44,7 @@
 * `gradethis_setup()` now uses a new argument order that favors the gradethis-specific options (#212).
 * The `space_before` and `space_after` arguments of `maybe_code_feedback()` have been deprecated in favor of more flexible arguments `before` and `after` that accept arbitrary strings to add before or after the message. (#219)
 * The `x` argument of `pass_if()` and `fail_if()` has been renamed `cond` and both functions now work inside `grade_this()`, although the function and formula versions are not supported there. (#216)
-
+* `grade_this()` no longer automatically converts errors to `fail()` grades, instead authors need to wrap unit-test-style code in `fail_if_error()` to convert them to grades. This helps to better differentiate between unexpected errors resulting from the author's grading code and portions of the grading code where errors are expected and indicative of a problem with the user's code. (#254)
 
 ### Bug fixes
 * Added a `NEWS.md` file to track changes to the package.
