@@ -113,8 +113,10 @@ remove_dangerous_html_tags <- function(md) {
   )
 }
 
+feedback_grading_problem_message <- "A problem occurred with your teacher's grading code."
+
 feedback_grading_problem <- function(message = NULL, type = "error", error = NULL) {
-  message <- message %||% "A problem occurred with your teacher's grading code. Defaulting to _incorrect_."
+  message <- message %||% paste(feedback_grading_problem_message,  "Defaulting to _incorrect_.")
   
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")
@@ -123,4 +125,16 @@ feedback_grading_problem <- function(message = NULL, type = "error", error = NUL
   error <- unclass(error)
   
   feedback(fail(message, error = error), type = type)
+}
+
+grade_grading_problem <- function(message = NULL, error = NULL, correct = logical(), type = "warning", ...) {
+  message <- message %||% feedback_grading_problem_message
+  
+  if (is.call(error$call)) {
+    error$call <- paste(deparse(error$call), collapse = "\n")
+  }
+  
+  error <- unclass(error)
+  
+  graded(correct, message, type = type, error = error)
 }
