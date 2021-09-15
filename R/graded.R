@@ -824,19 +824,19 @@ assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
   
   label <- env$.label
   label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
-  message <- paste0(
+  msg_obj_not_found <- paste0(
     label,
     "`", caller, "()`: expected `", obj_name, "` to be found",
     " in its calling environment or the environment specified by `env`.",
     " Did you call `", caller, "()`",
     " inside `grade_this()` or `grade_this_code()`?"
   )
-  message(message)
+  message(msg_obj_not_found)
   
   if (isTRUE(throw_grade)) {
     # Signal problem with grading code
     signal_grade(
-      grade_grading_problem(error = list(message = message)),
+      grade_grading_problem(error = list(message = msg_obj_not_found)),
       parent.frame()
     )
   }
