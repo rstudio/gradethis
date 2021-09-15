@@ -524,30 +524,39 @@ test_that("errors in grade_this() are internal errors by default", {
   ex <- mock_this_exercise("'4'")
     
   # by default, errors are now turned into internal errors
-  grade <- expect_graded(
-    grade_this(stop("boom"))(ex),
-    is_correct = logical(),
-    msg = "problem occurred"
+  grade <- testthat::expect_message(
+    expect_graded(
+      grade_this(stop("boom"))(ex),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ),
+    "#> grade_this\\("
   )
   expect_equal(grade$error$message, "boom")
   
   # without fail_if_error() errors become internal problem grades
   with_options(list(warn = -1), {
     grade_invalid <- 
-      expect_graded(
-        grade_this(runif("boom"))(ex),
-        is_correct = logical(),
-        msg = "problem occurred"
+      testthat::expect_message(
+        expect_graded(
+          grade_this(runif("boom"))(ex),
+          is_correct = logical(),
+          msg = "problem occurred"
+        ),
+        "#> grade_this\\("
       )
     err_invalid <- tryCatch(runif("boom"), error = identity)
     expect_equal(grade_invalid$error$message, err_invalid$message)
     expect_equal(grade_invalid$error$call, deparse(err_invalid$call))
     
     grade_syntax <- 
-      expect_graded(
-        grade_this(eval(parse(text = "runif(")))(ex),
-        is_correct = logical(),
-        msg = "problem occurred"
+      testthat::expect_message(
+        expect_graded(
+          grade_this(eval(parse(text = "runif(")))(ex),
+          is_correct = logical(),
+          msg = "problem occurred"
+        ),
+        "#> grade_this\\("
       )
     err_syntax <- tryCatch(eval(parse(text = "runif(")), error = identity)
     expect_equal(grade_syntax$error$message, err_syntax$message)

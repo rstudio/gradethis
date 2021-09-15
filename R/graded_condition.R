@@ -34,6 +34,22 @@ conditionMessage.gradethis_graded <- function(c) {
 capture_errors <- function(expr, on_error = NULL) {
   if (is.null(on_error)) {
     on_error <- function(err, that_env) {
+      # get relevant calls from the stack to improve error reporting
+      calls <- sys_calls_most_helpful()
+      
+      # Rewrite the error call with the more helpful call
+      err$call <- calls$last
+      
+      if (!is.null(calls$first)) {
+        calls$first <- deparse(calls$first, getOption("width", 80))
+        err$call_gradethis <- paste(calls$first, collapse= "\n")
+        
+        # Log the errors locally as messages
+        message(paste("#>", calls$first, collapse = "\n"))
+      }
+      message("Error in ", format(conditionCall(err)), ": ", conditionMessage(err))
+      
+      # Return an internal grading problem
       grade <- capture_graded(grade_grading_problem(error = err))
       rlang::return_from(that_env, grade)
     }
@@ -47,6 +63,45 @@ capture_errors <- function(expr, on_error = NULL) {
     },
     expr
   )
+}
+
+
+sys_calls_most_helpful <- function() {
+  # borrowing ideas from rstudio/shiny/blob/2360bde1/R/conditions.R#L434-L448
+  calls <- sys.calls()
+  calls <- calls[-length(calls)] # not this function, obviously
+  callnames <- calls_name(calls)
+  
+  # We want to locate the last call in the stack that isn't just error handling
+  # infrastructure. The following functions are part of the stack when an error
+  # is captured and surfaced in gradethis, the hope is that the last call before
+  # the final block of these functions is reasonably informative.
+  hideable <- callnames %in% c(".handleSimpleError", "h", "on_error", "on_graded")
+  
+  # we also want to find the highest-level gradethis call, which probably
+  # provides the full context of the code generating the error
+  gradethis_pattern <- "^(gradethis:::?)?(grade_this|grade_result)"
+  idx_gradethis <- grep(gradethis_pattern, callnames)
+  
+  list(
+    first = if (length(idx_gradethis)) calls[[min(idx_gradethis)]],
+    last = calls[[max(which(!hideable))]]
+  )
+}
+
+calls_name <- function(calls) {
+  # borrowed from rstudio/shiny/blob/2360bde1/R/conditions.R#L64-L76
+  sapply(calls, function(call) {
+    if (is.function(call[[1]])) {
+      "<Anonymous>"
+    } else if (inherits(call[[1]], "call")) {
+      paste0(format(call[[1]]), collapse = " ")
+    } else if (typeof(call[[1]]) == "promise") {
+      "<Promise>"
+    } else {
+      paste0(as.character(call[[1]]), collapse = " ")
+    }
+  })
 }
 
 gradethis_fail_error_handler <- function(message, env = parent.frame(), ...) {
