@@ -114,6 +114,7 @@ calls_name <- function(calls) {
 }
 
 gradethis_fail_error_handler <- function(message, env = parent.frame(), ...) {
+  force(list(message, env, args = list(...)))
   function(err, that_env) {
     # Add condition message as `.error_message` for use in the glue string
     # but use a child env of `env` so we don't trample anything by accident
