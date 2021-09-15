@@ -83,6 +83,15 @@ sys_calls_most_helpful <- function() {
   gradethis_pattern <- "^(gradethis:::?)?(grade_this|grade_result)"
   idx_gradethis <- grep(gradethis_pattern, callnames)
   
+  if (!length(idx_gradethis)) {
+    # next best guess, the function one level above the first function called
+    # in the function returned by grade_this()
+    idx_with_code_feedback <- which(callnames == "with_maybe_code_feedback")
+    if (length(idx_with_code_feedback)) {
+      idx_gradethis <- min(idx_with_code_feedback) - 1
+    }
+  }
+  
   list(
     first = if (length(idx_gradethis)) calls[[min(idx_gradethis)]],
     last = calls[[max(which(!hideable))]]
