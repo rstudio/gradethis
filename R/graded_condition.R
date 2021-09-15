@@ -42,7 +42,7 @@ capture_errors <- function(expr, on_error = NULL) {
       
       if (!is.null(calls$first)) {
         calls$first <- deparse(calls$first, getOption("width", 80))
-        err$call_gradethis <- paste(calls$first, collapse= "\n")
+        err$gradethis_call <- paste(calls$first, collapse= "\n")
         
         # Log the errors locally as messages
         message(paste("#>", calls$first, collapse = "\n"))
