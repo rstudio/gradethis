@@ -100,7 +100,7 @@ sys_calls_most_helpful <- function() {
 
 calls_name <- function(calls) {
   # borrowed from rstudio/shiny/blob/2360bde1/R/conditions.R#L64-L76
-  sapply(calls, function(call) {
+  vapply(calls, FUN.VALUE = character(1), function(call) {
     if (is.function(call[[1]])) {
       "<Anonymous>"
     } else if (inherits(call[[1]], "call")) {
