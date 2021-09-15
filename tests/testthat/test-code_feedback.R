@@ -409,7 +409,7 @@ test_that("give_code_feedback() catches testthat errors", {
       user_code = "5",
       solution_code = "5L",
       check_code = 'grade_this({
-       give_code_feedback(testthat::expect_type(.result, "integer"))
+       give_code_feedback(fail_if_error(testthat::expect_type(.result, "integer")))
        pass()
      })',
       is_correct = FALSE,
@@ -423,7 +423,7 @@ test_that("give_code_feedback() catches testthat errors", {
       user_code = "5",
       solution_code = "5L",
       check_code = 'give_code_feedback(grade_this({
-       testthat::expect_type(.result, "integer")
+       fail_if_error(testthat::expect_type(.result, "integer"))
        pass()
      }))',
       is_correct = FALSE,
@@ -439,7 +439,7 @@ test_that("give_code_feedback() catches plain errors", {
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       give_code_feedback(stop("nope;"))
+       give_code_feedback(fail_if_error(stop("nope;")))
        pass()
      })',
       is_correct = FALSE,
@@ -453,7 +453,7 @@ test_that("give_code_feedback() catches plain errors", {
       user_code = "apple",
       solution_code = "banana",
       check_code = 'give_code_feedback(grade_this({
-       stop("nope;")
+       fail_if_error(stop("nope;"))
        pass()
      }))',
       is_correct = FALSE,
@@ -541,7 +541,7 @@ test_that("give_code_feedback() works with pipes", {
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       stop("nope;") %>% give_code_feedback()
+       fail_if_error(stop("nope;")) %>% give_code_feedback()
        pass()
      })',
       is_correct = FALSE,
@@ -555,7 +555,7 @@ test_that("give_code_feedback() works with pipes", {
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       stop("nope;")
+       fail_if_error(stop("nope;"))
        pass()
      }) %>% give_code_feedback()',
       is_correct = FALSE,

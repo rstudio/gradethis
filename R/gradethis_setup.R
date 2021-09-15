@@ -112,7 +112,6 @@ gradethis_setup <- function(
     require(gradethis)
   }
   
-  
   set_opts <- as.list(match.call()[-1])
   set_opts <- lapply(set_opts, eval, envir = new.env())
   set_opts <- set_opts[setdiff(names(set_opts), "...")]

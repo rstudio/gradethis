@@ -117,12 +117,23 @@ check_exercise <- function(
           fn_used <- if (isTRUE(grade$correct)) "`pass()`" else "`fail()`"
 
           # notify author of their mistake
-          message(
-            "A ", fn_used, " statement was executed without access to student feedback. (Prematurely graded)\n",
-            "Remember to only call ", fn_used, " inside your checking function (ex: `grade_this({})`"
+          err_premature_grading <- list(
+            message = sprintf(
+              paste(
+                "A %s statement was executed without access to student feedback (prematurely graded).",
+                "Remember to only call %s inside your checking function, e.g. `grade_this({})`."
+              ),
+              fn_used, fn_used
+            ),
+            call = check_code,
+            label = check_label
           )
+          message(err_premature_grading$message)
           # return from main function (even though in a inner function! voodoo!)
-          rlang::return_from(check_exercise_env, feedback_grading_problem())
+          rlang::return_from(
+            check_exercise_env, 
+            feedback_grading_problem(error = err_premature_grading)
+          )
         }
       )
     },
@@ -130,8 +141,10 @@ check_exercise <- function(
     on_error = function(e, ignore) {
       # notify author of their mistake
       message("Error while checking `", check_label, "` chunk: ", e)
+      e$label <- check_label
+      e$call <- check_code
       # return from main function (even though in a inner function! voodoo!)
-      rlang::return_from(check_exercise_env, feedback_grading_problem())
+      rlang::return_from(check_exercise_env,  feedback_grading_problem(error = e))
     }
   )
 
@@ -154,17 +167,16 @@ check_exercise <- function(
     )
   ) {
     # notify author of their mistake
-    message(
-      "`", check_label, "` chunk did not return a function (such as `grade_this`) that accepts 1 argument containing the checking object",
-      "\nObject returned:\n",
-      paste0(
-        utils::capture.output(
-          utils::str(to_check_fn)
-        ),
-        collapse = "\n"
-      )
+    err_not_a_function <- list(
+      message = paste0(
+        "`", check_label, "` chunk did not return a function (such as `grade_this`) ", 
+        "that accepts 1 argument containing the checking object"
+      ),
+      call = check_code,
+      label = check_label
     )
-    return(feedback_grading_problem())
+    message(err_not_a_function$message, "\nObject returned:\n", err_not_a_function$call)
+    return(feedback_grading_problem(error = err_not_a_function))
   }
 
   # evaluate the function with the check envir passed in. (Passing an environment allows for `.solution` to be calculated on demand)
@@ -175,11 +187,16 @@ check_exercise <- function(
 
   # make sure the result is a pass or fail
   if (!is_graded(graded_result)) {
-    message(
-      "`", check_label, "` chunk did not mark an answer as correct or incorrect.",
-      "Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code"
+    err_result_not_graded <- list(
+      message = paste0(
+        "`", check_label, "` chunk did not mark an answer as correct or incorrect.",
+        "Consider adding a `pass()` or `fail()` at the end of your `", check_label, "` code"
+      ),
+      call = user_code,
+      label = check_label
     )
-    return(feedback_grading_problem())
+    message(err_result_not_graded$message)
+    return(feedback_grading_problem(error = err_result_not_graded))
   }
 
   # return result like normal
@@ -223,10 +240,17 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     x = ".solution",
     {
       if (length(solution_expr) == 0) {
-        rlang::return_from(envir_caller, feedback(
-          fail("No solution is provided for this exercise."),
-          type = "info"
-        ))
+        rlang::return_from(
+          envir_caller, 
+          feedback(grade_grading_problem(
+            message = "No solution is provided for this exercise.",
+            type = "info",
+            error = list(
+              message = "No solution provided for this exercise",
+              label = learnr_args[["label"]]
+            )
+          ))
+        )
       } else {
         # solution code exists...
         # Using eval_tidy does not evaluate the expression. Using eval() instead
@@ -276,5 +300,5 @@ grade_parse_error <- function(check_obj) {
         "with a matching `\"`, `'`, `)`, or `}}`. "
       )
     }
-  fail(message = msg)
+  fail(message = msg, error = list(message = check_obj$.error$message, call = check_obj$.user_code))
 }

@@ -38,6 +38,10 @@ gradethis_setup(
 see some default output (defaults to \code{FALSE}).}
     \item{\code{exercise.lines}}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
+    \item{\code{exercise.blanks}}{A regular expression to be used to identify blanks in
+submitted code that the user should fill in. If \code{TRUE} (default), blanks
+are three or more underscores in a row. If \code{FALSE}, blank checking is not
+performed.}
     \item{\code{exercise.completion}}{Use code completion in exercise editors.}
     \item{\code{exercise.diagnostics}}{Show diagnostics in exercise editors.}
     \item{\code{exercise.startover}}{Show "Start Over" button on exercise.}
@@ -130,16 +134,16 @@ These global package options can be set by \code{\link[=gradethis_setup]{gradeth
 directly setting the global option. The default values set for each option
 when gradethis is loaded are shown below.\tabular{ll}{
    Option \tab Default Value \cr
-   \code{gradethis.pass} \tab \code{"{random_praise()} Correct!"} \cr
+   \code{gradethis.pass} \tab \code{"{gradethis::random_praise()} Correct!"} \cr
    \code{gradethis.pass.praise} \tab \code{FALSE} \cr
-   \code{gradethis.fail} \tab \code{"Incorrect.{maybe_code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.fail} \tab \code{"Incorrect.{gradethis::maybe_code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.fail.hint} \tab \code{FALSE} \cr
    \code{gradethis.fail.encourage} \tab \code{FALSE} \cr
    \code{gradethis.maybe_code_feedback} \tab \code{TRUE} \cr
    \code{gradethis.maybe_code_feedback.before} \tab \code{" "} \cr
    \code{gradethis.maybe_code_feedback.after} \tab \code{NULL} \cr
    \code{gradethis.code_correct} \tab \code{NULL} \cr
-   \code{gradethis.code_incorrect} \tab \code{"{pipe_warning()}{code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.code_incorrect} \tab \code{"{gradethis::pipe_warning()}{gradethis::code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
    \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr

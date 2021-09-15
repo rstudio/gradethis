@@ -67,9 +67,10 @@ test_that("mock_this_exercise()", {
   expect_equal(ex2$.solution, 42)
   
   # no solution, delayed assignment of solution throws fail()
-  expect_equal(
+  expect_graded(
     ex3$.solution,
-    fail(I("No solution is provided for this exercise."))
+    is_correct = logical(),
+    msg = "No solution"
   )
 })
 

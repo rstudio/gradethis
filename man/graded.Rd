@@ -93,8 +93,8 @@ The helper functions follow these common patterns:
 \enumerate{
 \item If you don't provide a custom \code{message}, the default pass or fail
 messages will be used. With the default \pkg{gradethis} setup, the pass
-message follows the pattern \verb{\{random_praise()\} Correct!} , and
-the fail message follows \verb{Incorrect.\{maybe_code_feedback()\} \{random_encouragement()\}}.
+message follows the pattern \verb{\{gradethis::random_praise()\} Correct!} , and
+the fail message follows \verb{Incorrect.\{gradethis::maybe_code_feedback()\} \{gradethis::random_encouragement()\}}.
 
 You can set the default message pattern using the \code{pass} and \code{fail} in
 \code{\link[=gradethis_setup]{gradethis_setup()}}, or the options \code{gradethis.pass} and

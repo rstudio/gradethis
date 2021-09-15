@@ -12,9 +12,13 @@ grade_this(
 }
 \arguments{
 \item{expr}{The grade-checking expression to be evaluated. This expression
-must either signal a grade via \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} functions or throw an
-error (via \pkg{testthat} or \code{\link[=stop]{stop()}}). Errors will be converted to
-\code{\link[=fail]{fail()}} calls and will use the error message as the feedback \code{message}.}
+must either signal a grade via \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()}} functions or their
+sibling functions.
+
+By default, errors in this expression are converted to "internal problem"
+grades that mask the error for the user. If your grading logic relies on
+unit-test-styled functions, such as those from \pkg{testthat}, you can use
+\code{\link[=fail_if_error]{fail_if_error()}} to convert errors into \code{\link[=fail]{fail()}} grades.}
 
 \item{...}{Ignored}
 
