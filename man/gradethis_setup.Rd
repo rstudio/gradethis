@@ -17,7 +17,8 @@ gradethis_setup(
   fail.hint = NULL,
   fail.encourage = NULL,
   pipe_warning = NULL,
-  grading_error.message = NULL,
+  grading_problem.message = NULL,
+  grading_problem.type = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -85,6 +86,13 @@ encouraging phrase should be automatically appended to any \code{\link[=fail]{fa
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
 \code{gradethis.pipe_warning} option.}
 
+\item{grading_problem.message}{The feedback message used when a grading error occurs.
+Sets the \code{gradethis.grading_problem.message} option.}
+
+\item{grading_problem.type}{The feedback type used when a grading error occurs.
+Must be one of \code{"success"}, \code{"info"}, \code{"warning"} (default), \code{"error"}, or
+\code{"custom"}. Sets the \code{gradethis.grading_problem.type} option.}
+
 \item{error_checker.message}{The default message used by gradethis's default
 error checker, \code{\link[=gradethis_error_checker]{gradethis_error_checker()}}. Sets the
 \code{gradethis.error_checker.message} option.}
@@ -103,13 +111,6 @@ partial matching is allowed in \code{grade_this_code()}. Sets the
 code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
 
 \item{fail_code_feedback}{Deprecated. Use \code{maybe_code_feedback}.}
-
-\item{grading_problem.message}{The feedback message used when a grading error occurs.
-Sets the \code{gradethis.grading_problem.message} option.}
-
-\item{grading_problem.type}{The feedback type used when a grading error occurs.
-Must be one of \code{"success"}, \code{"info"}, \code{"warning"} (default), \code{"error"}, or
-\code{"custom"}. Sets the \code{gradethis.grading_problem.type} option.}
 }
 \value{
 Invisibly returns the global options as they were prior to setting
