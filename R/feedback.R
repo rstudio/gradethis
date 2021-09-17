@@ -113,9 +113,20 @@ remove_dangerous_html_tags <- function(md) {
   )
 }
 
+feedback_grading_problem_validate_type <- function(type) {
+  tryCatch(
+    match.arg(type, c("success", "info", "warning", "error", "custom")),
+    error = function(e) {
+      message('`gradethis_problem.type` should be one of "success", "info", "warning", "error", "custom"')
+      gradethis_settings$grading_problem.type()
+    }
+  )
+}
+
 feedback_grading_problem <- function(message = NULL, type = NULL, error = NULL) {
   message <- message %||% gradethis_settings$grading_problem.message()
   type <- type %||% gradethis_settings$grading_problem.type()
+  type <- feedback_grading_problem_validate_type(type)
   
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")
@@ -129,6 +140,7 @@ feedback_grading_problem <- function(message = NULL, type = NULL, error = NULL) 
 grade_grading_problem <- function(message = NULL, error = NULL, correct = logical(), type = NULL, ...) {
   message <- message %||% gradethis_settings$grading_problem.message()
   type <- type %||% gradethis_settings$grading_problem.type()
+  type <- feedback_grading_problem_validate_type(type)
   
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")
