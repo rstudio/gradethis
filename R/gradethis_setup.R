@@ -243,3 +243,34 @@ gradethis_default_learnr_options <- list(
   exercise.checker = gradethis_exercise_checker,
   exercise.error.check.code = "gradethis_error_checker()"
 )
+
+gradethis_settings <- (function() {
+  gradethis_settings <- list()
+  for (gt_opt in names(gradethis_default_options)) {
+    gradethis_settings[[gt_opt]] <- (function(x_opt, x_name) {
+      force(list(x_opt, x_name))
+      function() {
+        getOption(x_opt, gradethis_default_options[[x_name]])
+      }
+    })(paste0("gradethis.", gt_opt), gt_opt)
+  }
+  for (gt_legacy_opt in names(gradethis_legacy_options)) {
+    gt_opt <- sub("^gradethis[.]", "", gt_legacy_opt)
+    gradethis_settings[[gt_opt]] <- (function(x_opt, x_name) {
+      force(list(x_opt, x_name))
+      function() {
+        getOption(x_opt, gradethis_legacy_options[[x_name]])
+      }
+    })(gt_legacy_opt, gt_opt)
+  }
+  for (gt_learnr_opt in names(gradethis_default_learnr_options)) {
+    lrnr_opt <- paste0("tutorial.", gt_learnr_opt)
+    gradethis_settings[[gt_learnr_opt]] <- (function(x_opt, x_name) {
+      force(list(x_opt, x_name))
+      function() {
+        getOption(x_opt, gradethis_default_learnr_options[[x_name]])
+      }
+    })(lrnr_opt, gt_learnr_opt)
+  }
+  gradethis_settings
+})()
