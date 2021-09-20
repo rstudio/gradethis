@@ -29,18 +29,16 @@ jobs:
           - {os: macOS-latest,   r: 'release'}
           - {os: windows-latest, r: 'release'}
           - {os: windows-latest, r: '3.6'}
-          - {os: ubuntu-18.04,   r: 'devel',   rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-18.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-16.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
-          - {os: ubuntu-18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.3',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-18.04,   r: 'release'}
+          - {os: ubuntu-18.04,   r: 'oldrel-1'}
+          - {os: ubuntu-18.04,   r: 'oldrel-2'}
+          - {os: ubuntu-18.04,   r: 'oldrel-3'}
+          - {os: ubuntu-18.04,   r: 'oldrel-4'}
 
     env:
-      RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
 
     steps:
       - uses: actions/checkout@v2
@@ -50,62 +48,20 @@ jobs:
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-pandoc@v1
-
-      - name: Install pak and query dependencies
-        run: |
-          install.packages("pak", repos = "https://r-lib.github.io/p/pak/dev/")
-          saveRDS(pak::pkg_deps("local::.", dependencies = TRUE), ".github/r-depends.rds", version = 2)
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        uses: actions/cache@v2
+      
+      - name: Install devel system dependencies
+        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'devel'
+        run: sudo apt-get install -y libcurl4-openssl-dev
+      
+      - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ matrix.config.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-${{ hashFiles('.github/r-depends.rds') }}
-          restore-keys: ${{ matrix.config.os }}-${{ steps.install-r.outputs.installed-r-version }}-1-
-
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        run: |
-          system("sudo apt-get install libcurl4-openssl-dev", wait = TRUE)
-          pak::local_system_requirements(execute = TRUE)
-          pak::pkg_system_requirements("rcmdcheck", execute = TRUE)
-        shell: Rscript {0}
-
-      - name: Install macOS system dependencies
-        if: runner.os == 'macOS'
-        run: |
-          brew install imagemagick@6
-          brew install libgit2
-
-      - name: Install dependencies
-        run: |
-          pak::local_install_dev_deps(upgrade = TRUE)
-          pak::pkg_install("rcmdcheck")
-        shell: Rscript {0}
-
-      - name: Configure Git user
-        run: |
-          git config --global user.email "ghau@example.com"
-          git config --global user.name "GitHub Actions User"
-
-      - name: Session info
-        run: |
-          options(width = 100)
-          pkgs <- installed.packages()[, "Package"]
-          sessioninfo::session_info(pkgs, include_base = TRUE)
-        shell: Rscript {0}
-
-      - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_: false
-          _R_CHECK_FORCE_SUGGESTS_: ${{ matrix.config.r != '3.3' }}
-        run: |
-          options(crayon.enabled = TRUE)
-          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
-        shell: Rscript {0}
+          cache-version: 1
+          extra-packages: rcmdcheck
+        
+      - uses: r-lib/actions/check-r-package@v1
 
       - name: Show testthat output
         if: always()
