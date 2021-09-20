@@ -52,6 +52,10 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
       
+      - name: Install devel system dependencies
+        if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'devel'
+        run: sudo apt-get install -y libcurl4-openssl-dev
+      
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           cache-version: 1
