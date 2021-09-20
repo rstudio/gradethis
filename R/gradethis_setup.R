@@ -135,6 +135,10 @@ gradethis_setup <- function(
     }
   }
   
+  if (!is.null(grading_problem.type)) {
+    set_opts[["grading_problem.type"]] <- feedback_grading_problem_validate_type(grading_problem.type)
+  }
+  
   learnr_opts <- names(gradethis_default_learnr_options)
   gradethis_opts <- names(gradethis_default_options)
   
