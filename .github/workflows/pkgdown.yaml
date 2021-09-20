@@ -32,9 +32,6 @@ jobs:
           cache-version: 1
           needs: website
 
-      - name: Install package
-        run: R CMD INSTALL .
-
       - name: Build Site
         shell: Rscript {0}
         run: |
