@@ -30,7 +30,9 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           cache-version: 1
-          needs: website
+          needs: |
+            website
+            connect
 
       - name: Build Site
         shell: Rscript {0}
