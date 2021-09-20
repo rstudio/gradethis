@@ -234,7 +234,16 @@ expect_exercise_checker <- function(
   testthat::expect_equal(feedback$location, "append")
 
   expect_equal(feedback$correct, is_correct)
-  msg_type <- msg_type %||% (if (isTRUE(is_correct)) "success" else "error")
+  if (is.null(msg_type)) {
+    msg_type <- 
+      if (!length(is_correct)) {
+        gradethis_settings$grading_problem.type()
+      } else if (isTRUE(is_correct)) {
+        "success" 
+      } else {
+        "error"
+      }
+  }
   expect_equal(feedback$type, msg_type)
   
   msg <- message_md(msg)

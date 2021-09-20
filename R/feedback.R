@@ -134,7 +134,7 @@ feedback_grading_problem <- function(message = NULL, type = NULL, error = NULL) 
   
   error <- unclass(error)
   
-  feedback(fail(message, error = error), type = type)
+  feedback(graded(logical(), message, type = type, error = error))
 }
 
 grade_grading_problem <- function(message = NULL, error = NULL, correct = logical(), type = NULL, ...) {
