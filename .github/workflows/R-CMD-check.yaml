@@ -57,11 +57,6 @@ jobs:
           cache-version: 1
           extra-packages: rcmdcheck
 
-      - name: Configure Git user
-        run: |
-          git config --global user.email "ghau@example.com"
-          git config --global user.name "GitHub Actions User"
-
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
