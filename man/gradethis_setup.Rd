@@ -17,6 +17,8 @@ gradethis_setup(
   fail.hint = NULL,
   fail.encourage = NULL,
   pipe_warning = NULL,
+  grading_problem.message = NULL,
+  grading_problem.type = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -84,6 +86,13 @@ encouraging phrase should be automatically appended to any \code{\link[=fail]{fa
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
 \code{gradethis.pipe_warning} option.}
 
+\item{grading_problem.message}{The feedback message used when a grading error occurs.
+Sets the \code{gradethis.grading_problem.message} option.}
+
+\item{grading_problem.type}{The feedback type used when a grading error occurs.
+Must be one of \code{"success"}, \code{"info"}, \code{"warning"} (default), \code{"error"}, or
+\code{"custom"}. Sets the \code{gradethis.grading_problem.type} option.}
+
 \item{error_checker.message}{The default message used by gradethis's default
 error checker, \code{\link[=gradethis_error_checker]{gradethis_error_checker()}}. Sets the
 \code{gradethis.error_checker.message} option.}
@@ -145,6 +154,8 @@ when gradethis is loaded are shown below.\tabular{ll}{
    \code{gradethis.code_correct} \tab \code{NULL} \cr
    \code{gradethis.code_incorrect} \tab \code{"{gradethis::pipe_warning()}{gradethis::code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
+   \code{gradethis.grading_problem.message} \tab \code{"A problem occurred with the grading code for this exercise."} \cr
+   \code{gradethis.grading_problem.type} \tab \code{"warning"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
    \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
 }

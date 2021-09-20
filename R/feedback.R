@@ -113,10 +113,23 @@ remove_dangerous_html_tags <- function(md) {
   )
 }
 
-feedback_grading_problem_message <- "A problem occurred with your teacher's grading code."
+feedback_grading_problem_validate_type <- function(type) {
+  tryCatch(
+    match.arg(type, c("success", "info", "warning", "error", "custom")),
+    error = function(e) {
+      message(
+        '`gradethis_problem.type` should be one of "success", "info", "warning", "error", "custom". ',
+        'Defaulting to "', gradethis_default_options[["grading_problem.type"]], '".'
+      )
+      gradethis_default_options[["grading_problem.type"]]
+    }
+  )
+}
 
-feedback_grading_problem <- function(message = NULL, type = "error", error = NULL) {
-  message <- message %||% paste(feedback_grading_problem_message,  "Defaulting to _incorrect_.")
+feedback_grading_problem <- function(message = NULL, type = NULL, error = NULL) {
+  message <- message %||% gradethis_settings$grading_problem.message()
+  type <- type %||% gradethis_settings$grading_problem.type()
+  type <- feedback_grading_problem_validate_type(type)
   
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")
@@ -124,11 +137,13 @@ feedback_grading_problem <- function(message = NULL, type = "error", error = NUL
   
   error <- unclass(error)
   
-  feedback(fail(message, error = error), type = type)
+  feedback(graded(logical(), message, type = type, error = error))
 }
 
-grade_grading_problem <- function(message = NULL, error = NULL, correct = logical(), type = "warning", ...) {
-  message <- message %||% feedback_grading_problem_message
+grade_grading_problem <- function(message = NULL, error = NULL, correct = logical(), type = NULL, ...) {
+  message <- message %||% gradethis_settings$grading_problem.message()
+  type <- type %||% gradethis_settings$grading_problem.type()
+  type <- feedback_grading_problem_validate_type(type)
   
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")

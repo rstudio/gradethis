@@ -73,6 +73,11 @@
 #'   `gradethis.allow_partial_matching` option.
 #' @param pipe_warning The default message used in [pipe_warning()]. Sets the
 #'   `gradethis.pipe_warning` option.
+#' @param grading_problem.message The feedback message used when a grading error occurs.
+#'   Sets the `gradethis.grading_problem.message` option.
+#' @param grading_problem.type The feedback type used when a grading error occurs.
+#'   Must be one of `"success"`, `"info"`, `"warning"` (default), `"error"`, or
+#'   `"custom"`. Sets the `gradethis.grading_problem.type` option.
 #' @param error_checker.message The default message used by gradethis's default
 #'   error checker, [gradethis_error_checker()]. Sets the 
 #'   `gradethis.error_checker.message` option.
@@ -98,6 +103,8 @@ gradethis_setup <- function(
   fail.hint = NULL,
   fail.encourage = NULL,
   pipe_warning = NULL,
+  grading_problem.message = NULL,
+  grading_problem.type = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
@@ -126,6 +133,10 @@ gradethis_setup <- function(
       set_opts[["maybe_code_feedback"]] <- fail_code_feedback
       set_opts[["fail_code_feedback"]] <- NULL
     }
+  }
+  
+  if (!is.null(grading_problem.type)) {
+    set_opts[["grading_problem.type"]] <- feedback_grading_problem_validate_type(grading_problem.type)
   }
   
   learnr_opts <- names(gradethis_default_learnr_options)
@@ -174,7 +185,6 @@ gradethis_setup <- function(
   invisible(old_opts)
 }
 
-
 # Default Options ---------------------------------------------------------
 
 gradethis_default_options <- list(
@@ -202,6 +212,10 @@ gradethis_default_options <- list(
     "so I want to let you know that this is how I am interpretting your code ",
     "before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n"
   ),
+  
+  # Default message and type used for a grading error
+  grading_problem.message = "A problem occurred with the grading code for this exercise.",
+  grading_problem.type = "warning",
   
   # Default value for grade_this_code(allow_partial_matching)
   allow_partial_matching = NULL,
@@ -233,3 +247,34 @@ gradethis_default_learnr_options <- list(
   exercise.checker = gradethis_exercise_checker,
   exercise.error.check.code = "gradethis_error_checker()"
 )
+
+gradethis_settings <- (function() {
+  gradethis_settings <- list()
+  for (gt_opt in names(gradethis_default_options)) {
+    gradethis_settings[[gt_opt]] <- (function(x_opt, x_name) {
+      force(list(x_opt, x_name))
+      function() {
+        getOption(x_opt, gradethis_default_options[[x_name]])
+      }
+    })(paste0("gradethis.", gt_opt), gt_opt)
+  }
+  for (gt_legacy_opt in names(gradethis_legacy_options)) {
+    gt_opt <- sub("^gradethis[.]", "", gt_legacy_opt)
+    gradethis_settings[[gt_opt]] <- (function(x_opt, x_name) {
+      force(list(x_opt, x_name))
+      function() {
+        getOption(x_opt, gradethis_legacy_options[[x_name]])
+      }
+    })(gt_legacy_opt, gt_opt)
+  }
+  for (gt_learnr_opt in names(gradethis_default_learnr_options)) {
+    lrnr_opt <- paste0("tutorial.", gt_learnr_opt)
+    gradethis_settings[[gt_learnr_opt]] <- (function(x_opt, x_name) {
+      force(list(x_opt, x_name))
+      function() {
+        getOption(x_opt, gradethis_default_learnr_options[[x_name]])
+      }
+    })(lrnr_opt, gt_learnr_opt)
+  }
+  gradethis_settings
+})()

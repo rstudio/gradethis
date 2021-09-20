@@ -105,7 +105,7 @@ test_that("length 0 solution code", {
 test_that("pass / fail in check chunk are caught", {
   err <- testthat::expect_message(
     expect_exercise_checker(
-      is_correct = FALSE,
+      is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
@@ -119,7 +119,7 @@ test_that("pass / fail in check chunk are caught", {
   
   err <- testthat::expect_message(
     expect_exercise_checker(
-      is_correct = FALSE,
+      is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
@@ -135,7 +135,7 @@ test_that("pass / fail in check chunk are caught", {
 test_that("check parsing error is caught", {
   err <- testthat::expect_message(
     expect_exercise_checker(
-      is_correct = FALSE,
+      is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
@@ -152,7 +152,7 @@ test_that("check parsing error is caught", {
 test_that("return value is a function of 1 argument", {
   err <- testthat::expect_message(
     expect_exercise_checker(
-      is_correct = FALSE,
+      is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
@@ -167,7 +167,7 @@ test_that("return value is a function of 1 argument", {
   
   err <- testthat::expect_message(
     expect_exercise_checker(
-      is_correct = FALSE,
+      is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
@@ -191,7 +191,7 @@ test_that("return value is a function of 1 argument", {
 test_that("a grade is given", {
   err <- testthat::expect_message(
     expect_exercise_checker(
-      is_correct = FALSE,
+      is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
       solution_code = "1",
