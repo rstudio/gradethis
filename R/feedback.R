@@ -117,8 +117,11 @@ feedback_grading_problem_validate_type <- function(type) {
   tryCatch(
     match.arg(type, c("success", "info", "warning", "error", "custom")),
     error = function(e) {
-      message('`gradethis_problem.type` should be one of "success", "info", "warning", "error", "custom"')
-      gradethis_settings$grading_problem.type()
+      message(
+        '`gradethis_problem.type` should be one of "success", "info", "warning", "error", "custom". ',
+        'Defaulting to "', gradethis_default_options[["grading_problem.type"]], '".'
+      )
+      gradethis_default_options[["grading_problem.type"]]
     }
   )
 }
