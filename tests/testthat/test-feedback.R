@@ -260,3 +260,32 @@ test_that("feedback() passes along extra information in the from graded()", {
   expect_error(feedback(grade))
 })
 
+test_that("feedback_grading_problem() picks up grading_problem options", {
+  ex <- mock_this_exercise("1 + 1")
+  
+  # internal error because solution code is missing
+  with_options(
+    list(
+      gradethis.grading_problem.message = "TEST PASS",
+      gradethis.grading_problem.type = "info"
+    ), {
+      grade <- testthat::expect_message(grade_this_code()(ex))
+      expect_equal(grade$correct, logical())
+      expect_equal(grade$message, "TEST PASS")
+      expect_equal(grade$type, "info")
+    }
+  )
+  
+  # internal error from stop() in grading code
+  with_options(
+    list(
+      gradethis.grading_problem.message = "TEST PASS",
+      gradethis.grading_problem.type = "info"
+    ), {
+      grade <- testthat::expect_message(grade_this(stop("TEST FAIL"))(ex))
+      expect_equal(grade$correct, logical())
+      expect_equal(grade$message, "TEST PASS")
+      expect_equal(grade$type, "info")
+    }
+  )
+})
