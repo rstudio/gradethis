@@ -154,7 +154,7 @@ when gradethis is loaded are shown below.\tabular{ll}{
    \code{gradethis.code_correct} \tab \code{NULL} \cr
    \code{gradethis.code_incorrect} \tab \code{"{gradethis::pipe_warning()}{gradethis::code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
-   \code{gradethis.grading_problem.message} \tab \code{"A problem occurred with your teacher's grading code."} \cr
+   \code{gradethis.grading_problem.message} \tab \code{"A problem occurred with the grading code for this exercise."} \cr
    \code{gradethis.grading_problem.type} \tab \code{"warning"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
    \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr

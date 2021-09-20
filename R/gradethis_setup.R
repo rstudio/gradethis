@@ -210,7 +210,7 @@ gradethis_default_options <- list(
   ),
   
   # Default message and type used for a grading error
-  grading_problem.message = "A problem occurred with your teacher's grading code.",
+  grading_problem.message = "A problem occurred with the grading code for this exercise.",
   grading_problem.type = "warning",
   
   # Default value for grade_this_code(allow_partial_matching)
