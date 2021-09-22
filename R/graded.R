@@ -394,6 +394,12 @@ fail_if_equal <- function(
 }
 
 grade_if_equal <- function(x, y, message, correct, env, ...) {
+  # These options are set by fansi and diffobj but may be unset by learnr
+  # since this function is typically called from within sandboxed grading code.
+  # If they aren't set, the underlying packages throw errors.
+  opts <- options(fansi.warn = FALSE, diffobj.warn = FALSE, diffobj.max.diffs = 10L)
+  on.exit(options(opts))
+  
   compare_msg <- tryCatch(
     waldo::compare(x, y),
     error = function(e) {
@@ -409,7 +415,9 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
       } else if (grepl("reached theoretically unreachable branch 2", e$message, fixed = TRUE)) {
         "different"
       } else {
-        warning("Error in waldo::compare(): ", e$message, call. = FALSE)
+        warning(
+          "Error in grade_if_equal(): ", deparse(e$call), ": ", e$message, call. = FALSE
+        )
         capture_graded(grade_grading_problem(error = e))
       }
     }
