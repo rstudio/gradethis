@@ -33,17 +33,6 @@ is_infix <- function(x, infix_vals = .infixes) {
   })
 }
 
-
-
-with_options <- function(opts, expr) {
-  old_opts <- options(opts)
-  on.exit(options(old_opts), add = TRUE)
-  force(expr)
-}
-
-
-
-
 is_infix_assign <- function(x) {
   is_infix(x, infix_vals = .infixes_assign)
 }
@@ -59,4 +48,25 @@ is_tag_like <- function(x) {
 
 is_AsIs <- function(x) {
   inherits(x, "AsIs")
+}
+
+local_options_waldo_compare <- function(.local_envir = parent.frame()) {
+  # These options are set by fansi and diffobj (used by waldo::compare()) but
+  # may be unset by learnr when it reset options after running student & grading
+  # code. If they aren't set, the underlying packages throw errors.
+  # 
+  # This work-around is worth the effort because waldo::compare() does a great
+  # deal of work to compare many different types of R objects. The downside is
+  # that its output is a user-facing message and not a T/F or result value.
+  waldo_opts <- list(
+    fansi.warn = FALSE,
+    diffobj.warn = FALSE,
+    diffobj.max.diffs = 10L
+  )
+  
+  if (identical(.local_envir, globalenv())) {
+    return(invisible(options(waldo_opts)))
+  }
+  
+  withr::local_options(waldo_opts, .local_envir = .local_envir)
 }

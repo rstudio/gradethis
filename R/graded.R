@@ -394,6 +394,8 @@ fail_if_equal <- function(
 }
 
 grade_if_equal <- function(x, y, message, correct, env, ...) {
+  local_options_waldo_compare()
+  
   compare_msg <- tryCatch(
     waldo::compare(x, y),
     error = function(e) {
@@ -409,7 +411,9 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
       } else if (grepl("reached theoretically unreachable branch 2", e$message, fixed = TRUE)) {
         "different"
       } else {
-        warning("Error in waldo::compare(): ", e$message, call. = FALSE)
+        warning(
+          "Error in grade_if_equal(): ", deparse(e$call), ": ", e$message, call. = FALSE
+        )
         capture_graded(grade_grading_problem(error = e))
       }
     }
