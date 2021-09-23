@@ -16,6 +16,9 @@
   if (any(toset)) {
     options(gradethis_legacy_options[toset])
   }
+  
+  # Set a few options required for waldo::compare() to work
+  local_options_waldo_compare(globalenv())
 
   invisible()
 }
