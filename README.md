@@ -12,7 +12,7 @@ gradethis helps scale feedback for [learnr] exercises. Instructors can use a mod
 
 gradethis is designed for use in [learnr] tutorials. We recommend that you first be comfortable writing learnr tutorials before you begin incorporating exercise feedback with gradethis. You can learn more about learnr tutorials with the [learnr package documentation][learnr].
 
-<img src="man/figures/missing_sqrt.png" style="border: 1px solid black; box-shadow: 5px 5px 5px #eee; max-width: 66%; display: block; margin: 1em auto;">
+<img src="man/figures/missing_sqrt.png" alt="A screenshot of the gradethis package in action. An exercise starts with the following instructions: 'Here is a number. You can do great things with it, like this: Take the square root of the log of the number 2. Then click Submit Answer.' The student has entered the following code: '2'. The gradethis package generates the following message: 'I expected a call to sqrt() where you wrote 2. Try it again; next time's the charm!'" style="border: 1px solid black; box-shadow: 5px 5px 5px #eee; max-width: 66%; display: block; margin: 1em auto;">
 
 ## Installation
 
