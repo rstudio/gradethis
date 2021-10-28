@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/gradethis)](https://CRAN.R-project.org/package=gradethis)
 [![R build status](https://github.com/rstudio/gradethis/workflows/R-CMD-check/badge.svg)](https://github.com/rstudio/gradethis/actions)
-[![Codecov test coverage](https://codecov.io/gh/rstudio/gradethis/branch/master/graph/badge.svg)](https://codecov.io/gh/rstudio/gradethis?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/rstudio/gradethis/branch/main/graph/badge.svg)](https://codecov.io/gh/rstudio/gradethis?branch=main)
 [![gradethis downloads per month](https://cranlogs.r-pkg.org/badges/gradethis)](http://www.rpackages.io/package/gradethis)
 [![DOI](https://zenodo.org/badge/126734088.svg)](https://zenodo.org/badge/latestdoi/126734088)
 <!-- badges: end -->

@@ -6,7 +6,7 @@ template:
   package: quillt
   opengraph:
     image:
-      src: https://github.com/rstudio/gradethis/raw/master/man/figures/logo.png
+      src: https://github.com/rstudio/gradethis/raw/main/man/figures/logo.png
       alt: "gradethis package"
     twitter:
       creator: "@rstudio"
