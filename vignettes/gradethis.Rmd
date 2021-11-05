@@ -40,6 +40,9 @@ grade_html <- function(grade) {
   border: 1px #eee solid;
   border-radius: 5px;
 }
+.alert :last-child {
+  margin-bottom: 0;
+}
 .alert.alert-success {
   background-color: #e4f2dc;
   border-color: #ddedcf;
