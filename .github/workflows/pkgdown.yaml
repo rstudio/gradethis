@@ -33,7 +33,7 @@ jobs:
       - name: Install website dependencies
         shell: Rscript {0}
         run: |
-          needs <- pak::local_dev_deps(dependencies = paste0("Config/Needs/", c("website", "connect"))[["ref"]]
+          needs <- pak::local_dev_deps(dependencies = paste0("Config/Needs/", c("website", "connect")))[["ref"]]
           for (dep in needs) {
             pak::pkg_system_requirements(dep, execute = TRUE)
           }
