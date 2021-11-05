@@ -148,7 +148,7 @@ code_feedback("read.csv(f = 'file.csv')", "read.csv(file = 'file.csv')")
 
 # Feedback will spot differences in argument values...
 code_feedback(
-  "read.csv('file.csv', header = FALSE)", 
+  "read.csv('file.csv', header = FALSE)",
   "read.csv('file.csv', header = TRUE)"
 )
 
@@ -166,14 +166,14 @@ code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
 
 # We'll use this example of an incorrect exercise submission throughout
 submission_wrong <- mock_this_exercise(
-  .user_code = "log(4)", 
+  .user_code = "log(4)",
   .solution_code = "sqrt(4)"
 )
 
-# To add feedback to *any* incorrect grade, 
+# To add feedback to *any* incorrect grade,
 # wrap the entire `grade_this()` call in `give_code_feedback()`:
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   give_code_feedback(grade_this({
     pass_if_equal(.solution, "Good job!")
     if (.result < 2) {
@@ -185,8 +185,8 @@ grader <-
 grader(submission_wrong)
 
 # Or you can wrap the message of any fail() directly:
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_this({
     pass_if_equal(.solution, "Good job!")
     if (.result < 2) {
@@ -198,8 +198,8 @@ grader <-
 grader(submission_wrong)
 
 # Typically, grade_result() doesn't include code feedback
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_result(
     fail_if(~ round(.result, 0) != 2, "Not quite!")
   )
@@ -207,8 +207,8 @@ grader <-
 grader(submission_wrong)
 
 # But you can use give_code_feedback() to append code feedback
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   give_code_feedback(grade_result(
     fail_if(~ round(.result, 0) != 2, "Not quite!")
   ))
@@ -217,10 +217,9 @@ grader(submission_wrong)
 
 # The default `grade_this_code()` `incorrect` message always adds code feedback,
 # so be sure to remove \"{maybe_code_feedback()}\" from the incorrect message
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   give_code_feedback(grade_this_code(incorrect = "{random_encouragement()}"))
 # ```
 grader(submission_wrong)
-
 }

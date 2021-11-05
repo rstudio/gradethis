@@ -65,5 +65,4 @@ give_praise(pass("That's absolutely correct."))
 
 # give_encouragement() encouragement to failing grade messages
 give_encouragement(fail("Sorry, but no."))
-
 }

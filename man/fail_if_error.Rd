@@ -82,7 +82,7 @@ grade_this({
 # Note that you don't need to reveal the error message to the user
 grade_this({
   fail_if_error(
-    message = "Your result isn't a single numeric value.", 
+    message = "Your result isn't a single numeric value.",
     {
       testthat::expect_length(.result, 1)
       testthat::expect_true(is.numeric(.result))
@@ -91,7 +91,6 @@ grade_this({
   )
   pass("Good job!")
 })(ex)
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

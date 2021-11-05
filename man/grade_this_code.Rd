@@ -121,6 +121,7 @@ grades, by default.
 \examples{
 # For an interactive example run: gradethis_demo()
 
+# # These are manual examples, see grading demo for `learnr` tutorial usage
 
 grade_this_code()(
   mock_this_exercise(
@@ -161,7 +162,6 @@ grade_this_code(
     .solution_code = "storms \%>\% select(year, month, day)"
   )
 )
-
 }
 \seealso{
 \code{\link[=code_feedback]{code_feedback()}}, \code{\link[=grade_this]{grade_this()}}, \code{\link[=mock_this_exercise]{mock_this_exercise()}}

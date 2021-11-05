@@ -124,27 +124,27 @@ debug_this()(submission)$message
 
 # The remaining examples produce equivalent output
 \dontrun{
-  # Or you can call `debug_this()` inside a `grade_this()` call
-  # at the point where you want to get debug feedback.
-  grade_this({
-    pass_if_equal(42, "Good stuff!")
-  
-    # Find out why this is failing??
-    debug_this()
-  })(submission)
-  
-  # Set default `fail()` message to show debug information
-  # (for tutorial development only!)
-  old_opts <- options(gradethis.fail = "{debug_this()}")
-  
-  grade_this({
-    pass_if_equal(42, "Good stuff!")
-  
-    fail()
-  })(submission)
-  
-  # default fail() will show debug until you reset gradethis.fail option
-  options(old_opts)
+# Or you can call `debug_this()` inside a `grade_this()` call
+# at the point where you want to get debug feedback.
+grade_this({
+  pass_if_equal(42, "Good stuff!")
+
+  # Find out why this is failing??
+  debug_this()
+})(submission)
+
+# Set default `fail()` message to show debug information
+# (for tutorial development only!)
+old_opts <- options(gradethis.fail = "{debug_this()}")
+
+grade_this({
+  pass_if_equal(42, "Good stuff!")
+
+  fail()
+})(submission)
+
+# default fail() will show debug until you reset gradethis.fail option
+options(old_opts)
 }
 
 }

@@ -15,7 +15,7 @@ Authors@R: c(
   )
 Description: Pairing with the 'learnr' R package, 'gradethis' provides
     multiple methods to grade 'learnr' exercises.  To learn more about
-    'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
+    'learnr' tutorials, please visit <https://rstudio.github.io/learnr/>.
 License: MIT + file LICENSE
 URL: https://pkgs.rstudio.com/gradethis/,
     https://rstudio.github.io/learnr/,

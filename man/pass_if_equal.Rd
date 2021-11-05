@@ -90,22 +90,22 @@ equal.
 \examples{
 # Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
 
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_this({
     # Automatically pass if .result equal to .solution
     pass_if_equal()
-    
+
     fail_if_equal(mtcars[mtcars$cyl == 4, ], message = "Not four cylinders")
     fail_if_equal(mtcars[mtcars$cyl == 8, ], message = "Not eight cylinders")
-    
+
     # Default to failing grade with feedback
     fail()
   })
 # ```
 
-.solution <- 
-# ```{r example-solution}
+.solution <-
+  # ```{r example-solution}
   mtcars[mtcars$cyl == 6, ]
 # ```
 
@@ -118,7 +118,6 @@ grader(mock_this_exercise(mtcars[mtcars$cyl == 8, ], !!.solution))
 
 # This fails with default feedback message
 grader(mock_this_exercise(mtcars[mtcars$mpg == 8, ], !!.solution))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

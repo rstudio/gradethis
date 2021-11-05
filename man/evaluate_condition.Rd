@@ -38,6 +38,5 @@ evaluate_condition(
   last_value = 5,
   env = new.env()
 )
-
 }
 \keyword{internal}

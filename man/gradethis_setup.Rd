@@ -165,7 +165,7 @@ when gradethis is loaded are shown below.\tabular{ll}{
 # Not run in package documentation because this function changes global opts
 if (FALSE) {
   old_opts <- gradethis_setup(
-    pass = "Great work!", 
+    pass = "Great work!",
     fail = "{random_encouragement()}"
   )
 }
@@ -173,7 +173,6 @@ if (FALSE) {
 # Use getOption() to see the default value
 getOption("gradethis.pass")
 getOption("gradethis.maybe_code_feedback")
-
 }
 \seealso{
 \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}

@@ -49,7 +49,7 @@ expect when used to grade a user submission to an exercise in a \pkg{learnr}
 tutorial.
 }
 \examples{
-# First we'll create a grading function with grade_this(). The user's code 
+# First we'll create a grading function with grade_this(). The user's code
 # should return the value 42, and we have some specific messages if they're
 # close but miss this target. Otherwise, we'll fall back to the default fail
 # message, which will include code feedback.
@@ -75,7 +75,7 @@ this_grader(
       x <- 31
       y <- 11
       x + y
-    }, 
+    },
     .solution_code = 42
   )
 )
@@ -83,7 +83,7 @@ this_grader(
 # Our final submission changes the prompt slightly. Suppose we have provided
 # an `x` object in our global setup with a value of 31. We also have a `y`
 # object that we create for the user in the exercise setup chunk. We then ask
-# the student to add `x` and `y`. What happens if the student subtracts 
+# the student to add `x` and `y`. What happens if the student subtracts
 # instead? That's what this mock submission tests:
 this_grader(
   mock_this_exercise(
@@ -93,5 +93,4 @@ this_grader(
     setup_exercise = y <- 11
   )
 )
-
 }
