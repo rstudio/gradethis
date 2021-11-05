@@ -53,7 +53,6 @@ gradethis_error_checker()(mock_this_exercise(b))
 
 # If a model solution is available:
 gradethis_error_checker()(mock_this_exercise(b, a))
-
 }
 \seealso{
 \code{\link[=gradethis_setup]{gradethis_setup()}}, \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}

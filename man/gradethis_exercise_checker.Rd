@@ -54,7 +54,9 @@ of your tutorial. See \code{gradethis_demo()} to see an example learnr document
 that uses \code{gradethis_exercise_checker()}.
 }
 \examples{
-\dontrun{gradethis_demo()}
+\dontrun{
+gradethis_demo()
+}
 
 }
 \seealso{

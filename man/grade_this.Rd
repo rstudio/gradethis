@@ -81,30 +81,30 @@ with \pkg{testthat}, such as \pkg{checkmate}, or standard R errors via
 # Suppose we have an exercise that prompts students to calculate the
 # average height of Loblolly pine trees using the `Loblolly` data set.
 # We might write an exercise `-check` chunk like the one below.
-# 
+#
 # Since grade_this() returns a function, we'll save the result of this
 # "chunk" as `grader()`, which can be called on an exercise submission
 # to evaluate the student's code, which we'll simulate with
 # `mock_this_exercise()`.
 
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_this({
     if (length(.result) != 1) {
       fail("I expected a single value instead of {length(.result)} values.")
     }
-    
+
     if (is.na(.result)) {
       fail("I expected a number, but your code returned a missing value.")
     }
-    
+
     avg_height <- mean(Loblolly$height)
     if (identical(.result, avg_height)) {
       pass("Great work! The average height is {round(avg_height, 2)}.")
     }
-    
+
     # Always end grade_this() with a default grade.
-    # By default fail() will also give code feedback, 
+    # By default fail() will also give code feedback,
     # if a solution is available.
     fail()
   })
@@ -119,7 +119,7 @@ grader(mock_this_exercise(mean(Loblolly$Seed)))
 # the final grade is determined by the default (last) value in grade_this()
 grader(mock_this_exercise(mean(Loblolly$age)))
 
-# If you have a *-solution chunk, 
+# If you have a *-solution chunk,
 # fail() without arguments gives code feedback...
 grader(
   mock_this_exercise(
@@ -130,7 +130,6 @@ grader(
 
 # Finally, the "student" gets the correct answer!
 grader(mock_this_exercise(mean(Loblolly$height)))
-
 }
 \seealso{
 \code{\link[=grade_this_code]{grade_this_code()}}, \code{\link[=mock_this_exercise]{mock_this_exercise()}}, \code{\link[=gradethis_demo]{gradethis_demo()}}

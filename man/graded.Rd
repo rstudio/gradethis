@@ -178,7 +178,7 @@ phrase.
 # check code when the student clicks "Submit Answer" in a learnr tutorial.
 
 grader <-
-# ```{r example-check}
+  # ```{r example-check}
   grade_this({
     # Automatically use .result to compare to an expected value
     pass_if_equal(42, "Great work!")
@@ -201,7 +201,7 @@ grader <-
     if (.result * 100 == .solution) {
       pass("Right answer, but {.result} is two orders of magnitude too small.")
     }
-    
+
     # Fail with a hint if student code differs from the solution
     # (Skipped automatically if there isn't a -solution chunk)
     fail_if_code_feedback()
@@ -233,7 +233,6 @@ grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 
 # Finally fall back to the final answer...
 grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

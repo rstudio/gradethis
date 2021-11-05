@@ -63,5 +63,4 @@ submission <- mock_this_exercise(
 )
 
 grade_this_code()(submission)
-
 }

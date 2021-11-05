@@ -82,25 +82,25 @@ or \code{FALSE}.
 # less than 20,000 square miles. (`islands` reports land mass in units of
 # 10,000 sq. miles.)
 
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_this({
     fail_if(any(is.na(.result)), "You shouldn't have missing values.")
-    
+
     diff_len <- length(.result) - length(.solution)
     fail_if(diff_len < 0, "You missed {abs(diff_len)} island(s).")
     fail_if(diff_len > 0, "You included {diff_len} too many islands.")
-    
+
     pass_if(all(.result < 20), "Great work!")
-    
+
     # Fall back grade
     fail()
   })
 # ```
 
-.solution <- 
-# ```{r example-solution}
-    islands[islands < 20]
+.solution <-
+  # ```{r example-solution}
+  islands[islands < 20]
 # ```
 
 # Peek at the right answer
@@ -117,7 +117,6 @@ grader(mock_this_exercise(islands[islands < 16], !!.solution))
 
 # Just right!
 grader(mock_this_exercise(islands[islands < 20], !!.solution))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

@@ -95,17 +95,17 @@ functions.
 # chosen the correct sampling function.
 
 grader <-
-# ```{r example-check}
+  # ```{r example-check}
   grade_this({
     fail_if(length(.result) != 5, "I expected 5 numbers.")
     fail_if(
-      any(.result < 0 | .result > 1), 
+      any(.result < 0 | .result > 1),
       "I expected all numbers to be between 0 and 1."
     )
-    
+
     # Specific checks passed, but now we want to check the code.
     fail_if_code_feedback()
-    
+
     # All good!
     pass()
   })
@@ -129,7 +129,6 @@ grader(mock_this_exercise(rbinom(5, 1, 0.5), !!.solution_code))
 
 # Perfect!
 grader(mock_this_exercise(runif(n = 5), !!.solution_code))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},
