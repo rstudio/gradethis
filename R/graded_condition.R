@@ -15,10 +15,10 @@ conditionMessage.gradethis_graded <- function(c) {
   } else {
     "[Neutral]"
   }
-  
+
   message <- paste(as.character(condition_obj$message), collapse = " ")
   len_message <- nchar(message) + nchar(correct) + 3 + nchar("<gradethis_graded>")
-  
+
   if (len_message > (0.9 * getOption("width")) || grepl("\n", message)) {
     message <- strsplit(message, "\n")
     message <- lapply(message, strwrap, indent = 2, exdent = 2)
@@ -36,19 +36,19 @@ capture_errors <- function(expr, on_error = NULL) {
     on_error <- function(err, that_env) {
       # get relevant calls from the stack to improve error reporting
       calls <- sys_calls_most_helpful()
-      
+
       # Rewrite the error call with the more helpful call
       err$call <- calls$last
-      
+
       if (!is.null(calls$first)) {
         calls$first <- deparse(calls$first, getOption("width", 80))
         err$gradethis_call <- paste(calls$first, collapse= "\n")
-        
+
         # Log the errors locally as messages
         message(paste("#>", calls$first, collapse = "\n"))
       }
       message("Error in ", format(conditionCall(err)), ": ", conditionMessage(err))
-      
+
       # Return an internal grading problem
       grade <- capture_graded(grade_grading_problem(error = err))
       rlang::return_from(that_env, grade)
@@ -71,18 +71,18 @@ sys_calls_most_helpful <- function() {
   calls <- sys.calls()
   calls <- calls[-length(calls)] # not this function, obviously
   callnames <- calls_name(calls)
-  
+
   # We want to locate the last call in the stack that isn't just error handling
   # infrastructure. The following functions are part of the stack when an error
   # is captured and surfaced in gradethis, the hope is that the last call before
   # the final block of these functions is reasonably informative.
   hideable <- callnames %in% c(".handleSimpleError", "h", "on_error", "on_graded")
-  
+
   # we also want to find the highest-level gradethis call, which probably
   # provides the full context of the code generating the error
   gradethis_pattern <- "^(gradethis:::?)?(grade_this|grade_result)"
   idx_gradethis <- grep(gradethis_pattern, callnames)
-  
+
   if (!length(idx_gradethis)) {
     # next best guess, the function one level above the first function called
     # in the function returned by grade_this()
@@ -91,7 +91,7 @@ sys_calls_most_helpful <- function() {
       idx_gradethis <- min(idx_with_code_feedback) - 1
     }
   }
-  
+
   list(
     first = if (length(idx_gradethis)) calls[[min(idx_gradethis)]],
     last = calls[[max(which(!hideable))]]
@@ -121,7 +121,7 @@ gradethis_fail_error_handler <- function(message, env = parent.frame(), ...) {
     env_child <- new.env(parent = env)
     assign(".error", err, envir = env_child)
     assign(".error_message", conditionMessage(err), envir = env_child)
-    
+
     grade <- capture_graded(fail(message, ..., env = env_child, error = err))
     rlang::return_from(that_env, grade)
   }
@@ -163,10 +163,10 @@ ignore_graded <- function(expr) {
 
 #' Capture grades and errors
 #'
-#' 
+#'
 #' Capture the first [graded()] signal or error thrown when evaluating the
 #' `expr`.
-#' 
+#'
 #' @examples
 #' # Passes with "message 1", short-circuiting evaluation
 #' eval_gradethis({
@@ -174,27 +174,26 @@ ignore_graded <- function(expr) {
 #'   pass("message 2")
 #'   pass("message 3")
 #' })
-#' 
+#'
 #' # Fails with message from fail()
 #' eval_gradethis({
 #'   fail("incorrect")
 #'   pass("correct")
 #' })
-#' 
+#'
 #' # Fails with message from expect_true()
 #' eval_gradethis({
 #'   testthat::expect_true(FALSE)
 #'   pass("message 2")
 #'   pass("message 3")
 #' })
-#' 
+#'
 #' # Fails immediately with message "boom"
 #' eval_gradethis({
 #'   stop("boom")
 #'   pass("message 2")
 #'   pass("message 3")
 #' })
-#'   
 #' @param expr The expression or code block to evaluate
 #' @param on_error A [withCallingHandlers()] handler for class `error` with
 #'   signature `function(error, this_env)` that receives the error object and
@@ -206,7 +205,7 @@ ignore_graded <- function(expr) {
 #'   calling environment of the error handler. `on_graded` should use
 #'   [rlang::return_from()] using `this_env` to immediately return the value and
 #'   not continue evaluation.
-#' 
+#'
 #' @keywords internal
 #' @export
 eval_gradethis <- function(expr, on_error = NULL, on_graded = NULL) {

@@ -7,8 +7,8 @@
 #' @noRd
 order_calls <- function(code, env = parent.frame()) {
   if (is.name(code) ||
-      is.call(code) ||
-      is.atomic(code)) {
+    is.call(code) ||
+    is.atomic(code)) {
     code <- list(code)
   }
   if (is.call(code[[1]]) && length(code[[1]]) != 1) {

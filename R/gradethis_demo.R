@@ -24,7 +24,7 @@
 #' @export
 gradethis_demo <- function() {
   gradethis_demo_path <- system.file("tutorials", "grading-demo/grading-demo.Rmd",
-                                     package = "gradethis")
+    package = "gradethis")
   if (rstudioapi::isAvailable()) {
     rstudioapi::navigateToFile(gradethis_demo_path)
   } else {

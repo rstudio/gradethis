@@ -7,14 +7,13 @@
 #' @examples
 #' replicate(5, glue::glue("Random praise: {random_praise()}"))
 #' replicate(5, glue::glue("Random encouragement: {random_encouragement()}"))
-#' 
+#'
 #' # give_praise() adds praise to passing grade messages
 #' give_praise(pass("That's absolutely correct."))
-#' 
+#'
 #' # give_encouragement() encouragement to failing grade messages
 #' give_encouragement(fail("Sorry, but no."))
-#' 
-#' @return 
+#' @return
 #'   - `random_praise()` and `random_encouragement()` each return a length-one
 #'     string with a praising or encouraging phrase.
 #'   - `give_praise()` and `give_encouragment()` add praise or encouragement
@@ -64,7 +63,7 @@ with_encouragement <- function(value, expr) {
 #' @param before,after Text to be added before or after the praise or
 #'   encouragement phrase.
 #' @param ... Ignored.
-#'   
+#'
 #' @export
 give_praise <- function(
   expr,
@@ -80,7 +79,7 @@ give_praise <- function(
       rlang::abort("`give_praise()` expects `location` of 'before' or 'after'")
     }
   )
-  
+
   # evaluate expression in gradethis context to catch any grades
   # and also turn off  so that it isn't repeated twice
   env <- parent.frame()
@@ -89,10 +88,10 @@ give_praise <- function(
     FALSE,
     eval_gradethis(rlang::eval_bare(expr_q, env))
   )
-  
+
   # then dispatch on input type internally
   give_random_phrase(
-    x = res, 
+    x = res,
     location = placement$location,
     before = placement$before,
     after = placement$after,
@@ -101,7 +100,7 @@ give_praise <- function(
 }
 
 #' @describeIn praise Add encouraging message to a failing grade.
-#'   
+#'
 #' @export
 give_encouragement <- function(
   expr,
@@ -117,7 +116,7 @@ give_encouragement <- function(
       rlang::abort("`give_encouragement()` expects `location` of 'before' or 'after'")
     }
   )
-  
+
   # evaluate expression in gradethis context to catch any grades
   # and also turn off encouragement so that it isn't repeated twice
   env <- parent.frame()
@@ -126,10 +125,10 @@ give_encouragement <- function(
     FALSE,
     eval_gradethis(rlang::eval_bare(expr_q, env))
   )
-  
+
   # then dispatch on input type internally
   give_random_phrase(
-    x = res, 
+    x = res,
     location = placement$location,
     before = placement$before,
     after = placement$after,
@@ -147,12 +146,12 @@ set_placement <- function(location = c("after", "before"), before = NULL, after 
   if (!is.null(before) && !is.null(after)) {
     return(list(location = location, before = before, after = after))
   }
-  
+
   if (is.null(before) && is.null(after)) {
     before <- if (location == "after") " " else ""
     after <- if (location == "before") " " else ""
   }
-  
+
   list(
     location = location,
     before = before,
@@ -173,9 +172,9 @@ give_random_phrase <- function(
 
 #' @export
 give_random_phrase.character <- function(
-  x, 
-  ..., 
-  location = "after", 
+  x,
+  ...,
+  location = "after",
   type = c("praise", "encouragement"),
   before = NULL,
   after = NULL
@@ -193,15 +192,15 @@ give_random_phrase.character <- function(
 
 #' @export
 give_random_phrase.function <- function(
-  x, 
-  ..., 
-  location = "after", 
+  x,
+  ...,
+  location = "after",
   type = c("praise", "encouragement"),
   before = NULL,
   after = NULL
 ) {
   type <- match.arg(type)
-  
+
   function(check_env) {
     # get original grade without praise/encouragement
     grade <- capture_graded(
@@ -211,7 +210,7 @@ give_random_phrase.function <- function(
         encouragement = with_encouragement(FALSE, x(check_env))
       )
     )
-    
+
     give_random_phrase(
       x = grade,
       location = location,
@@ -234,8 +233,8 @@ give_random_phrase.gradethis_graded <- function(
   type <- match.arg(type)
   location <- match.arg(location)
   grade <- x
-  
-  phrase <- 
+
+  phrase <-
     switch(
       type,
       praise = {
@@ -252,16 +251,16 @@ give_random_phrase.gradethis_graded <- function(
       },
       signal_grade(grade)
     )
-  
+
   phrase <- paste0(before, phrase, after)
   add_before <- identical(location, "before")
-  
+
   grade$message <- paste0(
     if (add_before) phrase,
     grade$message,
     if (!add_before) phrase
   )
-  
+
   signal_grade(grade)
 }
 

@@ -21,23 +21,23 @@ expect_message <- function(x, message) {
 }
 
 expect_condi <- function(x) {
-    checkmate::expect_names(names(x), identical.to = c("x", "message", "correct", "type"))
-    checkmate::expect_character(x$message, null.ok = TRUE)
-    checkmate::expect_logical(x$correct, null.ok = FALSE, len = 1)
-    checkmate::expect_choice(x$type, choices = c("formula", "function", "value"))
-    checkmate::expect_class(x, "gradethis_condition")
+  checkmate::expect_names(names(x), identical.to = c("x", "message", "correct", "type"))
+  checkmate::expect_character(x$message, null.ok = TRUE)
+  checkmate::expect_logical(x$correct, null.ok = FALSE, len = 1)
+  checkmate::expect_choice(x$type, choices = c("formula", "function", "value"))
+  checkmate::expect_class(x, "gradethis_condition")
 }
 
 expect_condi_correct <- function(x, message = NULL) {
-    expect_condi(x)
-    expect_equal(x$message, message)
-    expect_true(x$correct)
+  expect_condi(x)
+  expect_equal(x$message, message)
+  expect_true(x$correct)
 }
 
 expect_condi_error <- function(x, message = NULL) {
-    expect_condi(x)
-    expect_equal(x$message, message)
-    expect_false(x$correct)
+  expect_condi(x)
+  expect_equal(x$message, message)
+  expect_false(x$correct)
 }
 
 
@@ -147,7 +147,7 @@ expect_feedback <- function(
   if (is_graded(feedback)) {
     feedback <- feedback(feedback)
   }
-  
+
   expect_s3_class(feedback, "gradethis_feedback")
   if (identical(is_correct, logical(0))) {
     expect_equal(feedback$correct, logical(0))
@@ -182,7 +182,7 @@ create_learnr_env <- function(user_code, solution_code = NULL, envir_prep, eval 
   if (isTRUE(eval)) {
     env$.result <-
       env$.last_value <-
-        eval(parse(text = user_code), envir = env$.envir_result)
+      eval(parse(text = user_code), envir = env$.envir_result)
     env$.solution <-
       if (is.null(solution_code)) {
         NULL
@@ -235,23 +235,23 @@ expect_exercise_checker <- function(
 
   expect_equal(feedback$correct, is_correct)
   if (is.null(msg_type)) {
-    msg_type <- 
+    msg_type <-
       if (!length(is_correct)) {
         gradethis_settings$grading_problem.type()
       } else if (isTRUE(is_correct)) {
-        "success" 
+        "success"
       } else {
         "error"
       }
   }
   expect_equal(feedback$type, msg_type)
-  
+
   msg <- message_md(msg)
   expect_match(feedback$message, msg, fixed = msg_fixed)
-  
+
   if (!is.null(error_message)) {
     expect_match(feedback$error$message, error_message)
   }
-  
+
   invisible(feedback)
 }

@@ -1,10 +1,10 @@
 #' Grade a student's submission using custom logic
-#' 
+#'
 #' @description
 #' `grade_this()` allows instructors to write custom logic to evaluate, grade
 #' and give feedback to students. To use `grade_this()`, call it directly in
 #' your `*-check` chunk:
-#' 
+#'
 #' \if{html}{\out{<div class="sourceCode">}}
 #' ````
 #' ```{r example-check}
@@ -18,16 +18,16 @@
 #' ```
 #' ````
 #' \if{html}{\out{</div>}}
-#' 
+#'
 #' `grade_this()` makes available a number of objects based on the exercise and
 #' the student's submission that can be used to evaluate the student's submitted
 #' code. See `?"grade_this-objects"` for more information about these objects.
-#' 
+#'
 #' As the instructor, you are free to use any logic to determine a student's
 #' grade as long as a [graded()] object is signaled. The check code can also
 #' contain \pkg{testthat} expectation code. Failed \pkg{testthat} expectations
 #' will be turned into [fail()]ed grades with the corresponding message.
-#' 
+#'
 #' A final grade is signaled from `grade_this()` using the [graded()] helper
 #' functions, which include [pass()], [fail()], among others. `grade_this()`
 #' uses condition handling to short-circuit further evaluation when a grade is
@@ -39,49 +39,49 @@
 #'
 #' @examples
 #' # For an interactive example run: gradethis_demo()
-#' 
+#'
 #' # Suppose we have an exercise that prompts students to calculate the
 #' # average height of Loblolly pine trees using the `Loblolly` data set.
 #' # We might write an exercise `-check` chunk like the one below.
-#' # 
+#' #
 #' # Since grade_this() returns a function, we'll save the result of this
 #' # "chunk" as `grader()`, which can be called on an exercise submission
 #' # to evaluate the student's code, which we'll simulate with
 #' # `mock_this_exercise()`.
-#' 
-#' grader <- 
-#' # ```{r example-check}
+#'
+#' grader <-
+#'   # ```{r example-check}
 #'   grade_this({
 #'     if (length(.result) != 1) {
 #'       fail("I expected a single value instead of {length(.result)} values.")
 #'     }
-#'     
+#'
 #'     if (is.na(.result)) {
 #'       fail("I expected a number, but your code returned a missing value.")
 #'     }
-#'     
+#'
 #'     avg_height <- mean(Loblolly$height)
 #'     if (identical(.result, avg_height)) {
 #'       pass("Great work! The average height is {round(avg_height, 2)}.")
 #'     }
-#'     
+#'
 #'     # Always end grade_this() with a default grade.
-#'     # By default fail() will also give code feedback, 
+#'     # By default fail() will also give code feedback,
 #'     # if a solution is available.
 #'     fail()
 #'   })
 #' # ```
-#' 
+#'
 #' # Simulate an incorrect answer: too many values...
 #' grader(mock_this_exercise(.user_code = Loblolly$height[1:2]))
-#' 
+#'
 #' # This student submission returns a missing value...
 #' grader(mock_this_exercise(mean(Loblolly$Seed)))
 #' # This student submission isn't caught by any specific tests,
 #' # the final grade is determined by the default (last) value in grade_this()
 #' grader(mock_this_exercise(mean(Loblolly$age)))
-#' 
-#' # If you have a *-solution chunk, 
+#'
+#' # If you have a *-solution chunk,
 #' # fail() without arguments gives code feedback...
 #' grader(
 #'   mock_this_exercise(
@@ -89,14 +89,13 @@
 #'     .solution_code = mean(Loblolly$height)
 #'   )
 #' )
-#' 
+#'
 #' # Finally, the "student" gets the correct answer!
 #' grader(mock_this_exercise(mean(Loblolly$height)))
-#' 
 #' @param expr The grade-checking expression to be evaluated. This expression
-#'   must either signal a grade via [pass()] or [fail()] functions or their 
-#'   sibling functions. 
-#'   
+#'   must either signal a grade via [pass()] or [fail()] functions or their
+#'   sibling functions.
+#'
 #'   By default, errors in this expression are converted to "internal problem"
 #'   grades that mask the error for the user. If your grading logic relies on
 #'   unit-test-styled functions, such as those from \pkg{testthat}, you can use
@@ -110,14 +109,14 @@
 #'   [gradethis_setup()]). If the `maybe_code_feedback` argument is `FALSE`,
 #'   `maybe_code_feedback()` returns an empty string.
 #' @param ... Ignored
-#'   
+#'
 #' @return Returns a function whose first parameter will be an environment
 #'   containing objects specific to the exercise and submission (see **Available
 #'   variables**). For local testing, you can create a version of the expected
 #'   environment for a mock exercise submission with [mock_this_exercise()].
 #'   Calling the returned function on the exercise-checking environment will
 #'   evaluate the grade-checking `expr` and return a final grade via [graded()].
-#'   
+#'
 #' @seealso [grade_this_code()], [mock_this_exercise()], [gradethis_demo()]
 #' @export
 grade_this <- function(
@@ -126,11 +125,11 @@ grade_this <- function(
   maybe_code_feedback = getOption("gradethis.maybe_code_feedback", TRUE)
 ) {
   express <- rlang::get_expr(rlang::enquo(expr))
-  
+
   if ("fail_code_feedback" %in% names(list(...))) {
     lifecycle::deprecate_warn(
-      "0.2.3", 
-      "grade_this(fail_code_feedback=)", 
+      "0.2.3",
+      "grade_this(fail_code_feedback=)",
       "grade_this(maybe_code_feedback=)"
     )
     if (missing(maybe_code_feedback)) {
@@ -142,7 +141,7 @@ grade_this <- function(
     if (is.list(check_env)) {
       check_env <- list2env(check_env)
     }
-    
+
     check_env[[".__gradethis_check_env"]] <- TRUE
 
     # make sure fail calls can get code feed back (or not) if they want
@@ -220,11 +219,11 @@ placeholder_definition <- function(x) {
 #' feedback messages using custom R code. To facilitate evaluating the
 #' exercise, [grade_this()] makes available a number of objects that can be
 #' referenced within the `{ ... }` expression.
-#'   
+#'
 #' All of the objects provided by `learnr` to an exercise checking function
-#' are available for inspection. To avoid name collisions with user or 
+#' are available for inspection. To avoid name collisions with user or
 #' instructor code, the names of these objects all start with `.`.
-#' 
+#'
 #' * `.label`: `r placeholder_definition(".label")`
 #' * `.engine`: `r placeholder_definition(".engine")`
 #' * `.last_value`: `r placeholder_definition(".last_value")`
@@ -234,9 +233,9 @@ placeholder_definition <- function(x) {
 #' * `.envir_prep`: `r placeholder_definition(".envir_prep")`
 #' * `.envir_result`: `r placeholder_definition(".envir_result")`
 #' * `.evaluate_result`: `r placeholder_definition(".evaluate_result")`
-#'   
-#' In addition, \pkg{gradethis} has provided some extra objects: 
-#'   
+#'
+#' In addition, \pkg{gradethis} has provided some extra objects:
+#'
 #' * `.user`, `.result`: `r placeholder_definition(".user")`
 #' * `.solution`: `r placeholder_definition(".solution")`
 #'
@@ -289,95 +288,95 @@ NULL
 
 
 #' Debug an exercise submission
-#' 
+#'
 #' When used in a `*-check` chunk or inside [grade_this()], `debug_this()`
 #' displays in the \pkg{learnr} tutorial a complete listing of the variables
 #' and environment available for checking. This can be helpful when you need
 #' to debug an exercise and a submission.
 #'
 #' @section Debugging exercises:
-#' 
+#'
 #' ```{r child = "man/fragments/debug_this-usage-setup.Rmd"}
 #' ```
-#' 
+#'
 #' \if{html}{
 #' The debug output will look like the following when used as described
 #' below.
-#' 
+#'
 #' \Sexpr[echo=FALSE,results=rd,stage=build]{
 #' submission <- gradethis::mock_this_exercise("# user submits\nx + 2", "x + 3", setup_exercise = "x <- 1", .label = "example")
 #' paste("\\\out{\n<blockquote>", gradethis::debug_this(submission)$message, "</blockquote>}", sep = "\n")
 #' }
 #' }
-#' 
+#'
 #' ```{r child = "man/fragments/debug_this-usage.Rmd"}
 #' ```
-#' 
+#'
 #' @examples
 #' # Suppose we have an exercise (guess the number 42). Mock a submission:
 #' submission <- mock_this_exercise(.user_code = 40, .solution_code = 11 + 31)
-#' 
+#'
 #' # Call `debug_this()` inside your *-check chunk, is equivalent to
 #' debug_this()(submission)$message
-#' 
+#'
 #' # The remaining examples produce equivalent output
 #' \dontrun{
-#'   # Or you can call `debug_this()` inside a `grade_this()` call
-#'   # at the point where you want to get debug feedback.
-#'   grade_this({
-#'     pass_if_equal(42, "Good stuff!")
-#'   
-#'     # Find out why this is failing??
-#'     debug_this()
-#'   })(submission)
-#'   
-#'   # Set default `fail()` message to show debug information
-#'   # (for tutorial development only!)
-#'   old_opts <- options(gradethis.fail = "{debug_this()}")
-#'   
-#'   grade_this({
-#'     pass_if_equal(42, "Good stuff!")
-#'   
-#'     fail()
-#'   })(submission)
-#'   
-#'   # default fail() will show debug until you reset gradethis.fail option
-#'   options(old_opts)
+#' # Or you can call `debug_this()` inside a `grade_this()` call
+#' # at the point where you want to get debug feedback.
+#' grade_this({
+#'   pass_if_equal(42, "Good stuff!")
+#'
+#'   # Find out why this is failing??
+#'   debug_this()
+#' })(submission)
+#'
+#' # Set default `fail()` message to show debug information
+#' # (for tutorial development only!)
+#' old_opts <- options(gradethis.fail = "{debug_this()}")
+#'
+#' grade_this({
+#'   pass_if_equal(42, "Good stuff!")
+#'
+#'   fail()
+#' })(submission)
+#'
+#' # default fail() will show debug until you reset gradethis.fail option
+#' options(old_opts)
 #' }
-#' 
+#'
 #' @param check_env A grade checking environment. You can use
 #'   [mock_this_exercise()] to prepare a mocked exercise submission
 #'   environment. Otherwise, you don't need to use or set this argument.
-#'   
+#'
 #' @return Returns a neutral grade containing a message that includes any
-#'   and all information available about the exercise and the current 
+#'   and all information available about the exercise and the current
 #'   submission. The output lets you visually explore the objects available for
 #'   use within your [grade_this()] grading code.
-#' 
+#'
 #' @export
 debug_this <- function(check_env = parent.frame()) {
-  
+
   if (!exists(".result", envir = check_env) || is_placeholder(get(".result", envir = check_env))) {
     # most likely called outside of grade_this(), so return
     # debug_this directly to be used as a checking function
     return(debug_this)
   }
-  
+
   tags <- htmltools::tags
   html <- htmltools::HTML
   collapse <- function(...) paste(..., collapse = "\n")
-  
+
   str_chr <- function(x) {
     utils::capture.output(utils::str(x))
   }
-  
+
   str_env <- function(env) {
     vars <- ls(env)
     names(vars) <- vars
     x <- str_chr(lapply(vars, function(v) get(v, env)))
     x[-1]
   }
-  
+
   code_block <- function(value, engine = "r") {
     tags$pre(
       class = engine,
@@ -385,18 +384,18 @@ debug_this <- function(check_env = parent.frame()) {
       .noWS = "inside"
     )
   }
-  
+
   get_check_env <- function(x, otherwise = I(paste0("<no ", x, ">"))) {
     get0(x, envir = check_env, ifnotfound = otherwise)
   }
-  
+
   prnt <- function(x) {
     if (inherits(x, "AsIs")) return(x)
     utils::capture.output(print(x))
   }
-  
+
   solution_code <- get_check_env(".solution_code")
-  
+
   message <- htmltools::tagList(
     tags$p(
       tags$strong(html("Exercise label (<code>.label</code>):")),
@@ -440,6 +439,6 @@ debug_this <- function(check_env = parent.frame()) {
       )
     }
   )
-  
+
   graded(logical(0), message = message, type = "custom", location = "replace")
 }

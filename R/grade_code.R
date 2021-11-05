@@ -70,7 +70,9 @@
 #' @keywords internal
 #' @export
 #' @examples
-#' \dontrun{gradethis_demo()}
+#' \dontrun{
+#' gradethis_demo()
+#' }
 #'
 #' # This is a manual example, see grading demo for `learnr` tutorial usage
 #' y <- expression(sqrt(log(2)))
@@ -145,8 +147,8 @@ grade_code <- function(
         )
       ))
     }
-    
-   # is incorrect
+
+    # is incorrect
     message <- glue_message(
       glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect,
       .is_correct = FALSE,
