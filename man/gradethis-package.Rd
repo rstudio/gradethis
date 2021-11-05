@@ -8,9 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
 
-Pairing with the 'learnr' R package, 'gradethis' provides
-    multiple methods to grade 'learnr' exercises.  To learn more about
-    'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
+Pairing with the 'learnr' R package, 'gradethis' provides multiple methods to grade 'learnr' exercises. To learn more about 'learnr' tutorials, please visit <http://rstudio.github.io/learnr/>.
 }
 \seealso{
 Useful links:
