@@ -60,7 +60,8 @@ Remotes:
     rstudio/learnr
 Config/Needs/connect: rsconnect
 Config/Needs/coverage: covr
-Config/Needs/website: r-lib/pkgdown, rstudio/quillt
+Config/Needs/website: r-lib/pkgdown, tidyverse/tidytemplate,
+    rstudio/quillt@tidytemplate
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
