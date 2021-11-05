@@ -5,11 +5,11 @@
 #' functions are provided for working with code feedback: `code_feedback()` does
 #' the comparison and returns a character description of the mismatch, or a
 #' `NULL` if no differences are found. `maybe_code_feedback()` is designed to be
-#' used inside [fail()] and related [graded()] messages, as in 
+#' used inside [fail()] and related [graded()] messages, as in
 #' `"{maybe_code_feedback()}"`. And `give_code_feedback()` gives you a way to
-#' add code feedback to any [fail()] message in a [grade_this()] or 
+#' add code feedback to any [fail()] message in a [grade_this()] or
 #' [grade_result()] checking function.
-#' 
+#'
 #' @section Code differences:
 #'
 #' There are many different ways that code can be different, yet still the same.
@@ -17,27 +17,27 @@
 #'
 #' 1. If the single values are different. Ex: `log(2)` vs `log(3)`
 #' 2. If the function call is different. Ex: `log(2)` vs `sqrt(2)`
-#' 3. Validate the user code can be standardised via 
-#'    [rlang::call_standardise()]. The `env` parameter is important for this 
-#'    step as \pkg{gradethis} does not readily know about user defined 
-#'    functions. Ex: `read.csv("file.csv")` turns into 
+#' 3. Validate the user code can be standardised via
+#'    [rlang::call_standardise()]. The `env` parameter is important for this
+#'    step as \pkg{gradethis} does not readily know about user defined
+#'    functions. Ex: `read.csv("file.csv")` turns into
 #'    `read.csv(file = "file.csv")`
-#' 4. If multiple formals are matched. Ex: `read.csv(f = "file.csv")` has `f` 
+#' 4. If multiple formals are matched. Ex: `read.csv(f = "file.csv")` has `f`
 #'    match to `file` and `fill`.
-#' 5. Verify that every named argument in the solution appears in the user 
-#'    code. Ex: If the solution is `read.csv("file.csv", header = TRUE)`, 
+#' 5. Verify that every named argument in the solution appears in the user
+#'    code. Ex: If the solution is `read.csv("file.csv", header = TRUE)`,
 #'    `header` must exist.
 #' 6. Verify that the user did not supply extra named arguments to `...`.
 #'    Ex: `mean(x = 1:10, na.rm = TRUE)` vs `mean(x = 1:10)`
 #' 7. Verify that every named argument in the solution matches the value of the
-#'    corresponding user argument. Ex: `read.csv("file.csv", header = TRUE)` 
+#'    corresponding user argument. Ex: `read.csv("file.csv", header = TRUE)`
 #'    vs `read.csv("file.csv", header = FALSE)`
-#' 8. Verify that the remaining arguments of the user and solution code match 
+#' 8. Verify that the remaining arguments of the user and solution code match
 #'    in order and value. Ex: `mean(1:10, 0.1)` vs `mean(1:10, 0.2)`
-#' 
+#'
 #' @examples
 #' # code_feedback() ------------------------------------------------------
-#' 
+#'
 #' # Values are same, so no differences found
 #' code_feedback("log(2)", "log(2)")
 #'
@@ -52,7 +52,7 @@
 #'
 #' # Feedback will spot differences in argument values...
 #' code_feedback(
-#'   "read.csv('file.csv', header = FALSE)", 
+#'   "read.csv('file.csv', header = FALSE)",
 #'   "read.csv('file.csv', header = TRUE)"
 #' )
 #'
@@ -64,20 +64,20 @@
 #'
 #' # Unstandardised arguments will match by order and value
 #' code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
-#' 
-#' 
+#'
+#'
 #' # give_code_feedback() -------------------------------------------------
-#' 
+#'
 #' # We'll use this example of an incorrect exercise submission throughout
 #' submission_wrong <- mock_this_exercise(
-#'   .user_code = "log(4)", 
+#'   .user_code = "log(4)",
 #'   .solution_code = "sqrt(4)"
 #' )
-#' 
-#' # To add feedback to *any* incorrect grade, 
+#'
+#' # To add feedback to *any* incorrect grade,
 #' # wrap the entire `grade_this()` call in `give_code_feedback()`:
-#' grader <- 
-#' # ```{r example-check}
+#' grader <-
+#'   # ```{r example-check}
 #'   give_code_feedback(grade_this({
 #'     pass_if_equal(.solution, "Good job!")
 #'     if (.result < 2) {
@@ -87,10 +87,10 @@
 #'   }))
 #' # ```
 #' grader(submission_wrong)
-#' 
+#'
 #' # Or you can wrap the message of any fail() directly:
-#' grader <- 
-#' # ```{r example-check}
+#' grader <-
+#'   # ```{r example-check}
 #'   grade_this({
 #'     pass_if_equal(.solution, "Good job!")
 #'     if (.result < 2) {
@@ -100,35 +100,34 @@
 #'   })
 #' # ```
 #' grader(submission_wrong)
-#' 
+#'
 #' # Typically, grade_result() doesn't include code feedback
-#' grader <- 
-#' # ```{r example-check}
+#' grader <-
+#'   # ```{r example-check}
 #'   grade_result(
 #'     fail_if(~ round(.result, 0) != 2, "Not quite!")
 #'   )
 #' # ```
 #' grader(submission_wrong)
-#' 
+#'
 #' # But you can use give_code_feedback() to append code feedback
-#' grader <- 
-#' # ```{r example-check}
+#' grader <-
+#'   # ```{r example-check}
 #'   give_code_feedback(grade_result(
 #'     fail_if(~ round(.result, 0) != 2, "Not quite!")
 #'   ))
 #' # ```
 #' grader(submission_wrong)
-#' 
+#'
 #' # The default `grade_this_code()` `incorrect` message always adds code feedback,
 #' # so be sure to remove \"{maybe_code_feedback()}\" from the incorrect message
-#' grader <- 
-#' # ```{r example-check}
+#' grader <-
+#'   # ```{r example-check}
 #'   give_code_feedback(grade_this_code(incorrect = "{random_encouragement()}"))
 #' # ```
 #' grader(submission_wrong)
-#'
-#' @param user_code,solution_code String containing user or solution code. For 
-#'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by 
+#' @param user_code,solution_code String containing user or solution code. For
+#'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by
 #'   default retrieved from the calling environment.
 #' @param env Environment used to standardise formals of the user and solution
 #'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
@@ -141,19 +140,19 @@
 #'   default is set via the `gradethis.allow_partial_matching` option, or by
 #'   [gradethis_setup()].
 #'
-#' @return 
-#' 
+#' @return
+#'
 #'   - `code_feedback()` returns a character value describing the difference
-#'     between the student's submitted code and the solution. If no 
+#'     between the student's submitted code and the solution. If no
 #'     discrepancies are found, `code_feedback()` returns `NULL`.
-#'   
-#'   - `maybe_code_feedback()` always returns a string for safe use in glue 
+#'
+#'   - `maybe_code_feedback()` always returns a string for safe use in glue
 #'     strings. If no discrepancies are found, it returns an empty string.
-#'   
+#'
 #'   - `give_code_feedback()` catches [fail()] grades and adds code feedback to
 #'      the feedback message using `maybe_code_feedback()`.
-#'   
-#' @describeIn code_feedback Determine code feedback by comparing the user's 
+#'
+#' @describeIn code_feedback Determine code feedback by comparing the user's
 #'   code to the solution.
 #' @export
 code_feedback <- function(
@@ -164,7 +163,7 @@ code_feedback <- function(
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
-  
+
   if (is_placeholder(env, ".envir_prep")) {
     env <- get0(".envir_prep", parent.frame(), ifnotfound = .envir_prep)
     if (is_placeholder(env)) {
@@ -180,16 +179,16 @@ code_feedback <- function(
     solution_code <- get0(".solution_code", parent.frame())
     assert_not_placeholder(solution_code)
   }
-  
+
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
   checkmate::assert_environment(env, null.ok = FALSE, .var.name = "env")
-  
+
   if (identical(user_expr, solution_expr)) {
     # identical! return early
     return(NULL)
   }
-  
+
   # returns `NULL` if no mistakes are found
   detect_mistakes(
     user = user_expr,
@@ -222,13 +221,13 @@ with_maybe_code_feedback <- function(val, expr) {
 #' @describeIn code_feedback Return `code_feedback()` result when possible.
 #'   Useful when setting default [fail()] glue messages. For example, if there
 #'   is no solution, no code feedback will be given.
-#'   
+#'
 #' @param default Default value to return if no code feedback is found or code
 #'   feedback can be provided.
 #' @param before,after Strings to be added before or after the code feedback
 #'   message to ensure the message is properly formatted in your feedback.
 #' @param space_before,space_after Deprecated. Use `before` and `after`.
-#'   
+#'
 #' @export
 maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
@@ -243,12 +242,12 @@ maybe_code_feedback <- function(
   space_after = deprecated()
 ) {
   ellipsis::check_dots_empty()
-  
+
   # if feedback is not enabled, return
   if (!should_display_code_feedback()) {
     return(default)
   }
-  
+
   if (is_present(space_before)) {
     deprecate_warn("0.2.3", "maybe_code_feedback(space_before=)", "maybe_code_feedback(before=)")
     if (missing(before)) {
@@ -261,13 +260,13 @@ maybe_code_feedback <- function(
       after <- if (isTRUE(space_after)) " " else ""
     }
   }
-  
+
   # ensure before and after are single strings
   checkmate::check_character(before, any.missing = FALSE, null.ok = TRUE)
   checkmate::check_character(after, any.missing = FALSE, null.ok = TRUE)
   before <- paste(before, collapse = "\n")
   after  <- paste(after, collapse = "\n")
-  
+
   # if an error occurs, return the default value
   # if no differences are found, return the default value
   # if any difference is found, maybe add space before and after
@@ -294,15 +293,15 @@ maybe_code_feedback <- function(
 
 #' @describeIn code_feedback Appends [maybe_code_feedback()] to the
 #'   message generated by incorrect grades.
-#'   
+#'
 #' @param expr A grading function — like [grade_this()] or [grade_result()] —
 #'   or a character string. The code feedback will be appended to the message
 #'   of any incorrect grades using [maybe_code_feedback()], set to always
 #'   include the code feedback, if possible. If `expr` is a character string,
-#'   `"{maybe_code_feedback()}"` is pasted into the string, without 
+#'   `"{maybe_code_feedback()}"` is pasted into the string, without
 #'   customization.
 #' @param location Should the code feedback message be added before or after?
-#'   
+#'
 #' @export
 give_code_feedback <- function(
   expr,
@@ -311,7 +310,7 @@ give_code_feedback <- function(
   location = c("after", "before")
 ) {
   location <- match.arg(location)
-  
+
   # evaluate expression in gradethis context to catch any grades
   # and also turn off maybe_code_feedback so that feedback isn't repeated twice
   expr_q <- rlang::get_expr(rlang::enquo(expr))
@@ -319,7 +318,7 @@ give_code_feedback <- function(
     FALSE,
     eval_gradethis(rlang::eval_bare(expr_q, env))
   )
-  
+
   # then dispatch on input type internally
   give_code_feedback_(res, env = env, location = location, ...)
 }
@@ -360,31 +359,31 @@ give_code_feedback_.gradethis_graded <- function(
 ) {
   solution_code <- get0(".solution_code", envir = env, ifnotfound = NULL)
   user_code <- get0(".user_code", envir = env, ifnotfound = NULL)
-  
+
   if (is.null(solution_code) || !identical(grade$correct, FALSE)) {
     signal_grade(grade)
   }
-  
+
   # What about correct grades with differences??
 
   feedback <- with_maybe_code_feedback(
     TRUE,
     maybe_code_feedback(user_code, solution_code, ...)
   )
-  
+
   # If there isn't any feedback or if the feedback message has already been
   # added to the grade message, then just re-throw the grade
   if (identical(feedback, "") || grepl(feedback, grade$message, fixed = TRUE)) {
     signal_grade(grade)
   }
-  
+
   before <- identical(location, "before")
   grade$message <- paste0(
-    if (before) feedback, 
-    grade$message, 
+    if (before) feedback,
+    grade$message,
     if (!before) feedback
   )
-  
+
   signal_grade(grade)
 }
 

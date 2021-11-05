@@ -1,5 +1,5 @@
 test_that("default error checker returns user error message", {
-  feedback <- 
+  feedback <-
     expect_exercise_checker(
       "definitely_not_right",
       check_code = "gradethis_error_checker()",
@@ -9,7 +9,7 @@ test_that("default error checker returns user error message", {
 })
 
 test_that("default error checker returns code feedback", {
-  feedback <- 
+  feedback <-
     expect_exercise_checker(
       "definitely_not_right",
       solution_code = "a",
@@ -18,4 +18,3 @@ test_that("default error checker returns code feedback", {
       msg = I("I expected")
     )
 })
-

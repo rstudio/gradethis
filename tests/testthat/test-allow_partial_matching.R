@@ -26,7 +26,7 @@ test_that("grade_code() - allow_partial_matching works 2 errors", {
 })
 
 test_that("grade_this_code() - allow_partial_matching works 2 errors", {
-  
+
   expect_this_code(
     user_code = "purrr::insistently(mean,quie = TRUE,rat = rate_backoff())",
     solution_code = "purrr::insistently(mean,quiet = TRUE,rate = rate_backoff())",
@@ -80,7 +80,7 @@ test_that("grade_code() - allow_partial_matching works 1 error bool", {
 })
 
 test_that("grade_this_code() - allow_partial_matching works 1 error bool", {
-  
+
   expect_this_code(
     user_code = "purrr::insistently(mean,quie = TRUE)",
     solution_code = "purrr::insistently(mean,quiet = TRUE)",
@@ -134,7 +134,7 @@ test_that("grade_code() - allow_partial_matching works 1 error fun", {
 })
 
 test_that("grade_this_code() - allow_partial_matching works 1 error fun", {
-  
+
   expect_this_code(
     user_code = "purrr::insistently(mean,rat = rate_backoff())",
     solution_code = "purrr::insistently(mean,rate = rate_backoff())",
@@ -181,11 +181,11 @@ test_that("grade_code() - allow_partial_matching works 1 error chr", {
 })
 
 test_that("grade_this_code() - allow_partial_matching works 1 error chr", {
-  
+
   ff <- function(p1 = "yes"){
     print(p1)
   }
-  
+
   expect_this_code(
     user_code = "ff(p=\"no\")",
     solution_code = "ff(p1=\"no\")",
@@ -231,11 +231,11 @@ test_that("grade_code() - allow_partial_matching works errors multi arg type", {
 })
 
 test_that("grade_this_code() - allow_partial_matching works errors multi arg type", {
-  
+
   ff <- function(chr = "yes", fun = ls, call =ls(), bool = TRUE) {
     print("youpi")
   }
-  
+
   pmatch_FALSE <- expect_this_code(
     user_code = "ff(ch = \"yes\", fu = ls, cal =ls(), boo = TRUE)",
     solution_code = "ff(chr = \"yes\", fun = ls, call =ls(), bool = TRUE)",
@@ -256,8 +256,8 @@ test_that("grade_this_code() - allow_partial_matching works errors multi arg typ
   expect_match(object = pmatch_FALSE$message,regexp = "call = ls()")
   expect_match(object = pmatch_FALSE$message,regexp = "fun = ls")
   expect_match(object = pmatch_FALSE$message,regexp = "fu = ls")
-  
-  
+
+
 })
 
 test_that("grade_code() - allow_partial_matching works with multiple matches", {
@@ -309,9 +309,9 @@ test_that("grade_code() - allow_partial_matching works with multiple matches", {
 })
 
 test_that("grade_this_code() - allow_partial_matching works with multiple matches", {
-  
+
   ff <-  function(ab, abc, abcd) { 1 }
-  
+
   expect_this_code(
     user_code = "ff(ab = 1)",
     solution_code = "ff(ab = 1)",
@@ -342,7 +342,7 @@ test_that("grade_this_code() - allow_partial_matching works with multiple matche
       is_correct = FALSE
     )
   )
-  
+
   expect_this_code(
     user_code = "ff(ab = 1, abc = 1)",
     solution_code = "ff(ab = 1, abc = 1)",
@@ -353,5 +353,5 @@ test_that("grade_this_code() - allow_partial_matching works with multiple matche
     solution_code = "ff(ab = 1, abc = 1)",
     is_correct = TRUE
   )
-  
+
 })

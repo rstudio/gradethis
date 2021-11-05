@@ -29,29 +29,29 @@ feedback <- function(
 
   type <- grade$type %||% type %||% "auto"
   type <- match.arg(type)
-  
+
   location <- grade$location %||% location %||% "append"
   location <- match.arg(location)
 
   if (identical("auto", type)) {
-    type <- 
+    type <-
       if (length(grade$correct)) {
         if (grade$correct) "success" else "error"
       } else {
         "custom"
       }
   }
-  
+
   feedback <- list(
     message = message_md(grade$message),
     correct = grade$correct,
     type = type,
     location = location
   )
-  
+
   learnr_std_feedback <- which(names(grade) %in% c("message", "correct", "type", "location"))
   extra <- grade[-learnr_std_feedback]
-  
+
   if (length(extra)) {
     checkmate::assert_names(names(extra), "unique", .var.name = "extra data in `grade`")
     feedback <- c(feedback, extra)
@@ -66,7 +66,7 @@ is_feedback <- function(x) {
 }
 
 # Process the graded message using {commonmark}
-# 
+#
 # 1. htmltools tags and tagLists are passed through untouched. Authors should
 #    not use unescaped user-generated results in graded messages, but at least
 #    htmltools escapes text input by default.
@@ -85,14 +85,14 @@ message_md <- function(message = NULL) {
   if (is.null(message)) {
     return("")
   }
-  
+
   md <- commonmark::markdown_html(
     message,
     smart = TRUE,
     normalize = TRUE,
     extensions = c("tagfilter", "strikethrough", "table", "autolink")
   )
-  
+
   htmltools::HTML(remove_dangerous_html_tags(md))
 }
 
@@ -101,10 +101,10 @@ remove_dangerous_html_tags <- function(md) {
   # but in practice they were not. The list of tags was taken from the GFM specs:
   # https://github.com/github/cmark-gfm/blob/85d895289c5ab67f988ca659493a64abb5fec7b4/test/spec.txt#L9661-L9672
   bad_tags <- c(
-    "title", "textarea", "style", "xmp", "iframe", "noembed", "noframes", 
+    "title", "textarea", "style", "xmp", "iframe", "noembed", "noframes",
     "script", "plaintext"
   )
-  
+
   gsub(
     pattern = glue::glue("<(/?({tags}))", tags = paste(bad_tags, collapse = "|")),
     replacement = "&lt;\\1",
@@ -130,13 +130,13 @@ feedback_grading_problem <- function(message = NULL, type = NULL, error = NULL) 
   message <- message %||% gradethis_settings$grading_problem.message()
   type <- type %||% gradethis_settings$grading_problem.type()
   type <- feedback_grading_problem_validate_type(type)
-  
+
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")
   }
-  
+
   error <- unclass(error)
-  
+
   feedback(graded(logical(), message, type = type, error = error))
 }
 
@@ -144,12 +144,12 @@ grade_grading_problem <- function(message = NULL, error = NULL, correct = logica
   message <- message %||% gradethis_settings$grading_problem.message()
   type <- type %||% gradethis_settings$grading_problem.type()
   type <- feedback_grading_problem_validate_type(type)
-  
+
   if (is.call(error$call)) {
     error$call <- paste(deparse(error$call), collapse = "\n")
   }
-  
+
   error <- unclass(error)
-  
+
   graded(correct, message, type = type, error = error)
 }

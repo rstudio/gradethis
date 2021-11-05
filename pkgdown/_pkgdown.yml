@@ -3,53 +3,59 @@ destination: reference
 url: https://pkgs.rstudio.com/gradethis
 
 template:
-  package: quillt
+  package: tidytemplate
+  bootstrap: 5
+  bslib:
+    primary: "#096B72"
+    navbar-background: "#e6f3fc"
+  trailing_slash_redirect: true
+
   opengraph:
     image:
-      src: https://github.com/rstudio/gradethis/raw/main/man/figures/logo.png
+      src: man/figures/logo.png
       alt: "gradethis package"
     twitter:
       creator: "@rstudio"
       card: summary
 
-development:
-  version_tooltip: "auto"
-
 home:
-  strip_header: false
+  links:
+  - text: Learn more about learnr
+    href: "https://rstudio.github.io/learnr"
+
+authors:
+  Garrick Aden-Buie:
+    href: https://www.garrickadenbuie.com
+  Daniel Chen:
+    href: http://chendaniely.github.io/
+  Barret Schloerke:
+    href: http://schloerke.com/
+  "RStudio, PBC":
+    href: https://www.rstudio.com
+    html: <img src="https://www.tidyverse.org/rstudio-logo.svg" height="24" />
 
 navbar:
-  title: ~
-  type: default
   structure:
-    left:  [intro, examples, articles]
-    right: [reference, news, github]
+    left:  [intro, articles, reference, news]
   components:
-    home: ~
-    # examples:
-    #   text: Examples
-    #   href: articles/articles/examples.html
-    # articles:
-    #   text: Articles
-    #   menu:
-    #     - text: "No vignettes"
-    reference:
-      text: Reference
-      href: reference/index.html
-    github:
-      icon: fab fa-github fa-lg
-      href: https://github.com/rstudio/gradethis
-    # news:
-    #   text: News
-    #   menu:
-    #     - text: "Changelog"
-    #       href: news/index.html
-    #     - text: "------------------"
-    #     - text: "Blog posts"
-    #     - text: "Version 1.0"
-    #       href: https://blog.rstudio.com/2021/01/18/blogdown-v1.0/
-    #     - text: "Version 0.1"
-    #       href: https://blog.rstudio.com/2017/09/11/announcing-blogdown/
+    examples:
+      text: Examples
+      href: articles/articles/examples.html
+
+# custom footer for rmarkdown ecosystem
+footer:
+  structure:
+    left: [gradethis]
+    right: [developed_by, p, built_with]
+  components:
+      p: "\n\n"
+      gradethis: |
+        gradethis is built for use with [learnr](https://rstudio.github.io/learnr)
+        interactive tutorials.
+
+        learnr is a part of the **R Markdown** ecosystem of packages for creating
+        computational documents in R. Learn more at
+        [rmarkdown.rstudio.com](https://rmarkdown.rstudio.com/).
 
 reference:
 - title: Setup gradethis

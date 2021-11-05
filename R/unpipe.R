@@ -84,12 +84,12 @@ uses_pipe <- function(code) {
 }
 
 is_function_definition <- function(code_expr) {
-  # `code_expr` positions: 
+  # `code_expr` positions:
   # * 1: as.symbol("function")
   # * 2: list of arguments
   # * 3: body
   # * 4: srcref (or NULL after unpipe_all() removes the srcref)
-  length(code_expr) == 4 && 
+  length(code_expr) == 4 &&
     identical(code_expr[[1]], as.symbol("function")) &&
     is.pairlist(code_expr[[2]]) &&
     (is.null(code_expr[[4]]) || inherits(code_expr[[4]], "srcref"))

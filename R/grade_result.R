@@ -1,6 +1,6 @@
 #' Grade result of exercise code (Legacy)
 #'
-#' @description 
+#' @description
 #' `r lifecycle::badge("superseded")` Please use [grade_this()]
 #' mixed with [pass()], [pass_if_equal()], [fail()], and/or [fail_if_equal()].
 #'
@@ -28,11 +28,11 @@
 #' @keywords internal
 #' @export
 #' @examples
-#' 
+#'
 #' # The student submits code that returns `5`
 #' submitted_5 <- mock_this_exercise(.user_code = 2 + 3)
 #'
-#' # grade_result() returns a function that is called on the student's 
+#' # grade_result() returns a function that is called on the student's
 #' # submission. The *-check chunk of the exercise might contain the following
 #' # grade_result() code. When you're writing your tutorial, you can ignore the
 #' # `(submitted_5)`, we're using that notation here to preview what this
@@ -53,7 +53,7 @@
 #' submitted_fn <- mock_this_exercise(
 #'   .user_code = function(x) { x + 2 }
 #' )
-#' 
+#'
 #' # We can check submissions for this exercise using `grade_result()`. Note that
 #' # because all checks in this `grade_result()` are `fail_if()` statements, if
 #' # the student's submission passes all of the checks, then `grade_result()`
@@ -64,7 +64,9 @@
 #' )(submitted_fn)
 #'
 #' # To learn more about using grade_result() and grade_code() with learnr, see:
-#' \dontrun{gradethis_demo()}
+#' \dontrun{
+#' gradethis_demo()
+#' }
 grade_result <- function(
   ...,
   correct = NULL,
@@ -112,7 +114,7 @@ grade_result <- function(
         break
       }
     }
-    
+
     glue_correct   <- glue_correct   %||% gradethis_legacy_options$gradethis.glue_correct
     glue_incorrect <- glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect
 
@@ -165,7 +167,7 @@ grade_result_strict <- function(
 
     num_correct <- sum(vapply(grades, function(x) x$correct, logical(1)))
     is_correct <- num_correct == length(conditions)
-    
+
     glue_correct   <- glue_correct   %||% gradethis_legacy_options$gradethis.glue_correct_test
     glue_incorrect <- glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect_test
 

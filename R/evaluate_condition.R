@@ -18,7 +18,6 @@
 #'   last_value = 5,
 #'   env = new.env()
 #' )
-#' 
 #' @param condition a [condition()] object
 #' @param env environment to evaluate the condition
 #' @param ... ignored

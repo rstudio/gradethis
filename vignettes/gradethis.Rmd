@@ -33,7 +33,7 @@ grade_html <- function(grade) {
 }
 ```
 
-```{css echo=FALSE}
+```{css echo=FALSE, eval = !identical(Sys.getenv("IN_PKGDOWN", "false"), "true")}
 .alert {
   padding: 0.5em 1em;
   margin: 1em 2em;
@@ -60,6 +60,11 @@ grade_html <- function(grade) {
 }
 .alert code {
   background-color: #ffffff55;
+}
+```
+```{css echo=FALSE}
+.alert :last-child {
+  margin-bottom: 0;
 }
 ```
 

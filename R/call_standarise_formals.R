@@ -29,6 +29,6 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   }
   return(
     rlang::call_standardise(rlang::call_modify(code_std, !!!code_missing_default_args),
-                            env = env)
+      env = env)
   )
 }

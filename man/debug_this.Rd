@@ -28,7 +28,7 @@ to debug an exercise and a submission.
 
 \code{debug_this()} gives you a few ways to see the objects that are
 available inside \code{\link[=grade_this]{grade_this()}} for you to use when grading exercise
-submissions. Suppose we have this example exercise:\if{html}{\out{<div class="markdown">}}\preformatted{```\{r example-setup\}
+submissions. Suppose we have this example exercise:\if{html}{\out{<div class="sourceCode markdown">}}\preformatted{```\{r example-setup\}
 x <- 1
 ```
 

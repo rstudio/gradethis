@@ -12,7 +12,7 @@ glue_message <- function(
   if (is_tag_like(glue_expression) || is_AsIs(glue_expression)) {
     return(glue_expression)
   }
-  
+
   params <- list(...)
   param_names <- names(params)
   is_bool <- grepl("^\\.is_", param_names)

@@ -1,9 +1,9 @@
 detect_mistakes <- function(user,
-                            solution,
-                            env = rlang::env_parent(),
-                            enclosing_call = NULL,
-                            enclosing_arg = NULL,
-                            allow_partial_matching = TRUE) {
+  solution,
+  env = rlang::env_parent(),
+  enclosing_call = NULL,
+  enclosing_arg = NULL,
+  allow_partial_matching = TRUE) {
   force(env)
 
   if (rlang::is_quosure(user)) {
@@ -69,7 +69,7 @@ detect_mistakes <- function(user,
         submitted <- as.pairlist(user[setdiff(names(user), names(solution))])
         solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
       }
-      
+
       return(
         wrong_value(
           this = submitted,
@@ -381,7 +381,7 @@ detect_mistakes <- function(user,
         )
       )
 
-    # if user argument is unmatched due to no remaining solution arguments
+      # if user argument is unmatched due to no remaining solution arguments
     } else if (i > solution_len) {
       arg_name <- rlang::names2(user_args[i])
       if (!(arg_name %in% submitted_names)) arg_name <- ""
@@ -395,16 +395,16 @@ detect_mistakes <- function(user,
         )
       )
 
-    # The user argument has a matching solution argument, are they identical?
+      # The user argument has a matching solution argument, are they identical?
     } else if (!identical(user_args[[i]], solution_args[[i]])) {
       name <- rlang::names2(user_args[i])
       if (!(name %in% submitted_names)) name <- ""
-      
+
       # find user arg as submitted
       user_args_submitted <- as.list(call_standardise_formals(unpipe(submitted), env = env))
       user_args_ignore <- which(names(user_args_submitted) %in% user_named_args_ignore_list)
       user_args_submitted <- user_args_submitted[-c(1, user_args_ignore)]
-      
+
       res <- detect_mistakes(
         # unpipe only one level to detect mistakes in the argument as submitted
         user = user_args_submitted[[i]],
@@ -430,7 +430,7 @@ real_names <- function(x) {
 }
 
 detect_mismatched_function_arguments <- function(user, solution) {
-  is.pairlist(user) && 
+  is.pairlist(user) &&
     is.pairlist(solution) &&
     length(user) != length(solution)
 }

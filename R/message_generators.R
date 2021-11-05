@@ -29,10 +29,10 @@ missing_answer <- function(this_prior_line) {
 
 # bad argument name
 bad_argument_name <- function(this_call,
-                              this,
-                              this_name,
-                              enclosing_call = NULL,
-                              enclosing_arg = NULL) { # only if the user supplied one (to match user code)
+  this,
+  this_name,
+  enclosing_call = NULL,
+  enclosing_arg = NULL) { # only if the user supplied one (to match user code)
 
   # f(1, g(1, h(b = i(1))))
   # f(1, a = g(1, a = h(ba = i(1)), bb = i(2)))
@@ -69,9 +69,9 @@ bad_argument_name <- function(this_call,
 
 # duplicate_name
 duplicate_name <- function(this_call,
-                           this_name,
-                           enclosing_call = NULL,
-                           enclosing_arg = NULL) {
+  this_name,
+  enclosing_call = NULL,
+  enclosing_arg = NULL) {
 
   # f(a = 1, a = 2)
   # f(a = 1)
@@ -102,9 +102,9 @@ duplicate_name <- function(this_call,
 # WHAT TO DO IF THE MISSING ARGUMENT DOESN"T HAVE A NAME IN THE SOLUTION?
 # missing argument
 missing_argument <- function(this_call,
-                             that_name = NULL,
-                             enclosing_call = NULL,
-                             enclosing_arg = NULL) {
+  that_name = NULL,
+  enclosing_call = NULL,
+  enclosing_arg = NULL) {
 
   # f(1, g(1, h(i(1))))
   # f(1, a = g(1, a = h(a = i(1)), b = i(2)))
@@ -143,10 +143,10 @@ missing_argument <- function(this_call,
 
 # surplus argument
 surplus_argument <- function(this_call,
-                             this,
-                             this_name = NULL,
-                             enclosing_call = NULL,
-                             enclosing_arg = NULL) {
+  this,
+  this_name = NULL,
+  enclosing_call = NULL,
+  enclosing_arg = NULL) {
 
   # f(1, g(1, h(1, b = i(1))))
   # f(1, a = g(1, a = h(a = 1)))
@@ -187,11 +187,11 @@ surplus_argument <- function(this_call,
 
 # partial matching
 pmatches_argument_name <- function(this_call,
-                                   this,
-                                   this_name = NULL,
-                                   correct_name = NULL,
-                                   enclosing_call = NULL,
-                                   enclosing_arg = NULL) {
+  this,
+  this_name = NULL,
+  correct_name = NULL,
+  enclosing_call = NULL,
+  enclosing_arg = NULL) {
 
 
   # "{intro}I did not expect your call to {this_call} to ",
@@ -242,9 +242,9 @@ pmatches_argument_name <- function(this_call,
 
 # too_many_matches
 too_many_matches <- function(this_call,
-                             that_name,
-                             enclosing_call = NULL,
-                             enclosing_arg = NULL) {
+  that_name,
+  enclosing_call = NULL,
+  enclosing_arg = NULL) {
 
   # f(1, g(1, h(b = i(1), ba = 2)))
   # f(1, a = g(1, a = h(bab = 1)))
@@ -280,9 +280,9 @@ too_many_matches <- function(this_call,
 
 # wrong call
 wrong_call <- function(this,
-                       that,
-                       this_name = NULL,
-                       enclosing_call = NULL) {
+  that,
+  this_name = NULL,
+  enclosing_call = NULL) {
 
   # f(1, g(1, h(a = i(1))))
   # f(1, a = g(1, a = h(a = j(1))))
@@ -301,8 +301,8 @@ wrong_call <- function(this,
     that <- md_code_prepend(paste(this_name, "= "), that)
     this <- md_code_prepend(paste(this_name, "= "), this)
   }
-  
-  action <- 
+
+  action <-
     if (is_infix_assign(that_original)) {
       "assign something to something else with"
     } else {
@@ -323,9 +323,9 @@ wrong_call <- function(this,
 # argument that appears before the call or value. It should be passed to
 # this_name
 wrong_value <- function(this,
-                        that,
-                        this_name = NULL,
-                        enclosing_call = NULL) {
+  that,
+  this_name = NULL,
+  enclosing_call = NULL) {
 
   # f(1, g(1, h(1)))
   # f(1, a = g(1, a = h(2)))
@@ -342,19 +342,19 @@ wrong_value <- function(this,
     that <- this
     this <- NULL
   }
-  
+
   where <- " where you wrote "
-  
+
   that_original <- that
   that <- prep(that)
-   
+
   if (is.null(this)) {
     intro <- ""
     this <- build_intro(enclosing_call %||% that_original, .open = "", .close = "")
   } else {
     this <-prep(this)
   }
-      
+
   if (!is.null(this_name) && this_name != "") {
     that <- md_code_prepend(paste(this_name, "= "), that)
     this <- md_code_prepend(paste(this_name, "= "), this)
@@ -363,7 +363,7 @@ wrong_value <- function(this,
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
-  action <- 
+  action <-
     if (is_infix_assign(that_original)) {
       "you to assign something to something else with "
     } else if (grepl("\\(\\)", that)) {
@@ -405,7 +405,7 @@ build_intro <- function(.call = NULL, .arg = NULL, .open = "In ", .close = ", ")
     .call_str <- deparse_to_string(.call)
     if (!is.null(.arg) && !identical(.arg, "")) {
       .call_str <- paste(.arg, "=", .call_str)
-    } 
+    }
     if (is_call_fn_def) {
       # strip function body
       .call_str <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call_str)

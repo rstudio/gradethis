@@ -1,11 +1,11 @@
 context("Check grade_conditions messages")
 
 test_that("Correct messages without random praise", {
-  
+
   with_gradethis_setup(
     pass = "A pass message",
     {
-      
+
       expect_grade_this(
         expr = {
           pass_if_equal(5, "A pass_if_equal message")
@@ -15,7 +15,7 @@ test_that("Correct messages without random praise", {
         is_correct = TRUE,
         msg = "A pass_if_equal message"
       )
-      
+
       expect_grade_this(
         expr = {
           pass_if_equal(5)
@@ -25,10 +25,10 @@ test_that("Correct messages without random praise", {
         is_correct = TRUE,
         msg = "A pass message"
       )
-      
+
     }
   )
-  
+
 })
 
 test_that("Incorrect messages no match pass_if", {

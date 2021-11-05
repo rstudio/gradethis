@@ -9,8 +9,10 @@
 #' that uses `gradethis_exercise_checker()`.
 #'
 #' @examples
-#' \dontrun{gradethis_demo()}
-#' 
+#' \dontrun{
+#' gradethis_demo()
+#' }
+#'
 #' @param label Label for exercise chunk
 #' @param solution_code Code provided within the "-solution" chunk for the
 #'   exercise.
@@ -69,7 +71,7 @@ check_exercise <- function(
   last_value = NULL,
   ...
 ) {
-  
+
   learnr_args <- list(
     label = label,
     solution_code = solution_code,
@@ -81,7 +83,7 @@ check_exercise <- function(
     last_value = last_value,
     ...
   )
-  
+
   if (length(user_code) == 0 || !any(nzchar(trimws(user_code)))) {
     return(feedback(
       fail("I didn't receive your code. Did you write any?"),
@@ -99,7 +101,7 @@ check_exercise <- function(
   ## setup environments for checking
   # Errors in setup of exercise checking return from here
   check_exercise_env <- rlang::current_env()
-  
+
   # Envir to use for evaluating grade_this checking code,
   # using a clone of envir_prep as parent env
   check_env <- prepare_check_env(learnr_args)
@@ -131,7 +133,7 @@ check_exercise <- function(
           message(err_premature_grading$message)
           # return from main function (even though in a inner function! voodoo!)
           rlang::return_from(
-            check_exercise_env, 
+            check_exercise_env,
             feedback_grading_problem(error = err_premature_grading)
           )
         }
@@ -157,19 +159,19 @@ check_exercise <- function(
       to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
     }
   )
-  
+
   if (
     !(
       # make sure the returned value from check chunk evaluation is a function
       checkmate::test_function(to_check_fn) &&
-      # ...that accepts at least 1 argument
-      checkmate::test_number(length(formals(to_check_fn)), lower = 1)
+        # ...that accepts at least 1 argument
+        checkmate::test_number(length(formals(to_check_fn)), lower = 1)
     )
   ) {
     # notify author of their mistake
     err_not_a_function <- list(
       message = paste0(
-        "`", check_label, "` chunk did not return a function (such as `grade_this`) ", 
+        "`", check_label, "` chunk did not return a function (such as `grade_this`) ",
         "that accepts 1 argument containing the checking object"
       ),
       call = check_code,
@@ -213,26 +215,26 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
   # of the checking code changing the prep environment
   envir_base <- learnr::duplicate_env(learnr_args[["envir_prep"]])
   check_env <- new.env(parent = envir_base)
-  
+
   force(envir_caller)
-  
+
   # Copy over all learnr args into the checking environment
   for (name in names(learnr_args)) {
     learnr_arg <- learnr_args[[name]]
     name <- paste0(".", name)
-    
+
     # Ensure that code objects are always a length-1 character string
     if (length(learnr_arg) > 1 && grepl("code", name) && is.character(learnr_arg)) {
       learnr_arg <- paste(learnr_arg, collapse = "\n")
     }
-    
+
     check_env[[name]] <- learnr_arg
   }
-  
+
   # Add gradethis specific check objects
   check_env[[".result"]] <- learnr_args[["last_value"]]
   check_env[[".user"]] <- learnr_args[["last_value"]]
-  
+
   # Delayed evaluation of `.solution`
   solution_expr <- parse(text = learnr_args[["solution_code"]] %||% "")
   delayedAssign(
@@ -241,7 +243,7 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     {
       if (length(solution_expr) == 0) {
         rlang::return_from(
-          envir_caller, 
+          envir_caller,
           feedback(grade_grading_problem(
             message = "No solution is provided for this exercise.",
             type = "info",
@@ -270,7 +272,7 @@ grade_parse_error <- function(check_obj) {
   #   - .solution (evaluated .solution_code)
   #   - .result (.last_value from .user_code)
   #   - .user (.last_value from .user_code)
-  #   
+  #
   # Code scaffolding in exercise code will cause parse errors, so first check
   # for blanks. We consider a blank to be 3+ "_" characters.
   n_blanks <- sum(vapply(
@@ -278,10 +280,10 @@ grade_parse_error <- function(check_obj) {
     function(x) sum(x > 0),
     integer(1)
   ))
-  msg <- 
+  msg <-
     if (n_blanks > 0) {
       paste0(
-        "The exercise contains ", 
+        "The exercise contains ",
         if (n_blanks == 1L) {
           "1 blank"
         } else {

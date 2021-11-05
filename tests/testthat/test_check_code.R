@@ -150,7 +150,7 @@ test_that("Spot differences when pipes are involved", {
 test_that("Spots differences in long calls", {
   # original discussion here:
   # https://github.com/rstudio/gradethis/issues/28
-  
+
   # stub tidyr::gather()
   gather <- function(key = "key", value = "value", ..., na.rm = FALSE) {
     NULL
