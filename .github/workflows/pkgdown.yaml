@@ -44,24 +44,6 @@ jobs:
         run: |
           pkgdown::build_site(new_process = FALSE)
 
-      - name: Validate all topics exist (PR)
-        if: github.event_name != 'push'
-        shell: Rscript {0}
-        env:
-          R_CLI_NUM_COLORS: 1
-        run: |
-          pkgdown::build_reference_index()
-          if (length(warnings()) > 0) {
-            cat(
-              "::warning title=pkgdown reference index::",
-              paste(capture.output(warnings()), collapse = "%0A"),
-              sep = ""
-            )
-            if ("${{ github.event_name }}" != "push") {
-              stop("pkgdown reference index is missing topics")
-            }
-          }
-
       - name: Set environment variable $GIT_BRANCH_NAME
         id: git-branch-name
         uses: EthanSK/git-branch-name-action@v1
