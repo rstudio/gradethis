@@ -26,6 +26,7 @@
 #'   chunk.
 #' @param last_value The last value from evaluating the user's exercise
 #'   submission.
+#' @param stage The current stage of exercise checking.
 #' @param ... Extra arguments supplied by learnr
 #'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
@@ -43,6 +44,7 @@ gradethis_exercise_checker <- function(
   evaluate_result = NULL,
   envir_prep = NULL,
   last_value = NULL,
+  stage = NULL,
   ...
 ) {
   # Call this function in such a way that it can use other gradethis internals when called by learnr
@@ -56,6 +58,7 @@ gradethis_exercise_checker <- function(
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
     last_value = last_value,
+    stage = stage,
     ...
   )
 }
@@ -69,6 +72,7 @@ check_exercise <- function(
   evaluate_result = NULL,
   envir_prep = NULL,
   last_value = NULL,
+  stage = NULL,
   ...
 ) {
 
@@ -81,6 +85,7 @@ check_exercise <- function(
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
     last_value = last_value,
+    stage = stage,
     ...
   )
 

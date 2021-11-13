@@ -13,6 +13,7 @@ gradethis_exercise_checker(
   evaluate_result = NULL,
   envir_prep = NULL,
   last_value = NULL,
+  stage = NULL,
   ...
 )
 }
@@ -37,6 +38,8 @@ chunk.}
 
 \item{last_value}{The last value from evaluating the user's exercise
 submission.}
+
+\item{stage}{The current stage of exercise checking.}
 
 \item{...}{Extra arguments supplied by learnr}
 }
