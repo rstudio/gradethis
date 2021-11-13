@@ -155,15 +155,17 @@ check_exercise <- function(
     }
   )
 
-  tryCatch(
-    parse(text = user_code %||% ""),
-    error = function(e) {
-      # Add the error object to the checking object
-      check_env$.error <- e
-      # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
-      to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
-    }
-  )
+  if (is.null(stage)) {
+    tryCatch(
+      parse(text = user_code %||% ""),
+      error = function(e) {
+        # Add the error object to the checking object
+        check_env$.error <- e
+        # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
+        to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
+      }
+    )
+  }
 
   if (
     !(
