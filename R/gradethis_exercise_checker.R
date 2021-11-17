@@ -26,6 +26,7 @@
 #'   chunk.
 #' @param last_value The last value from evaluating the user's exercise
 #'   submission.
+#' @param stage The current stage of exercise checking.
 #' @param ... Extra arguments supplied by learnr
 #'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
@@ -43,6 +44,7 @@ gradethis_exercise_checker <- function(
   evaluate_result = NULL,
   envir_prep = NULL,
   last_value = NULL,
+  stage = NULL,
   ...
 ) {
   # Call this function in such a way that it can use other gradethis internals when called by learnr
@@ -56,6 +58,7 @@ gradethis_exercise_checker <- function(
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
     last_value = last_value,
+    stage = stage,
     ...
   )
 }
@@ -69,6 +72,7 @@ check_exercise <- function(
   evaluate_result = NULL,
   envir_prep = NULL,
   last_value = NULL,
+  stage = NULL,
   ...
 ) {
 
@@ -81,6 +85,7 @@ check_exercise <- function(
     evaluate_result = evaluate_result,
     envir_prep = envir_prep,
     last_value = last_value,
+    stage = stage,
     ...
   )
 
@@ -150,15 +155,18 @@ check_exercise <- function(
     }
   )
 
-  tryCatch(
-    parse(text = user_code %||% ""),
-    error = function(e) {
-      # Add the error object to the checking object
-      check_env$.error <- e
-      # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
-      to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
-    }
-  )
+  # Skip parse checking if it was already done in {learnr}
+  if (!learnr_includes_parse_check(stage)) {
+    tryCatch(
+      parse(text = user_code %||% ""),
+      error = function(e) {
+        # Add the error object to the checking object
+        check_env$.error <- e
+        # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
+        to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
+      }
+    )
+  }
 
   if (
     !(
@@ -303,4 +311,8 @@ grade_parse_error <- function(check_obj) {
       )
     }
   fail(message = msg, error = list(message = check_obj$.error$message, call = check_obj$.user_code))
+}
+
+learnr_includes_parse_check <- function(stage) {
+  !is.null(stage) && rlang::is_installed("learnr", version = "0.10.1.9017")
 }
