@@ -156,7 +156,7 @@ check_exercise <- function(
   )
 
   # Skip parse checking if it was already done in {learnr}
-  if (!learnr_includes_parse_check()) {
+  if (!learnr_includes_parse_check(stage)) {
     tryCatch(
       parse(text = user_code %||% ""),
       error = function(e) {
