@@ -155,7 +155,8 @@ check_exercise <- function(
     }
   )
 
-  if (is.null(stage)) {
+  # Skip parse checking if it was already done in {learnr}
+  if (!learnr_includes_parse_check()) {
     tryCatch(
       parse(text = user_code %||% ""),
       error = function(e) {
@@ -310,4 +311,8 @@ grade_parse_error <- function(check_obj) {
       )
     }
   fail(message = msg, error = list(message = check_obj$.error$message, call = check_obj$.user_code))
+}
+
+learnr_includes_parse_check <- function(stage) {
+  !is.null(stage) && rlang::is_installed("learnr", version = "0.10.1.9017")
 }
