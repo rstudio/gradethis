@@ -4,6 +4,7 @@ on:
      - main
      - rc-**
      - pkgdown/**
+     - docs/**
   pull_request:
     branches:
      - main
