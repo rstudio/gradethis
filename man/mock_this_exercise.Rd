@@ -10,6 +10,7 @@ mock_this_exercise(
   ...,
   .label = "mock",
   .engine = "r",
+  .stage = "check",
   setup_global = NULL,
   setup_exercise = NULL
 )
@@ -27,6 +28,10 @@ representing the solution code to this exercise.}
 
 \item{.engine}{The engine of the mock exercise, must be \code{"r"} but is included
 here for future compatibility.}
+
+\item{.stage}{The stage of the exercise evaluation, defaults to \code{"check"}.
+\pkg{learnr} stages are \code{"code_check"}, \code{"check"} or \code{"error_check"}. When
+gradethis is used outside of learnr, this variable is typically \code{NULL}.}
 
 \item{setup_global}{An optional single string or expression in braces
 representing the global \code{setup} chunk code.}
