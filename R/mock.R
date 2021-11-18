@@ -10,6 +10,9 @@
 #' @param .solution_code An optional single string or expression in braces
 #'   representing the solution code to this exercise.
 #' @param .label The label of the mock exercise, defaults to `"mock"`.
+#' @param .stage The stage of the exercise evaluation, defaults to `"check"`.
+#'   \pkg{learnr} stages are `"code_check"`, `"check"` or `"error_check"`. When
+#'   gradethis is used outside of learnr, this variable is typically `NULL`.
 #' @param .engine The engine of the mock exercise, must be `"r"` but is included
 #'   here for future compatibility.
 #' @param setup_global An optional single string or expression in braces
@@ -77,6 +80,7 @@ mock_this_exercise <- function(
   ...,
   .label = "mock",
   .engine = "r",
+  .stage = "check",
   setup_global = NULL,
   setup_exercise = NULL
 ) {
@@ -116,6 +120,7 @@ mock_this_exercise <- function(
     .user_code = expr_text(.user_code),
     .solution_code = expr_text(.solution_code),
     .label = .label,
+    .stage = .stage,
     .engine = .engine,
     .error = .error,
     .envir_prep = env_prep,

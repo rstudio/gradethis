@@ -13,6 +13,7 @@
 \alias{.envir_result}
 \alias{.evaluate_result}
 \alias{.label}
+\alias{.stage}
 \alias{.engine}
 \title{Checking environment objects for use in \code{grade_this()}}
 \format{
@@ -35,6 +36,8 @@ An object of class \code{.envir_result} (inherits from \code{gradethis_placehold
 An object of class \code{.evaluate_result} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.label} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.stage} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) of length 0.
 }
@@ -59,6 +62,8 @@ An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) o
 
 .label
 
+.stage
+
 .engine
 }
 \description{
@@ -80,6 +85,7 @@ instructor code, the names of these objects all start with \code{.}.
 \item \code{.envir_prep}: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.
 \item \code{.envir_result}: The R environemnt after running the student's submitted code.
 \item \code{.evaluate_result}: The return value from the \code{\link[evaluate:evaluate]{evaluate::evaluate()}} function (see learnr's documentation).
+\item \code{.stage}: The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'
 }
 
 In addition, \pkg{gradethis} has provided some extra objects:

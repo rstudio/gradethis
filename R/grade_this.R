@@ -208,6 +208,7 @@ placeholder_definition <- function(x) {
     .envir_prep = "A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.",
     .envir_result = "The R environemnt after running the student's submitted code.",
     .evaluate_result = "The return value from the [evaluate::evaluate()] function (see learnr's documentation).",
+    .stage = "The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'",
     ""
   )
 }
@@ -233,6 +234,7 @@ placeholder_definition <- function(x) {
 #' * `.envir_prep`: `r placeholder_definition(".envir_prep")`
 #' * `.envir_result`: `r placeholder_definition(".envir_result")`
 #' * `.evaluate_result`: `r placeholder_definition(".evaluate_result")`
+#' * `.stage`: `r placeholder_definition(".stage")`
 #'
 #' In addition, \pkg{gradethis} has provided some extra objects:
 #'
@@ -281,6 +283,10 @@ NULL
 #' @rdname grade_this-objects
 #' @export
 .label <- placeholder(".label")
+
+#' @rdname grade_this-objects
+#' @export
+.stage <- placeholder(".stage")
 
 #' @rdname grade_this-objects
 #' @export
