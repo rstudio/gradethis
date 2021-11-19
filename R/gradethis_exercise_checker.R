@@ -314,5 +314,8 @@ grade_parse_error <- function(check_obj) {
 }
 
 learnr_includes_parse_check <- function(stage) {
-  !is.null(stage) && rlang::is_installed("learnr", version = "0.10.1.9017")
+  if (is.null(stage)) {
+    return(FALSE)
+  }
+  utils::packageVersion("learnr") >= package_version("0.10.1.9017")
 }
