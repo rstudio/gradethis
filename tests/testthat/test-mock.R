@@ -101,12 +101,12 @@ test_that("mock_this_exercise() evaluates solution into check_env parent", {
     "x <- 12",
     "y <- 30"
   )
-  
+
   force(ex$.solution)
-  
+
   expect_false(exists("x", ex))
   expect_true(exists("x", ex$.envir_result))
-  
+
   expect_true(exists("y", ex))
   expect_false(exists("y", ex, inherits = FALSE))
   expect_true(exists("y", parent.env(ex), inherits = FALSE))
