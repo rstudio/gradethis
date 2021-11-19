@@ -113,19 +113,23 @@ mock_this_exercise <- function(
     .result <- .error
   }
 
-  check_env <- list2env(list(
-    .result = .result,
-    .last_value = .result,
-    .user = .result,
-    .user_code = expr_text(.user_code),
-    .solution_code = expr_text(.solution_code),
-    .label = .label,
-    .stage = .stage,
-    .engine = .engine,
-    .error = .error,
-    .envir_prep = env_prep,
-    .envir_result = env_result
-  ))
+  env_base <- learnr::duplicate_env(env_prep)
+  check_env <- rlang::new_environment(
+    parent = env_base,
+    data = list(
+      .result = .result,
+      .last_value = .result,
+      .user = .result,
+      .user_code = expr_text(.user_code),
+      .solution_code = expr_text(.solution_code),
+      .label = .label,
+      .stage = .stage,
+      .engine = .engine,
+      .error = .error,
+      .envir_prep = env_prep,
+      .envir_result = env_result
+    )
+  )
 
   delayedAssign(
     assign.env = check_env,
@@ -142,8 +146,7 @@ mock_this_exercise <- function(
         )
       } else {
         # solution code exists...
-        # Using eval_tidy does not evaluate the expression. Using eval() instead
-        eval_code(.solution_code, rlang::env_clone(env_prep, env_global))
+        eval_code(.solution_code, env_base)
       }
     }
   )

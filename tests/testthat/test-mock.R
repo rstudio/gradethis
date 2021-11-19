@@ -95,3 +95,20 @@ test_that("user error populates .error, .result, .last_value, .user", {
   expect_condition_message(ex$.last_value, "boom")
   expect_condition_message(ex$.user, "boom")
 })
+
+test_that("mock_this_exercise() evaluates solution into check_env parent", {
+  ex <- mock_this_exercise(
+    "x <- 12",
+    "y <- 30"
+  )
+  
+  force(ex$.solution)
+  
+  expect_false(exists("x", ex))
+  expect_true(exists("x", ex$.envir_result))
+  
+  expect_true(exists("y", ex))
+  expect_false(exists("y", ex, inherits = FALSE))
+  expect_true(exists("y", parent.env(ex), inherits = FALSE))
+  expect_equal(get("y", ex), 30)
+})
