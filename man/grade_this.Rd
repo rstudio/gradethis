@@ -42,9 +42,7 @@ evaluate the grade-checking \code{expr} and return a final grade via \code{\link
 \description{
 \code{grade_this()} allows instructors to write custom logic to evaluate, grade
 and give feedback to students. To use \code{grade_this()}, call it directly in
-your \verb{*-check} chunk:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
+your \verb{*-check} chunk:\preformatted{```\{r example-check\}
 grade_this(\{
   # custom checking code appears here
   if (identical(.result, .solution)) \{
@@ -54,8 +52,6 @@ grade_this(\{
 \})
 ```
 }
-
-\if{html}{\out{</div>}}
 
 \code{grade_this()} makes available a number of objects based on the exercise and
 the student's submission that can be used to evaluate the student's submitted

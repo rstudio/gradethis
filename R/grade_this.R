@@ -5,7 +5,6 @@
 #' and give feedback to students. To use `grade_this()`, call it directly in
 #' your `*-check` chunk:
 #'
-#' \if{html}{\out{<div class="sourceCode">}}
 #' ````
 #' ```{r example-check}
 #' grade_this({
@@ -17,7 +16,6 @@
 #' })
 #' ```
 #' ````
-#' \if{html}{\out{</div>}}
 #'
 #' `grade_this()` makes available a number of objects based on the exercise and
 #' the student's submission that can be used to evaluate the student's submitted

@@ -27,18 +27,10 @@ jobs:
       - uses: r-lib/actions/setup-pandoc@v1
 
       - uses: r-lib/actions/setup-r-dependencies@v1
-        # with:
-        #   needs: website
-
-      # TODO: remove this when https://github.com/r-lib/actions/issues/386 is fixed
-      - name: Install website dependencies
-        shell: Rscript {0}
-        run: |
-          needs <- pak::local_dev_deps(dependencies = paste0("Config/Needs/", c("website", "connect")))[["ref"]]
-          for (dep in needs) {
-            pak::pkg_system_requirements(dep, execute = TRUE)
-          }
-          pak::pkg_install(needs)
+        with:
+          needs: |
+            connect
+            website
 
       - name: Build Site
         shell: Rscript {0}

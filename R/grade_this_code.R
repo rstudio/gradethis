@@ -11,23 +11,19 @@
 #' In most cases, to use `grade_this_code()`, ensure that your exercise has a
 #' `-solution` chunk:
 #'
-#' \if{html}{\out{<div class="sourceCode">}}
 #' ````
 #' ```{r example-solution}
 #' sqrt(log(1))
 #' ```
 #' ````
-#' \if{html}{\out{</div>}}
 #'
 #' Then, call `grade_this_code()` in your exercise's `-check` chunk:
 #'
-#' \if{html}{\out{<div class="sourceCode">}}
 #' ````
 #' ```{r example-check}
 #' grade_this_code()
 #' ```
 #' ````
-#' \if{html}{\out{</div>}}
 #'
 #' Learn more about how to use `grade_this_code()` in the **Details** section
 #'
