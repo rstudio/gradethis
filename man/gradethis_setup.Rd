@@ -118,15 +118,11 @@ them with \code{gradethis_setup()}.
 }
 \description{
 To use \pkg{gradethis} in your \pkg{learnr} tutorial, you only need to call
-\code{library(gradethis)} in your tutorial's setup chunk.
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r setup\}
+\code{library(gradethis)} in your tutorial's setup chunk.\preformatted{```\{r setup\}
 library(learnr)
 library(gradethis)
 ```
 }
-
-\if{html}{\out{</div>}}
 
 Use \code{gradethis_setup()} to change the default options suggested by gradethis.
 This function also describes in detail each of the global options available

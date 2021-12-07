@@ -46,23 +46,15 @@ success message (\code{correct}). If the student code does not match the solutio
 a customizable incorrect message (\code{incorrect}) can also be provided.
 
 In most cases, to use \code{grade_this_code()}, ensure that your exercise has a
-\code{-solution} chunk:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-solution\}
+\code{-solution} chunk:\preformatted{```\{r example-solution\}
 sqrt(log(1))
 ```
 }
 
-\if{html}{\out{</div>}}
-
-Then, call \code{grade_this_code()} in your exercise's \code{-check} chunk:
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
+Then, call \code{grade_this_code()} in your exercise's \code{-check} chunk:\preformatted{```\{r example-check\}
 grade_this_code()
 ```
 }
-
-\if{html}{\out{</div>}}
 
 Learn more about how to use \code{grade_this_code()} in the \strong{Details} section
 }

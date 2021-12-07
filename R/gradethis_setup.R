@@ -6,14 +6,12 @@
 #' To use \pkg{gradethis} in your \pkg{learnr} tutorial, you only need to call
 #' `library(gradethis)` in your tutorial's setup chunk.
 #'
-#' \if{html}{\out{<div class="sourceCode">}}
 #' ````
 #' ```{r setup}
 #' library(learnr)
 #' library(gradethis)
 #' ```
 #' ````
-#' \if{html}{\out{</div>}}
 #'
 #' Use `gradethis_setup()` to change the default options suggested by gradethis.
 #' This function also describes in detail each of the global options available

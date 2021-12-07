@@ -57,7 +57,6 @@
 #'   first, progressing to the most complicated tests. By taking advantage of
 #'   early grade returns, you can simplify your checking code:
 #'
-#'   \if{html}{\out{<div class="sourceCode">}}
 #'   ````
 #'   ```{r}
 #'   grade_this({
@@ -81,7 +80,6 @@
 #'   })
 #'   ```
 #'   ````
-#'   \if{html}{\out{</div>}}
 #'
 #'   Notice that it's important to choose a final fallback grade as the last
 #'   value in your [grade_this()] checking code. This last value is the default
