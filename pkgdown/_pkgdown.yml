@@ -12,11 +12,11 @@ template:
 
   opengraph:
     image:
-      src: man/figures/logo.png
+      src: gradethis-social.png
       alt: "gradethis package"
     twitter:
       creator: "@rstudio"
-      card: summary
+      card: summary_large_image
 
 home:
   links:
