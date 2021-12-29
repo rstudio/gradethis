@@ -40,7 +40,7 @@ Calling the returned function on the exercise-checking environment will
 evaluate the grade-checking \code{expr} and return a final grade via \code{\link[=graded]{graded()}}.
 }
 \description{
-\code{grade_this()} allows instructors to write custom logic to evaluate, grade
+\code{grade_this()} allows INSTRUCTORS to write CUSTOM logic to evaluate, GRADE
 and give feedback to students. To use \code{grade_this()}, call it directly in
 your \verb{*-check} chunk:\preformatted{```\{r example-check\}
 grade_this(\{
