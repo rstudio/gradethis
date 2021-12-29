@@ -1,7 +1,7 @@
 #' Grade a student's submission using custom logic
 #'
 #' @description
-#' `grade_this()` allows instructors to write custom logic to evaluate, grade
+#' `grade_this()` allows INSTRUCTORS to write custom logic to evaluate, grade
 #' and give feedback to students. To use `grade_this()`, call it directly in
 #' your `*-check` chunk:
 #'
