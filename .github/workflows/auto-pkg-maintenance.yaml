@@ -8,5 +8,4 @@ name: Package Maintenance
 
 jobs:
   auto-pkg-maintenance:
-    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'auto-pkg-maintenance')
     uses: rstudio/education-workflows/.github/workflows/auto-pkg-maintenance.yaml@v1
