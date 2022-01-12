@@ -17,16 +17,26 @@
 #' ```
 #' ````
 #'
-#' Then, call `grade_this_code()` in your exercise's `-check` chunk:
+#' Then, call `grade_this_code()` in your exercise's `-check` or `-code-check` chunk:
 #'
 #' ````
 #' ```{r example-check}
 #' grade_this_code()
 #' ```
 #' ````
+#' 
+#' If `grade_this_code()` is called in a `-code-check` chunk and returns
+#' feedback, either passing or failing feedback, then the user's code is not
+#' executed. If you want the user to see the output of their code, call
+#' `grade_this_code()` in the `-check` chunk. You can also use
+#' `grade_this_code()` as a pre-check to avoid running code when it fails or
+#' passes by calling `grade_this_code()` inside the `-code-check` chunk and
+#' setting `action = "pass"` or `action = "fail"` to only return feedback when
+#' the user's code passes or fails, respectively. (Note: requires \pkg{learnr}
+#' version 0.10.1.9017 or later.)
 #'
 #' Learn more about how to use `grade_this_code()` in the **Details** section
-#'
+#' below.
 #'
 #' @section Details:
 #'
@@ -121,6 +131,7 @@
 #'     .solution_code = "storms %>% select(year, month, day)"
 #'   )
 #' )
+#'
 #' @param correct A `glue`-able character string to display if the student
 #'   answer matches a known correct answer.
 #' @param incorrect A `glue`-able character string to display if the student
