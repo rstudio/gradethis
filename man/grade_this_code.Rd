@@ -10,7 +10,8 @@ grade_this_code(
   incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
+  action = c("both", "pass", "fail")
 )
 }
 \arguments{
@@ -29,6 +30,15 @@ argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
 message indicating that the full formal name \code{min} should be used. The
 default is set via the \code{gradethis.allow_partial_matching} option, or by
 \code{\link[=gradethis_setup]{gradethis_setup()}}.}
+
+\item{action}{The action to take:
+\enumerate{
+\item \code{"pass"} provide passing \code{correct} feedback when the user's code
+matches the solution code.
+\item \code{"fail"} provide failing \code{incorrect} feedback when the user's code does
+not match the solution code.
+\item \code{"both"} always provide passing or failing feedback.
+}}
 }
 \value{
 Returns a function whose first parameter will be an environment
