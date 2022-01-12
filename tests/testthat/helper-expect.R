@@ -204,7 +204,9 @@ expect_exercise_checker <- function(
   msg,
   msg_type = NULL,
   msg_fixed = TRUE,
-  error_message = NULL
+  error_message = NULL,
+  stage = NULL,
+  expect_feedback = TRUE
 ) {
   envir_prep <- new.env(parent = .GlobalEnv)
   eval(parse(text = prep_code), envir = envir_prep)
@@ -223,8 +225,13 @@ expect_exercise_checker <- function(
     envir_result = envir_result,
     evaluate_result = "ignore",
     envir_prep = envir_prep,
-    last_value = last_value
+    last_value = last_value,
+    stage = stage
   )
+  
+  if (!expect_feedback) {
+    return(feedback)
+  }
 
   checkmate::expect_names(names(feedback), must.include = c("message", "correct", "type", "location"))
   checkmate::expect_string(feedback$message, null.ok = TRUE)

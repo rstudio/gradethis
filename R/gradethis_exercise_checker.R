@@ -197,6 +197,11 @@ check_exercise <- function(
 
   # make sure the result is a pass or fail
   if (!is_graded(graded_result)) {
+    if (!is.null(stage) && stage %in% c("code_check", "error_check")) {
+      # It's okay for these stages to not return feedback
+      return()
+    }
+    
     err_result_not_graded <- list(
       message = paste0(
         "`", check_label, "` chunk did not mark an answer as correct or incorrect.",

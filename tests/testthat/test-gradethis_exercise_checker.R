@@ -1,5 +1,3 @@
-context("Check grade learnr")
-
 test_that("prep environment is used", {
   expect_exercise_checker(
     is_correct = TRUE,
@@ -12,7 +10,8 @@ test_that("prep environment is used", {
       grade_this({
         pass_if_equal(4, 'yes. you did it. {extra}')
       })
-    "
+    ",
+    stage = "check"
   )
 })
 
@@ -26,7 +25,8 @@ test_that("check environment is used", {
       grade_this({
         pass_if_equal(4, 'yes. you did it. {extra}')
       })
-    "
+    ",
+    stage = "check"
   )
 })
 
@@ -60,7 +60,8 @@ test_that("user and solution code are always length 1", {
     is_correct = TRUE,
     msg = "TEST PASSED",
     user_code = c("1", "2", "3"),
-    check_code = "grade_this(if (length(.user_code) == 1) pass('TEST PASSED') else fail('TEST FAILED'))"
+    check_code = "grade_this(if (length(.user_code) == 1) pass('TEST PASSED') else fail('TEST FAILED'))",
+    stage = "check"
   )
 
   expect_exercise_checker(
@@ -68,7 +69,8 @@ test_that("user and solution code are always length 1", {
     msg = "TEST PASSED",
     user_code = c("1", "2", "3"),
     solution_code= c("1", "2", "3", "4"),
-    check_code = "grade_this(if (length(.solution_code) == 1) pass('TEST PASSED') else fail('TEST FAILED'))"
+    check_code = "grade_this(if (length(.solution_code) == 1) pass('TEST PASSED') else fail('TEST FAILED'))",
+    stage = "check"
   )
 
   expect_exercise_checker(
@@ -83,7 +85,8 @@ test_that("user and solution code are always length 1", {
       "else",
       "fail('TEST FAILED')",
       ")"
-    )
+    ),
+    stage = "check"
   )
 })
 
@@ -97,7 +100,8 @@ test_that("length 0 solution code", {
     msg_type = "info",
     user_code = "1",
     check_code = "grade_this({pass(.solution)})",
-    solution_code = ""
+    solution_code = "",
+    stage = "check"
   )
 })
 
@@ -110,7 +114,8 @@ test_that("pass / fail in check chunk are caught", {
       user_code = "1",
       solution_code = "1",
       check_code = "pass()",
-      error_message = "prematurely graded"
+      error_message = "prematurely graded",
+      stage = "check"
     ),
     "prematurely graded"
   )
@@ -124,7 +129,8 @@ test_that("pass / fail in check chunk are caught", {
       user_code = "1",
       solution_code = "1",
       check_code = "fail()",
-      error_message = "prematurely graded"
+      error_message = "prematurely graded",
+      stage = "check"
     ),
     "prematurely graded"
   )
@@ -140,7 +146,8 @@ test_that("check parsing error is caught", {
       user_code = "1",
       solution_code = "1",
       check_code = "4 +",
-      error_message = "unexpected end of input"
+      error_message = "unexpected end of input",
+      stage = NULL
     ),
     "Error while checking `test-check` chunk: "
   )
@@ -157,7 +164,8 @@ test_that("return value is a function of 1 argument", {
       user_code = "1",
       solution_code = "1",
       check_code = "1",
-      error_message = "chunk did not return a function"
+      error_message = "chunk did not return a function",
+      stage = "check"
     ),
     "chunk did not return a function (such as `grade_this`) that accepts 1 argument", fixed = TRUE
   )
@@ -172,7 +180,8 @@ test_that("return value is a function of 1 argument", {
       user_code = "1",
       solution_code = "1",
       check_code = "Sys.time",
-      error_message = "chunk did not return a function"
+      error_message = "chunk did not return a function",
+      stage = "check"
     ),
     "chunk did not return a function (such as `grade_this`) that accepts 1 argument", fixed = TRUE
   )
@@ -184,7 +193,8 @@ test_that("return value is a function of 1 argument", {
     msg = "test pass",
     user_code = "1",
     solution_code = "1",
-    check_code = "function(...) pass('test pass')"
+    check_code = "function(...) pass('test pass')",
+    stage = "check"
   )
 })
 
@@ -196,33 +206,47 @@ test_that("a grade is given", {
       user_code = "1",
       solution_code = "1",
       check_code = "function(...) NULL",
-      error_message = "chunk did not mark an answer as correct or incorrect"
+      error_message = "chunk did not mark an answer as correct or incorrect",
+      stage = "check"
     ),
     "chunk did not mark an answer as correct or incorrect", fixed = TRUE
   )
   expect_equal(err$error$call, "1")
   expect_equal(err$error$label, "test-check")
+  
+  expect_null(
+    expect_exercise_checker(
+      user_code = "1",
+      solution_code = "1",
+      check_code = "grade_this({ fail_if_code_feedback() })",
+      stage = "code_check",
+      expect_feedback = FALSE
+    )
+  )
 
   expect_exercise_checker(
     is_correct = TRUE,
     msg = "test pass",
     user_code = "1",
     solution_code = "1",
-    check_code = "function(...) pass('test pass')"
+    check_code = "function(...) pass('test pass')",
+    stage = "check"
   )
   expect_exercise_checker(
     is_correct = FALSE,
     msg = "test fail",
     user_code = "1",
     solution_code = "1",
-    check_code = "function(...) fail('test fail')"
+    check_code = "function(...) fail('test fail')",
+    stage = "check"
   )
   expect_exercise_checker(
     is_correct = FALSE,
     msg = "boom",
     user_code = "1",
     solution_code = "1",
-    check_code = "function(...) fail_if_error(stop('boom'))"
+    check_code = "function(...) fail_if_error(stop('boom'))",
+    stage = "check"
   )
 })
 
