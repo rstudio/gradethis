@@ -197,8 +197,8 @@ check_exercise <- function(
 
   # make sure the result is a pass or fail
   if (!is_graded(graded_result)) {
-    if (!is.null(stage) && stage %in% c("code_check", "error_check")) {
-      # It's okay for these stages to not return feedback
+    if (!is.null(stage) && !identical(tolower(stage), "check")) {
+      # check chunks require a final answer, others might defer to later stages
       return()
     }
     
