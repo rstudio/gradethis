@@ -228,7 +228,7 @@ expect_exercise_checker <- function(
     last_value = last_value,
     stage = stage
   )
-  
+
   if (!expect_feedback) {
     return(feedback)
   }

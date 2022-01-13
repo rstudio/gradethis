@@ -213,7 +213,7 @@ test_that("a grade is given", {
   )
   expect_equal(err$error$call, "1")
   expect_equal(err$error$label, "test-check")
-  
+
   expect_null(
     expect_exercise_checker(
       user_code = "1",

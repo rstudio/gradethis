@@ -201,7 +201,7 @@ check_exercise <- function(
       # check chunks require a final answer, others might defer to later stages
       return()
     }
-    
+
     err_result_not_graded <- list(
       message = paste0(
         "`", check_label, "` chunk did not mark an answer as correct or incorrect.",

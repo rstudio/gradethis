@@ -175,7 +175,7 @@ test_that("grade_this_code() doesn't have to return a grade", {
   expect_graded(grade_this_code(action = "both")(ex_fails), is_correct = FALSE)
   expect_graded(grade_this_code(action = "fail")(ex_fails), is_correct = FALSE)
   expect_null(grade_this_code(action = "pass")(ex_fails))
-  
+
   # user code is correct
   ex_ok <- mock_this_exercise("1 + 1", "1 + 1")
   expect_graded(grade_this_code(action = "both")(ex_ok), is_correct = TRUE)

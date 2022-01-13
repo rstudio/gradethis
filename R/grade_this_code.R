@@ -24,7 +24,7 @@
 #' grade_this_code()
 #' ```
 #' ````
-#' 
+#'
 #' If `grade_this_code()` is called in a `-code-check` chunk and returns
 #' feedback, either passing or failing feedback, then the user's code is not
 #' executed. If you want the user to see the output of their code, call
@@ -140,8 +140,8 @@
 #'   produced by comparing the student's submission with the solution.
 #' @param ... Ignored
 #' @param action The action to take:
-#' 
-#'   1. `"pass"` provide passing `correct` feedback when the user's code 
+#'
+#'   1. `"pass"` provide passing `correct` feedback when the user's code
 #'      matches the solution code.
 #'   2. `"fail"` provide failing `incorrect` feedback when the user's code does
 #'      not match the solution code.
@@ -165,7 +165,7 @@ grade_this_code <- function(
   action = c("both", "pass", "fail")
 ) {
   ellipsis::check_dots_empty()
-  
+
   action <- tolower(action)
   action <- match.arg(action)
   if (identical(action, "both")) {
@@ -203,15 +203,15 @@ grade_this_code <- function(
             fail(get(".__incorrect"))
           }
         }
-        
+
         invisible(NULL)
       })(check_env)
     )
-    
+
     if (is.null(grade)) {
       return(invisible(NULL))
     }
-    
+
     class(grade) <- c("gradethis_graded_this_code", class(grade))
     grade
   }
