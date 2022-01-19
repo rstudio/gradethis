@@ -17,7 +17,7 @@
 #' ```
 #' ````
 #'
-#' Then, call `grade_this_code()` in your exercise's `-check` chunk:
+#' Then, call `grade_this_code()` in your exercise's `-check` or `-code-check` chunk:
 #'
 #' ````
 #' ```{r example-check}
@@ -25,8 +25,18 @@
 #' ```
 #' ````
 #'
-#' Learn more about how to use `grade_this_code()` in the **Details** section
+#' If `grade_this_code()` is called in a `-code-check` chunk and returns
+#' feedback, either passing or failing feedback, then the user's code is not
+#' executed. If you want the user to see the output of their code, call
+#' `grade_this_code()` in the `-check` chunk. You can also use
+#' `grade_this_code()` as a pre-check to avoid running code when it fails or
+#' passes by calling `grade_this_code()` inside the `-code-check` chunk and
+#' setting `action = "pass"` or `action = "fail"` to only return feedback when
+#' the user's code passes or fails, respectively. (Note: requires \pkg{learnr}
+#' version 0.10.1.9017 or later.)
 #'
+#' Learn more about how to use `grade_this_code()` in the **Details** section
+#' below.
 #'
 #' @section Details:
 #'
@@ -121,6 +131,7 @@
 #'     .solution_code = "storms %>% select(year, month, day)"
 #'   )
 #' )
+#'
 #' @param correct A `glue`-able character string to display if the student
 #'   answer matches a known correct answer.
 #' @param incorrect A `glue`-able character string to display if the student
@@ -128,6 +139,13 @@
 #'   this string to control the placement of the auto-generated feedback message
 #'   produced by comparing the student's submission with the solution.
 #' @param ... Ignored
+#' @param action The action to take:
+#'
+#'   1. `"pass"` provide passing `correct` feedback when the user's code
+#'      matches the solution code.
+#'   2. `"fail"` provide failing `incorrect` feedback when the user's code does
+#'      not match the solution code.
+#'   3. `"both"` always provide passing or failing feedback.
 #' @inheritParams code_feedback
 #'
 #' @return Returns a function whose first parameter will be an environment
@@ -143,14 +161,22 @@ grade_this_code <- function(
   correct = getOption("gradethis.code_correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail", "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
+  action = c("both", "pass", "fail")
 ) {
   ellipsis::check_dots_empty()
+
+  action <- tolower(action)
+  action <- match.arg(action)
+  if (identical(action, "both")) {
+    action <- c("pass", "fail")
+  }
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
   function(check_env) {
     check_env[[".__correct"]] <- correct
     check_env[[".__incorrect"]] <- incorrect
+    check_env[[".__action"]] <- action
 
     grade <- with_options(
       list(
@@ -169,12 +195,23 @@ grade_this_code <- function(
         # but need to use `get()` to avoid using `utils::globalVariables`
         if (is.null(.message)) {
           # no code_feedback() message means the code is correct
-          pass(get(".__correct"))
+          if ("pass" %in% get(".__action")) {
+            pass(get(".__correct"))
+          }
+        } else {
+          if ("fail" %in% get(".__action")) {
+            fail(get(".__incorrect"))
+          }
         }
 
-        fail(get(".__incorrect"))
+        invisible(NULL)
       })(check_env)
     )
+
+    if (is.null(grade)) {
+      return(invisible(NULL))
+    }
+
     class(grade) <- c("gradethis_graded_this_code", class(grade))
     grade
   }

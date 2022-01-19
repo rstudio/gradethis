@@ -10,7 +10,8 @@ grade_this_code(
   incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
+  action = c("both", "pass", "fail")
 )
 }
 \arguments{
@@ -29,6 +30,15 @@ argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
 message indicating that the full formal name \code{min} should be used. The
 default is set via the \code{gradethis.allow_partial_matching} option, or by
 \code{\link[=gradethis_setup]{gradethis_setup()}}.}
+
+\item{action}{The action to take:
+\enumerate{
+\item \code{"pass"} provide passing \code{correct} feedback when the user's code
+matches the solution code.
+\item \code{"fail"} provide failing \code{incorrect} feedback when the user's code does
+not match the solution code.
+\item \code{"both"} always provide passing or failing feedback.
+}}
 }
 \value{
 Returns a function whose first parameter will be an environment
@@ -51,12 +61,23 @@ sqrt(log(1))
 ```
 }
 
-Then, call \code{grade_this_code()} in your exercise's \code{-check} chunk:\preformatted{```\{r example-check\}
+Then, call \code{grade_this_code()} in your exercise's \code{-check} or \code{-code-check} chunk:\preformatted{```\{r example-check\}
 grade_this_code()
 ```
 }
 
+If \code{grade_this_code()} is called in a \code{-code-check} chunk and returns
+feedback, either passing or failing feedback, then the user's code is not
+executed. If you want the user to see the output of their code, call
+\code{grade_this_code()} in the \code{-check} chunk. You can also use
+\code{grade_this_code()} as a pre-check to avoid running code when it fails or
+passes by calling \code{grade_this_code()} inside the \code{-code-check} chunk and
+setting \code{action = "pass"} or \code{action = "fail"} to only return feedback when
+the user's code passes or fails, respectively. (Note: requires \pkg{learnr}
+version 0.10.1.9017 or later.)
+
 Learn more about how to use \code{grade_this_code()} in the \strong{Details} section
+below.
 }
 \section{Details}{
 
@@ -154,6 +175,7 @@ grade_this_code(
     .solution_code = "storms \%>\% select(year, month, day)"
   )
 )
+
 }
 \seealso{
 \code{\link[=code_feedback]{code_feedback()}}, \code{\link[=grade_this]{grade_this()}}, \code{\link[=mock_this_exercise]{mock_this_exercise()}}

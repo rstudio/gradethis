@@ -1,5 +1,3 @@
-context("Check Code")
-
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
 
 test_that("Spots differences in atomics", {
@@ -169,4 +167,18 @@ test_that("Spots differences in long calls", {
   solution <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
   expect_this_code(user, solution, is_correct = TRUE)
 
+})
+
+test_that("grade_this_code() doesn't have to return a grade", {
+  # user code is incorrect
+  ex_fails <- mock_this_exercise("1", "2")
+  expect_graded(grade_this_code(action = "both")(ex_fails), is_correct = FALSE)
+  expect_graded(grade_this_code(action = "fail")(ex_fails), is_correct = FALSE)
+  expect_null(grade_this_code(action = "pass")(ex_fails))
+
+  # user code is correct
+  ex_ok <- mock_this_exercise("1 + 1", "1 + 1")
+  expect_graded(grade_this_code(action = "both")(ex_ok), is_correct = TRUE)
+  expect_graded(grade_this_code(action = "pass")(ex_ok), is_correct = TRUE)
+  expect_null(grade_this_code(action = "fail")(ex_ok))
 })
