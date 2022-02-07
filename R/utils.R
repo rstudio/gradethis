@@ -74,7 +74,7 @@ local_options_waldo_compare <- function(.local_envir = parent.frame()) {
 local_knitr_opts_chunk <- function (new = list(), .local_envir = parent.frame()) {
   old <- knitr::opts_chunk$get()
   knitr::opts_chunk$set(new)
-  
+
   withr::defer(envir = .local_envir, {
     knitr::opts_chunk$set(old)
     new_opts <- setdiff(names(new), names(old))
@@ -83,7 +83,7 @@ local_knitr_opts_chunk <- function (new = list(), .local_envir = parent.frame())
       knitr::opts_chunk$restore(opt)
     }
   })
-  
+
   invisible(old)
 }
 
