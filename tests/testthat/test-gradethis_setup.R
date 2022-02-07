@@ -38,19 +38,13 @@ test_that("gradethis_setup() sets default learnr options via chunk opts", {
   local_knitr_opts_chunk()
 
   with_knitr_opts_chunk(list(exercise.checker = "fail"), {
-    gradethis_setup()
-    expect_identical(
-      knitr::opts_chunk$get("exercise.checker"),
-      gradethis_exercise_checker
-    )
+    gradethis_setup(exercise.checker = "PASS")
+    expect_equal(knitr::opts_chunk$get("exercise.checker"), "PASS")
   })
 
   with_knitr_opts_chunk(list(exercise.checker = "fail"), {
-    gradethis_setup(exercise.timelimit = 42)
-    expect_identical(
-      knitr::opts_chunk$get("exercise.checker"),
-      gradethis_exercise_checker
-    )
+    gradethis_setup(exercise.checker = "PASS", exercise.timelimit = 42)
+    expect_equal(knitr::opts_chunk$get("exercise.checker"), "PASS")
     expect_equal(knitr::opts_chunk$get("exercise.timelimit"), 42)
   })
 })
