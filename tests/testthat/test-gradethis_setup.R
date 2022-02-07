@@ -33,3 +33,18 @@ test_that("gradethis_setup() issues warning for invalid `grading_problem.type`",
     )
   })
 })
+
+test_that("gradethis_setup() sets default learnr options via chunk opts", {
+  local_knitr_opts_chunk()
+
+  with_knitr_opts_chunk(list(exercise.checker = "fail"), {
+    gradethis_setup(exercise.checker = "PASS")
+    expect_equal(knitr::opts_chunk$get("exercise.checker"), "PASS")
+  })
+
+  with_knitr_opts_chunk(list(exercise.checker = "fail"), {
+    gradethis_setup(exercise.checker = "PASS", exercise.timelimit = 42)
+    expect_equal(knitr::opts_chunk$get("exercise.checker"), "PASS")
+    expect_equal(knitr::opts_chunk$get("exercise.timelimit"), 42)
+  })
+})
