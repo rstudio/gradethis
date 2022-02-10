@@ -41,7 +41,8 @@ Imports:
     withr
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    spelling
 VignetteBuilder: 
     knitr
 Remotes: 
@@ -50,6 +51,7 @@ Config/Needs/connect: rsconnect
 Config/Needs/coverage: covr
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
