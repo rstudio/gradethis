@@ -17,7 +17,7 @@
 #'
 #' 1. If the single values are different. Ex: `log(2)` vs `log(3)`
 #' 2. If the function call is different. Ex: `log(2)` vs `sqrt(2)`
-#' 3. Validate the user code can be standardised via
+#' 3. Validate the user code can be standardized via
 #'    [rlang::call_standardise()]. The `env` parameter is important for this
 #'    step as \pkg{gradethis} does not readily know about user defined
 #'    functions. Ex: `read.csv("file.csv")` turns into
@@ -44,7 +44,7 @@
 #' # Functions are different
 #' code_feedback("log(2)", "sqrt(2)")
 #'
-#' # Standardise argument names (no differences)
+#' # Standardize argument names (no differences)
 #' code_feedback("read.csv('file.csv')", "read.csv(file = 'file.csv')")
 #'
 #' # Partial matching is not allowed
@@ -62,7 +62,7 @@
 #' # ...even when the expected argument matches the function's default value
 #' code_feedback("read.csv('file.csv')", "read.csv('file.csv', header = TRUE)")
 #'
-#' # Unstandardised arguments will match by order and value
+#' # Unstandardized arguments will match by order and value
 #' code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
 #'
 #'
@@ -129,7 +129,7 @@
 #' @param user_code,solution_code String containing user or solution code. For
 #'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by
 #'   default retrieved from the calling environment.
-#' @param env Environment used to standardise formals of the user and solution
+#' @param env Environment used to standardize formals of the user and solution
 #'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
 #'   not found, the [parent.frame()] will be used.
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In

@@ -53,7 +53,7 @@ detect_mistakes <- function(user,
   solution_original <- solution
 
   if (is.call(user)) {
-    user <- unpipe_all(user) # cannot standardise yet without risking error
+    user <- unpipe_all(user) # cannot standardize yet without risking error
     submitted_names <- rlang::names2(user)
   }
   if (is.call(solution)) {
@@ -301,7 +301,7 @@ detect_mistakes <- function(user,
 
 
   # 6. Check that the user code does not contain any named arguments that do not
-  #    appear in the solution code. Since both calls have been standardised, these
+  #    appear in the solution code. Since both calls have been standardized, these
   #    named arguments can only be being passed to ... and we should not match by
   #    position a named argument that is passed to ... with an unnamed argument
   #    passed to ...
