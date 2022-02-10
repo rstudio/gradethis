@@ -83,7 +83,7 @@ detect_mistakes <- function(user,
   # We can assume anything below here is a call
 
   # Dividing cases into groups based on the relative lengths of the user's code
-  # and the solution code produces unitelligible messages as in issue #84. To
+  # and the solution code produces unintelligible messages as in issue #84. To
   # produce more transparent messages that accord with how a user thinks of calls,
   # check these things in this order:
 
@@ -303,7 +303,7 @@ detect_mistakes <- function(user,
   # 6. Check that the user code does not contain any named arguments that do not
   #    appear in the solution code. Since both calls have been standardised, these
   #    named arguments can only be being passed to ... and we should not match by
-  #    position a named argument that is passed to ... with an unamed argument
+  #    position a named argument that is passed to ... with an unnamed argument
   #    passed to ...
 
   unmatched_user_names <- user_names[!(user_names %in% solution_names)]
@@ -419,7 +419,7 @@ detect_mistakes <- function(user,
     }
   }
 
-  # No missmatch found
+  # No mismatch found
   return(NULL)
 }
 

@@ -237,7 +237,7 @@ that we will cover in more detail:
    related to the exercise and the student's submission, such as `.result`.
    
 1. `pass()` and `fail()` signal a final grade _as soon as they are called_.
-   There are also [additional grade-signalling functions](#grading-helper-functions)
+   There are also [additional grade-signaling functions](#grading-helper-functions)
    for common scenarios.
 
 1. The default `fail()` message includes code feedback, if a solution is available.
@@ -254,7 +254,7 @@ where a number of submission- and exercise-specific objects have been added.
 Among these objects,
 `grade_this()` includes all of the objects provided by `learnr`
 to an exercise checking function. 
-For convenience, gradethis also includes a few additional ojects.
+For convenience, gradethis also includes a few additional objects.
 To avoid name collisions with user or instructor code, 
 the names of these objects all start with `.`:
 

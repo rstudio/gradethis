@@ -193,7 +193,7 @@ grade_result_strict <- function(
 #' @export
 #' @param x A formula, function, or value, that returns `TRUE` or `FALSE`.
 #'    When comparing objects that are greater than length 1
-#'    (e.g., vectors, dataframes, matricies, etc)
+#'    (e.g., vectors, dataframes, matrices, etc)
 #'    A logical vector will be returned if the user uses `==`, not a single logical value.
 #'    `gradethis` will run the vector through
 #'     `all(..., na.rm = TRUE)` to check for the logical value.

@@ -242,7 +242,7 @@ pass <- function(
 #'   added using the default options of [give_code_feedback()] and
 #'   [maybe_code_feedback()]. The default value of `hint` can be set using
 #'   [gradethis_setup()] or the `gradethis.fail.hint` option.
-#' @param encourage Incude a random encouraging phrase with
+#' @param encourage Include a random encouraging phrase with
 #'   [random_encouragement()]? The default value of `encourage` can be set
 #'   using [gradethis_setup()] or the `gradethis.fail.encourage` option.
 #'
@@ -397,7 +397,7 @@ grade_if_equal <- function(x, y, message, correct, env, ...) {
     error = function(e) {
       # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
       # waldo::compare() calls diffobj::ses() — these functions try hard to create
-      # a useable diff to describe the differences. These filters below cover
+      # a usable diff to describe the differences. These filters below cover
       # cases where the diff description throws an error, but we know they only
       # arise when a difference has occurred. Since we aren't (currently)
       # interested in reporting the differences between `x` and `y`, we mark
@@ -552,7 +552,7 @@ fail_if <- function(
   if (detect_grade_this(env)) {
     assert_gradethis_condition_type_is_value(cond, "fail_if")
     if (cond) {
-      message <- message %||% getOption("gradethis.fail", "Inorrect.")
+      message <- message %||% getOption("gradethis.fail", "Incorrect.")
       maybe_extras(
         fail(message, env = env, ...),
         env = env,

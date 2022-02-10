@@ -204,7 +204,7 @@ placeholder_definition <- function(x) {
     .solution_code = "A string containing the code provided within the `*-solution` chunk for the exercise.",
     .check_code = "A string containing the code provided within the `*-check` or `*-code-check` chunk for the exercise.",
     .envir_prep = "A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.",
-    .envir_result = "The R environemnt after running the student's submitted code.",
+    .envir_result = "The R environment after running the student's submitted code.",
     .evaluate_result = "The return value from the [evaluate::evaluate()] function (see learnr's documentation).",
     .stage = "The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'",
     ""

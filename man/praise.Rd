@@ -36,7 +36,7 @@ encouragement phrase.}
 \itemize{
 \item \code{random_praise()} and \code{random_encouragement()} each return a length-one
 string with a praising or encouraging phrase.
-\item \code{give_praise()} and \code{give_encouragment()} add praise or encouragement
+\item \code{give_praise()} and \code{give_encouragement()} add praise or encouragement
 phrases to passing and failing grades, respectively.
 }
 }
