@@ -166,7 +166,15 @@ test_that("Spots differences in long calls", {
   user <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
   solution <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint
   expect_this_code(user, solution, is_correct = TRUE)
+})
 
+test_that("grade_this_code() gives neutral feedback if code is missing", {
+  expect_graded(
+    grade_this_code()(
+      mock_this_exercise(.user_code = "", .solution_code = "rnorm(1)")
+    ),
+    is_correct = logical()
+  )
 })
 
 test_that("grade_this_code() doesn't have to return a grade", {

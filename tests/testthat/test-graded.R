@@ -259,11 +259,9 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
 
   # Expect teacher grading problem if called outside of grade_this()
   testthat::expect_message(
-    expect_graded(
-      fail_if_code_feedback(),
-      is_correct = logical(),
-      msg = "problem occurred"
-    )
+    expect_null(fail_if_code_feedback()),
+    "expected `.user_code` to be found",
+    fixed = TRUE
   )
 
 

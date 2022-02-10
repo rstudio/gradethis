@@ -174,6 +174,8 @@ grade_this_code <- function(
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
   function(check_env) {
+    check_env[[".user_code"]] <- assert_user_code(.user_code, check_env)
+
     check_env[[".__correct"]] <- correct
     check_env[[".__incorrect"]] <- incorrect
     check_env[[".__action"]] <- action

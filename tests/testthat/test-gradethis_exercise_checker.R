@@ -296,3 +296,12 @@ test_that("pass_if() and fail_if() work in grade_this()", {
   )
   expect_match(err$error$message, "does not accept functions or formulas")
 })
+
+test_that("grade_this() gives neutral feedback if code is missing", {
+  expect_graded(
+    grade_this()(
+      mock_this_exercise(.user_code = "", .solution_code = "rnorm(1)")
+    ),
+    is_correct = logical()
+  )
+})
