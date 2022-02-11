@@ -520,7 +520,7 @@ pass_if <- function(
     assert_gradethis_condition_type_is_value(cond, "pass_if")
     if (cond) {
       message <- message %||% getOption("gradethis.pass", "Correct!")
-      maybe_extras(pass(message, env = env, ...), praise = praise)
+      pass(message, env = env, ..., praise = praise)
     }
   } else {
     condition(cond, message, correct = TRUE)
@@ -553,12 +553,7 @@ fail_if <- function(
     assert_gradethis_condition_type_is_value(cond, "fail_if")
     if (cond) {
       message <- message %||% getOption("gradethis.fail", "Incorrect.")
-      maybe_extras(
-        fail(message, env = env, ...),
-        env = env,
-        hint = hint,
-        encourage = encourage
-      )
+      fail(message, env = env, ..., hint = hint, encourage = encourage)
     }
   } else {
     if (!missing(hint) || isTRUE(hint)) {
