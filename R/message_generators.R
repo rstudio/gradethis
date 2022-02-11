@@ -99,7 +99,7 @@ duplicate_name <- function(this_call,
   )
 }
 
-# WHAT TO DO IF THE MISSING ARGUMENT DOESN"T HAVE A NAME IN THE SOLUTION?
+# WHAT TO DO IF THE MISSING ARGUMENT DOESN'T HAVE A NAME IN THE SOLUTION?
 # missing argument
 missing_argument <- function(this_call,
   that_name = NULL,

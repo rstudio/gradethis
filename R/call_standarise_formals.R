@@ -11,7 +11,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
 
 
 
-  # if include_defaults == FALSE standarise, but dont bother trying to fill out default formals
+  # if include_defaults == FALSE standardize, but don't bother trying to fill out default formals
   # - for primitives like mean, unable to distinguish between mean and mean.default
   if ( (!include_defaults) || is_infix(code) || is.primitive(fxn)) {
     return(rlang::call_standardise(code, env = env))

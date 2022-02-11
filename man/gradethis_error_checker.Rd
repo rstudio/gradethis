@@ -17,7 +17,7 @@ gradethis_error_checker(
 provided for the exercise. May reference \code{.error} or any of the
 \link{grade_this-objects}. The default value is set by \code{\link[=gradethis_setup]{gradethis_setup()}}.}
 
-\item{encourage}{Incude a random encouraging phrase with
+\item{encourage}{Include a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 }

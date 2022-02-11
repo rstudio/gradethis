@@ -83,7 +83,7 @@ instructor code, the names of these objects all start with \code{.}.
 \item \code{.user_code}: A string containing the code submitted by the user.
 \item \code{.check_code}: A string containing the code provided within the \verb{*-check} or \verb{*-code-check} chunk for the exercise.
 \item \code{.envir_prep}: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.
-\item \code{.envir_result}: The R environemnt after running the student's submitted code.
+\item \code{.envir_result}: The R environment after running the student's submitted code.
 \item \code{.evaluate_result}: The return value from the \code{\link[evaluate:evaluate]{evaluate::evaluate()}} function (see learnr's documentation).
 \item \code{.stage}: The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'
 }

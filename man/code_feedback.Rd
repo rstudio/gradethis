@@ -39,7 +39,7 @@ give_code_feedback(
 ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
 default retrieved from the calling environment.}
 
-\item{env}{Environment used to standardise formals of the user and solution
+\item{env}{Environment used to standardize formals of the user and solution
 code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
 not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
@@ -111,7 +111,7 @@ Here is how we detect code differences:
 \enumerate{
 \item If the single values are different. Ex: \code{log(2)} vs \code{log(3)}
 \item If the function call is different. Ex: \code{log(2)} vs \code{sqrt(2)}
-\item Validate the user code can be standardised via
+\item Validate the user code can be standardized via
 \code{\link[rlang:call_standardise]{rlang::call_standardise()}}. The \code{env} parameter is important for this
 step as \pkg{gradethis} does not readily know about user defined
 functions. Ex: \code{read.csv("file.csv")} turns into
@@ -140,7 +140,7 @@ code_feedback("log(2)", "log(2)")
 # Functions are different
 code_feedback("log(2)", "sqrt(2)")
 
-# Standardise argument names (no differences)
+# Standardize argument names (no differences)
 code_feedback("read.csv('file.csv')", "read.csv(file = 'file.csv')")
 
 # Partial matching is not allowed
@@ -158,7 +158,7 @@ code_feedback("mean(1:10)", "mean(1:10, na.rm = TRUE)")
 # ...even when the expected argument matches the function's default value
 code_feedback("read.csv('file.csv')", "read.csv('file.csv', header = TRUE)")
 
-# Unstandardised arguments will match by order and value
+# Unstandardized arguments will match by order and value
 code_feedback("mean(1:10, 0.1)", "mean(1:10, 0.2)")
 
 

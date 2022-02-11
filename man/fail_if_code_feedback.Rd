@@ -52,7 +52,7 @@ details.
 \code{location} may be one of "append", "prepend", or "replace".}
   }}
 
-\item{env}{Environment used to standardise formals of the user and solution
+\item{env}{Environment used to standardize formals of the user and solution
 code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
 not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
@@ -62,7 +62,7 @@ added using the default options of \code{\link[=give_code_feedback]{give_code_fe
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
 \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
-\item{encourage}{Incude a random encouraging phrase with
+\item{encourage}{Include a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 

@@ -16,7 +16,7 @@
 #' @return
 #'   - `random_praise()` and `random_encouragement()` each return a length-one
 #'     string with a praising or encouraging phrase.
-#'   - `give_praise()` and `give_encouragment()` add praise or encouragement
+#'   - `give_praise()` and `give_encouragement()` add praise or encouragement
 #'     phrases to passing and failing grades, respectively.
 #'
 #' @name praise

@@ -203,7 +203,7 @@ gradethis_default_options <- list(
   # Default message used for pipe_warning()
   pipe_warning = paste0(
     "I see that you are using pipe operators (e.g. %>%), ",
-    "so I want to let you know that this is how I am interpretting your code ",
+    "so I want to let you know that this is how I am interpreting your code ",
     "before I check it:\n\n```r\n{.user_code_unpiped}\n```\n\n"
   ),
 
