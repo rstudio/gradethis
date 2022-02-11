@@ -604,3 +604,42 @@ test_that("errors in fail_if_error() become fail() grades", {
     msg = "Your result isn't a single numeric value."
   )
 })
+
+test_that("extra phrases aren't duplicated", {
+  local_edition(2)
+  local_mock(
+    random_encouragement = function() "RANDOM ENCOURAGEMENT.",
+    random_praise = function() "RANDOM PRAISE."
+  )
+  
+  with_gradethis_setup(
+    fail.encourage = TRUE,
+    pass.praise = TRUE,
+    fail = "\n\nDEFAULT FAIL MESSAGE. {random_encouragement()}",
+    {
+      grader <- grade_this({
+        fail_if(
+          identical(.result, 43),
+          "SPECIFIC FAIL FEEDBACK",
+          encourage = TRUE
+        )
+        pass_if(
+          identical(.result, 42),
+          "SPECIFIC PASS FEEDBACK",
+          praise = TRUE
+        )
+      })
+      
+      grade_fail <- grader(mock_this_exercise(.user_code = 43, .solution_code = 42))
+      grade_pass <- grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
+    }
+  )
+  
+  expect_match_count <- function(text, pattern, n) {
+    count <- length(strsplit(text, pattern)[[1]]) - 1
+    expect_equal(!!count, !!n)
+  }
+  
+  expect_match_count(grade_fail$message, "RANDOM ENCOURAGEMENT", 1L)
+  expect_match_count(grade_pass$message, "RANDOM PRAISE", 1L)
+})
