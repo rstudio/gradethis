@@ -3,7 +3,7 @@ test_that("grade_this() can find objects in the original env where it was define
   grader <- grade_this({
     return(from_calling_env)
   })
-  
+
   expect_equal(
     grader(mock_this_exercise(1)),
     "CALLER"

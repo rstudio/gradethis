@@ -143,10 +143,10 @@ grade_this <- function(
     }
 
     check_env[[".__gradethis_check_env"]] <- TRUE
-    
+
     # Make check env a child of the original env where grade_this() was called
     rlang::env_poke_parent(check_env, expr_env)
-    
+
     # Turn the grading code into a function defined in the `check_env`
     do_grade_this <- rlang::new_function(NULL, body = expr, env = check_env)
 
