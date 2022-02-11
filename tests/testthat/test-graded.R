@@ -611,7 +611,7 @@ test_that("extra phrases aren't duplicated", {
     random_encouragement = function() "RANDOM ENCOURAGEMENT.",
     random_praise = function() "RANDOM PRAISE."
   )
-  
+
   with_gradethis_setup(
     fail.encourage = TRUE,
     pass.praise = TRUE,
@@ -629,17 +629,17 @@ test_that("extra phrases aren't duplicated", {
           praise = TRUE
         )
       })
-      
+
       grade_fail <- grader(mock_this_exercise(.user_code = 43, .solution_code = 42))
       grade_pass <- grader(mock_this_exercise(.user_code = 42, .solution_code = 42))
     }
   )
-  
+
   expect_match_count <- function(text, pattern, n) {
     count <- length(strsplit(text, pattern)[[1]]) - 1
     expect_equal(!!count, !!n)
   }
-  
+
   expect_match_count(grade_fail$message, "RANDOM ENCOURAGEMENT", 1L)
   expect_match_count(grade_pass$message, "RANDOM PRAISE", 1L)
 })
