@@ -8,7 +8,11 @@ runif( 3 ) '
   
   expect_equal(
     solutions_prepare(code),
-    list(one = "runif(1)", two = "runif(2)", three = "runif(3)")
+    gradethis_solutions(
+      one   = "runif(1)",
+      two   = "runif(2)",
+      three = "runif(3)"
+    )
   )
   
   code <- '
@@ -20,7 +24,11 @@ runif( 3 ) '
   
   expect_equal(
     solutions_prepare(code),
-    list(solution00 = "runif(1)", two = "runif(2)", solution02 = "runif(3)")
+    gradethis_solutions(
+      solution00 = "runif(1)",
+      two        = "runif(2)",
+      solution02 = "runif(3)"
+    )
   )
   
   
@@ -33,10 +41,18 @@ runif( 3 ) '
   
   expect_equal(
     solutions_prepare(code),
-    list(solution00 = "runif(1)", solution01 = "runif(2)", solution02 = "runif(3)")
+    gradethis_solutions(
+      solution00 = "runif(1)",
+      solution01 = "runif(2)",
+      solution02 = "runif(3)"
+    )
   )
-})
   
+  code <- "runif(1)"
+  expect_equal(solutions_prepare(code), list("runif(1)"))
+  expect_equal(solutions_prepare(code)[[1]], code[[1]])
+})
+
 test_that("split solutions with unparseable code", {
   code <- '
 runif(1)

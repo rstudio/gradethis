@@ -32,7 +32,33 @@ solutions_prepare <- function(code) {
     }
   }
   
-  ret
+  gradethis_solutions(.list = ret)
+}
+
+gradethis_solutions <- function(..., .list = list()) {
+  ret <- c(.list, list(...))
+  structure(ret, class = "gradethis_solutions")
+}
+
+#' @export
+print.gradethis_solutions <- function(x, ...) {
+  if (!rlang::has_length(x)) {
+    cat("No solutions")
+  } else {
+    cat(format(x))
+  }
+}
+
+#' @export
+format.gradethis_solutions <- function(x, ...) {
+  ret <- c()
+  for (i in seq_along(x)) {
+    header <- names(x)[i]
+    width_remaining <- min(getOption("width", 80), 80) - nchar(header) - 3
+    header <- paste("#", header, strrep("-", width_remaining))
+    ret <- c(ret, header, "", x[[i]], "")
+  }
+  paste(ret, collapse = "\n")
 }
 
 code_standardize_string <- function(code, scalar = TRUE) {
@@ -84,3 +110,4 @@ r_format_code <- function(code, name = "solution") {
     rlang::abort(msg, parent = err)
   })
 }
+
