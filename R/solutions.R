@@ -1,5 +1,9 @@
 solutions_prepare <- function(code) {
-  code <- strsplit(paste(code, collapse = "\n"), "\n")[[1]]
+  code <- code_standardize_string(code, scalar = FALSE)
+  
+  if (is.null(code)) {
+    return(NULL)
+  }
   
   headers <- solutions_detect_headers(code)
   if (is_null(headers)) {
@@ -29,6 +33,24 @@ solutions_prepare <- function(code) {
   }
   
   ret
+}
+
+code_standardize_string <- function(code, scalar = TRUE) {
+  if (is_null(code)) {
+    return(NULL)
+  }
+  
+  code <- paste(code, collapse = "\n")
+  if (!nzchar(trimws(code))) {
+    return(NULL)
+  }
+  
+  code <- strsplit(code, "\n")[[1]]
+  if (is_true(scalar)) {
+    paste(code, collapse = "\n")
+  } else {
+    code
+  }
 }
 
 solutions_detect_headers <- function(code) {

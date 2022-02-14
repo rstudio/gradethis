@@ -35,7 +35,9 @@ runif( 3 ) '
     solutions_prepare(code),
     list(solution00 = "runif(1)", solution01 = "runif(2)", solution02 = "runif(3)")
   )
+})
   
+test_that("split solutions with unparseable code", {
   code <- '
 runif(1)
 # ----
@@ -46,4 +48,12 @@ runif( 3 ) '
   # throws both an error and a condition
   expect_error(solutions_prepare(code))
   expect_condition(solutions_prepare(code), class = "gradethis_graded")
+})
+
+test_that("split solutions with empty code", {
+  expect_null(solutions_prepare(NULL))
+  expect_null(solutions_prepare(""))
+  expect_null(solutions_prepare("      "))
+  expect_null(solutions_prepare("\n\n\n\n"))
+  expect_null(solutions_prepare(c(" ", "", "\n", "\t\t")))
 })
