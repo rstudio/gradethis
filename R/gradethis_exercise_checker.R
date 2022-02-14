@@ -107,9 +107,22 @@ check_exercise <- function(
   # Errors in setup of exercise checking return from here
   check_exercise_env <- rlang::current_env()
 
-  # Envir to use for evaluating grade_this checking code,
-  # using a clone of envir_prep as parent env
-  check_env <- prepare_check_env(learnr_args)
+  # Create the check environment used by grade_this() where the parent of
+  # check_env is a clone of `envir_prep`. We use capture_errors/graded to throw
+  # an internal grading problem if anything goes wrong.
+  check_env <- capture_errors(
+    capture_graded(
+      prepare_check_env(learnr_args)
+    ),
+    on_error = function(err, ...) {
+      grade_grading_problem("Could not prepare checking environment for gradethis checking code.", error = err)
+    }
+  )
+  
+  if (is_graded(check_env)) {
+    # An error occurred while trying to prepare the check environment
+    return(feedback(check_env, "error"))
+  }
 
   # evaluate all checking code
   to_check_fn <- capture_errors(
@@ -247,9 +260,18 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
   # Add gradethis specific check objects
   check_env[[".result"]] <- learnr_args[["last_value"]]
   check_env[[".user"]] <- learnr_args[["last_value"]]
+  
+  # Add full solution code options
+  solutions <- solutions_prepare(learnr_args[["solution_code"]])
+  check_env[[".solution_code_all"]] <- solutions
+  
+  if (inherits(solutions, "gradethis_solutions")) {
+    # use last solution for .solution_code if we have multiple solutions
+    check_env[[".solution_code"]] <- solutions[[length(solutions)]]
+  }
 
   # Delayed evaluation of `.solution`
-  solution_expr <- parse(text = learnr_args[["solution_code"]] %||% "")
+  solution_expr <- parse(text = check_env[[".solution_code"]] %||% "")
   delayedAssign(
     assign.env = check_env,
     x = ".solution",

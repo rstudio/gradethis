@@ -9,6 +9,7 @@
 \alias{.solution}
 \alias{.user_code}
 \alias{.solution_code}
+\alias{.solution_code_all}
 \alias{.envir_prep}
 \alias{.envir_result}
 \alias{.evaluate_result}
@@ -28,6 +29,8 @@ An object of class \code{.solution} (inherits from \code{gradethis_placeholder})
 An object of class \code{.user_code} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.solution_code} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.solution_code_all} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.envir_prep} (inherits from \code{gradethis_placeholder}) of length 0.
 
@@ -53,6 +56,8 @@ An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) o
 .user_code
 
 .solution_code
+
+.solution_code_all
 
 .envir_prep
 
@@ -92,6 +97,7 @@ In addition, \pkg{gradethis} has provided some extra objects:
 \itemize{
 \item \code{.user}, \code{.result}: The last value returned from evaluating the user's exercise submission.
 \item \code{.solution}: The last value returned from evaluating the \code{.solution_code} for the exercise (evaluated in \code{.envir_prep}).
+\item \code{.solution_code_all}: A list containing the code of all solutions when multiple solutions are provided in the \verb{*-solution} chunk for the exercise. Solutions are separated by header comments, e.g. \verb{# base_r ----}.
 }
 }
 \keyword{datasets}
