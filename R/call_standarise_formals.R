@@ -6,7 +6,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
     return(code)
   })
   
-  if (!exists("fn") || !rlang::is_function(fn)) {
+  if (!exists("fn") || !is_function(fn)) {
     ## if for some reason the above tryCatch doesn't go to the error part
     return(code)
   }
@@ -14,7 +14,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   # if include_defaults == FALSE standardize, but don't bother trying to fill
   # out default formals. For primitives like mean, we're unable to distinguish
   # between mean() and mean.default()
-  if (rlang::is_false(include_defaults) || is_infix(code) || is.primitive(fn)) {
+  if (is_false(include_defaults) || is_infix(code) || is.primitive(fn)) {
     return(rlang::call_standardise(code, env = env))
   }
 

@@ -8,7 +8,11 @@
 #' @importFrom lifecycle deprecated
 #' @importFrom lifecycle is_present
 #' @importFrom rlang %||%
+#' @importFrom rlang is_false
+#' @importFrom rlang is_function
 #' @importFrom rlang is_missing
+#' @importFrom rlang is_null
+#' @importFrom rlang is_true
 #' @importFrom rlang missing_arg is_missing
 #' @importFrom utils browseURL
 #' @importFrom withr with_options
