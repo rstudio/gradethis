@@ -20,6 +20,7 @@
 * Added `gradethis_error_checker()`, a more robust checking function for general use when the student's submission _should not_ throw an error. (#234)
 * `grade_this_code()` gains an `action` argument, allowing authors to choose if `grade_this_code()` should only `"pass"` or `"fail"` the user's submission. By default, `grade_this_code()` uses `action = "both"` to maintain current behavior. (#276)
 * When combined with learnr version 0.10.1.9017 or later, gradethis' exercise checking function will not require that grading code absolutely return feedback unless exercise checking is at the `"check"` stage. (#276)
+* You may now call `return()` in `grade_this()` grading code to exit grading early. This is allowed in code and error checking code, but will result in an "internal error" when used in the `-check` chunk grading code (#284).
 
 ### Breaking changes
 

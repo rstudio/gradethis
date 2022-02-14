@@ -122,7 +122,9 @@ grade_this <- function(
   ...,
   maybe_code_feedback = getOption("gradethis.maybe_code_feedback", TRUE)
 ) {
-  express <- rlang::get_expr(rlang::enquo(expr))
+  expr_quo <- rlang::enquo(expr)
+  expr_env <- rlang::quo_get_env(expr_quo)
+  expr <- rlang::quo_get_expr(expr_quo)
 
   if ("fail_code_feedback" %in% names(list(...))) {
     lifecycle::deprecate_warn(
@@ -142,19 +144,18 @@ grade_this <- function(
 
     check_env[[".__gradethis_check_env"]] <- TRUE
 
+    # Make check env a child of the original env where grade_this() was called
+    rlang::env_poke_parent(check_env, expr_env)
+
+    # Turn the grading code into a function defined in the `check_env`
+    do_grade_this <- rlang::new_function(NULL, body = expr, env = check_env)
+
     # make sure fail calls can get code feed back (or not) if they want
     with_maybe_code_feedback(
       maybe_code_feedback,
 
       # capture all pass/fail calls and errors thrown
-      eval_gradethis({
-
-        # force the evaluation of the expression in an environment
-        rlang::eval_bare(
-          express,
-          env = check_env
-        )
-      })
+      eval_gradethis(do_grade_this())
     )
   }
 }
