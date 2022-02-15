@@ -325,7 +325,11 @@ wrong_call <- function(this,
 wrong_value <- function(this,
   that,
   this_name = NULL,
-  enclosing_call = NULL) {
+  enclosing_call = NULL
+) {
+  if (rlang::is_missing(this)) {
+    this <- NULL
+  }
 
   # f(1, g(1, h(1)))
   # f(1, a = g(1, a = h(2)))
