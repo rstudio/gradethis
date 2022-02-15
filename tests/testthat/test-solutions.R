@@ -5,7 +5,7 @@ runif(1)
     runif( 2 )
   # ------- three ----------
 runif( 3 ) '
-  
+
   expect_equal(
     solutions_prepare(code),
     gradethis_solutions(
@@ -14,14 +14,14 @@ runif( 3 ) '
       three = "runif(3)"
     )
   )
-  
+
   code <- '
 runif(1)
 # --- two ----
     runif( 2 )
   # ----------
 runif( 3 ) '
-  
+
   expect_equal(
     solutions_prepare(code),
     gradethis_solutions(
@@ -30,15 +30,15 @@ runif( 3 ) '
       solution02 = "runif(3)"
     )
   )
-  
-  
+
+
   code <- '
 runif(1)
 # ----
     runif( 2 )
   # ----------
 runif( 3 ) '
-  
+
   expect_equal(
     solutions_prepare(code),
     gradethis_solutions(
@@ -47,7 +47,7 @@ runif( 3 ) '
       solution02 = "runif(3)"
     )
   )
-  
+
   code <- "runif(1)"
   expect_equal(solutions_prepare(code), list("runif(1)"))
   expect_equal(solutions_prepare(code)[[1]], code[[1]])
@@ -57,10 +57,10 @@ test_that("split solutions with unparseable code", {
   code <- '
 runif(1)
 # ----
-    runif( 
+    runif(
   # ----------
 runif( 3 ) '
-  
+
   # throws both an error and a condition
   expect_error(solutions_prepare(code))
   expect_condition(solutions_prepare(code), class = "gradethis_graded")

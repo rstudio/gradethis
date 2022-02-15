@@ -143,7 +143,7 @@ grade_this <- function(
     }
 
     check_env[[".__gradethis_check_env"]] <- TRUE
-    
+
     # Ensure that check_env has expr_env as a parent
     #
     # +------------+       +-----------+

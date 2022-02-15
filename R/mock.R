@@ -121,12 +121,12 @@ mock_this_exercise <- function(
     engine = .engine,
     ...
   )
-  
+
   if (!is.null(.error)) {
     learnr_args$error <- .error
     learnr_args$last_value <- .error
   }
-  
+
   prepare_check_env(learnr_args, envir_caller = NULL)
 }
 
