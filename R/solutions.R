@@ -5,34 +5,14 @@ solutions_prepare <- function(code) {
     return(NULL)
   }
 
-  headers <- solutions_detect_headers(code)
-  if (is_null(headers)) {
-    return(list(code))
+  solutions <- solutions_split_headers(code)
+  if (rlang::is_character(solutions)) {
+    return(list(solutions))
   }
 
-  idx_code_splits <- c(1, headers, length(code) + 1L)
-  names(idx_code_splits) <- c("solution00", names(headers), "__ignored__")
+  solutions <- lapply(solutions, r_format_code)
 
-  if (all(idx_code_splits[1:2] == 1)) {
-    idx_code_splits <- idx_code_splits[-1]
-  }
-
-  ret <- list()
-  for (i in seq_along(idx_code_splits)[-1]) {
-    split_name <- names(idx_code_splits)[i - 1L]
-    line_start <- idx_code_splits[i - 1L]
-    line_end <- idx_code_splits[i] - 1L
-
-    split_code <- code[seq(line_start, line_end)]
-    split_code <- paste(split_code, collapse = "\n")
-    split_code <- r_format_code(split_code)
-
-    if (nzchar(split_code)) {
-      ret[split_name] <- split_code
-    }
-  }
-
-  gradethis_solutions(.list = ret)
+  gradethis_solutions(.list = solutions)
 }
 
 gradethis_solutions <- function(..., .list = list()) {
@@ -79,25 +59,42 @@ code_standardize_string <- function(code, scalar = TRUE) {
   }
 }
 
-solutions_detect_headers <- function(code) {
-  # lines with only a comment and ending in 4+ dashes
-  idx <- grep("^\\s*#.+----+\\s*$", code)
-  if (!length(idx)) {
-    return(NULL)
+solutions_split_headers <- function(code, prefix = "solution") {
+  code <- paste(code, collapse = "\n")
+  code <- trimws(code)
+  code <- strsplit(code, "\n")[[1]]
+
+  rgx_header <- "^\\s*#+[ -]*(.+?)\\s*----+$"
+  headers <- regmatches(code, regexec(rgx_header, code))
+  lines_headers <- which(vapply(headers, length, integer(1)) > 0)
+
+  if (length(lines_headers) > 0 && max(lines_headers) == length(code)) {
+    # nothing after last heading
+    lines_headers <- lines_headers[-length(lines_headers)]
   }
 
-  names(idx) <- sprintf("solution%02d", seq_len(length(idx)))
-  for (i in seq_along(idx)) {
-    idx_name <- code[idx[i]]
-    idx_name <- sub("^\\s*#([ -]+)?", "", idx_name)
-    idx_name <- sub("-+\\s*$", "", idx_name)
-    idx_name <- trimws(idx_name)
-    if (nzchar(idx_name)) {
-      names(idx)[i] <- idx_name
-    }
+  if (!length(lines_headers)) {
+    return(paste(code, collapse = "\n"))
   }
 
-  idx
+  header_names <- vapply(headers[lines_headers], `[[`, character(1), 2)
+  header_names <- trimws(header_names)
+  if (any(!nzchar(header_names))) {
+    header_names[!nzchar(header_names)] <- sprintf(
+      paste0(prefix, "%02d"),
+      which(!nzchar(header_names))
+    )
+  }
+
+  rgx_header_line <- gsub("[$^]", "(^|\n|$)", rgx_header)
+  sections <- strsplit(paste(code, collapse = "\n"), rgx_header_line, perl = TRUE)[[1]]
+  if (length(sections) > length(header_names)) {
+    header_names <- c(paste0(prefix, "00"), header_names)
+  }
+
+  names(sections) <- header_names
+  sections <- trimws(sections)
+  as.list(sections[nzchar(sections)])
 }
 
 r_format_code <- function(code, name = "solution") {
