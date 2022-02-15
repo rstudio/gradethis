@@ -109,49 +109,25 @@ mock_this_exercise <- function(
     error = function(e) .error <<- e
   )
 
+  learnr_args <- list(
+    label = .label,
+    solution_code = expr_text(.solution_code),
+    user_code = expr_text(.user_code),
+    envir_result = env_result,
+    # evaluate_result = evaluate_result,
+    envir_prep = env_prep,
+    last_value = .result,
+    stage = .stage,
+    engine = .engine,
+    ...
+  )
+  
   if (!is.null(.error)) {
-    .result <- .error
+    learnr_args$error <- .error
+    learnr_args$last_value <- .error
   }
-
-  env_base <- learnr::duplicate_env(env_prep)
-  check_env <- rlang::new_environment(
-    parent = env_base,
-    data = list(
-      .result = .result,
-      .last_value = .result,
-      .user = .result,
-      .user_code = expr_text(.user_code),
-      .solution_code = expr_text(.solution_code),
-      .label = .label,
-      .stage = .stage,
-      .engine = .engine,
-      .error = .error,
-      .envir_prep = env_prep,
-      .envir_result = env_result
-    )
-  )
-
-  delayedAssign(
-    assign.env = check_env,
-    x = ".solution",
-    {
-      # Delayed evaluation of `.solution!`
-      if (length(expr_text(.solution_code)) == 0) {
-        grade_grading_problem(
-          message = I("No solution is provided for this exercise"),
-          error = list(
-            message = "No solution is provided for this exercise",
-            label = .label
-          )
-        )
-      } else {
-        # solution code exists...
-        eval_code(.solution_code, env_base)
-      }
-    }
-  )
-
-  check_env
+  
+  prepare_check_env(learnr_args, envir_caller = NULL)
 }
 
 eval_code <- function(x, env) {
