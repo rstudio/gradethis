@@ -13,7 +13,7 @@
 #' @importFrom rlang is_missing
 #' @importFrom rlang is_null
 #' @importFrom rlang is_true
-#' @importFrom rlang missing_arg is_missing
+#' @importFrom rlang missing_arg
 #' @importFrom utils browseURL
 #' @importFrom withr with_options
 ## usethis namespace: end

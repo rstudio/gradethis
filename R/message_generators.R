@@ -327,7 +327,7 @@ wrong_value <- function(this,
   this_name = NULL,
   enclosing_call = NULL
 ) {
-  if (rlang::is_missing(this)) {
+  if (is_missing(this)) {
     this <- NULL
   }
 
