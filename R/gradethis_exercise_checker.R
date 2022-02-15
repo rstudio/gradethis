@@ -118,7 +118,7 @@ check_exercise <- function(
       grade_grading_problem("Could not prepare checking environment for gradethis checking code.", error = err)
     }
   )
-  
+
   if (is_graded(check_env)) {
     # An error occurred while trying to prepare the check environment
     return(feedback(check_env, "error"))
@@ -260,11 +260,11 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
   # Add gradethis specific check objects
   check_env[[".result"]] <- learnr_args[["last_value"]]
   check_env[[".user"]] <- learnr_args[["last_value"]]
-  
+
   # Add full solution code options
   solutions <- solutions_prepare(learnr_args[["solution_code"]])
   check_env[[".solution_code_all"]] <- solutions
-  
+
   if (inherits(solutions, "gradethis_solutions")) {
     # use last solution for .solution_code if we have multiple solutions
     check_env[[".solution_code"]] <- solutions[[length(solutions)]]
@@ -277,17 +277,24 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     x = ".solution",
     {
       if (length(solution_expr) == 0) {
-        rlang::return_from(
-          envir_caller,
-          feedback(grade_grading_problem(
+        solution_problem <-
+          grade_grading_problem(
             message = "No solution is provided for this exercise.",
             type = "info",
             error = list(
               message = "No solution provided for this exercise",
               label = learnr_args[["label"]]
             )
-          ))
-        )
+          )
+
+        if (!is.null(envir_caller)) {
+          # inside gradethis_exercise_checker or another process,
+          # return feedback from there
+          rlang::return_from(envir_caller, feedback(solution_problem))
+        } else {
+          # otherwise (e.g. mocking) just return the solution problem grade
+          solution_problem
+        }
       } else {
         # solution code exists...
         # Using eval_tidy does not evaluate the expression. Using eval() instead
@@ -298,6 +305,7 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
       }
     }
   )
+
   check_env
 }
 
