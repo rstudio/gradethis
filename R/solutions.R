@@ -5,7 +5,7 @@ solutions_prepare <- function(code) {
     return(NULL)
   }
 
-  solutions <- solutions_split_headers(code)
+  solutions <- split_code_headers(code, prefix = "solution")
   if (rlang::is_character(solutions)) {
     return(list(solutions))
   }
@@ -59,12 +59,17 @@ code_standardize_string <- function(code, scalar = TRUE) {
   }
 }
 
-solutions_split_headers <- function(code, prefix = "solution") {
+# TODO: replace with staticimport from learnr
+split_code_headers <- function(code, prefix = "section") {
+  if (is.null(code)) {
+    return(NULL)
+  }
+
   code <- paste(code, collapse = "\n")
-  code <- trimws(code)
+  code <- str_trim(code, character = "[\r\n]")
   code <- strsplit(code, "\n")[[1]]
 
-  rgx_header <- "^\\s*#+[ -]*(.+?)\\s*----+$"
+  rgx_header <- "^#+[ -]*(.+?)\\s*----+$"
   headers <- regmatches(code, regexec(rgx_header, code))
   lines_headers <- which(vapply(headers, length, integer(1)) > 0)
 
@@ -74,11 +79,11 @@ solutions_split_headers <- function(code, prefix = "solution") {
   }
 
   if (!length(lines_headers)) {
-    return(paste(code, collapse = "\n"))
+    return(list(paste(code, collapse = "\n")))
   }
 
   header_names <- vapply(headers[lines_headers], `[[`, character(1), 2)
-  header_names <- trimws(header_names)
+  header_names <- str_trim(header_names)
   if (any(!nzchar(header_names))) {
     header_names[!nzchar(header_names)] <- sprintf(
       paste0(prefix, "%02d"),
@@ -91,8 +96,12 @@ solutions_split_headers <- function(code, prefix = "solution") {
   if (length(sections) > length(header_names)) {
     header_names <- c(paste0(prefix, "00"), header_names)
   }
-
   names(sections) <- header_names
-  sections <- trimws(sections)
-  as.list(sections[nzchar(sections)])
+
+  # trim leading/trailing new lines from code section
+  sections <- str_trim(sections, character = "[\r\n]")
+  # drop any sections that don't have anything in them
+  sections <- sections[nzchar(str_trim(sections))]
+
+  as.list(sections)
 }
