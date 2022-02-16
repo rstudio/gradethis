@@ -60,6 +60,17 @@ is_AsIs <- function(x) {
   inherits(x, "AsIs")
 }
 
+r_format_code <- function(code, name = "solution") {
+  tryCatch({
+    x <- lapply(rlang::parse_exprs(code), rlang::expr_text)
+    paste(unlist(x), collapse = "\n")
+  }, error = function(err) {
+    msg <- glue::glue("Unable to parse {name} code")
+    grade_grading_problem(message = msg, error = err)
+    rlang::abort(msg, parent = err)
+  })
+}
+
 local_options_waldo_compare <- function(.local_envir = parent.frame()) {
   # These options are set by fansi and diffobj (used by waldo::compare()) but
   # may be unset by learnr when it reset options after running student & grading

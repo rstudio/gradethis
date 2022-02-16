@@ -96,14 +96,3 @@ solutions_split_headers <- function(code, prefix = "solution") {
   sections <- trimws(sections)
   as.list(sections[nzchar(sections)])
 }
-
-r_format_code <- function(code, name = "solution") {
-  tryCatch({
-    x <- lapply(rlang::parse_exprs(code), rlang::expr_text)
-    paste(unlist(x), collapse = "\n")
-  }, error = function(err) {
-    msg <- glue::glue("Unable to parse {name} code")
-    grade_grading_problem(message = msg, error = err)
-    rlang::abort(msg, parent = err)
-  })
-}
