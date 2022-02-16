@@ -75,7 +75,7 @@ is_feedback <- function(x) {
 # 3. All other messages are processed with commonmark into HTML, stripped of
 #    disallowed tags, and then returned as HTML.
 message_md <- function(message = NULL) {
-  if (is_tag_like(message)) {
+  if (is_html_tag(message)) {
     return(message)
   }
   if (is_AsIs(message)) {

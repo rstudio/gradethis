@@ -112,3 +112,22 @@ test_that("mock_this_exercise() evaluates solution into check_env parent", {
   expect_true(exists("y", parent.env(ex), inherits = FALSE))
   expect_equal(get("y", ex), 30)
 })
+
+test_that("mock_this_exercise() mocks multiple solutions", {
+  .solution_code_all <-
+    gradethis_solutions(
+      one = "runif(1)",
+      two = "runif(2)",
+      three = "runif(3)"
+    )
+
+  ex <- mock_this_exercise("runif(4)", !!format(.solution_code_all))
+  # solution code round trips through exercise prep
+  expect_equal(ex$.solution_code_all, .solution_code_all)
+
+  expect_named(ex$.solution_code_all, c("one", "two", "three"))
+
+  # default solution code is last solution
+  expect_equal(ex$.solution_code, ex$.solution_code_all[[3]])
+  expect_equal(length(ex$.solution), 3L)
+})

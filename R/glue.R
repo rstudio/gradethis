@@ -9,7 +9,7 @@ glue_message <- function(
   glue_expression,
   ...
 ) {
-  if (is_tag_like(glue_expression) || is_AsIs(glue_expression)) {
+  if (is_html_tag(glue_expression) || is_AsIs(glue_expression)) {
     return(glue_expression)
   }
 
@@ -41,7 +41,7 @@ glue_message <- function(
 }
 
 glue_message_with_env <- function(env, message) {
-  if (is_tag_like(message) || is_AsIs(message)) {
+  if (is_html_tag(message) || is_AsIs(message)) {
     return(message)
   }
   if (length(message) > 1) {
