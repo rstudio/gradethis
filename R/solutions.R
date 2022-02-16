@@ -6,11 +6,9 @@ solutions_prepare <- function(code) {
   }
 
   solutions <- split_code_headers(code, prefix = "solution")
-  if (rlang::is_character(solutions)) {
-    return(list(solutions))
+  if (length(solutions) == 1 && is_null(names(solutions))) {
+    return(solutions)
   }
-
-  solutions <- lapply(solutions, r_format_code)
 
   gradethis_solutions(.list = solutions)
 }
@@ -69,8 +67,8 @@ split_code_headers <- function(code, prefix = "section") {
   code <- str_trim(code, character = "[\r\n]")
   code <- strsplit(code, "\n")[[1]]
 
-  rgx_header <- "^#+[ -]*(.+?)\\s*----+$"
-  headers <- regmatches(code, regexec(rgx_header, code))
+  rgx_header <- "^(#+)([ -]*)(.+?)?(\\s*----+$)"
+  headers <- regmatches(code, regexec(rgx_header, code, perl = TRUE))
   lines_headers <- which(vapply(headers, length, integer(1)) > 0)
 
   if (length(lines_headers) > 0 && max(lines_headers) == length(code)) {
@@ -82,7 +80,8 @@ split_code_headers <- function(code, prefix = "section") {
     return(list(paste(code, collapse = "\n")))
   }
 
-  header_names <- vapply(headers[lines_headers], `[[`, character(1), 2)
+  # header names are 3rd group, so 4th place in match since 1st is the whole match
+  header_names <- vapply(headers[lines_headers], `[[`, character(1), 4)
   header_names <- str_trim(header_names)
   if (any(!nzchar(header_names))) {
     header_names[!nzchar(header_names)] <- sprintf(
@@ -104,4 +103,18 @@ split_code_headers <- function(code, prefix = "section") {
   sections <- sections[nzchar(str_trim(sections))]
 
   as.list(sections)
+}
+
+# TODO: replace with staticimport from learnr
+
+str_trim <- function(x, side = "both", character = "\\s") {
+  if (side %in% c("both", "left", "start")) {
+    rgx <- sprintf("^%s+", character)
+    x <- sub(rgx, "", x)
+  }
+  if (side %in% c("both", "right", "end")) {
+    rgx <- sprintf("%s+$", character)
+    x <- sub(rgx, "", x)
+  }
+  x
 }
