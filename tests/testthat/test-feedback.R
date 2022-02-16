@@ -1,10 +1,10 @@
 
-test_that("markdown utilities: is_tag_like", {
-  expect_true(is_tag_like(htmltools::p(htmltools::strong("a"), htmltools::em("b"))))
-  expect_true(is_tag_like(htmltools::tagList(htmltools::p("1"), htmltools::p("2"))))
-  expect_false(is_tag_like("a"))
-  expect_false(is_tag_like(htmltools::HTML("a")))
-  expect_false(is_tag_like(I("a")))
+test_that("markdown utilities: is_html_tag", {
+  expect_true(is_html_tag(htmltools::p(htmltools::strong("a"), htmltools::em("b"))))
+  expect_true(is_html_tag(htmltools::tagList(htmltools::p("1"), htmltools::p("2"))))
+  expect_false(is_html_tag("a"))
+  expect_false(is_html_tag(htmltools::HTML("a")))
+  expect_false(is_html_tag(I("a")))
 })
 
 test_that("markdown utilities: is_AsIs", {
