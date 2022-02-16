@@ -1,3 +1,7 @@
+# @staticimports pkg:learnr
+#   is_AsIs
+#   is_html_tag is_html_chr is_html_any
+
 deparse_to_string <- function(x, width.cutoff = 500L, ...) {
   paste0(deparse(x, width.cutoff = width.cutoff, ...), collapse = "\n")
 }

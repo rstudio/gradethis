@@ -405,7 +405,7 @@ debug_this <- function(check_env = parent.frame()) {
   }
 
   prnt <- function(x) {
-    if (inherits(x, "AsIs")) return(x)
+    if (is_AsIs(x)) return(x)
     utils::capture.output(print(x))
   }
 

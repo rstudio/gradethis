@@ -36,11 +36,3 @@ is_infix <- function(x, infix_vals = .infixes) {
 is_infix_assign <- function(x) {
   is_infix(x, infix_vals = .infixes_assign)
 }
-
-is_tag_like <- function(x) {
-  inherits(x, c("shiny.tag", "shiny.tag.list"))
-}
-
-is_AsIs <- function(x) {
-  inherits(x, "AsIs")
-}
