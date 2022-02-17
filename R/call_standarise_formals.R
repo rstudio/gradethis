@@ -15,25 +15,57 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   # out default formals. For primitives like mean, we're unable to distinguish
   # between mean() and mean.default()
   if (is_false(include_defaults) || is_infix(code) || is.primitive(fn)) {
-    return(rlang::call_standardise(code, env = env))
+    return(call_standardise_keep_partials(code, env = env))
   }
 
   fmls <- rlang::fn_fmls(fn)
   args_default <- fmls[!vapply(fmls, is.symbol, logical(1), USE.NAMES = FALSE)]
 
-  code_std <- rlang::call_standardise(code, env = env) # order and label existing params
+  # order and label existing params
+  code_std <- call_standardise_keep_partials(code, env = env)
 
-  # get arguments passed from user
+  # get named arguments passed from user
   args_user <- rlang::call_args(code_std)
+  args_user <- args_user[nzchar(names(args_user))]
 
-  args_default_missing <- setdiff(names(args_default), names(args_user))
+  args_default_missing <- names(args_default)[
+    !grepl(paste0("^", names(args_user), collapse = "|"), names(args_default))
+  ]
   if (length(args_default_missing) == 0) {
     return(code_std)
   }
 
   ## Add implicit default args to the call
-  rlang::call_standardise(
+  call_standardise_keep_partials(
     rlang::call_modify(code_std, !!!args_default[args_default_missing]),
     env = env
   )
 }
+
+# @staticimports pkg:staticimports
+#   str_extract
+
+call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
+  tryCatch(
+    rlang::call_standardise(code, env = env),
+    error = function(e) {
+      # Find index of (first) problematic partial match
+      index <- as.integer(str_extract(e$message, "\\d+")) + 1
+
+      # Recursively run `call_standardise_keep_partials()` on code with
+      # problematic argument removed
+      standardised_call <- call_standardise_keep_partials(code[-index])
+
+      # Reassemble original call, by re-adding unaltered problematic arguments
+      # to the standardized call
+      as.call(
+        append(
+          as.list(standardised_call),
+          as.list(code[index]),
+          after = index - 1
+        )
+      )
+    }
+  )
+}
+
