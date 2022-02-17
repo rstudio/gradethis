@@ -158,6 +158,7 @@
 code_feedback <- function(
   user_code = .user_code,
   solution_code = .solution_code,
+  solution_code_all = .solution_code_all,
   env = .envir_prep,
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
@@ -175,10 +176,23 @@ code_feedback <- function(
     user_code <- get0(".user_code", parent.frame())
     assert_not_placeholder(user_code)
   }
-  if (is_placeholder(solution_code, ".solution_code")) {
-    solution_code <- get0(".solution_code", parent.frame())
-    assert_not_placeholder(solution_code)
+  if (is_placeholder(solution_code_all, ".solution_code_all")) {
+    solution_code_all <- get0(".solution_code_all", parent.frame())
+
+    # If .solution_code_all is not present, create it from .solution_code
+    if (is_placeholder(solution_code_all, ".solution_code_all")) {
+      if (is_placeholder(solution_code, ".solution_code")) {
+        solution_code <- get0(".solution_code", parent.frame())
+        assert_not_placeholder(solution_code)
+      }
+
+      solution_code_all <- solutions_prepare(solution_code)
+    }
   }
+
+  # Figure out which solution code is .solution_code here
+  closest_solution <- which_closest_solution_code(user_code, solution_code_all)
+  solution_code <- solution_code_all[[closest_solution]]
 
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
@@ -216,6 +230,47 @@ with_maybe_code_feedback <- function(val, expr) {
     list("gradethis.maybe_code_feedback" = val),
     expr
   )
+}
+
+which_closest_solution_code <- function(
+  user_code = .user_code,
+  solution_code_all = .solution_code_all
+) {
+  if (is_placeholder(solution_code_all, ".solution_code_all")) {
+    solution_code_all <- get0(".solution_code_all", parent.frame())
+    assert_not_placeholder(solution_code_all)
+  }
+
+  # If there's no solution code or only one solution,
+  # we don't need to find the closest match
+  if (length(solution_code_all) < 2) {
+    return(length(solution_code_all))
+  }
+
+  if (is_placeholder(user_code, ".user_code")) {
+    user_code <- get0(".user_code", parent.frame())
+    assert_not_placeholder(user_code)
+  }
+
+  # Convert from list to character vector
+  solution_code_all <- unlist(solution_code_all)
+
+  standardise_code_text <- function(code) {
+    code %>%
+      unpipe_all_str() %>%
+      rlang::parse_exprs() %>%
+      call_standardise_formals_recursive() %>%
+      purrr::map_chr(rlang::expr_text) %>%
+      paste(collapse = "\n")
+  }
+
+  user_code <- standardise_code_text(user_code)
+
+  solution_code_all <- solution_code_all %>%
+    purrr::map_chr(standardise_code_text)
+
+  # Find the index of the solution code that the user code is closest to
+  which.min(adist(user_code, solution_code_all))
 }
 
 #' @describeIn code_feedback Return `code_feedback()` result when possible.

@@ -69,3 +69,19 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   )
 }
 
+call_standardise_formals_recursive <- function(
+  code, env = rlang::current_env(), include_defaults = TRUE
+) {
+  if (is.list(code)) {
+    return(lapply(code, call_standardise_formals_recursive))
+  }
+
+  # `code` must be parsed call
+  if (!rlang::is_call(code)) {
+    return(code)
+  }
+
+  code <- purrr::map(code, call_standardise_formals_recursive)
+  code <- as.call(code)
+  call_standardise_formals(code)
+}
