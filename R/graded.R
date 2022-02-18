@@ -798,12 +798,12 @@ get_from_env <- function(x, env) {
 assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
   obj_expr <- rlang::enexpr(obj)
 
-  if (!is_placeholder(obj) && !is_missing(obj)) {
+  if (!is_missing(obj) && !is_placeholder(obj)) {
     return(invisible(NULL))
   }
 
   obj_name <-
-    if (is_placeholder(obj)) {
+    if (!is_missing(obj) && is_placeholder(obj)) {
       class(obj)[1]
     } else {
       rlang::expr_text(obj_expr)
