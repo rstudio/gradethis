@@ -48,18 +48,18 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-pandoc@v1
-      
+      - uses: r-lib/actions/setup-pandoc@v2
+
       - name: Install devel system dependencies
         if: matrix.config.os == 'ubuntu-18.04' && matrix.config.r == 'devel'
         run: sudo apt-get install -y libcurl4-openssl-dev
-      
-      - uses: r-lib/actions/setup-r-dependencies@v1
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 1
           extra-packages: rcmdcheck
-        
-      - uses: r-lib/actions/check-r-package@v1
+
+      - uses: r-lib/actions/check-r-package@v2
 
       - name: Show testthat output
         if: always()
