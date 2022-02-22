@@ -41,6 +41,9 @@ give_code_feedback(
 ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
 default retrieved from the calling environment.}
 
+\item{solution_code_all}{A list containing the code of all solutions when
+multiple solutions are provided.}
+
 \item{env}{Environment used to standardize formals of the user and solution
 code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
 not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}

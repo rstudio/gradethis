@@ -129,6 +129,8 @@
 #' @param user_code,solution_code String containing user or solution code. For
 #'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by
 #'   default retrieved from the calling environment.
+#' @param solution_code_all A list containing the code of all solutions when
+#'   multiple solutions are provided.
 #' @param env Environment used to standardize formals of the user and solution
 #'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
 #'   not found, the [parent.frame()] will be used.

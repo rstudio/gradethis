@@ -24,6 +24,9 @@ string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
 default retrieved from the calling environment.}
 
+\item{solution_code_all}{A list containing the code of all solutions when
+multiple solutions are provided.}
+
 \item{...}{
   Arguments passed on to \code{\link[=graded]{graded}}
   \describe{
