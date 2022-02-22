@@ -269,7 +269,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
 
   testthat::expect_message(
     expect_null(fail_if_code_feedback(user_code = "2")),
-    "expected `.solution_code` to be found",
+    "expected `.solution_code_all` to be found",
     fixed = TRUE
   )
 })

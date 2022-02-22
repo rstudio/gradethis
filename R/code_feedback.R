@@ -287,6 +287,7 @@ which_closest_solution_code <- function(
 maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
+  solution_code_all = get0(".solution_code_all", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
@@ -330,6 +331,7 @@ maybe_code_feedback <- function(
       code_feedback_val <- code_feedback(
         user_code = user_code,
         solution_code = solution_code,
+        solution_code_all = solution_code_all,
         env = env,
         allow_partial_matching = allow_partial_matching
       )
