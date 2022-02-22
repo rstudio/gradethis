@@ -270,7 +270,7 @@ which_closest_solution_code <- function(
     purrr::map_chr(standardise_code_text)
 
   # Find the index of the solution code that the user code is closest to
-  which.min(adist(user_code, solution_code_all))
+  which.min(utils::adist(user_code, solution_code_all))
 }
 
 #' @describeIn code_feedback Return `code_feedback()` result when possible.
