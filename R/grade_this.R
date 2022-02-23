@@ -142,7 +142,11 @@ grade_this <- function(
       check_env <- list2env(check_env, envir = new.env(parent = emptyenv()))
     }
 
-    check_env[[".user_code"]] <- assert_user_code(.user_code, check_env)
+    empty_code <- empty_code(check_env[[".user_code"]])
+    if (!is.null(empty_code)) {
+      return(empty_code)
+    }
+
     check_env[[".__gradethis_check_env"]] <- TRUE
 
     # Ensure that check_env has expr_env as a parent
@@ -270,15 +274,15 @@ NULL
 #' @export
 .user_code <- placeholder(".user_code")
 
-assert_user_code <- function(user_code, env, frame = parent.frame()) {
-  if (is_placeholder(user_code, ".user_code")) {
-    user_code <- get_from_env(".user_code", env)
-    assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
+empty_code <- function(code, check_null = FALSE) {
+  if (check_null) {
+    empty_code <- is.null(code) || length(code) == 0 || !nzchar(code)
+  } else {
+    empty_code <- length(code) && !nzchar(code)
   }
 
-  if (is.null(user_code) || length(user_code) == 0 || !nzchar(user_code)) {
-    rlang::return_from(
-      frame,
+  if (empty_code) {
+    return(
       graded(
         logical(),
         "I didn't receive your code. Did you write any?",
@@ -286,8 +290,6 @@ assert_user_code <- function(user_code, env, frame = parent.frame()) {
       )
     )
   }
-
-  user_code
 }
 
 #' @rdname grade_this-objects

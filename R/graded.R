@@ -641,7 +641,15 @@ fail_if_code_feedback <- function(
   encourage = getOption("gradethis.fail.encourage", FALSE),
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
-  user_code <- assert_user_code(user_code, env)
+  if (is_placeholder(user_code, ".user_code")) {
+    user_code <- get_from_env(".user_code", env)
+    assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
+  }
+
+  empty_code <- empty_code(user_code, check_null = TRUE)
+  if (!is.null(empty_code)) {
+    return(empty_code)
+  }
 
   if (is_placeholder(solution_code, ".solution_code")) {
     solution_code <- get_from_env(".solution_code", env)
@@ -798,12 +806,12 @@ get_from_env <- function(x, env) {
 assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
   obj_expr <- rlang::enexpr(obj)
 
-  if (!is_missing(obj) && !is_placeholder(obj)) {
+  if (!is_placeholder(obj) && !is_missing(obj)) {
     return(invisible(NULL))
   }
 
   obj_name <-
-    if (!is_missing(obj) && is_placeholder(obj)) {
+    if (is_placeholder(obj)) {
       class(obj)[1]
     } else {
       rlang::expr_text(obj_expr)
