@@ -43,8 +43,13 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
 }
 
 call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
+  # If the function from the user code cannot be found, early exit because
+  #   standardization is impossible
+  fn <- tryCatch(rlang::call_fn(code), error = as.null)
+  if (is.null(fn)) return(code)
+
   tryCatch(
-    rlang::call_standardise(code, env = env),
+    rlang::call_match(code, fn),
     error = function(e) {
       # Find index of (first) problematic partial match from error message
       # "argument 1 matches multiple formal arguments"
