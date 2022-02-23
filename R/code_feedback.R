@@ -127,13 +127,13 @@
 #' # ```
 #' grader(submission_wrong)
 #' @param user_code,solution_code String containing user or solution code. For
-#'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by
+#'   ease of use in [grade_this()], [.user_code] or [.solution_code] are by
 #'   default retrieved from the calling environment.
 #' @param solution_code_all A list containing the code of all solutions when
-#'   multiple solutions are provided. For ease of use in `grade_this()`,
-#'   `.solution_code_all` is by default retrieved from the calling environment.
+#'   multiple solutions are provided. For ease of use in [grade_this()],
+#'   [.solution_code_all] is by default retrieved from the calling environment.
 #' @param env Environment used to standardize formals of the user and solution
-#'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
+#'   code. Defaults to retrieving [.envir_prep] from the calling environment. If
 #'   not found, the [parent.frame()] will be used.
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In
 #'   `give_code_feedback()`, `...` are passed to `maybe_code_feedback()`.

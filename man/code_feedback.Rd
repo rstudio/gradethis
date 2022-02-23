@@ -38,15 +38,15 @@ give_code_feedback(
 }
 \arguments{
 \item{user_code, solution_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
+ease of use in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} or \link{.solution_code} are by
 default retrieved from the calling environment.}
 
 \item{solution_code_all}{A list containing the code of all solutions when
-multiple solutions are provided. For ease of use in \code{grade_this()},
-\code{.solution_code_all} is by default retrieved from the calling environment.}
+multiple solutions are provided. For ease of use in \code{\link[=grade_this]{grade_this()}},
+\link{.solution_code_all} is by default retrieved from the calling environment.}
 
 \item{env}{Environment used to standardize formals of the user and solution
-code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
+code. Defaults to retrieving \link{.envir_prep} from the calling environment. If
 not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
 \item{...}{Ignored in \code{code_feedback()} and \code{maybe_code_feedback()}. In
