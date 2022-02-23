@@ -1,7 +1,3 @@
-# @staticimports pkg:learnr
-#   split_code_headers
-#   str_trim
-
 solutions_prepare <- function(code) {
   code <- code_standardize_string(code, scalar = FALSE)
 

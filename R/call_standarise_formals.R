@@ -42,9 +42,6 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   )
 }
 
-# @staticimports pkg:staticimports
-#   str_extract
-
 call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   tryCatch(
     rlang::call_standardise(code, env = env),
