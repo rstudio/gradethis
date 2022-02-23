@@ -49,8 +49,7 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
       # Find index of (first) problematic partial match
       index <- as.integer(str_extract(e$message, "\\d+")) + 1
 
-      # Recursively run `call_standardise_keep_partials()` on code with
-      # problematic argument removed
+      # Try to standardize the call while ignoring the un-matchable arg
       standardised_call <- call_standardise_keep_partials(code[-index])
 
       # Reassemble original call, by re-adding unaltered problematic arguments
@@ -66,7 +65,7 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   )
 }
 
-call_standardise_formals_recursive <- function(
+call_standardise_formals_recursive <- function( # nolint
   code, env = rlang::current_env(), include_defaults = TRUE
 ) {
   if (is.list(code)) {
