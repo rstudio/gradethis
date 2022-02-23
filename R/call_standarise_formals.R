@@ -46,7 +46,8 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   tryCatch(
     rlang::call_standardise(code, env = env),
     error = function(e) {
-      # Find index of (first) problematic partial match
+      # Find index of (first) problematic partial match from error message
+      # "argument 1 matches multiple formal arguments"
       index <- as.integer(str_extract(e$message, "\\d+")) + 1
 
       # Try to standardize the call while ignoring the un-matchable arg
