@@ -55,13 +55,7 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
 
       # Reassemble original call, by re-adding unaltered problematic arguments
       # to the standardized call
-      as.call(
-        append(
-          as.list(standardised_call),
-          as.list(code[index]),
-          after = index - 1
-        )
-      )
+      rlang::call_modify(standardised_call, !!!as.list(code[index]))
     }
   )
 }
