@@ -42,7 +42,8 @@ ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} a
 default retrieved from the calling environment.}
 
 \item{solution_code_all}{A list containing the code of all solutions when
-multiple solutions are provided.}
+multiple solutions are provided. For ease of use in \code{grade_this()},
+\code{.solution_code_all} is by default retrieved from the calling environment.}
 
 \item{env}{Environment used to standardize formals of the user and solution
 code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
