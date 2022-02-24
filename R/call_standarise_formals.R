@@ -106,11 +106,11 @@ call_fn <- function(call, env = rlang::caller_env()) {
   stopifnot(rlang::is_call(expr))
 
   switch(call_type(expr),
-         recursive = rlang::abort("`call` does not call a named or inlined function"),
-         inlined = rlang::node_car(expr),
-         named = ,
-         namespaced = ,
-         rlang::eval_bare(rlang::node_car(expr), env)
+    recursive = rlang::abort("`call` does not call a named or inlined function"),
+    inlined = rlang::node_car(expr),
+    named = ,
+    namespaced = ,
+    rlang::eval_bare(rlang::node_car(expr), env)
   )
 }
 
