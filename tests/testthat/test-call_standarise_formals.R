@@ -80,3 +80,20 @@ test_that("Standarize call with include_defaults = FALSE", {
 
 
 })
+
+test_that("Standardize call with ambiguous partial args", {
+  testthat::expect_equal(
+    call_standardise_formals(quote(dunif(1, m = 1, l = TRUE))),
+    quote(dunif(x = 1, log = TRUE, m = 1))
+  )
+
+  testthat::expect_equal(
+    call_standardise_formals(quote(dunif(1, m = 1, m = 1))),
+    quote(dunif(1, m = 1, m = 1, log = FALSE))
+  )
+
+  testthat::expect_equal(
+    call_standardise_formals(quote(invalid_function(1, m = 1, l = TRUE))),
+    quote(invalid_function(1, m = 1, l = TRUE))
+  )
+})
