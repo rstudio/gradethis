@@ -646,7 +646,7 @@ fail_if_code_feedback <- function(
     assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
   }
 
-  if (is_empty_code(user_code, check_null = TRUE)) {
+  if (length(user_code) == 0 || is_empty_code(user_code)) {
     return(grade_code_is_empty())
   }
 

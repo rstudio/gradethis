@@ -169,12 +169,12 @@ detect_grade_this <- function(env = parent.frame()) {
   get0(".__gradethis_check_env", envir = env, ifnotfound = FALSE)
 }
 
-is_empty_code <- function(code, check_null = FALSE) {
-  if (check_null) {
-    is.null(code) || length(code) == 0 || !nzchar(code)
-  } else {
-    length(code) && !nzchar(code)
+is_empty_code <- function(code) {
+  if (length(code) == 0) {
+    return(FALSE)
   }
+
+  all(!nzchar(str_trim(code)))
 }
 
 grade_code_is_empty <- function() {
