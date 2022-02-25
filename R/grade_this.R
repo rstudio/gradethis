@@ -169,6 +169,21 @@ detect_grade_this <- function(env = parent.frame()) {
   get0(".__gradethis_check_env", envir = env, ifnotfound = FALSE)
 }
 
+is_empty_code <- function(code, check_null = FALSE) {
+  if (check_null) {
+    is.null(code) || length(code) == 0 || !nzchar(code)
+  } else {
+    length(code) && !nzchar(code)
+  }
+}
+
+grade_code_is_empty <- function() {
+  graded(
+    logical(),
+    "I didn't receive your code. Did you write any?",
+    type = "info"
+  )
+}
 
 # Sentinel Values ----
 placeholder <- function(class, ...) {
@@ -268,24 +283,6 @@ NULL
 #' @rdname grade_this-objects
 #' @export
 .user_code <- placeholder(".user_code")
-
-empty_code <- function(code, check_null = FALSE) {
-  if (check_null) {
-    empty_code <- is.null(code) || length(code) == 0 || !nzchar(code)
-  } else {
-    empty_code <- length(code) && !nzchar(code)
-  }
-
-  if (empty_code) {
-    return(
-      graded(
-        logical(),
-        "I didn't receive your code. Did you write any?",
-        type = "info"
-      )
-    )
-  }
-}
 
 #' @rdname grade_this-objects
 #' @export

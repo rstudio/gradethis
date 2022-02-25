@@ -174,9 +174,8 @@ grade_this_code <- function(
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
   function(check_env) {
-    empty_code <- empty_code(check_env[[".user_code"]])
-    if (!is.null(empty_code)) {
-      return(empty_code)
+    if (is_empty_code(check_env[[".user_code"]])) {
+      return(grade_code_is_empty())
     }
 
     check_env[[".__correct"]] <- correct

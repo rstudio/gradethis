@@ -646,9 +646,8 @@ fail_if_code_feedback <- function(
     assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
   }
 
-  empty_code <- empty_code(user_code, check_null = TRUE)
-  if (!is.null(empty_code)) {
-    return(empty_code)
+  if (is_empty_code(user_code, check_null = TRUE)) {
+    return(grade_code_is_empty())
   }
 
   if (is_placeholder(solution_code, ".solution_code")) {
