@@ -142,11 +142,6 @@ grade_this <- function(
       check_env <- list2env(check_env, envir = new.env(parent = emptyenv()))
     }
 
-    empty_code <- empty_code(check_env[[".user_code"]])
-    if (!is.null(empty_code)) {
-      return(empty_code)
-    }
-
     check_env[[".__gradethis_check_env"]] <- TRUE
 
     # Ensure that check_env has expr_env as a parent
