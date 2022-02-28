@@ -86,7 +86,6 @@ mock_this_exercise <- function(
   .engine = "r",
   .stage = "check",
   .result = rlang::missing_arg(),
-  .error = rlang::missing_arg(),
   setup_global = NULL,
   setup_exercise = NULL
 ) {
@@ -106,18 +105,21 @@ mock_this_exercise <- function(
   eval_code(setup_exercise, env_prep)
 
   env_result <- rlang::env_clone(env_prep, env_global)
+
   if (rlang::is_missing(.result)) {
     if (!is_r_code) {
       rlang::abort(glue::glue(
         "Must provide `.result` for a mock exercise with `.engine = \"{.engine}\"`"
       ))
     }
-    tryCatch({
-      .result <- eval_code(.user_code, env_result)
-    },
-    error = function(e) .error <<- e
-    )
+    .result <-
+      tryCatch(
+        eval_code(.user_code, env_result),
+        error = identity
+      )
   }
+
+  .error <- if (rlang::is_condition(.result)) .result
 
   learnr_args <- list(
     label = .label,
@@ -132,7 +134,7 @@ mock_this_exercise <- function(
     ...
   )
 
-  if (!rlang::is_missing(.error)) {
+  if (!is.null(.error)) {
     learnr_args$error <- .error
     learnr_args$last_value <- .error
   }

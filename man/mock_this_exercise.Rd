@@ -12,7 +12,6 @@ mock_this_exercise(
   .engine = "r",
   .stage = "check",
   .result = rlang::missing_arg(),
-  .error = rlang::missing_arg(),
   setup_global = NULL,
   setup_exercise = NULL
 )
