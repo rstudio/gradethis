@@ -97,7 +97,7 @@ test_that("length 0 solution code", {
   expect_exercise_checker(
     is_correct = logical(),
     msg = "No solution is provided for this exercise.",
-    msg_type = "info",
+    msg_type = "warning",
     user_code = "1",
     check_code = "grade_this({pass(.solution)})",
     solution_code = "",

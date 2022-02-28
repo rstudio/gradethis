@@ -18,3 +18,6 @@
 #' @importFrom withr with_options
 ## usethis namespace: end
 NULL
+
+# @staticimports pkg:learnr
+#   knitr_engine_caption
