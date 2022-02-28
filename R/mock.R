@@ -13,8 +13,12 @@
 #' @param .stage The stage of the exercise evaluation, defaults to `"check"`.
 #'   \pkg{learnr} stages are `"code_check"`, `"check"` or `"error_check"`. When
 #'   gradethis is used outside of learnr, this variable is typically `NULL`.
-#' @param .engine The engine of the mock exercise, must be `"r"` but is included
-#'   here for future compatibility.
+#' @param .engine The engine of the mock exercise. If the engine is not `"r"`,
+#'   then `.result` must be provided explicitly since `mock_this_exercise()`
+#'   cannot evaluate the `.user_code`.
+#' @param .result The result of the evaluation of the `.user_code`. If the
+#'   `.engine` is `"r"`, the result will be prepared automatically by evaluating
+#'   the user code.
 #' @param setup_global An optional single string or expression in braces
 #'   representing the global `setup` chunk code.
 #' @param setup_exercise An optional single string or expression in braces
