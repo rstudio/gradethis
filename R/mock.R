@@ -89,8 +89,7 @@ mock_this_exercise <- function(
   setup_global = NULL,
   setup_exercise = NULL
 ) {
-  .engine <- tolower(.engine)
-  is_r_code <- identical(.engine, "r")
+  is_r_code <- identical(tolower(.engine), "r")
 
   env_global <- rlang::env(globalenv())
 
