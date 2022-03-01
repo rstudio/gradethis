@@ -220,3 +220,15 @@ grade_this_code <- function(
     grade
   }
 }
+
+is_empty_code <- function(code) {
+  length(code) == 0 || all(!nzchar(str_trim(code)))
+}
+
+grade_code_is_empty <- function() {
+  graded(
+    logical(),
+    "I didn't receive your code. Did you write any?",
+    type = "info"
+  )
+}

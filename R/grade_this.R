@@ -169,18 +169,6 @@ detect_grade_this <- function(env = parent.frame()) {
   get0(".__gradethis_check_env", envir = env, ifnotfound = FALSE)
 }
 
-is_empty_code <- function(code) {
-  length(code) == 0 || all(!nzchar(str_trim(code)))
-}
-
-grade_code_is_empty <- function() {
-  graded(
-    logical(),
-    "I didn't receive your code. Did you write any?",
-    type = "info"
-  )
-}
-
 # Sentinel Values ----
 placeholder <- function(class, ...) {
   structure(list(), class = c(class, ..., "gradethis_placeholder"))
