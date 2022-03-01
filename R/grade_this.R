@@ -170,11 +170,7 @@ detect_grade_this <- function(env = parent.frame()) {
 }
 
 is_empty_code <- function(code) {
-  if (length(code) == 0) {
-    return(FALSE)
-  }
-
-  all(!nzchar(str_trim(code)))
+  length(code) == 0 || all(!nzchar(str_trim(code)))
 }
 
 grade_code_is_empty <- function() {
