@@ -131,3 +131,27 @@ test_that("mock_this_exercise() mocks multiple solutions", {
   expect_equal(ex$.solution_code, ex$.solution_code_all[[3]])
   expect_equal(length(ex$.solution), 3L)
 })
+
+test_that("mock_this_exercise() with non-R exercise engine", {
+  ex <- mock_this_exercise("SELECT * FROM mtcars", .engine = "sql", .result = mtcars)
+
+  expect_equal(ex$.engine, "sql")
+  expect_equal(
+    ex$.user_code,
+    "SELECT * FROM mtcars"
+  )
+  expect_equal(
+    ex$.result,
+    mtcars
+  )
+
+  # .result is required if not R engine
+  expect_error(
+    mock_this_exercise("SELECT * FROM table", .engine = "sql")
+  )
+
+  # Bare code allowed only when R engine
+  expect_error(
+    mock_this_exercise(SELECT, .engine = "sql", .result = 7)
+  )
+})

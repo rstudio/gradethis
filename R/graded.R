@@ -644,19 +644,21 @@ fail_if_code_feedback <- function(
   if (is_placeholder(user_code, ".user_code")) {
     user_code <- get_from_env(".user_code", env)
     assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
-    if (is.null(user_code) || length(user_code) == 0 || !nzchar(user_code)) {
-      graded(logical(), "I didn't receive your code. Did you write any?", type = "info")
-    }
   }
+
+  if (is_empty_code(user_code)) {
+    return(grade_code_is_empty())
+  }
+
   if (is_placeholder(solution_code_all, ".solution_code_all")) {
     solution_code_all <- get_from_env(".solution_code_all", env)
     assert_object_found_in_env(solution_code_all, env, "fail_if_code_feedback", throw_grade = FALSE)
     if (
       is_placeholder(solution_code_all) ||
-        is_missing(solution_code_all) ||
-        is.null(solution_code_all) ||
-        length(solution_code_all) == 0 ||
-        !nzchar(solution_code_all)
+      is_missing(solution_code_all) ||
+      is.null(solution_code_all) ||
+      length(solution_code_all) == 0 ||
+      !nzchar(solution_code_all)
     ) {
       # user_code can't be missing, but don't fail if solution code is missing
       return()

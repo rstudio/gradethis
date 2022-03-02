@@ -11,6 +11,7 @@ mock_this_exercise(
   .label = "mock",
   .engine = "r",
   .stage = "check",
+  .result = rlang::missing_arg(),
   setup_global = NULL,
   setup_exercise = NULL
 )
@@ -26,12 +27,17 @@ representing the solution code to this exercise.}
 
 \item{.label}{The label of the mock exercise, defaults to \code{"mock"}.}
 
-\item{.engine}{The engine of the mock exercise, must be \code{"r"} but is included
-here for future compatibility.}
+\item{.engine}{The engine of the mock exercise. If the engine is not \code{"r"},
+then \code{.result} must be provided explicitly since \code{mock_this_exercise()}
+cannot evaluate the \code{.user_code}.}
 
 \item{.stage}{The stage of the exercise evaluation, defaults to \code{"check"}.
 \pkg{learnr} stages are \code{"code_check"}, \code{"check"} or \code{"error_check"}. When
 gradethis is used outside of learnr, this variable is typically \code{NULL}.}
+
+\item{.result}{The result of the evaluation of the \code{.user_code}. If the
+\code{.engine} is \code{"r"}, the result will be prepared automatically by evaluating
+the user code.}
 
 \item{setup_global}{An optional single string or expression in braces
 representing the global \code{setup} chunk code.}

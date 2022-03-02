@@ -174,6 +174,10 @@ grade_this_code <- function(
 
   # MUST wrap calling function to be able to shim in `.correct`/`.incorrect`
   function(check_env) {
+    if (is_empty_code(check_env[[".user_code"]])) {
+      return(grade_code_is_empty())
+    }
+
     check_env[[".__correct"]] <- correct
     check_env[[".__incorrect"]] <- incorrect
     check_env[[".__action"]] <- action
@@ -215,4 +219,16 @@ grade_this_code <- function(
     class(grade) <- c("gradethis_graded_this_code", class(grade))
     grade
   }
+}
+
+is_empty_code <- function(code) {
+  length(code) == 0 || all(!nzchar(str_trim(code)))
+}
+
+grade_code_is_empty <- function() {
+  graded(
+    logical(),
+    "I didn't receive your code. Did you write any?",
+    type = "info"
+  )
 }

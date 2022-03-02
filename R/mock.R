@@ -13,8 +13,12 @@
 #' @param .stage The stage of the exercise evaluation, defaults to `"check"`.
 #'   \pkg{learnr} stages are `"code_check"`, `"check"` or `"error_check"`. When
 #'   gradethis is used outside of learnr, this variable is typically `NULL`.
-#' @param .engine The engine of the mock exercise, must be `"r"` but is included
-#'   here for future compatibility.
+#' @param .engine The engine of the mock exercise. If the engine is not `"r"`,
+#'   then `.result` must be provided explicitly since `mock_this_exercise()`
+#'   cannot evaluate the `.user_code`.
+#' @param .result The result of the evaluation of the `.user_code`. If the
+#'   `.engine` is `"r"`, the result will be prepared automatically by evaluating
+#'   the user code.
 #' @param setup_global An optional single string or expression in braces
 #'   representing the global `setup` chunk code.
 #' @param setup_exercise An optional single string or expression in braces
@@ -81,11 +85,11 @@ mock_this_exercise <- function(
   .label = "mock",
   .engine = "r",
   .stage = "check",
+  .result = rlang::missing_arg(),
   setup_global = NULL,
   setup_exercise = NULL
 ) {
-  .engine <- tolower(.engine)
-  .engine <- match.arg(.engine)
+  is_r_code <- identical(tolower(.engine), "r")
 
   env_global <- rlang::env(globalenv())
 
@@ -99,20 +103,27 @@ mock_this_exercise <- function(
   env_prep <- rlang::env(env_global)
   eval_code(setup_exercise, env_prep)
 
-  .error <- NULL
-  .result <- NULL
   env_result <- rlang::env_clone(env_prep, env_global)
-  tryCatch(
-    {
-      .result <- eval_code(.user_code, env_result)
-    },
-    error = function(e) .error <<- e
-  )
+
+  if (rlang::is_missing(.result)) {
+    if (!is_r_code) {
+      rlang::abort(glue::glue(
+        "Must provide `.result` for a mock exercise with `.engine = \"{.engine}\"`"
+      ))
+    }
+    .result <-
+      tryCatch(
+        eval_code(.user_code, env_result),
+        error = identity
+      )
+  }
+
+  .error <- if (rlang::is_condition(.result)) .result
 
   learnr_args <- list(
     label = .label,
-    solution_code = expr_text(.solution_code),
-    user_code = expr_text(.user_code),
+    solution_code = expr_text(.solution_code, is_r_code),
+    user_code = expr_text(.user_code, is_r_code),
     envir_result = env_result,
     # evaluate_result = evaluate_result,
     envir_prep = env_prep,
@@ -142,12 +153,15 @@ eval_code <- function(x, env) {
   }
 }
 
-expr_text <- function(expr) {
+expr_text <- function(expr, is_r_code = TRUE) {
   if (rlang::is_null(expr)) {
     return()
   }
   if (rlang::is_string(expr)) {
     return(expr)
+  }
+  if (!isTRUE(is_r_code)) {
+    rlang::abort("Bare expressions are only valid for exercises with R code engines")
   }
   if (length(expr) > 1 && identical(expr[[1]], rlang::sym("{"))) {
     # unwrap one level of braces

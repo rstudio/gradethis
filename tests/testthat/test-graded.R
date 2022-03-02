@@ -274,6 +274,15 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
   )
 })
 
+test_that("fail_if_code_feedback() gives neutral feedback if code is missing", {
+  expect_graded(
+    grade_this(fail_if_code_feedback())(
+      mock_this_exercise(.user_code = "", .solution_code = "rnorm(1)")
+    ),
+    is_correct = logical()
+  )
+})
+
 test_that("graded() returns correct, incorrect, neutral", {
   # correct
   expect_graded(

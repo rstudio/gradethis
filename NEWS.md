@@ -22,6 +22,8 @@
 * When combined with learnr version 0.10.1.9017 or later, gradethis' exercise checking function will not require that grading code absolutely return feedback unless exercise checking is at the `"check"` stage. (#276)
 * You may now call `return()` in `grade_this()` grading code to exit grading early. This is allowed in code and error checking code, but will result in an "internal error" when used in the `-check` chunk grading code (#284).
 * gradethis now includes low-level support for multiple solutions. Authors can add multiple solutions in the `-solution` chunk, separated by [code section headers](https://support.rstudio.com/hc/en-us/articles/200484568-Code-Folding-and-Sections-in-the-RStudio-IDE), e.g. `# ----`. (note only trailing dashes, `----`, are supported). These additional solutions are made available in the `.solution_code_all` object in `grade_this()` grading code and are named with the code section name if one is provided, e.g. `# first ----`. When multiple solutions are provided using the code section comments, `.solution` and `.solution_code` will default to the **last** solution. (#286)
+* `grade_this_code()` and `fail_if_code_feedback()` now return informative feedback with a neutral grade when no code is submitted and when not previously caught by learnr (#288).
+* gradethis can now be used to grade non-R code. If learnr can evaluate the non-R code and return the result of the submitted code as an R object, then gradethis can be used to grade the submission result. Grading code is still written in R and code feedback tool designed for R will not work as expected (#290).
 
 ### Breaking changes
 

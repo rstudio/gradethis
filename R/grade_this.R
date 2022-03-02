@@ -169,7 +169,6 @@ detect_grade_this <- function(env = parent.frame()) {
   get0(".__gradethis_check_env", envir = env, ifnotfound = FALSE)
 }
 
-
 # Sentinel Values ----
 placeholder <- function(class, ...) {
   structure(list(), class = c(class, ..., "gradethis_placeholder"))
@@ -300,7 +299,6 @@ NULL
 #' @rdname grade_this-objects
 #' @export
 .engine <- placeholder(".engine")
-
 
 #' Debug an exercise submission
 #'
