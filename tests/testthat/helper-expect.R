@@ -226,7 +226,8 @@ expect_exercise_checker <- function(
     evaluate_result = "ignore",
     envir_prep = envir_prep,
     last_value = last_value,
-    stage = stage
+    stage = stage,
+    ...
   )
 
   if (!expect_feedback) {

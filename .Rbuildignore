@@ -16,3 +16,4 @@
 ^LICENSE\.md$
 ^CODE_OF_CONDUCT\.md$
 ^_dev$
+^\.covrignore$

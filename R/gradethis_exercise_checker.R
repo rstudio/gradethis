@@ -169,7 +169,7 @@ check_exercise <- function(
   )
 
   # Skip parse checking if it was already done in {learnr}
-  if (!learnr_includes_parse_check(stage)) {
+  if (!learnr_includes_parse_check(stage) && identical(learnr_args$engine %||% "r", "r")) {
     tryCatch(
       parse(text = user_code %||% ""),
       error = function(e) {
@@ -271,6 +271,22 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
   }
 
   # Delayed evaluation of `.solution`
+  engine <- knitr_engine_caption(learnr_args[["engine"]])
+  if (!identical(engine, "R")) {
+    msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
+    delayedAssign(
+      assign.env = check_env,
+      x = ".solution",
+      grade_grading_problem(
+        message = msg,
+        type = "warning",
+        error = list(message = msg, label = learnr_args[["label"]])
+      )
+    )
+
+    return(check_env)
+  }
+
   solution_expr <- parse(text = check_env[[".solution_code"]] %||% "")
   delayedAssign(
     assign.env = check_env,
@@ -280,7 +296,7 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
         solution_problem <-
           grade_grading_problem(
             message = "No solution is provided for this exercise.",
-            type = "info",
+            type = "warning",
             error = list(
               message = "No solution provided for this exercise",
               label = learnr_args[["label"]]

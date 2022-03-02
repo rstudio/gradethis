@@ -18,3 +18,8 @@
 #' @importFrom withr with_options
 ## usethis namespace: end
 NULL
+
+# @staticimports pkg:learnr
+#   is_AsIs
+#   is_html_tag is_html_chr is_html_any
+#   knitr_engine_caption
