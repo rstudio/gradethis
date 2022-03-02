@@ -655,10 +655,10 @@ fail_if_code_feedback <- function(
     assert_object_found_in_env(solution_code_all, env, "fail_if_code_feedback", throw_grade = FALSE)
     if (
       is_placeholder(solution_code_all) ||
-      is_missing(solution_code_all) ||
-      is.null(solution_code_all) ||
-      length(solution_code_all) == 0 ||
-      !nzchar(solution_code_all)
+        is_missing(solution_code_all) ||
+        is.null(solution_code_all) ||
+        length(solution_code_all) == 0 ||
+        !nzchar(solution_code_all)
     ) {
       # user_code can't be missing, but don't fail if solution code is missing
       return()
