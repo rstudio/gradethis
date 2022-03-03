@@ -51,8 +51,10 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   tryCatch(
     rlang::call_match(code, fn),
     error = function(e) {
-      # Check that error is caused by an ambiguous partial argument
-      # If not, return the code unaltered
+      # Check that error is caused by an ambiguous partial argument, which we
+      # are forced to identify from its error message. The \Q...\E regex meta
+      # characters mark the text inside them as literal. This way we can use the
+      # literal, translated error message, but replace the `%d` with `\d+`.
       pattern <- paste0(
         "\\Q",
         gsub(
