@@ -235,20 +235,10 @@ with_maybe_code_feedback <- function(val, expr) {
 }
 
 which_closest_solution_code <- function(user_code, solution_code_all) {
-  if (is_placeholder(solution_code_all, ".solution_code_all")) {
-    solution_code_all <- get0(".solution_code_all", parent.frame())
-    assert_not_placeholder(solution_code_all)
-  }
-
   # If there's no solution code or only one solution,
   # we don't need to find the closest match
   if (length(solution_code_all) < 2) {
     return(length(solution_code_all))
-  }
-
-  if (is_placeholder(user_code, ".user_code")) {
-    user_code <- get0(".user_code", parent.frame())
-    assert_not_placeholder(user_code)
   }
 
   # Convert from list to character vector
