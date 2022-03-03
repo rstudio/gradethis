@@ -193,7 +193,6 @@ code_feedback <- function(
     }
   }
 
-  # Figure out which solution code is .solution_code here
   closest_solution <- which_closest_solution_code(user_code, solution_code_all)
   solution_code <- solution_code_all[[closest_solution]]
 
@@ -273,7 +272,18 @@ which_closest_solution_code <- function(
     purrr::map_chr(standardise_code_text)
 
   # Find the index of the solution code that the user code is closest to
-  which.min(utils::adist(user_code, solution_code_all))
+  closest_solution <- which.min(utils::adist(user_code, solution_code_all))
+
+  # If closest_solution is invalid,
+  # fallback to the last element of solution_code_all
+  if (
+    length(closest_solution) != 1 ||
+    !closest_solution %in% seq_along(solution_code_all)
+  ) {
+    closest_solution <- length(solution_code_all)
+  }
+
+  closest_solution
 }
 
 #' @describeIn code_feedback Return `code_feedback()` result when possible.
