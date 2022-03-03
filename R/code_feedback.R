@@ -260,18 +260,28 @@ which_closest_solution_code <- function(user_code, solution_code_all) {
 
   # Find the index of the solution code that the user code is closest to
   # which.min.last() uses the last index if there is a tie
-  closest_solution <- which.min.last(utils::adist(user_code, solution_code_all))
+  string_distance <- utils::adist(user_code, solution_code_all)
+  index_min <- which(string_distance == min(string_distance))
 
-  # If closest_solution is invalid,
-  # fallback to the last element of solution_code_all
-  if (
-    length(closest_solution) != 1 ||
-      !closest_solution %in% seq_along(solution_code_all)
-  ) {
-    closest_solution <- length(solution_code_all)
+  if (length(index_min) == 1) {
+    return(index_min)
   }
 
-  closest_solution
+  # If index_min is invalid, fallback to the last element of solution_code_all
+  if (
+    length(index_min) == 0 ||
+    !index_min %in% seq_along(solution_code_all)
+  ) {
+    return(length(solution_code_all))
+  }
+
+  # Return last solution if it's in the tie
+  if (length(solution_code_all) %in% index_min) {
+    return(length(solution_code_all))
+  }
+
+  # Otherwise, return the first solution within the tie
+  index_min[[1]]
 }
 
 which.min.last <- function(x) {

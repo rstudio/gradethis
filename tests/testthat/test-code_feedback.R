@@ -20,10 +20,16 @@ test_that("code_feedback() finds the closest match if multiple solutions", {
     "I expected `aa` where you wrote `a`."
   )
 
-  # If there's a tie, the last option is selected
+  # If there's a tie including the last option, the last option is selected
   expect_equal(
     code_feedback("a", solution_code_all = gradethis_solutions("b", "c")),
     "I expected `c` where you wrote `a`."
+  )
+
+  # If there's a tie not including the last option, the first option is selected
+  expect_equal(
+    code_feedback("a", solution_code_all = gradethis_solutions("b", "c", "xyz")),
+    "I expected `b` where you wrote `a`."
   )
 })
 
@@ -33,10 +39,14 @@ test_that("code_feedback() converts solution_code to solution_code_all", {
     "I expected `aa` where you wrote `a`."
   )
 
-  # If there's a tie, the last option is selected
   expect_equal(
     code_feedback("a", solution_code = gradethis_solutions("b", "c")),
     "I expected `c` where you wrote `a`."
+  )
+
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("b", "c", "xyz")),
+    "I expected `b` where you wrote `a`."
   )
 })
 
