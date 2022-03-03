@@ -234,10 +234,7 @@ with_maybe_code_feedback <- function(val, expr) {
   )
 }
 
-which_closest_solution_code <- function(
-  user_code = .user_code,
-  solution_code_all = .solution_code_all
-) {
+which_closest_solution_code <- function(user_code, solution_code_all) {
   if (is_placeholder(solution_code_all, ".solution_code_all")) {
     solution_code_all <- get0(".solution_code_all", parent.frame())
     assert_not_placeholder(solution_code_all)
