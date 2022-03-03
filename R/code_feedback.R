@@ -275,7 +275,7 @@ which_closest_solution_code <- function(user_code, solution_code_all) {
   # fallback to the last element of solution_code_all
   if (
     length(closest_solution) != 1 ||
-    !closest_solution %in% seq_along(solution_code_all)
+      !closest_solution %in% seq_along(solution_code_all)
   ) {
     closest_solution <- length(solution_code_all)
   }
