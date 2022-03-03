@@ -658,7 +658,7 @@ fail_if_code_feedback <- function(
         is_missing(solution_code_all) ||
         is.null(solution_code_all) ||
         length(solution_code_all) == 0 ||
-        !nzchar(solution_code_all)
+        !any(nzchar(solution_code_all))
     ) {
       # user_code can't be missing, but don't fail if solution code is missing
       return()
