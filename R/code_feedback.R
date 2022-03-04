@@ -270,7 +270,7 @@ which_closest_solution_code <- function(user_code, solution_code_all) {
   # If index_min is invalid, fallback to the last element of solution_code_all
   if (
     length(index_min) == 0 ||
-      !index_min %in% seq_along(solution_code_all)
+      !all(index_min %in% seq_along(solution_code_all))
   ) {
     return(length(solution_code_all))
   }
