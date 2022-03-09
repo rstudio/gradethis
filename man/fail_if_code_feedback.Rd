@@ -7,7 +7,7 @@
 fail_if_code_feedback(
   message = NULL,
   user_code = .user_code,
-  solution_code = .solution_code,
+  solution_code_all = .solution_code_all,
   ...,
   env = parent.frame(),
   hint = TRUE,
@@ -21,12 +21,12 @@ grading helper functions other than \code{\link[=graded]{graded()}}, \code{messa
 string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
 \item{user_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
+ease of use in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} or \link{.solution_code} are by
 default retrieved from the calling environment.}
 
-\item{solution_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
-default retrieved from the calling environment.}
+\item{solution_code_all}{A list containing the code of all solutions when
+multiple solutions are provided. For ease of use in \code{\link[=grade_this]{grade_this()}},
+\link{.solution_code_all} is by default retrieved from the calling environment.}
 
 \item{...}{
   Arguments passed on to \code{\link[=graded]{graded}}
@@ -53,7 +53,7 @@ details.
   }}
 
 \item{env}{Environment used to standardize formals of the user and solution
-code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
+code. Defaults to retrieving \link{.envir_prep} from the calling environment. If
 not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
 \item{hint}{Include a code feedback hint with the failing message? This

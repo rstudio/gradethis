@@ -127,10 +127,13 @@
 #' # ```
 #' grader(submission_wrong)
 #' @param user_code,solution_code String containing user or solution code. For
-#'   ease of use in `grade_this()`, `.user_code` or `.solution_code` are by
+#'   ease of use in [grade_this()], [.user_code] or [.solution_code] are by
 #'   default retrieved from the calling environment.
+#' @param solution_code_all A list containing the code of all solutions when
+#'   multiple solutions are provided. For ease of use in [grade_this()],
+#'   [.solution_code_all] is by default retrieved from the calling environment.
 #' @param env Environment used to standardize formals of the user and solution
-#'   code. Defaults to retrieving `.envir_prep` from the calling environment. If
+#'   code. Defaults to retrieving [.envir_prep] from the calling environment. If
 #'   not found, the [parent.frame()] will be used.
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In
 #'   `give_code_feedback()`, `...` are passed to `maybe_code_feedback()`.
@@ -158,6 +161,7 @@
 code_feedback <- function(
   user_code = .user_code,
   solution_code = .solution_code,
+  solution_code_all = .solution_code_all,
   env = .envir_prep,
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
@@ -175,10 +179,22 @@ code_feedback <- function(
     user_code <- get0(".user_code", parent.frame())
     assert_not_placeholder(user_code)
   }
-  if (is_placeholder(solution_code, ".solution_code")) {
-    solution_code <- get0(".solution_code", parent.frame())
-    assert_not_placeholder(solution_code)
+  if (is_placeholder(solution_code_all, ".solution_code_all")) {
+    solution_code_all <- get0(".solution_code_all", parent.frame())
+
+    # If .solution_code_all is not present, create it from .solution_code
+    if (is_placeholder(solution_code_all, ".solution_code_all")) {
+      if (is_placeholder(solution_code, ".solution_code")) {
+        solution_code <- get0(".solution_code", parent.frame())
+        assert_not_placeholder(solution_code)
+      }
+
+      solution_code_all <- solutions_prepare(solution_code)
+    }
   }
+
+  closest_solution <- which_closest_solution_code(user_code, solution_code_all)
+  solution_code <- solution_code_all[[closest_solution]]
 
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
@@ -218,6 +234,62 @@ with_maybe_code_feedback <- function(val, expr) {
   )
 }
 
+which_closest_solution_code <- function(user_code, solution_code_all) {
+  # If there's no solution code or only one solution,
+  # we don't need to find the closest match
+  if (length(solution_code_all) < 2) {
+    return(length(solution_code_all))
+  }
+
+  # Convert from list to character vector
+  solution_code_all <- unlist(solution_code_all)
+
+  standardise_code_text <- function(code) {
+    code %>%
+      unpipe_all_str() %>%
+      rlang::parse_exprs() %>%
+      call_standardise_formals_recursive() %>%
+      purrr::map_chr(rlang::expr_text) %>%
+      paste(collapse = "\n")
+  }
+
+  user_code <- standardise_code_text(user_code)
+
+  solution_code_all <- solution_code_all %>%
+    purrr::map_chr(standardise_code_text)
+
+  # Find the index of the solution code that the user code is closest to
+  # which.min.last() uses the last index if there is a tie
+  string_distance <- utils::adist(user_code, solution_code_all)
+  index_min <- which(string_distance == min(string_distance))
+
+  if (length(index_min) == 1) {
+    return(index_min)
+  }
+
+  # If index_min is invalid, fallback to the last element of solution_code_all
+  if (
+    length(index_min) == 0 ||
+      !all(index_min %in% seq_along(solution_code_all))
+  ) {
+    return(length(solution_code_all))
+  }
+
+  # Return last solution if it's in the tie
+  if (length(solution_code_all) %in% index_min) {
+    return(length(solution_code_all))
+  }
+
+  # Otherwise, return the first solution within the tie
+  index_min[[1]]
+}
+
+which.min.last <- function(x) {
+  x <- rev(x)
+  index <- which.min(x)
+  rev(seq_along(x))[index]
+}
+
 #' @describeIn code_feedback Return `code_feedback()` result when possible.
 #'   Useful when setting default [fail()] glue messages. For example, if there
 #'   is no solution, no code feedback will be given.
@@ -232,6 +304,7 @@ with_maybe_code_feedback <- function(val, expr) {
 maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code", parent.frame()),
+  solution_code_all = get0(".solution_code_all", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
@@ -275,6 +348,7 @@ maybe_code_feedback <- function(
       code_feedback_val <- code_feedback(
         user_code = user_code,
         solution_code = solution_code,
+        solution_code_all = solution_code_all,
         env = env,
         allow_partial_matching = allow_partial_matching
       )

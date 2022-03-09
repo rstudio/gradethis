@@ -1,8 +1,8 @@
-# @staticimports pkg:learnr
-#   split_code_headers
-#   str_trim
-
 solutions_prepare <- function(code) {
+  if (inherits(code, "gradethis_solutions")) {
+    return(code)
+  }
+
   code <- code_standardize_string(code, scalar = FALSE)
 
   if (is.null(code)) {

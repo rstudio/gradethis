@@ -119,8 +119,8 @@ grade_code <- function(
       ))
     }
 
-    solution_code <- check_env$.solution_code
-    if (is.null(solution_code) || length(str2expression(solution_code)) == 0) {
+    solution_code_all <- check_env$.solution_code_all
+    if (is.null(solution_code_all) || length(str2expression(solution_code_all)) == 0) {
       return(legacy_graded(
         correct = FALSE,
         message = "No exercise solution provided. Defaulting to _incorrect_."
@@ -129,7 +129,7 @@ grade_code <- function(
 
     message <- code_feedback(
       user_code = user_code,
-      solution_code = solution_code,
+      solution_code_all = solution_code_all,
       env = check_env,
       allow_partial_matching = allow_partial_matching
     )

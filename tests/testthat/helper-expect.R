@@ -49,7 +49,9 @@ expect_grade_result <- function(
   msg = NULL
 ) {
   user_code <- deparse_to_string(last_value)
-  check_env <- create_learnr_env(user_code, solution_code = NULL, envir_prep)
+  check_env <- create_learnr_env(
+    user_code, solution_code = NULL, solution_code_all = NULL, envir_prep
+  )
   grader <- grade_result(...)
   grade <- grader(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
@@ -62,7 +64,9 @@ expect_grade_result_strict <- function(
   msg = NULL
 ) {
   user_code <- deparse_to_string(last_value)
-  check_env <- create_learnr_env(user_code, solution_code = NULL, envir_prep)
+  check_env <- create_learnr_env(
+    user_code, solution_code = NULL, solution_code_all = NULL, envir_prep
+  )
   grade <- grade_result_strict(...)(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
@@ -71,12 +75,19 @@ expect_grade_result_strict <- function(
 expect_grade_code <- function(
   ...,
   user_code,
-  solution_code,
+  solution_code = NULL,
+  solution_code_all = NULL,
   envir_prep = new.env(parent = parent.frame()),
   is_correct,
   msg = NULL
 ) {
-  check_env <- create_learnr_env(user_code, solution_code, envir_prep, eval = FALSE)
+  if (is.null(solution_code_all) && !is.null(solution_code)) {
+    solution_code_all <- solutions_prepare(solution_code)
+  }
+
+  check_env <- create_learnr_env(
+    user_code, solution_code, solution_code_all, envir_prep, eval = FALSE
+  )
   grader <- grade_code(...)
   grade <- grader(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
@@ -86,11 +97,16 @@ expect_grade_this <- function(
   expr,
   user_code,
   solution_code = NULL,
+  solution_code_all = NULL,
   envir_prep = new.env(parent = parent.frame()),
   is_correct,
   msg = NULL
 ) {
-  env <- create_learnr_env(user_code, solution_code, envir_prep)
+  if (is.null(solution_code_all) && !is.null(solution_code)) {
+    solution_code_all <- solutions_prepare(solution_code)
+  }
+
+  env <- create_learnr_env(user_code, solution_code, solution_code_all, envir_prep)
 
   expr_quo <- rlang::enquo(expr)
   grader <- grade_this(!!expr_quo)
@@ -102,6 +118,7 @@ expect_grade_this <- function(
 expect_this_code <- function(
   user_code,
   solution_code,
+  solution_code_all = NULL,
   envir_prep = new.env(parent = parent.frame()),
   correct = "valid",
   incorrect = "{.message}",
@@ -109,7 +126,11 @@ expect_this_code <- function(
   msg = NULL,
   allow_partial_matching = TRUE
 ) {
-  env <- create_learnr_env(user_code, solution_code, envir_prep, eval = FALSE)
+  if (is.null(solution_code_all) && !is.null(solution_code)) {
+    solution_code_all <- solutions_prepare(solution_code)
+  }
+
+  env <- create_learnr_env(user_code, solution_code, solution_code_all, envir_prep, eval = FALSE)
   grade <- grade_this_code(correct, incorrect, allow_partial_matching = allow_partial_matching)(env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
@@ -173,12 +194,19 @@ expect_feedback <- function(
 }
 
 
-create_learnr_env <- function(user_code, solution_code = NULL, envir_prep, eval = TRUE) {
+create_learnr_env <- function(
+  user_code,
+  solution_code = NULL,
+  solution_code_all = NULL,
+  envir_prep,
+  eval = TRUE
+) {
   env <- new.env(parent = envir_prep)
   env$.envir_prep <- envir_prep
   env$.envir_result <- new.env(parent = envir_prep)
   env$.user_code <- as.character(user_code)
   env$.solution_code <- as.character(solution_code)
+  env$.solution_code_all <- solution_code_all
   if (isTRUE(eval)) {
     env$.result <-
       env$.last_value <-

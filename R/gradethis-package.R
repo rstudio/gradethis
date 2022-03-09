@@ -22,4 +22,9 @@ NULL
 # @staticimports pkg:learnr
 #   is_AsIs
 #   is_html_tag is_html_chr is_html_any
+#   split_code_headers
+#   str_trim
 #   knitr_engine_caption
+
+# @staticimports pkg:staticimports
+#   str_extract
