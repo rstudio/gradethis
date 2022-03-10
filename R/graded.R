@@ -363,8 +363,13 @@ pass_if_equal <- function(
   }
   maybe_extras(
     grade_if_equal(
-      x = x, y = y,
-      message = message, correct = TRUE, env = env, tolerance = tolerance, ...
+      x = x,
+      y = y,
+      message = message,
+      correct = TRUE,
+      env = env,
+      tolerance = tolerance,
+      ...
     ),
     praise = praise
   )
@@ -389,8 +394,13 @@ fail_if_equal <- function(
   }
   maybe_extras(
     grade_if_equal(
-      x = x, y = y,
-      message = message, correct = FALSE, env = env, tolerance = tolerance, ...
+      x = x,
+      y = y,
+      message = message,
+      correct = FALSE,
+      env = env,
+      tolerance = tolerance,
+      ...
     ),
     env = env,
     hint = hint,
