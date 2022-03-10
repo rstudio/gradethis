@@ -333,8 +333,10 @@ fail <- function(
 #'   the student's submission against a specific value, `y`.
 #' @param y The expected value against which `x` is compared using
 #'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
-#'   exercise `.solution`, or the result of evaluating the code in the
+#'   exercise `.solution_all`, or the result of evaluating the code in the
 #'   exercise's `*-solution` chunk, will be used for the comparison.
+#'   If `.solution_all` contains multiple solutions, a passing grade is given if
+#'   `x` matches _any_ values contained in `y`.
 #' @param ... Additional arguments passed to [graded()]
 #'
 #' @return Returns a passing or failing grade if `x` and `y` are equal.
@@ -344,7 +346,7 @@ fail <- function(
 #'   equal.
 #' @export
 pass_if_equal <- function(
-  y = .solution,
+  y = .solution_all,
   message = getOption("gradethis.pass", "Correct!"),
   x = .result,
   ...,
@@ -355,14 +357,30 @@ pass_if_equal <- function(
     x <- get_from_env(".result", env)
     assert_object_found_in_env(x, env, "pass_if_equal")
   }
-  if (is_placeholder(y, ".solution")) {
-    y <- get_from_env(".solution", env)
-    assert_object_found_in_env(y, env, "pass_if_equal")
+
+  if (is_placeholder(y, ".solution_all")) {
+    y <- get_from_env(".solution_all", env)
+
+    # If .solution_all is not present, use .solution
+    if (is_placeholder(y, ".solution_all")) {
+      y <- get_from_env(".solution", env)
+      assert_object_found_in_env(y, env, "pass_if_equal")
+    }
   }
-  maybe_extras(
-    grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...),
-    praise = praise
-  )
+
+  if (inherits(y, "gradethis_solutions")) {
+    for (i in seq_along(y)) {
+      maybe_extras(
+        grade_if_equal(x = x, y = y[[i]], message = message, correct = TRUE, env = env, ...),
+        praise = praise
+      )
+    }
+  } else {
+    maybe_extras(
+      grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...),
+      praise = praise
+    )
+  }
 }
 
 #' @describeIn pass_if_equal Signal a _failing_ grade only if `x` and `y` are
