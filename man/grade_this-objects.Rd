@@ -7,6 +7,7 @@
 \alias{.user}
 \alias{.last_value}
 \alias{.solution}
+\alias{.solution_all}
 \alias{.user_code}
 \alias{.solution_code}
 \alias{.solution_code_all}
@@ -25,6 +26,8 @@ An object of class \code{.user} (inherits from \code{.result}, \code{gradethis_p
 An object of class \code{.last_value} (inherits from \code{.result}, \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.solution} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.solution_all} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.user_code} (inherits from \code{gradethis_placeholder}) of length 0.
 
@@ -52,6 +55,8 @@ An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) o
 .last_value
 
 .solution
+
+.solution_all
 
 .user_code
 
@@ -97,6 +102,7 @@ In addition, \pkg{gradethis} has provided some extra objects:
 \itemize{
 \item \code{.user}, \code{.result}: The last value returned from evaluating the user's exercise submission.
 \item \code{.solution}: The last value returned from evaluating the \code{.solution_code} for the exercise (evaluated in \code{.envir_prep}).
+\item \code{.solution_all}: A list containing all solutions when multiple solutions are provided in the \verb{*-solution} chunk for the exercise. Solutions are separated by header comments, e.g. \verb{# base_r ----}.
 \item \code{.solution_code_all}: A list containing the code of all solutions when multiple solutions are provided in the \verb{*-solution} chunk for the exercise. Solutions are separated by header comments, e.g. \verb{# base_r ----}.
 }
 }
