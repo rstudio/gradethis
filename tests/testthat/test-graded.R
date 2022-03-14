@@ -139,6 +139,28 @@ test_that("fail_if_equal() in grade_this()", {
   )
 })
 
+test_that("pass_if_equal() with tolerance", {
+  # pass
+  expect_graded(
+    pass_if_equal(y = 2, x = sqrt(2) ^ 2),
+    is_correct = TRUE
+  )
+
+  # no pass
+  expect_null(pass_if_equal(y = 2, x = sqrt(2) ^ 2, tolerance = 0))
+})
+
+test_that("fail_if_equal() with tolerance", {
+  # fail
+  expect_graded(
+    fail_if_equal(y = 2, x = sqrt(2) ^ 2),
+    is_correct = FALSE
+  )
+
+  # no fail
+  expect_null(fail_if_equal(y = 2, x = sqrt(2) ^ 2, tolerance = 0))
+})
+
 test_that("fail_if_code_feedback() returns grade if code feedback", {
   # code feedback message by default
   expect_graded(
