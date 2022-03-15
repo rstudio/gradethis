@@ -170,7 +170,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
     },
     user_code = "x + y",
     solution_code = "x + z",
-    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    setup_exercise = "x = 1; y = 2; z = 3",
     is_correct = FALSE,
     msg = paste("zzz", code_feedback("x + y", "x + z"))
   )
@@ -183,7 +183,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
     },
     user_code = "x + y",
     solution_code = "x + z",
-    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    setup_exercise = "x = 1; y = 2; z = 3",
     is_correct = FALSE,
     msg = paste("3.", code_feedback("x + y", "x + z"))
   )
@@ -199,7 +199,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
         },
         user_code = "x + y",
         solution_code = "x + z",
-        envir_prep = rlang::env(x = 1, y = 2, z = 3),
+        setup_exercise = "x = 1; y = 2; z = 3",
         is_correct = FALSE,
         msg = "TEST PASSED"
       )$message
@@ -215,7 +215,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
     },
     user_code = "x + y",
     solution_code = "x + z",
-    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    setup_exercise = "x = 1; y = 2; z = 3",
     is_correct = FALSE,
     msg = paste("zzz", code_feedback("x + y", "x + z"))
   )
@@ -228,7 +228,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
     },
     user_code = "x + z",
     solution_code = "x + z",
-    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    setup_exercise = "x = 1; y = 2; z = 3",
     is_correct = TRUE,
     msg = "TEST PASSED"
   )
@@ -240,7 +240,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
       pass("TEST PASSED")
     },
     user_code = "x + z",
-    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    setup_exercise = "x = 1; y = 2; z = 3",
     is_correct = TRUE,
     msg = "TEST PASSED"
   )
@@ -252,7 +252,7 @@ test_that("fail_if_code_feedback() returns grade if code feedback", {
       pass("TEST PASSED")
     },
     user_code = "",
-    envir_prep = rlang::env(x = 1, y = 2, z = 3),
+    setup_exercise = "x = 1; y = 2; z = 3",
     is_correct = logical(),
     msg = "I didn't receive your code"
   )

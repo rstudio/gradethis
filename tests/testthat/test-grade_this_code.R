@@ -79,16 +79,16 @@ test_that("Spots differences in argument names", {
 })
 
 test_that("Ignore differences in argument positions (for non ... arguments)", {
-  test_fn2 <- function(x, digits = 0){return(1)}
+  setup_fn <- "test_fn2 <- function(x, digits = 0){return(1)}"
   a <- "test_fn2(x = pi, digits = 2)"
   b <- "test_fn2(pi, digits = 2)"
   c <- "test_fn2(2, x = pi)"
   d <- "test_fn2(digits = 2, x = pi)"
 
-  expect_this_code(b, a, is_correct = TRUE)
-  expect_this_code(c, a, is_correct = TRUE)
-  expect_this_code(d, a, is_correct = TRUE)
-  expect_this_code(a, d, is_correct = TRUE)
+  expect_this_code(b, a, is_correct = TRUE, setup_exercise = !!setup_fn)
+  expect_this_code(c, a, is_correct = TRUE, setup_exercise = !!setup_fn)
+  expect_this_code(d, a, is_correct = TRUE, setup_exercise = !!setup_fn)
+  expect_this_code(a, d, is_correct = TRUE, setup_exercise = !!setup_fn)
 
 })
 
