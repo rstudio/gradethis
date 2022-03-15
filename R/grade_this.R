@@ -149,7 +149,21 @@ grade_this <- function(
     # +------------+       +-----------+
     # |  expr_env  +------>| check_env |
     # +------------+       +-----------+
-    rlang::env_poke_parent(check_env, expr_env)
+
+    env_insert_parent <- function(env, parent) {
+      if (
+        identical(parent, rlang::global_env()) ||
+        identical(env, rlang::global_env())
+      ) {
+        return()
+      }
+
+      rlang::env_poke_parent(parent, rlang::env_parent(env))
+      rlang::env_poke_parent(env, parent)
+    }
+
+    env_insert_parent(expr_env, rlang::env_parent(check_env))
+    env_insert_parent(check_env, expr_env)
 
     # Turn the grading code into a function defined in the `check_env`
     do_grade_this <- rlang::new_function(NULL, body = expr, env = check_env)
