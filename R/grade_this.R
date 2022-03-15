@@ -153,7 +153,7 @@ grade_this <- function(
     env_insert_parent <- function(env, parent) {
       if (
         identical(parent, rlang::global_env()) ||
-        identical(env, rlang::global_env())
+          identical(env, rlang::global_env())
       ) {
         return()
       }
