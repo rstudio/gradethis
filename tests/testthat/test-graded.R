@@ -109,6 +109,68 @@ test_that("pass_if_equal() in grade_this()", {
   )
 })
 
+test_that("pass_if_equal() with multiple solutions", {
+  grader <- grade_this({
+    pass_if_equal(message = "YES")
+    fail("NO")
+  })
+
+  solution_code <-
+"# one ----
+1
+# two ----
+2
+# three ----
+3"
+
+  # correct
+  expect_graded(
+    grader(mock_this_exercise(1, !!solution_code)),
+    is_correct = TRUE,
+    msg = "YES"
+  )
+
+  expect_graded(
+    grader(mock_this_exercise(2, !!solution_code)),
+    is_correct = TRUE,
+    msg = "YES"
+  )
+
+  expect_graded(
+    grader(mock_this_exercise(3, !!solution_code)),
+    is_correct = TRUE,
+    msg = "YES"
+  )
+
+  # incorrect
+  expect_graded(
+    grader(mock_this_exercise(4, !!solution_code)),
+    is_correct = FALSE,
+    msg = "NO"
+  )
+
+  expect_graded(
+    grader(mock_this_exercise("c(1, 2, 3)", !!solution_code)),
+    is_correct = FALSE,
+    msg = "NO"
+  )
+
+  expect_graded(
+    grader(mock_this_exercise("list(1, 2, 3)", !!solution_code)),
+    is_correct = FALSE,
+    msg = "NO"
+  )
+
+  expect_graded(
+    grader(mock_this_exercise(
+      "gradethis:::gradethis_solutions(one = 1, two = 2, three = 3)",
+      !!solution_code
+    )),
+    is_correct = FALSE,
+    msg = "NO"
+  )
+})
+
 test_that("fail_if_equal() in grade_this()", {
   grader <- grade_this({
     fail_if_equal(40, message = "NO")
