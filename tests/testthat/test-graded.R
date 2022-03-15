@@ -116,7 +116,7 @@ test_that("pass_if_equal() with multiple solutions", {
   })
 
   solution_code <-
-"# one ----
+    "# one ----
 1
 # two ----
 2
