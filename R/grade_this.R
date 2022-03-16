@@ -139,7 +139,7 @@ grade_this <- function(
 
   function(check_env) {
     if (is.list(check_env)) {
-      check_env <- list2env(check_env, envir = new.env(parent = emptyenv()))
+      check_env <- list2env(check_env, envir = new.env(parent = globalenv()))
     }
 
     check_env[[".__gradethis_check_env"]] <- TRUE
