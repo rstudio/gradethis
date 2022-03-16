@@ -24,7 +24,11 @@ env_rls <- function(env, show_contents = TRUE) {
   }
 }
 
-env_insert_parent <- function(child, parent_new) {
+local_env_insert_parent <- function(
+  child,
+  parent_new,
+  restore_env = parent.frame()
+) {
   if (!rlang::is_environment(child) || !rlang::is_environment(parent_new)) {
     return(invisible(child))
   }
@@ -83,6 +87,13 @@ env_insert_parent <- function(child, parent_new) {
     }
     return(invisible(child))
   }
+
+  # Put parent_new back where we found it when exiting `restore_env`
+  original_parent_of_parent_new <- rlang::env_parent(parent_new)
+  withr::defer(
+    rlang::env_poke_parent(parent_new, original_parent_of_parent_new),
+    envir = restore_env
+  )
 
   parent_old <- rlang::env_parent(child)
   rlang::env_poke_parent(parent_new, parent_old)

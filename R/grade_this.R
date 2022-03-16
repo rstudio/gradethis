@@ -150,7 +150,7 @@ grade_this <- function(
     # env_rls(check_env, show_contents = FALSE)
 
     # Ensure that check_env has expr_env as a parent
-    env_insert_parent(check_env, parent_new = expr_env)
+    local_env_insert_parent(check_env, parent_new = expr_env)
 
     # cat("\n---- after -----\n")
     # env_rls(check_env, show_contents = FALSE)
