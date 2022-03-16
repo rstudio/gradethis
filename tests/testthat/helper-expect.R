@@ -97,7 +97,6 @@ expect_grade_this <- function(
   expr,
   user_code,
   solution_code = NULL,
-  envir_prep = new.env(parent = parent.frame()),
   is_correct,
   msg = NULL,
   ...
