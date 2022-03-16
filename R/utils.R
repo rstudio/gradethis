@@ -2,15 +2,26 @@ deparse_to_string <- function(x, width.cutoff = 500L, ...) {
   paste0(deparse(x, width.cutoff = width.cutoff, ...), collapse = "\n")
 }
 
-env_rls <- function(env) {
+env_rls <- function(env, show_contents = TRUE) {
+  env_start <- rlang::as_label(rlang::enquo(env))
+
   if (identical(env, rlang::global_env()) || rlang::is_namespace(env)) {
     rlang::env_print(env)
     return(invisible(env))
   }
-  purrr::walk(
-    c(list(env), rlang::env_parents(env)),
-    rlang::env_print
-  )
+
+  stack <- c(list(env), rlang::env_parents(env))
+
+  if (show_contents) {
+    purrr::walk(stack, rlang::env_print)
+  } else {
+    env_names <- purrr::map_chr(stack, rlang::env_label)
+    env_names <- paste0("<env ", env_names, ">")
+    env_names[1] <- paste0(env_start, ": ", env_names[1])
+    names(env_names) <- c("", rep("*", length(env_names) - 1))
+    msg <- rlang::cnd_message(rlang::catch_cnd(rlang::inform(env_names)))
+    cat("\n", msg, "\n", sep = "")
+  }
 }
 
 env_insert_parent <- function(child, parent_new) {
