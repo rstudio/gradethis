@@ -58,14 +58,14 @@ test_that("Mentions only first non-matching element", {
 })
 
 test_that("Spots differences in argument names", {
-  test_fn <- function(x, y = 1, z = 2, ...) {return(1)}
+  setup <- "test_fn <- function(x, y = 1, z = 2, ...) {return(1)}"
 
   a <- "test_fn(10, y = 1, z = TRUE)"
   b <- "test_fn(10, 1, TRUE)"
   c <- "test_fn(10, w = 1, z = TRUE)"
 
-  expect_this_code(a, a, is_correct = TRUE)
-  expect_this_code(b, a, is_correct = TRUE)
+  expect_this_code(a, a, is_correct = TRUE, setup_exercise = !!setup)
+  expect_this_code(b, a, is_correct = TRUE, setup_exercise = !!setup)
   expect_this_code(
     c, a,
     is_correct = FALSE,
@@ -73,7 +73,8 @@ test_that("Spots differences in argument names", {
       this_call = quote(test_fn()),
       this = 1,
       this_name = "w"
-    )
+    ),
+    setup_exercise = !!setup
   )
 
 })
