@@ -144,26 +144,13 @@ grade_this <- function(
 
     check_env[[".__gradethis_check_env"]] <- TRUE
 
+    # cat("\n\n----- expr_env -----\n")
+    # env_rls(expr_env)
+    # cat("\n\n----- check_env -----\n")
+    # env_rls(check_env)
+
     # Ensure that check_env has expr_env as a parent
-    #
-    # +------------+       +-----------+
-    # |  expr_env  +------>| check_env |
-    # +------------+       +-----------+
-
-    env_insert_parent <- function(env, parent) {
-      if (
-        identical(parent, rlang::global_env()) ||
-          identical(env, rlang::global_env())
-      ) {
-        return()
-      }
-
-      rlang::env_poke_parent(parent, rlang::env_parent(env))
-      rlang::env_poke_parent(env, parent)
-    }
-
-    env_insert_parent(expr_env, rlang::env_parent(check_env))
-    env_insert_parent(check_env, expr_env)
+    env_insert_parent(check_env, parent_new = expr_env)
 
     # Turn the grading code into a function defined in the `check_env`
     do_grade_this <- rlang::new_function(NULL, body = expr, env = check_env)
