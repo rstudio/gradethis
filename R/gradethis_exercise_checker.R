@@ -333,43 +333,28 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     }
   )
 
+  check_env[[".solution_all"]] <- new.env()
+  class(check_env[[".solution_all"]]) <- "gradethis_solutions"
+
   solution_all_expr <- purrr::map(
     check_env[[".solution_code_all"]] %||% list(),
     ~ parse(text = .)
   )
 
-  delayedAssign(
-    assign.env = check_env,
-    x = ".solution_all",
-    {
-      if (length(solution_all_expr) == 0) {
-        solution_problem <-
-          grade_grading_problem(
-            message = "No solution is provided for this exercise.",
-            type = "warning",
-            error = list(
-              message = "No solution provided for this exercise",
-              label = learnr_args[["label"]]
-            )
-          )
+  if (!rlang::is_named(solution_all_expr)) {
+    names(solution_all_expr) <- sprintf(
+      "solution%02d",
+      seq_along(solution_all_expr)
+    )
+  }
 
-        if (!is.null(envir_caller)) {
-          # inside gradethis_exercise_checker or another process,
-          # return feedback from there
-          rlang::return_from(envir_caller, feedback(solution_problem))
-        } else {
-          # otherwise (e.g. mocking) just return the solution problem grade
-          solution_problem
-        }
-      } else {
-        # solution code exists...
-        # Using eval_tidy does not evaluate the expression. Using eval() instead
-        gradethis_solutions(
-          .list = purrr::map(solution_all_expr, eval, envir = envir_base)
-        )
-      }
-    }
-  )
+  purrr::imap(solution_all_expr, function(expr, name) {
+    delayedAssign(
+      x = name,
+      value = eval(expr, envir = envir_base),
+      assign.env = check_env[[".solution_all"]]
+    )
+  })
 
   check_env
 }

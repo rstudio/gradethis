@@ -377,7 +377,7 @@ pass_if_equal <- function(
   }
 
   if (inherits(y, "gradethis_solutions")) {
-    for (i in seq_along(y)) {
+    for (i in names(y)) {
       maybe_extras(
         grade_if_equal(x = x, y = y[[i]], message = message, correct = TRUE, env = env, ...),
         praise = praise
