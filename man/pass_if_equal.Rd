@@ -6,7 +6,7 @@
 \title{Signal a passing or failing grade if two values are equal}
 \usage{
 pass_if_equal(
-  y = .solution_all,
+  y = .solution,
   message = getOption("gradethis.pass", "Correct!"),
   x = .result,
   ...,
@@ -26,11 +26,14 @@ fail_if_equal(
 }
 \arguments{
 \item{y}{The expected value against which \code{x} is compared using
-\code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the
-exercise \code{.solution_all}, or the result of evaluating the code in the
+\code{waldo::compare(x, y)}.
+
+In \code{pass_if_equal()}, if no value is provided, the
+exercise \code{.solution}, or the result of evaluating the code in the
 exercise's \verb{*-solution} chunk, will be used for the comparison.
-If \code{.solution_all} contains multiple solutions, a passing grade is given if
-\code{x} matches \emph{any} values contained in \code{y}.}
+
+If \code{y} is \code{.solution_all}, \code{pass_if_equal()} will test multiple solutions.
+A passing grade is given if \code{x} matches \emph{any} values contained in \code{y}.}
 
 \item{message}{A character string of the message to be displayed. In all
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template

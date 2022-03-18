@@ -111,7 +111,7 @@ test_that("pass_if_equal() in grade_this()", {
 
 test_that("pass_if_equal() with multiple solutions", {
   grader <- grade_this({
-    pass_if_equal(message = "YES")
+    pass_if_equal(y = .solution_all, message = "YES")
     fail("NO")
   })
 
