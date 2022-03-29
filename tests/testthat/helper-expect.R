@@ -81,10 +81,6 @@ expect_grade_code <- function(
   is_correct,
   msg = NULL
 ) {
-  if (is.null(solution_code_all) && !is.null(solution_code)) {
-    solution_code_all <- solutions_prepare(solution_code)
-  }
-
   check_env <- create_learnr_env(
     user_code, solution_code, solution_code_all, envir_prep, eval = FALSE
   )
