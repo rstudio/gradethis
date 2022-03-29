@@ -120,6 +120,12 @@ grade_code <- function(
     }
 
     solution_code_all <- check_env$.solution_code_all
+    # If `.solution_code_all` is missing, make it from `.solution_code`
+    if (is.null(solution_code_all) || length(str2expression(solution_code_all)) == 0) {
+      solution_code_all <- solutions_prepare(check_env$.solution_code)
+    }
+
+    # If `.solution_code_all` is still missing, return an error
     if (is.null(solution_code_all) || length(str2expression(solution_code_all)) == 0) {
       return(legacy_graded(
         correct = FALSE,
