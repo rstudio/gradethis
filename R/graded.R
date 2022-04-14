@@ -340,6 +340,9 @@ fail <- function(
 #'
 #'   If `y` is `.solution_all`, `pass_if_equal()` will test multiple solutions.
 #'   A passing grade is given if `x` matches _any_ values contained in `y`.
+#'   This is only necessary if the multiple solutions have different results.
+#'   If each of the multiple solutions have the same result, it will be faster
+#'   to use the default value, `.solution`.
 #' @param ... Additional arguments passed to [graded()]
 #'
 #' @return Returns a passing or failing grade if `x` and `y` are equal.

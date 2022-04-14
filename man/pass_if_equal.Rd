@@ -33,7 +33,10 @@ exercise \code{.solution}, or the result of evaluating the code in the
 exercise's \verb{*-solution} chunk, will be used for the comparison.
 
 If \code{y} is \code{.solution_all}, \code{pass_if_equal()} will test multiple solutions.
-A passing grade is given if \code{x} matches \emph{any} values contained in \code{y}.}
+A passing grade is given if \code{x} matches \emph{any} values contained in \code{y}.
+This is only necessary if the multiple solutions have different results.
+If each of the multiple solutions have the same result, it will be faster
+to use the default value, \code{.solution}.}
 
 \item{message}{A character string of the message to be displayed. In all
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
