@@ -58,14 +58,14 @@ test_that("Mentions only first non-matching element", {
 })
 
 test_that("Spots differences in argument names", {
-  test_fn <- function(x, y = 1, z = 2, ...) {return(1)}
+  setup <- "test_fn <- function(x, y = 1, z = 2, ...) {return(1)}"
 
   a <- "test_fn(10, y = 1, z = TRUE)"
   b <- "test_fn(10, 1, TRUE)"
   c <- "test_fn(10, w = 1, z = TRUE)"
 
-  expect_this_code(a, a, is_correct = TRUE)
-  expect_this_code(b, a, is_correct = TRUE)
+  expect_this_code(a, a, is_correct = TRUE, setup_exercise = !!setup)
+  expect_this_code(b, a, is_correct = TRUE, setup_exercise = !!setup)
   expect_this_code(
     c, a,
     is_correct = FALSE,
@@ -73,22 +73,23 @@ test_that("Spots differences in argument names", {
       this_call = quote(test_fn()),
       this = 1,
       this_name = "w"
-    )
+    ),
+    setup_exercise = !!setup
   )
 
 })
 
 test_that("Ignore differences in argument positions (for non ... arguments)", {
-  test_fn2 <- function(x, digits = 0){return(1)}
+  setup_fn <- "test_fn2 <- function(x, digits = 0){return(1)}"
   a <- "test_fn2(x = pi, digits = 2)"
   b <- "test_fn2(pi, digits = 2)"
   c <- "test_fn2(2, x = pi)"
   d <- "test_fn2(digits = 2, x = pi)"
 
-  expect_this_code(b, a, is_correct = TRUE)
-  expect_this_code(c, a, is_correct = TRUE)
-  expect_this_code(d, a, is_correct = TRUE)
-  expect_this_code(a, d, is_correct = TRUE)
+  expect_this_code(b, a, is_correct = TRUE, setup_exercise = !!setup_fn)
+  expect_this_code(c, a, is_correct = TRUE, setup_exercise = !!setup_fn)
+  expect_this_code(d, a, is_correct = TRUE, setup_exercise = !!setup_fn)
+  expect_this_code(a, d, is_correct = TRUE, setup_exercise = !!setup_fn)
 
 })
 

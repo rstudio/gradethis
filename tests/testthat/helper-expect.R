@@ -81,10 +81,6 @@ expect_grade_code <- function(
   is_correct,
   msg = NULL
 ) {
-  if (is.null(solution_code_all) && !is.null(solution_code)) {
-    solution_code_all <- solutions_prepare(solution_code)
-  }
-
   check_env <- create_learnr_env(
     user_code, solution_code, solution_code_all, envir_prep, eval = FALSE
   )
@@ -97,20 +93,15 @@ expect_grade_this <- function(
   expr,
   user_code,
   solution_code = NULL,
-  solution_code_all = NULL,
-  envir_prep = new.env(parent = parent.frame()),
   is_correct,
-  msg = NULL
+  msg = NULL,
+  ...
 ) {
-  if (is.null(solution_code_all) && !is.null(solution_code)) {
-    solution_code_all <- solutions_prepare(solution_code)
-  }
-
-  env <- create_learnr_env(user_code, solution_code, solution_code_all, envir_prep)
+  ex <- mock_this_exercise(!!user_code, !!solution_code, ...)
 
   expr_quo <- rlang::enquo(expr)
   grader <- grade_this(!!expr_quo)
-  grade <- grader(env)
+  grade <- grader(ex)
 
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
@@ -118,20 +109,15 @@ expect_grade_this <- function(
 expect_this_code <- function(
   user_code,
   solution_code,
-  solution_code_all = NULL,
-  envir_prep = new.env(parent = parent.frame()),
   correct = "valid",
   incorrect = "{.message}",
   is_correct,
   msg = NULL,
-  allow_partial_matching = TRUE
+  allow_partial_matching = TRUE,
+  ...
 ) {
-  if (is.null(solution_code_all) && !is.null(solution_code)) {
-    solution_code_all <- solutions_prepare(solution_code)
-  }
-
-  env <- create_learnr_env(user_code, solution_code, solution_code_all, envir_prep, eval = FALSE)
-  grade <- grade_this_code(correct, incorrect, allow_partial_matching = allow_partial_matching)(env)
+  ex <- mock_this_exercise(!!user_code, !!solution_code, ..., eval = FALSE)
+  grade <- grade_this_code(correct, incorrect, allow_partial_matching = allow_partial_matching)(ex)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
 

@@ -11,6 +11,7 @@ pass_if_equal(
   x = .result,
   ...,
   env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
   praise = getOption("gradethis.pass.praise", FALSE)
 )
 
@@ -20,6 +21,7 @@ fail_if_equal(
   x = .result,
   ...,
   env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 )
@@ -52,6 +54,18 @@ the student's submission against a specific value, \code{y}.}
 
 \item{env}{environment to evaluate the glue \code{message}. Most users of
 \pkg{gradethis} will not need to use this argument.}
+
+\item{tolerance}{If non-\code{NULL}, used as threshold for ignoring small
+floating point difference when comparing numeric vectors. Setting to
+any non-\code{NULL} value will cause integer and double vectors to be compared
+based on their values, rather than their types.
+
+It uses the same algorithm as \code{\link[=all.equal]{all.equal()}}, i.e., first we generate
+\code{x_diff} and \code{y_diff} by subsetting \code{x} and \code{y} to look only locations
+with differences. Then we check that
+\code{mean(abs(x_diff - y_diff)) / mean(abs(y_diff))} (or just
+\code{mean(abs(x_diff - y_diff))} if \code{y_diff} is small) is less than
+\code{tolerance}.}
 
 \item{praise}{Include a random praising phrase with \code{\link[=random_praise]{random_praise()}}? The
 default value of \code{praise} can be set using \code{\link[=gradethis_setup]{gradethis_setup()}} or the

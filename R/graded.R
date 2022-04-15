@@ -343,6 +343,7 @@ fail <- function(
 #'   This is only necessary if the multiple solutions have different results.
 #'   If each of the multiple solutions have the same result, it will be faster
 #'   to use the default value, `.solution`.
+#' @inheritParams waldo::compare
 #' @param ... Additional arguments passed to [graded()]
 #'
 #' @return Returns a passing or failing grade if `x` and `y` are equal.
@@ -357,6 +358,7 @@ pass_if_equal <- function(
   x = .result,
   ...,
   env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
   praise = getOption("gradethis.pass.praise", FALSE)
 ) {
   if (is_placeholder(x, ".result")) {
@@ -382,13 +384,13 @@ pass_if_equal <- function(
   if (inherits(y, "gradethis_solutions")) {
     for (i in names(y)) {
       maybe_extras(
-        grade_if_equal(x = x, y = y[[i]], message = message, correct = TRUE, env = env, ...),
+        grade_if_equal(x = x, y = y[[i]], message = message, correct = TRUE, env = env, tolerance = tolerance, ...),
         praise = praise
       )
     }
   } else {
     maybe_extras(
-      grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, ...),
+      grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, tolerance = tolerance, ...),
       praise = praise
     )
   }
@@ -403,6 +405,7 @@ fail_if_equal <- function(
   x = .result,
   ...,
   env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
@@ -411,18 +414,28 @@ fail_if_equal <- function(
     assert_object_found_in_env(x, env, "fail_if_equal")
   }
   maybe_extras(
-    grade_if_equal(x = x, y = y, message = message, correct = FALSE, env = env, ...),
+    grade_if_equal(
+      x = x,
+      y = y,
+      message = message,
+      correct = FALSE,
+      env = env,
+      tolerance = tolerance,
+      ...
+    ),
     env = env,
     hint = hint,
     encourage = encourage
   )
 }
 
-grade_if_equal <- function(x, y, message, correct, env, ...) {
+grade_if_equal <- function(
+  x, y, message, correct, env, tolerance = sqrt(.Machine$double.eps), ...
+) {
   local_options_waldo_compare()
 
   compare_msg <- tryCatch(
-    waldo::compare(x, y),
+    waldo::compare(x, y, tolerance = tolerance),
     error = function(e) {
       # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
       # waldo::compare() calls diffobj::ses() — these functions try hard to create
