@@ -270,13 +270,24 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     check_env[[".solution_code"]] <- solutions[[length(solutions)]]
   }
 
-  # Delayed evaluation of `.solution`
+  # Delayed evaluation of `.solution` and `.solution_all`
   engine <- knitr_engine_caption(learnr_args[["engine"]])
   if (!identical(engine, "R")) {
     msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
+
     delayedAssign(
       assign.env = check_env,
       x = ".solution",
+      grade_grading_problem(
+        message = msg,
+        type = "warning",
+        error = list(message = msg, label = learnr_args[["label"]])
+      )
+    )
+
+    delayedAssign(
+      assign.env = check_env,
+      x = ".solution_all",
       grade_grading_problem(
         message = msg,
         type = "warning",
@@ -321,6 +332,29 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
       }
     }
   )
+
+  check_env[[".solution_all"]] <- new.env()
+  class(check_env[[".solution_all"]]) <- "gradethis_solutions"
+
+  solution_all_expr <- purrr::map(
+    check_env[[".solution_code_all"]] %||% list(),
+    ~ parse(text = .)
+  )
+
+  if (!rlang::is_named(solution_all_expr)) {
+    names(solution_all_expr) <- sprintf(
+      "solution%02d",
+      seq_along(solution_all_expr)
+    )
+  }
+
+  purrr::imap(solution_all_expr, function(expr, name) {
+    delayedAssign(
+      x = name,
+      value = eval(expr, envir = envir_base),
+      assign.env = check_env[[".solution_all"]]
+    )
+  })
 
   check_env
 }

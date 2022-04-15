@@ -332,9 +332,18 @@ fail <- function(
 #'   the first argument since you will often want to compare the final value of
 #'   the student's submission against a specific value, `y`.
 #' @param y The expected value against which `x` is compared using
-#'   `waldo::compare(x, y)`. In `pass_if_equal()`, if no value is provided, the
-#'   exercise `.solution`, or the result of evaluating the code in the
-#'   exercise's `*-solution` chunk, will be used for the comparison.
+#'   `waldo::compare(x, y)`.
+#'
+#'   In `pass_if_equal()`, if no value is provided, the exercise `.solution`
+#'   (i.e. the result of evaluating the code in the exercise's `*-solution`
+#'   chunk) will be used for the comparison.
+#'
+#'   If the exercise uses multiple solutions with _different results_, set
+#'   `y = .solution_all`. In this case, `pass_if_equal()` will test each of the
+#'   solutions and provide a passing grade if `x` matches _any_ values contained
+#'   in `y`. Note that if the exercise has multiple solutions but they all
+#'   return the same result, it will be faster to use the default value of
+#'   `y = .solution`.
 #' @inheritParams waldo::compare
 #' @param ... Additional arguments passed to [graded()]
 #'
@@ -357,22 +366,44 @@ pass_if_equal <- function(
     x <- get_from_env(".result", env)
     assert_object_found_in_env(x, env, "pass_if_equal")
   }
+
   if (is_placeholder(y, ".solution")) {
     y <- get_from_env(".solution", env)
     assert_object_found_in_env(y, env, "pass_if_equal")
   }
-  maybe_extras(
-    grade_if_equal(
-      x = x,
-      y = y,
-      message = message,
-      correct = TRUE,
-      env = env,
-      tolerance = tolerance,
-      ...
-    ),
-    praise = praise
+
+  if (is_placeholder(y, ".solution_all")) {
+    y <- get_from_env(".solution_all", env)
+
+    # If .solution_all is not present, use .solution
+    if (is_placeholder(y, ".solution_all")) {
+      y <- get_from_env(".solution", env)
+      assert_object_found_in_env(y, env, "pass_if_equal")
+    }
+  }
+
+  grade_if_equal_p <- purrr::partial(
+    grade_if_equal,
+    message = message,
+    correct = TRUE,
+    env = env,
+    tolerance = tolerance,
+    ...
   )
+
+  if (inherits(y, "gradethis_solutions")) {
+    for (i in names(y)) {
+      maybe_extras(
+        grade_if_equal_p(x = x, y = y[[i]]),
+        praise = praise
+      )
+    }
+  } else {
+    maybe_extras(
+      grade_if_equal_p(x = x, y = y),
+      praise = praise
+    )
+  }
 }
 
 #' @describeIn pass_if_equal Signal a _failing_ grade only if `x` and `y` are

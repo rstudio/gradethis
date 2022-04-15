@@ -34,11 +34,16 @@ print.gradethis_solutions <- function(x, ...) {
 #' @export
 format.gradethis_solutions <- function(x, ...) {
   ret <- c()
-  for (i in seq_along(x)) {
-    header <- names(x)[i]
+
+  if (!rlang::is_named(x)) {
+    names(x) <- sprintf("solution%02d", seq_along(x))
+  }
+
+  for (name in names(x)) {
+    header <- name
     width_remaining <- min(getOption("width", 80), 80) - nchar(header) - 3
     header <- paste("#", header, strrep("-", width_remaining))
-    ret <- c(ret, header, "", x[[i]], "")
+    ret <- c(ret, header, "", x[[name]], "")
   }
   paste(ret, collapse = "\n")
 }

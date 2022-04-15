@@ -201,6 +201,7 @@ placeholder_definition <- function(x) {
     .result = "The last value returned from evaluating the user's exercise submission.",
     .user_code = "A string containing the code submitted by the user.",
     .solution = "The last value returned from evaluating the `.solution_code` for the exercise (evaluated in `.envir_prep`).",
+    .solution_all = "A list containing all solutions when multiple solutions are provided in the `*-solution` chunk for the exercise. Solutions are separated by header comments, e.g. `# base_r ----`.",
     .solution_code = "A string containing the code provided within the `*-solution` chunk for the exercise.",
     .solution_code_all = "A list containing the code of all solutions when multiple solutions are provided in the `*-solution` chunk for the exercise. Solutions are separated by header comments, e.g. `# base_r ----`.",
     .check_code = "A string containing the code provided within the `*-check` or `*-code-check` chunk for the exercise.",
@@ -239,6 +240,7 @@ placeholder_definition <- function(x) {
 #'
 #' * `.user`, `.result`: `r placeholder_definition(".user")`
 #' * `.solution`: `r placeholder_definition(".solution")`
+#' * `.solution_all`: `r placeholder_definition(".solution_all")`
 #' * `.solution_code_all`: `r placeholder_definition(".solution_code_all")`
 #'
 #' @name grade_this-objects
@@ -259,6 +261,10 @@ NULL
 #' @rdname grade_this-objects
 #' @export
 .solution <- placeholder(".solution")
+
+#' @rdname grade_this-objects
+#' @export
+.solution_all <- placeholder(".solution_all")
 
 #' @rdname grade_this-objects
 #' @export
