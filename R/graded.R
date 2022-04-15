@@ -381,16 +381,25 @@ pass_if_equal <- function(
     }
   }
 
+  grade_if_equal_p <- purrr::partial(
+    grade_if_equal,
+    message = message,
+    correct = TRUE,
+    env = env,
+    tolerance = tolerance,
+    ...
+  )
+
   if (inherits(y, "gradethis_solutions")) {
     for (i in names(y)) {
       maybe_extras(
-        grade_if_equal(x = x, y = y[[i]], message = message, correct = TRUE, env = env, tolerance = tolerance, ...),
+        grade_if_equal_p(x = x, y = y[[i]]),
         praise = praise
       )
     }
   } else {
     maybe_extras(
-      grade_if_equal(x = x, y = y, message = message, correct = TRUE, env = env, tolerance = tolerance, ...),
+      grade_if_equal_p(x = x, y = y),
       praise = praise
     )
   }
