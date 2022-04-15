@@ -36,9 +36,9 @@ chunk) will be used for the comparison.
 
 If the exercise uses multiple solutions with \emph{different results}, set
 \code{y = .solution_all}. In this case, \code{pass_if_equal()} will test each of the
-solutions and provide a passing grade is given if \code{x} matches \emph{any} values
-contained in \code{y}. Note that if the exercise has multiple solutions that
-each have the same result, it will be faster to use the default value of
+solutions and provide a passing grade if \code{x} matches \emph{any} values contained
+in \code{y}. Note that if the exercise has multiple solutions but they all
+return the same result, it will be faster to use the default value of
 \code{y = .solution}.}
 
 \item{message}{A character string of the message to be displayed. In all
