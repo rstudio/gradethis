@@ -334,15 +334,16 @@ fail <- function(
 #' @param y The expected value against which `x` is compared using
 #'   `waldo::compare(x, y)`.
 #'
-#'   In `pass_if_equal()`, if no value is provided, the
-#'   exercise `.solution`, or the result of evaluating the code in the
-#'   exercise's `*-solution` chunk, will be used for the comparison.
+#'   In `pass_if_equal()`, if no value is provided, the exercise `.solution`
+#'   (i.e. the result of evaluating the code in the exercise's `*-solution`
+#'   chunk) will be used for the comparison.
 #'
-#'   If `y` is `.solution_all`, `pass_if_equal()` will test multiple solutions.
-#'   A passing grade is given if `x` matches _any_ values contained in `y`.
-#'   This is only necessary if the multiple solutions have different results.
-#'   If each of the multiple solutions have the same result, it will be faster
-#'   to use the default value, `.solution`.
+#'   If the exercise uses multiple solutions with _different results_, set
+#'   `y = .solution_all`. In this case, `pass_if_equal()` will test each of the
+#'   solutions and provide a passing grade is given if `x` matches _any_ values
+#'   contained in `y`. Note that if the exercise has multiple solutions that
+#'   each have the same result, it will be faster to use the default value of
+#'   `y = .solution`.
 #' @inheritParams waldo::compare
 #' @param ... Additional arguments passed to [graded()]
 #'

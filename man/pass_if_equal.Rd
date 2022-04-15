@@ -30,15 +30,16 @@ fail_if_equal(
 \item{y}{The expected value against which \code{x} is compared using
 \code{waldo::compare(x, y)}.
 
-In \code{pass_if_equal()}, if no value is provided, the
-exercise \code{.solution}, or the result of evaluating the code in the
-exercise's \verb{*-solution} chunk, will be used for the comparison.
+In \code{pass_if_equal()}, if no value is provided, the exercise \code{.solution}
+(i.e. the result of evaluating the code in the exercise's \verb{*-solution}
+chunk) will be used for the comparison.
 
-If \code{y} is \code{.solution_all}, \code{pass_if_equal()} will test multiple solutions.
-A passing grade is given if \code{x} matches \emph{any} values contained in \code{y}.
-This is only necessary if the multiple solutions have different results.
-If each of the multiple solutions have the same result, it will be faster
-to use the default value, \code{.solution}.}
+If the exercise uses multiple solutions with \emph{different results}, set
+\code{y = .solution_all}. In this case, \code{pass_if_equal()} will test each of the
+solutions and provide a passing grade is given if \code{x} matches \emph{any} values
+contained in \code{y}. Note that if the exercise has multiple solutions that
+each have the same result, it will be faster to use the default value of
+\code{y = .solution}.}
 
 \item{message}{A character string of the message to be displayed. In all
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
