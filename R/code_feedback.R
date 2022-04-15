@@ -193,8 +193,7 @@ code_feedback <- function(
     }
   }
 
-  closest_solution <- which_closest_solution_code(user_code, solution_code_all)
-  solution_code <- solution_code_all[[closest_solution]]
+  solution_code <- solution_code_closest(user_code, solution_code_all)
 
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
@@ -234,7 +233,12 @@ with_maybe_code_feedback <- function(val, expr) {
   )
 }
 
-which_closest_solution_code <- function(user_code, solution_code_all) {
+solution_code_closest <- function(user_code, solution_code_all) {
+  closest_solution <- solution_code_closest_which(user_code, solution_code_all)
+  unlist(solution_code_all[closest_solution])
+}
+
+solution_code_closest_which <- function(user_code, solution_code_all) {
   # If there's no solution code or only one solution,
   # we don't need to find the closest match
   if (length(solution_code_all) < 2) {
