@@ -126,6 +126,7 @@ expect_graded <- function(
   is_correct,
   msg = NULL
 ) {
+  grade <- eval_gradethis(grade)
   expect_s3_class(grade, "gradethis_graded")
   if (identical(is_correct, logical(0))) {
     expect_equal(grade$correct, logical(0))

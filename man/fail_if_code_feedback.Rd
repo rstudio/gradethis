@@ -7,7 +7,7 @@
 fail_if_code_feedback(
   message = NULL,
   user_code = .user_code,
-  solution_code_all = .solution_code_all,
+  solution_code = .solution_code_all,
   ...,
   env = parent.frame(),
   hint = TRUE,
@@ -20,13 +20,19 @@ fail_if_code_feedback(
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
 string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
-\item{user_code}{String containing user or solution code. For
-ease of use in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} or \link{.solution_code} are by
-default retrieved from the calling environment.}
+\item{user_code}{String containing user or solution code. By
+default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
+\link{.user_code}. \code{solution_code} may also be a list containing multiple
+solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
+is found and used for \code{solution_code}. You may also use \code{.solution_code} if
+there is only one solution.}
 
-\item{solution_code_all}{A list containing the code of all solutions when
-multiple solutions are provided. For ease of use in \code{\link[=grade_this]{grade_this()}},
-\link{.solution_code_all} is by default retrieved from the calling environment.}
+\item{solution_code}{String containing user or solution code. By
+default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
+\link{.user_code}. \code{solution_code} may also be a list containing multiple
+solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
+is found and used for \code{solution_code}. You may also use \code{.solution_code} if
+there is only one solution.}
 
 \item{...}{
   Arguments passed on to \code{\link[=graded]{graded}}

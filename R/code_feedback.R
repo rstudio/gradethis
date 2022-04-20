@@ -126,12 +126,12 @@
 #'   give_code_feedback(grade_this_code(incorrect = "{random_encouragement()}"))
 #' # ```
 #' grader(submission_wrong)
-#' @param user_code,solution_code String containing user or solution code. For
-#'   ease of use in [grade_this()], [.user_code] or [.solution_code] are by
-#'   default retrieved from the calling environment.
-#' @param solution_code_all A list containing the code of all solutions when
-#'   multiple solutions are provided. For ease of use in [grade_this()],
-#'   [.solution_code_all] is by default retrieved from the calling environment.
+#' @param user_code,solution_code String containing user or solution code. By
+#'   default, when used in [grade_this()], [.user_code] is retrieved for the
+#'   [.user_code]. `solution_code` may also be a list containing multiple
+#'   solution variations, so by default in [grade_this()] [.solution_code_all]
+#'   is found and used for `solution_code`. You may also use `.solution_code` if
+#'   there is only one solution.
 #' @param env Environment used to standardize formals of the user and solution
 #'   code. Defaults to retrieving [.envir_prep] from the calling environment. If
 #'   not found, the [parent.frame()] will be used.
@@ -160,40 +160,27 @@
 #' @export
 code_feedback <- function(
   user_code = .user_code,
-  solution_code = .solution_code,
-  solution_code_all = .solution_code_all,
+  solution_code = .solution_code_all,
   env = .envir_prep,
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
   ellipsis::check_dots_empty()
 
-  if (is_placeholder(env, ".envir_prep")) {
-    env <- get0(".envir_prep", parent.frame(), ifnotfound = .envir_prep)
-    if (is_placeholder(env)) {
-      env <- parent.frame()
-    }
-    assert_not_placeholder(env)
-  }
-  if (is_placeholder(user_code, ".user_code")) {
-    user_code <- get0(".user_code", parent.frame())
-    assert_not_placeholder(user_code)
-  }
-  if (is_placeholder(solution_code_all, ".solution_code_all")) {
-    solution_code_all <- get0(".solution_code_all", parent.frame())
+  resolve_placeholder_parent <-
+    purrr::partial(
+      resolve_placeholder,
+      env_find = !!parent.frame(),
+      throw_grade = FALSE
+    )
 
-    # If .solution_code_all is not present, create it from .solution_code
-    if (is_placeholder(solution_code_all, ".solution_code_all")) {
-      if (is_placeholder(solution_code, ".solution_code")) {
-        solution_code <- get0(".solution_code", parent.frame())
-        assert_not_placeholder(solution_code)
-      }
+  env <- resolve_placeholder_parent(env, default = parent.frame())
+  user_code <- resolve_placeholder_parent(user_code, default = NULL)
+  solution_code <- resolve_placeholder_parent(solution_code, default = NULL)
 
-      solution_code_all <- solutions_prepare(solution_code)
-    }
+  if (inherits(solution_code, "gradethis_solutions") || is.list(solution_code)) {
+    solution_code <- solution_code_closest(user_code, solution_code)
   }
-
-  solution_code <- solution_code_closest(user_code, solution_code_all)
 
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
@@ -307,8 +294,7 @@ which.min.last <- function(x) {
 #' @export
 maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
-  solution_code = get0(".solution_code", parent.frame()),
-  solution_code_all = get0(".solution_code_all", parent.frame()),
+  solution_code = get0(".solution_code_all", parent.frame()),
   env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
@@ -352,7 +338,6 @@ maybe_code_feedback <- function(
       code_feedback_val <- code_feedback(
         user_code = user_code,
         solution_code = solution_code,
-        solution_code_all = solution_code_all,
         env = env,
         allow_partial_matching = allow_partial_matching
       )

@@ -174,10 +174,80 @@ is_placeholder <- function(x, which = "gradethis_placeholder") {
   inherits(x, which)
 }
 
-assert_not_placeholder <- function(x) {
-  if (is_placeholder(x)) {
-    rlang::abort(glue::glue("Unable to find value for placeholder `{class(x)[1]}`"))
+assert_placeholder_resolved <- function(
+  obj,
+  env,
+  caller,
+  obj_name = NULL,
+  throw_grade = TRUE,
+  env_return_from = parent.frame(n = 2)
+) {
+  obj_expr <- rlang::enexpr(obj)
+
+  if (!is_placeholder(obj) && !is_missing(obj)) {
+    return(invisible(obj))
   }
+
+  obj_name <-
+    if (is_placeholder(obj)) {
+      class(obj)[1]
+    } else {
+      obj_name %||% rlang::expr_label(obj_expr)
+    }
+
+  label <- env$.label
+  label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
+  msg_obj_not_found <- glue::glue(
+    "{label} `{caller}()`: expected `{obj_name}` to be found in its",
+    "calling environment or the environment specified by `env`. ",
+    "Did you call `{caller}()` inside `grade_this()` or `grade_this_code()`?",
+    label = label %||% "",
+    caller = as.character(caller[[1]])
+  )
+  message(msg_obj_not_found)
+
+  if (isTRUE(throw_grade)) {
+    # Signal problem with grading code
+    cnd <- rlang::cnd(
+      "gradethis_placeholder_not_found",
+      message = msg_obj_not_found,
+      call = caller
+    )
+
+    signal_grade(grade_grading_problem(error = cnd), env_return_from)
+  }
+
+  obj
+}
+
+resolve_placeholder <- function(
+  x,
+  env_find = parent.frame(n = 2),
+  default = rlang::missing_arg(),
+  throw_grade = TRUE
+) {
+  x_label <- rlang::expr_label(rlang::enexpr(x))
+
+  if (!is_placeholder(x)) {
+    return(x)
+  }
+
+  placeholder_name <- class(x)[[1]]
+  x <- get0(placeholder_name, env_find, ifnotfound = x)
+
+  if (is_placeholder(x) && !rlang::is_missing(default)) {
+    # it's still a placeholder and we have a default, return that instead
+    return(default)
+  }
+
+  assert_placeholder_resolved(
+    obj = x,
+    env = env_find,
+    caller = rlang::caller_call(),
+    env_return_from = rlang::caller_env(),
+    obj_name = x_label,
+    throw_grade = throw_grade
+  )
 }
 
 # @export
