@@ -834,42 +834,6 @@ get_from_env <- function(x, env) {
   get0(x, envir = env, ifnotfound = missing_arg())
 }
 
-assert_object_found_in_env <- function(obj, env, caller, obj_name = NULL, throw_grade = TRUE) {
-  obj_name <- obj_name %||% rlang::expr_label(rlang::enexpr(obj))
-
-  if (!is_placeholder(obj) && !is_missing(obj)) {
-    return(invisible(obj))
-  }
-
-  obj_name <-
-    if (is_placeholder(obj)) {
-      class(obj)[1]
-    } else {
-      rlang::expr_text(obj_expr)
-    }
-
-  label <- env$.label
-  label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
-  msg_obj_not_found <- paste0(
-    label,
-    "`", caller, "()`: expected `", obj_name, "` to be found",
-    " in its calling environment or the environment specified by `env`.",
-    " Did you call `", caller, "()`",
-    " inside `grade_this()` or `grade_this_code()`?"
-  )
-  message(msg_obj_not_found)
-
-  if (isTRUE(throw_grade)) {
-    # Signal problem with grading code
-    signal_grade(
-      grade_grading_problem(error = list(message = msg_obj_not_found)),
-      parent.frame()
-    )
-  }
-
-  obj
-}
-
 maybe_extras <- function(
   expr,
   env = NULL,
