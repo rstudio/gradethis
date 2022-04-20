@@ -22,14 +22,14 @@ string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
 \item{user_code}{String containing user or solution code. By
 default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
-\link{user_code}. \code{solution_code} may also be a list containing multiple
+\link{.user_code}. \code{solution_code} may also be a list containing multiple
 solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
 is found and used for \code{solution_code}. You may also use \code{.solution_code} if
 there is only one solution.}
 
 \item{solution_code}{String containing user or solution code. By
 default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
-\link{user_code}. \code{solution_code} may also be a list containing multiple
+\link{.user_code}. \code{solution_code} may also be a list containing multiple
 solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
 is found and used for \code{solution_code}. You may also use \code{.solution_code} if
 there is only one solution.}

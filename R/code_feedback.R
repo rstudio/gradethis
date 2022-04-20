@@ -128,7 +128,7 @@
 #' grader(submission_wrong)
 #' @param user_code,solution_code String containing user or solution code. By
 #'   default, when used in [grade_this()], [.user_code] is retrieved for the
-#'   [user_code]. `solution_code` may also be a list containing multiple
+#'   [.user_code]. `solution_code` may also be a list containing multiple
 #'   solution variations, so by default in [grade_this()] [.solution_code_all]
 #'   is found and used for `solution_code`. You may also use `.solution_code` if
 #'   there is only one solution.
