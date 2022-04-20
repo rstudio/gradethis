@@ -174,15 +174,7 @@ is_placeholder <- function(x, which = "gradethis_placeholder") {
   inherits(x, which)
 }
 
-assert_not_placeholder <- function(x, caller = rlang::caller_call()) {
-  if (is_placeholder(x)) {
-    msg <- glue::glue("Unable to find value for placeholder `{class(x)[1]}`")
-    rlang::abort(msg, call = caller)
-  }
-  x
-}
-
-assert_object_found_in_env <- function(obj, env, caller, obj_name = NULL, throw_grade = TRUE) {
+assert_placeholder_resolved <- function(obj, env, caller, obj_name = NULL, throw_grade = TRUE) {
   obj_name <- obj_name %||% rlang::expr_label(rlang::enexpr(obj))
 
   if (!is_placeholder(obj) && !is_missing(obj)) {
@@ -239,7 +231,7 @@ resolve_placeholder <- function(
   }
 
   caller <- as.character(rlang::caller_call()[[1]])
-  assert_object_found_in_env(
+  assert_placeholder_resolved(
     obj = x,
     env = env_find,
     caller = caller,
