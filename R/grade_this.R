@@ -182,7 +182,7 @@ assert_placeholder_resolved <- function(
   throw_grade = TRUE,
   env_return_from = parent.frame(n = 2)
 ) {
-  obj_name <- obj_name %||% rlang::expr_label(rlang::enexpr(obj))
+  obj_expr <- rlang::enexpr(obj)
 
   if (!is_placeholder(obj) && !is_missing(obj)) {
     return(invisible(obj))
@@ -192,7 +192,7 @@ assert_placeholder_resolved <- function(
     if (is_placeholder(obj)) {
       class(obj)[1]
     } else {
-      rlang::expr_text(obj_expr)
+      obj_name %||% rlang::expr_label(obj_expr)
     }
 
   label <- env$.label
