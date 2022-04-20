@@ -686,7 +686,7 @@ fail_if <- function(
 fail_if_code_feedback <- function(
   message = NULL,
   user_code = .user_code,
-  solution_code_all = .solution_code_all,
+  solution_code = .solution_code_all,
   ...,
   env = parent.frame(),
   hint = TRUE,
@@ -702,15 +702,15 @@ fail_if_code_feedback <- function(
     return(grade_code_is_empty())
   }
 
-  if (is_placeholder(solution_code_all, ".solution_code_all")) {
-    solution_code_all <- get_from_env(".solution_code_all", env)
-    assert_object_found_in_env(solution_code_all, env, "fail_if_code_feedback", throw_grade = FALSE)
+  if (is_placeholder(solution_code)) {
+    solution_code <- get_from_env(class(solution_code)[1], env)
+    assert_object_found_in_env(solution_code, env, "fail_if_code_feedback", throw_grade = FALSE)
     if (
-      is_placeholder(solution_code_all) ||
-        is_missing(solution_code_all) ||
-        is.null(solution_code_all) ||
-        length(solution_code_all) == 0 ||
-        !any(nzchar(solution_code_all))
+      is_placeholder(solution_code) ||
+        is_missing(solution_code) ||
+        is.null(solution_code) ||
+        length(solution_code) == 0 ||
+        !any(nzchar(solution_code))
     ) {
       # user_code can't be missing, but don't fail if solution code is missing
       return()
@@ -720,7 +720,7 @@ fail_if_code_feedback <- function(
 
   feedback <- code_feedback(
     user_code = user_code,
-    solution_code_all = solution_code_all,
+    solution_code = solution_code,
     env = env_feedback,
     allow_partial_matching = allow_partial_matching
   )

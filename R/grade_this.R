@@ -174,10 +174,27 @@ is_placeholder <- function(x, which = "gradethis_placeholder") {
   inherits(x, which)
 }
 
-assert_not_placeholder <- function(x) {
+assert_not_placeholder <- function(x, caller = rlang::caller_call()) {
   if (is_placeholder(x)) {
-    rlang::abort(glue::glue("Unable to find value for placeholder `{class(x)[1]}`"))
+    msg <- glue::glue("Unable to find value for placeholder `{class(x)[1]}`")
+    rlang::abort(msg, call = caller)
   }
+  x
+}
+
+resolve_placeholder <- function(
+  x,
+  default = rlang::missing_arg(),
+  env_find = parent.frame(n = 2)
+) {
+  if (is_placeholder(x)) {
+    placeholder_name <- class(x)[[1]]
+    x <- get0(placeholder_name, env_find, ifnotfound = x)
+  }
+  if (is_placeholder(x) && !rlang::is_missing(default)) {
+    return(default)
+  }
+  assert_not_placeholder(x, caller = rlang::caller_call())
 }
 
 # @export

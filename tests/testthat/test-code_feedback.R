@@ -16,19 +16,19 @@ test_that("code_feedback() returns a string if there are differences or NULL", {
 
 test_that("code_feedback() finds the closest match if multiple solutions", {
   expect_equal(
-    code_feedback("a", solution_code_all = gradethis_solutions("aa", "bb")),
+    code_feedback("a", solution_code = gradethis_solutions("aa", "bb")),
     "I expected `aa` where you wrote `a`."
   )
 
   # If there's a tie including the last option, the last option is selected
   expect_equal(
-    code_feedback("a", solution_code_all = gradethis_solutions("b", "c")),
+    code_feedback("a", solution_code = gradethis_solutions("b", "c")),
     "I expected `c` where you wrote `a`."
   )
 
   # If there's a tie not including the last option, the first option is selected
   expect_equal(
-    code_feedback("a", solution_code_all = gradethis_solutions("b", "c", "xyz")),
+    code_feedback("a", solution_code = gradethis_solutions("b", "c", "xyz")),
     "I expected `b` where you wrote `a`."
   )
 })
