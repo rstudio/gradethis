@@ -830,10 +830,6 @@ legacy_graded <- function(...) {
   )
 }
 
-get_from_env <- function(x, env) {
-  get0(x, envir = env, ifnotfound = missing_arg())
-}
-
 maybe_extras <- function(
   expr,
   env = NULL,
