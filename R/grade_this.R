@@ -174,7 +174,14 @@ is_placeholder <- function(x, which = "gradethis_placeholder") {
   inherits(x, which)
 }
 
-assert_placeholder_resolved <- function(obj, env, caller, obj_name = NULL, throw_grade = TRUE) {
+assert_placeholder_resolved <- function(
+  obj,
+  env,
+  caller,
+  obj_name = NULL,
+  throw_grade = TRUE,
+  env_return_from = parent.frame(n = 2)
+) {
   obj_name <- obj_name %||% rlang::expr_label(rlang::enexpr(obj))
 
   if (!is_placeholder(obj) && !is_missing(obj)) {
@@ -190,21 +197,24 @@ assert_placeholder_resolved <- function(obj, env, caller, obj_name = NULL, throw
 
   label <- env$.label
   label <- if (!is.null(label)) paste0("In exercise `", label, "`: ")
-  msg_obj_not_found <- paste0(
-    label,
-    "`", caller, "()`: expected `", obj_name, "` to be found",
-    " in its calling environment or the environment specified by `env`.",
-    " Did you call `", caller, "()`",
-    " inside `grade_this()` or `grade_this_code()`?"
+  msg_obj_not_found <- glue::glue(
+    "{label} `{caller}()`: expected `{obj_name}` to be found in its",
+    "calling environment or the environment specified by `env`. ",
+    "Did you call `{caller}()` inside `grade_this()` or `grade_this_code()`?",
+    label = label %||% "",
+    caller = as.character(caller[[1]])
   )
   message(msg_obj_not_found)
 
   if (isTRUE(throw_grade)) {
     # Signal problem with grading code
-    signal_grade(
-      grade_grading_problem(error = list(message = msg_obj_not_found)),
-      parent.frame()
+    cnd <- rlang::cnd(
+      "gradethis_placeholder_not_found",
+      message = msg_obj_not_found,
+      call = caller
     )
+
+    signal_grade(grade_grading_problem(error = cnd), env_return_from)
   }
 
   obj
@@ -230,11 +240,11 @@ resolve_placeholder <- function(
     return(default)
   }
 
-  caller <- as.character(rlang::caller_call()[[1]])
   assert_placeholder_resolved(
     obj = x,
     env = env_find,
-    caller = caller,
+    caller = rlang::caller_call(),
+    env_return_from = rlang::caller_env(),
     obj_name = x_label,
     throw_grade = throw_grade
   )
