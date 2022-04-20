@@ -184,17 +184,32 @@ assert_not_placeholder <- function(x, caller = rlang::caller_call()) {
 
 resolve_placeholder <- function(
   x,
+  env_find = parent.frame(n = 2),
   default = rlang::missing_arg(),
-  env_find = parent.frame(n = 2)
+  throw_grade = TRUE
 ) {
-  if (is_placeholder(x)) {
-    placeholder_name <- class(x)[[1]]
-    x <- get0(placeholder_name, env_find, ifnotfound = x)
+  x_label <- rlang::expr_label(rlang::enexpr(x))
+
+  if (!is_placeholder(x)) {
+    return(x)
   }
+
+  placeholder_name <- class(x)[[1]]
+  x <- get0(placeholder_name, env_find, ifnotfound = x)
+
   if (is_placeholder(x) && !rlang::is_missing(default)) {
+    # it's still a placeholder and we have a default, return that instead
     return(default)
   }
-  assert_not_placeholder(x, caller = rlang::caller_call())
+
+  caller <- as.character(rlang::caller_call()[[1]])
+  assert_object_found_in_env(
+    obj = x,
+    env = env_find,
+    caller = caller,
+    obj_name = x_label,
+    throw_grade = throw_grade
+  )
 }
 
 # @export

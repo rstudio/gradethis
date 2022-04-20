@@ -2,24 +2,26 @@ test_that("pass_if_equal() finds .result and .solution automatically", {
   env <- new.env()
 
   # missing .result
-  pass1 <- testthat::expect_message(
-    pass_if_equal(env = env), ".result", fixed = TRUE
-  )
-  expect_graded(
-    pass1,
-    is_correct = logical(0),
-    msg = "problem occurred"
-  )
+  pass1 <-
+    testthat::expect_message(
+      expect_graded(
+        pass_if_equal(env = env),
+        is_correct = logical(0),
+        msg = "problem occurred"
+      ),
+      ".result",
+      fixed = TRUE
+    )
 
   # missing .solution
   eval(quote(.result <- 12), envir = env)
   pass2 <- testthat::expect_message(
-    pass_if_equal(env = env), ".solution", fixed = TRUE
-  )
-  expect_graded(
-    pass2,
-    is_correct = logical(0),
-    msg = "problem occurred"
+    expect_graded(
+      pass_if_equal(env = env),
+      is_correct = logical(0),
+      msg = "problem occurred"
+    ),
+    ".solution", fixed = TRUE
   )
 
   # Missing .solution but comparison value provided
@@ -42,12 +44,13 @@ test_that("fail_if_equal() finds .result", {
 
   # missing .result
   fail1 <- testthat::expect_message(
-    fail_if_equal(env = env), ".result", fixed = TRUE
-  )
-  expect_graded(
-    fail1,
-    is_correct = logical(),
-    msg = "problem occurred"
+    expect_graded(
+      fail_if_equal(env = env),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ),
+    regexp = ".result",
+    fixed = TRUE
   )
 
   # Has .result (not equal, doesn't fail)

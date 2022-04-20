@@ -362,25 +362,10 @@ pass_if_equal <- function(
   tolerance = sqrt(.Machine$double.eps),
   praise = getOption("gradethis.pass.praise", FALSE)
 ) {
-  if (is_placeholder(x, ".result")) {
-    x <- get_from_env(".result", env)
-    assert_object_found_in_env(x, env, "pass_if_equal")
-  }
 
-  if (is_placeholder(y, ".solution")) {
-    y <- get_from_env(".solution", env)
-    assert_object_found_in_env(y, env, "pass_if_equal")
-  }
-
-  if (is_placeholder(y, ".solution_all")) {
-    y <- get_from_env(".solution_all", env)
-
-    # If .solution_all is not present, use .solution
-    if (is_placeholder(y, ".solution_all")) {
-      y <- get_from_env(".solution", env)
-      assert_object_found_in_env(y, env, "pass_if_equal")
-    }
-  }
+  x <- resolve_placeholder(x, env)
+  # in general: try .solution_all, fall back to .solution
+  y <- resolve_placeholder(y, env, default = resolve_placeholder(.solution, env))
 
   grade_if_equal_p <- purrr::partial(
     grade_if_equal,
@@ -419,10 +404,8 @@ fail_if_equal <- function(
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
-  if (is_placeholder(x, ".result")) {
-    x <- get_from_env(".result", env)
-    assert_object_found_in_env(x, env, "fail_if_equal")
-  }
+  x <- resolve_placeholder(x, env)
+
   maybe_extras(
     grade_if_equal(
       x = x,
@@ -693,29 +676,26 @@ fail_if_code_feedback <- function(
   encourage = getOption("gradethis.fail.encourage", FALSE),
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
-  if (is_placeholder(user_code, ".user_code")) {
-    user_code <- get_from_env(".user_code", env)
-    assert_object_found_in_env(user_code, env, "fail_if_code_feedback")
-  }
+  user_code <- resolve_placeholder(user_code, env)
 
   if (is_empty_code(user_code)) {
     return(grade_code_is_empty())
   }
 
-  if (is_placeholder(solution_code)) {
-    solution_code <- get_from_env(class(solution_code)[1], env)
-    assert_object_found_in_env(solution_code, env, "fail_if_code_feedback", throw_grade = FALSE)
-    if (
-      is_placeholder(solution_code) ||
-        is_missing(solution_code) ||
-        is.null(solution_code) ||
-        length(solution_code) == 0 ||
-        !any(nzchar(solution_code))
-    ) {
-      # user_code can't be missing, but don't fail if solution code is missing
-      return()
-    }
+  solution_code <- resolve_placeholder(solution_code, env, throw_grade = FALSE)
+
+  is_missing_solution_code <-
+    is_placeholder(solution_code) ||
+      is_missing(solution_code) ||
+      is.null(solution_code) ||
+      length(solution_code) == 0 ||
+      !any(nzchar(solution_code))
+
+  if (is_missing_solution_code) {
+    # user_code can't be missing, but don't fail if solution code is missing
+    return()
   }
+
   env_feedback <- get0(".envir_prep", env, ifnotfound = env)
 
   feedback <- code_feedback(
@@ -854,11 +834,11 @@ get_from_env <- function(x, env) {
   get0(x, envir = env, ifnotfound = missing_arg())
 }
 
-assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
-  obj_expr <- rlang::enexpr(obj)
+assert_object_found_in_env <- function(obj, env, caller, obj_name = NULL, throw_grade = TRUE) {
+  obj_name <- obj_name %||% rlang::expr_label(rlang::enexpr(obj))
 
   if (!is_placeholder(obj) && !is_missing(obj)) {
-    return(invisible(NULL))
+    return(invisible(obj))
   }
 
   obj_name <-
@@ -886,6 +866,8 @@ assert_object_found_in_env <- function(obj, env, caller, throw_grade = TRUE) {
       parent.frame()
     )
   }
+
+  obj
 }
 
 maybe_extras <- function(

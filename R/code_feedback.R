@@ -167,9 +167,16 @@ code_feedback <- function(
 ) {
   ellipsis::check_dots_empty()
 
-  env <- resolve_placeholder(env, default = parent.frame())
-  user_code <- resolve_placeholder(user_code)
-  solution_code <- resolve_placeholder(solution_code)
+  resolve_placeholder_parent <-
+    purrr::partial(
+      resolve_placeholder,
+      env_find = !!parent.frame(),
+      throw_grade = FALSE
+    )
+
+  env <- resolve_placeholder_parent(env, default = parent.frame())
+  user_code <- resolve_placeholder_parent(user_code, default = NULL)
+  solution_code <- resolve_placeholder_parent(solution_code, default = NULL)
 
   if (inherits(solution_code, "gradethis_solutions") || is.list(solution_code)) {
     solution_code <- solution_code_closest(user_code, solution_code)
