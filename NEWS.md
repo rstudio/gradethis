@@ -26,6 +26,8 @@
 * gradethis can now be used to grade non-R code. If learnr can evaluate the non-R code and return the result of the submitted code as an R object, then gradethis can be used to grade the submission result. Grading code is still written in R and code feedback tool designed for R will not work as expected (#290).
 * `pass_if_equal()` and `fail_if_equal()` gain a tolerance argument which is passed to `waldo::compare()`. This defaults to the same default value as `all.equal()` to avoid floating point errors when comparing numeric values (#295).
 * gradethis now includes support for multiple solutions with different results. The solutions are made available in the `.solution_all` object in `grade_this()` grading code. `pass_if_equal()` gains support for multiple solutions as its `y` argument. If `.solution_all` is used as the `y` argument of `pass_if_equal()`, it will return a passing grade if `x` matches any of the multiple solutions (#296).
+* `code_feedback()` now supports multiple solutions. By default, `code_feedback()` now looks for `.solution_code_all`. If multiple solutions are present, string distance is used to determine the closest solution to `.user_code` and give feedback based on that solution. Functions that call `code_feedback()` internally (`grade_this_code()`, `fail_if_code_feedback()` and `maybe_code_feedback()`) inherit the same functionality (#289).
+* The `solution_code` argument of `code_feedback()` is now the single entry-point for solution code in `code_feedback()`, `fail_if_code_feedback()` and other functions that work with both `.solution_code` and `.solution_code_all`. In these cases, the default argument values will use multiple solutions if they exist (#305).
 
 ### Breaking changes
 
