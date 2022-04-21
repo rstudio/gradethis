@@ -114,36 +114,42 @@ test_that("pass_if_equal() in grade_this()", {
 
 test_that("pass_if_equal() with multiple solutions", {
   grader <- grade_this({
-    pass_if_equal(y = .solution_all, message = "YES")
+    pass_if_equal(y = .solution_all, message = "YES {.solution_code} - {.solution_label} - {.solution}")
     fail("NO")
   })
 
   solution_code <-
-    "# one ----
+    "# first ----
 1
-# two ----
+# alt ----
 2
-# three ----
+# alt ----
 3"
 
   # correct
-  expect_graded(
+  grade_first <- expect_graded(
     grader(mock_this_exercise(1, !!solution_code)),
     is_correct = TRUE,
-    msg = "YES"
+    msg = "YES 1 - first - 1"
   )
+  expect_equal(grade_first$solution_label, "first")
+  expect_equal(grade_first$solution_index, 1L)
 
-  expect_graded(
+  grade_alt <- expect_graded(
     grader(mock_this_exercise(2, !!solution_code)),
     is_correct = TRUE,
-    msg = "YES"
+    msg = "YES 2 - alt - 2"
   )
+  expect_equal(grade_alt$solution_label, "alt")
+  expect_equal(grade_alt$solution_index, 2L)
 
-  expect_graded(
+  grade_alt_1 <- expect_graded(
     grader(mock_this_exercise(3, !!solution_code)),
     is_correct = TRUE,
-    msg = "YES"
+    msg = "YES 3 - alt - 3"
   )
+  expect_equal(grade_alt_1$solution_label, "alt")
+  expect_equal(grade_alt_1$solution_index, 3L)
 
   # incorrect
   expect_graded(

@@ -371,21 +371,57 @@ pass_if_equal <- function(
     grade_if_equal,
     message = message,
     correct = TRUE,
-    env = env,
     tolerance = tolerance,
     ...
   )
 
-  if (inherits(y, "gradethis_solutions")) {
-    for (i in names(y)) {
+  if (inherits(y, "gradethis_solutions_env")) {
+    # Code for multiple solutions is a named list with user labels as names. The
+    # labels may not be unique, so for .solution_code_all items should be
+    # accessed by position. OTOH for `.solution_all` we use an environment,
+    # rather than a list, so positional indexing isn't possible. In the
+    # `.solution_all` environment we store the original solution labels with
+    # their associated labels as a named character vector. The names are the
+    # unique binding names in `.solution_all` and the values are the original,
+    # potentially non-unique labels provided by the user.
+    solution_labels <- get_from_env(".solution_labels", y)
+
+    for (i in seq_along(solution_labels)) {
+      # get solution code **by index** (see above)
+      solution_code <- get_from_env(".solution_code_all", env)[[i]]
+
+      solution_name <- names(solution_labels)[i]
+      solution_label <- unname(solution_labels[solution_name])
+
+      # get solution **by name** (see above)
+      solution <- y[[solution_name]]
+
+      # these extras become available for the glue string (or override defaults)
+      solution_env_extras <- list(
+        .solution = solution,
+        .solution_code = if (!rlang::is_missing(solution_code)) solution_code,
+        .solution_label = solution_label
+      )
+
+      env <- rlang::new_environment(
+        purrr::compact(solution_env_extras),
+        parent = env
+      )
+
       maybe_extras(
-        grade_if_equal_p(x = x, y = y[[i]]),
+        grade_if_equal_p(
+          x = x,
+          y = solution,
+          env = env,
+          solution_label = solution_label,
+          solution_index = i
+        ),
         praise = praise
       )
     }
   } else {
     maybe_extras(
-      grade_if_equal_p(x = x, y = y),
+      grade_if_equal_p(x = x, y = y, env = env),
       praise = praise
     )
   }
