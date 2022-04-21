@@ -296,3 +296,41 @@ test_that("pass_if() and fail_if() work in grade_this()", {
   )
   expect_match(err$error$message, "does not accept functions or formulas")
 })
+
+test_that("multiple solutions are prepared correctly with unique code header names", {
+  ex <- mock_this_exercise("1", "# one ----\n1\n# two ----\n2\n# three ----\n3")
+
+  solution_labels <- c("one", "two", "three")
+
+  expect_s3_class(ex$.solution_code_all, "gradethis_solutions")
+  expect_named(ex$.solution_code_all, solution_labels)
+  expect_equal(ex$.solution_code, ex$.solution_code_all[["three"]])
+  expect_s3_class(ex$.solution_all, "gradethis_solutions_env")
+  expect_setequal(
+    names(ex$.solution_all),
+    c(".solution_labels", solution_labels)
+  )
+  expect_equal(unname(get(".solution_labels", ex$.solution_all)), solution_labels)
+  expect_equal(ex$.solution_all[["three"]], ex$.solution)
+})
+
+test_that("multiple solutions are prepared correctly with non-unique code header names", {
+  ex <- mock_this_exercise("1", "# one ----\n1\n# one ----\n2\n# one ----\n3")
+
+  # we make the env names unique because they have to be
+  solution_labels_exp <- c("one", "one_1", "one_2")
+
+  expect_s3_class(ex$.solution_code_all, "gradethis_solutions")
+  expect_named(ex$.solution_code_all, c("one", "one", "one"))
+  expect_equal(ex$.solution_code, ex$.solution_code_all[[3]])
+  expect_s3_class(ex$.solution_all, "gradethis_solutions_env")
+  expect_setequal(
+    names(ex$.solution_all),
+    c(".solution_labels", solution_labels_exp)
+  )
+  solution_labels <- get(".solution_labels", ex$.solution_all)
+  expect_equal(names(solution_labels), solution_labels_exp)
+  expect_equal(unname(solution_labels), c("one", "one", "one"))
+
+  expect_equal(ex$.solution_all[["one_2"]], ex$.solution)
+})
