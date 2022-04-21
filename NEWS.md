@@ -28,6 +28,7 @@
 * gradethis now includes support for multiple solutions with different results. The solutions are made available in the `.solution_all` object in `grade_this()` grading code. `pass_if_equal()` gains support for multiple solutions as its `y` argument. If `.solution_all` is used as the `y` argument of `pass_if_equal()`, it will return a passing grade if `x` matches any of the multiple solutions (#296).
 * `code_feedback()` now supports multiple solutions. By default, `code_feedback()` now looks for `.solution_code_all`. If multiple solutions are present, string distance is used to determine the closest solution to `.user_code` and give feedback based on that solution. Functions that call `code_feedback()` internally (`grade_this_code()`, `fail_if_code_feedback()` and `maybe_code_feedback()`) inherit the same functionality (#289).
 * The `solution_code` argument of `code_feedback()` is now the single entry-point for solution code in `code_feedback()`, `fail_if_code_feedback()` and other functions that work with both `.solution_code` and `.solution_code_all`. In these cases, the default argument values will use multiple solutions if they exist (#305).
+* `pass_if_equal()` supports multiple solutions when authors set `y = .solution_all` to compare the student's result with all solutions. For additional details, please see the new section, _Comparing with Multiple Solutions_, in `?pass_if_equal` (#306).
 
 ### Breaking changes
 

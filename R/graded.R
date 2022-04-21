@@ -294,6 +294,94 @@ fail <- function(
 #' See [graded()] for more information on \pkg{gradethis} grade-signaling
 #' functions.
 #'
+#' @section Comparing with Multiple Solutions:
+#' By default, `pass_if_equal()` will compare with `.solution`, or the final
+#' value returned by the entire `-solution` chunk (in other words, the last
+#' solution). This default behavior covers exercises with a single solution and
+#' exercises with multiple solutions that all return the same value.
+#'
+#' When your exercise has **multiple solutions with different results**,
+#' `pass_if_equal()` can compare the student's result to each of the solutions
+#' to return a passing grade when the result matches any of the values returned
+#' by the set of solutions. You can opt into this behavior by calling
+#'
+#' ```r
+#' pass_if_equal(.solution_all)
+#' ```
+#'
+#' Note that this causes `pass_if_equal()` to evaluate each of the solutions in
+#' the set, and may increase the computation time.
+#'
+#' Here's a small example. Suppose an exercise asks students to filter `mtcars`
+#' to include only cars with the same number of cylinders. Students are free to
+#' pick cars with 4, 6, or 8 cylinders, and so your `-solution` chunk would
+#' include this code:
+#'
+#' ```{r}
+#' ex_solution <- "
+#' # four cylinders ----
+#' mtcars[mtcars$cyl == 4, ]
+#'
+#' # six cylinders ----
+#' mtcars[mtcars$cyl == 6, ]
+#'
+#' # eight cylinders ----
+#' mtcars[mtcars$cyl == 8, ]
+#' "
+#' ```
+#'
+#' In the `-check` chunk, you'd call [grade_this()] and ask `pass_if_equal()` to
+#' compare the student's result to all of the solutions.
+#'
+#' ```{r}
+#' ex_check <- grade_this({
+#'   pass_if_equal(
+#'     y = .solution_all,
+#'     message = "The cars in your result all have {.solution_label}!"
+#'    )
+#'
+#'   fail()
+#' })
+#' ```
+#'
+#' What happens when a student submits one of these solutions? This function
+#' below mocks the process of a student submitting an attempt.
+#'
+#' ```{r}
+#' student_submits <- function(code) {
+#'   submission <- mock_this_exercise(!!code, !!ex_solution)
+#'   ex_check(submission)
+#' }
+#' ```
+#'
+#' If they submit code that returns one of the three possible solutions, they
+#' receive positive feedback.
+#'
+#' ```{r}
+#' student_submits("mtcars[mtcars$cyl == 4, ]")
+#' student_submits("mtcars[mtcars$cyl == 6, ]")
+#' ```
+#'
+#' Notice that the solution label appears in the feedback message. When
+#' `pass_if_equal()` picks a solution as correct, three variables are made
+#' available for use in the glue string provided to `message`:
+#'
+#' * `.solution_label`: The heading label of the matching solution
+#' * `.solution_code`: The code of the matching solution
+#' * `.solution`: The value of the evaluated matching solution code
+#'
+#' If the student submits incorrect code, `pass_if_equal()` defers to later
+#' grading code.
+#'
+#' ```{r}
+#' student_submits("mtcars[mtcars$cyl < 8, ]")
+#' ```
+#'
+#' Here, because [fail()] provides [code_feedback()] by default, and because
+#' [code_feedback()] is also aware of the multiple solutions for this exercise,
+#' the code feedback picks the _eight cylinders_ solution and gives advice
+#' based on that particular solution.
+#'
 #' @examples
 #' # Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
 #'
@@ -371,21 +459,57 @@ pass_if_equal <- function(
     grade_if_equal,
     message = message,
     correct = TRUE,
-    env = env,
     tolerance = tolerance,
     ...
   )
 
-  if (inherits(y, "gradethis_solutions")) {
-    for (i in names(y)) {
+  if (inherits(y, "gradethis_solutions_env")) {
+    # Code for multiple solutions is a named list with user labels as names. The
+    # labels may not be unique, so for .solution_code_all items should be
+    # accessed by position. OTOH for `.solution_all` we use an environment,
+    # rather than a list, so positional indexing isn't possible. In the
+    # `.solution_all` environment we store the original solution labels with
+    # their associated labels as a named character vector. The names are the
+    # unique binding names in `.solution_all` and the values are the original,
+    # potentially non-unique labels provided by the user.
+    solution_labels <- get_from_env(".solution_labels", y)
+
+    for (i in seq_along(solution_labels)) {
+      # get solution code **by index** (see above)
+      solution_code <- get_from_env(".solution_code_all", env)[[i]]
+
+      solution_name <- names(solution_labels)[i]
+      solution_label <- unname(solution_labels[solution_name])
+
+      # get solution **by name** (see above)
+      solution <- y[[solution_name]]
+
+      # these extras become available for the glue string (or override defaults)
+      solution_env_extras <- list(
+        .solution = solution,
+        .solution_code = if (!rlang::is_missing(solution_code)) solution_code,
+        .solution_label = solution_label
+      )
+
+      env <- rlang::new_environment(
+        purrr::compact(solution_env_extras),
+        parent = env
+      )
+
       maybe_extras(
-        grade_if_equal_p(x = x, y = y[[i]]),
+        grade_if_equal_p(
+          x = x,
+          y = solution,
+          env = env,
+          solution_label = solution_label,
+          solution_index = i
+        ),
         praise = praise
       )
     }
   } else {
     maybe_extras(
-      grade_if_equal_p(x = x, y = y),
+      grade_if_equal_p(x = x, y = y, env = env),
       praise = praise
     )
   }
@@ -828,6 +952,10 @@ legacy_graded <- function(...) {
   capture_graded(
     graded(...)
   )
+}
+
+get_from_env <- function(x, env) {
+  get0(x, envir = env, ifnotfound = missing_arg())
 }
 
 maybe_extras <- function(

@@ -333,30 +333,39 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     }
   )
 
-  check_env[[".solution_all"]] <- new.env()
-  class(check_env[[".solution_all"]]) <- "gradethis_solutions"
+  check_env[[".solution_all"]] <- prepare_solutions_env(solutions, envir_base)
 
-  solution_all_expr <- purrr::map(
-    check_env[[".solution_code_all"]] %||% list(),
-    ~ parse(text = .)
-  )
+  check_env
+}
 
-  if (!rlang::is_named(solution_all_expr)) {
-    names(solution_all_expr) <- sprintf(
-      "solution%02d",
-      seq_along(solution_all_expr)
-    )
+prepare_solutions_env <- function(solution_code_all = NULL, envir_base = parent.frame()) {
+  if (is.null(solution_code_all) || length(solution_code_all) == 0) {
+    return(NULL)
   }
 
-  purrr::imap(solution_all_expr, function(expr, name) {
+  if (!inherits(solution_code_all, "gradethis_solutions")) {
+    solution_code_all <- solutions_prepare(solution_code_all)
+  }
+
+  solutions_env <- new.env()
+  class(solutions_env) <- "gradethis_solutions_env"
+
+  names_original <- names(solution_code_all) %||% "solution"
+  names(names_original) <- make.unique(names_original, sep = "_")
+  names(solution_code_all) <- names(names_original)
+  assign(".solution_labels", names_original, solutions_env)
+
+  solution_all_expr <- purrr::map(solution_code_all, ~ parse(text = .x))
+
+  purrr::iwalk(solution_all_expr, function(expr, name) {
     delayedAssign(
       x = name,
       value = eval(expr, envir = envir_base),
-      assign.env = check_env[[".solution_all"]]
+      assign.env = solutions_env
     )
   })
 
-  check_env
+  solutions_env
 }
 
 grade_parse_error <- function(check_obj) {
