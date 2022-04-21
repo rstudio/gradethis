@@ -129,7 +129,8 @@ the set, and may increase the computation time.
 Here's a small example. Suppose an exercise asks students to filter \code{mtcars}
 to include only cars with the same number of cylinders. Students are free to
 pick cars with 4, 6, or 8 cylinders, and so your \code{-solution} chunk would
-include this code:\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_solution <- "
+include this code (ignoring the \code{ex_solution} variable, the chunk would
+contain the code in the string below):\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_solution <- "
 # four cylinders ----
 mtcars[mtcars$cyl == 4, ]
 
@@ -154,6 +155,7 @@ compare the student's result to all of the solutions.\if{html}{\out{<div class="
 
 What happens when a student submits one of these solutions? This function
 below mocks the process of a student submitting an attempt.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits <- function(code) \{
+  withr::local_seed(42)
   submission <- mock_this_exercise(!!code, !!ex_solution)
   ex_check(submission)
 \}
@@ -183,7 +185,7 @@ If the student submits incorrect code, \code{pass_if_equal()} defers to later
 grading code.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl < 8, ]")
 }\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Incorrect]
 ##   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==`
-##   where you called `<`. Let's try it again.
+##   where you called `<`. Please try again.
 ## >
 }
 

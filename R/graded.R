@@ -315,7 +315,8 @@ fail <- function(
 #' Here's a small example. Suppose an exercise asks students to filter `mtcars`
 #' to include only cars with the same number of cylinders. Students are free to
 #' pick cars with 4, 6, or 8 cylinders, and so your `-solution` chunk would
-#' include this code:
+#' include this code (ignoring the `ex_solution` variable, the chunk would
+#' contain the code in the string below):
 #'
 #' ```{r}
 #' ex_solution <- "
@@ -349,6 +350,7 @@ fail <- function(
 #'
 #' ```{r}
 #' student_submits <- function(code) {
+#'   withr::local_seed(42)
 #'   submission <- mock_this_exercise(!!code, !!ex_solution)
 #'   ex_check(submission)
 #' }
