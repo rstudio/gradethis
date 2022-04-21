@@ -294,6 +294,94 @@ fail <- function(
 #' See [graded()] for more information on \pkg{gradethis} grade-signaling
 #' functions.
 #'
+#' @section Comparing with Multiple Solutions:
+#' By default, `pass_if_equal()` will compare with `.solution`, or the final
+#' value returned by the entire `-solution` chunk (in other words, the last
+#' solution). This default behavior covers exercises with a single solution and
+#' exercises with multiple solutions that all return the same value.
+#'
+#' When your exercise has **multiple solutions with different results**,
+#' `pass_if_equal()` can compare the student's result to each of the solutions
+#' to return a passing grade when the result matches any of the values returned
+#' by the set of solutions. You can opt into this behavior by calling
+#'
+#' ```r
+#' pass_if_equal(.solution_all)
+#' ```
+#'
+#' Note that this causes `pass_if_equal()` to evaluate each of the solutions in
+#' the set, and may increase the computation time.
+#'
+#' Here's a small example. Suppose an exercise asks students to filter `mtcars`
+#' to include only cars with the same number of cylinders. Students are free to
+#' pick cars with 4, 6, or 8 cylinders, and so your `-solution` chunk would
+#' include this code:
+#'
+#' ```{r}
+#' ex_solution <- "
+#' # four cylinders ----
+#' mtcars[mtcars$cyl == 4, ]
+#'
+#' # six cylinders ----
+#' mtcars[mtcars$cyl == 6, ]
+#'
+#' # eight cylinders ----
+#' mtcars[mtcars$cyl == 8, ]
+#' "
+#' ```
+#'
+#' In the `-check` chunk, you'd call [grade_this()] and ask `pass_if_equal()` to
+#' compare the student's result to all of the solutions.
+#'
+#' ```{r}
+#' ex_check <- grade_this({
+#'   pass_if_equal(
+#'     y = .solution_all,
+#'     message = "The cars in your result all have {.solution_label}!"
+#'    )
+#'
+#'   fail()
+#' })
+#' ```
+#'
+#' What happens when a student submits one of these solutions? This function
+#' below mocks the process of a student submitting an attempt.
+#'
+#' ```{r}
+#' student_submits <- function(code) {
+#'   submission <- mock_this_exercise(!!code, !!ex_solution)
+#'   ex_check(submission)
+#' }
+#' ```
+#'
+#' If they submit code that returns one of the three possible solutions, they
+#' receive positive feedback.
+#'
+#' ```{r}
+#' student_submits("mtcars[mtcars$cyl == 4, ]")
+#' student_submits("mtcars[mtcars$cyl == 6, ]")
+#' ```
+#'
+#' Notice that the solution label appears in the feedback message. When
+#' `pass_if_equal()` picks a solution as correct, three variables are made
+#' available for use in the glue string provided to `message`:
+#'
+#' * `.solution_label`: The heading label of the matching solution
+#' * `.solution_code`: The code of the matching solution
+#' * `.solution`: The value of the evaluated matching solution code
+#'
+#' If the student submits incorrect code, `pass_if_equal()` defers to later
+#' grading code.
+#'
+#' ```{r}
+#' student_submits("mtcars[mtcars$cyl < 8, ]")
+#' ```
+#'
+#' Here, because [fail()] provides [code_feedback()] by default, and because
+#' [code_feedback()] is also aware of the multiple solutions for this exercise,
+#' the code feedback picks the _eight cylinders_ solution and gives advice
+#' based on that particular solution.
+#'
 #' @examples
 #' # Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
 #'
