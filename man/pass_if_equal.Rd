@@ -161,9 +161,13 @@ below mocks the process of a student submitting an attempt.\if{html}{\out{<div c
 
 If they submit code that returns one of the three possible solutions, they
 receive positive feedback.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 4, ]")
-}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Correct] The cars in your result all have four cylinders!>
+}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Correct]
+##   The cars in your result all have four cylinders!
+## >
 }\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 6, ]")
-}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Correct] The cars in your result all have six cylinders!>
+}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Correct]
+##   The cars in your result all have six cylinders!
+## >
 }
 
 Notice that the solution label appears in the feedback message. When
@@ -178,8 +182,8 @@ available for use in the glue string provided to \code{message}:
 If the student submits incorrect code, \code{pass_if_equal()} defers to later
 grading code.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl < 8, ]")
 }\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Incorrect]
-##   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==` where you called `<`. Try it
-##   again. Perseverence is the key to success.
+##   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==`
+##   where you called `<`. Let's try it again.
 ## >
 }
 
