@@ -298,7 +298,10 @@ fail <- function(
 #' If your exercise includes multiple solutions that are variations of the same
 #' task — meaning that all solutions achieve the same result — you can call
 #' `pass_if_equal()` without changing any defaults to compare the result of the
-#' student's submission to the common solution result.
+#' student's submission to the common solution result. After checking if any
+#' solution matches, you can perform additional checks or you can call [fail()]
+#' with the [default message][gradethis_setup()] or with `hint = TRUE`. [fail()]
+#' will automatically provide code feedback for the most likely solution.
 #'
 #' By default, `pass_if_equal()` will compare [.result] with [.solution], or the
 #' final value returned by the entire `-solution` chunk (in other words, the
