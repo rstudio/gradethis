@@ -295,15 +295,22 @@ fail <- function(
 #' functions.
 #'
 #' @section Comparing with Multiple Solutions:
-#' By default, `pass_if_equal()` will compare with `.solution`, or the final
-#' value returned by the entire `-solution` chunk (in other words, the last
-#' solution). This default behavior covers exercises with a single solution and
-#' exercises with multiple solutions that all return the same value.
+#' If your exercise includes multiple solutions that are variations of the same
+#' task — meaning that all solutions achieve the same result — you can call
+#' `pass_if_equal()` without changing any defaults to compare the result of the
+#' student's submission to the common solution result.
 #'
-#' When your exercise has **multiple solutions with different results**,
-#' `pass_if_equal()` can compare the student's result to each of the solutions
-#' to return a passing grade when the result matches any of the values returned
-#' by the set of solutions. You can opt into this behavior by calling
+#' By default, `pass_if_equal()` will compare [.result] with [.solution], or the
+#' final value returned by the entire `-solution` chunk (in other words, the
+#' last solution). This default behavior covers both exercises with a single
+#' solution and exercises with multiple solutions that all return the same
+#' value.
+#'
+#' When your exercise has multiple solutions with **different results**,
+#' `pass_if_equal()` can compare the student's [.result] to each of the
+#' solutions in [.solution_all], returning a passing grade when the result
+#' matches any of the values returned by the set of solutions. You can opt into
+#' this behavior by calling
 #'
 #' ```r
 #' pass_if_equal(.solution_all)
@@ -332,7 +339,7 @@ fail <- function(
 #' ```
 #'
 #' In the `-check` chunk, you'd call [grade_this()] and ask `pass_if_equal()` to
-#' compare the student's result to all of the solutions.
+#' compare the student's [.result] to [.solution_all] (all the solutions).
 #'
 #' ```{r}
 #' ex_check <- grade_this({
