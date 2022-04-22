@@ -493,7 +493,7 @@ pass_if_equal <- function(
         .solution_label = solution_label
       )
 
-      env <- rlang::new_environment(
+      env_soln <- rlang::new_environment(
         purrr::compact(solution_env_extras),
         parent = env
       )
@@ -502,7 +502,7 @@ pass_if_equal <- function(
         grade_if_equal_p(
           x = x,
           y = solution,
-          env = env,
+          env = env_soln,
           solution_label = solution_label,
           solution_index = i
         ),
