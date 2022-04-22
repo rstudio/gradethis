@@ -115,7 +115,10 @@ equal.
 If your exercise includes multiple solutions that are variations of the same
 task — meaning that all solutions achieve the same result — you can call
 \code{pass_if_equal()} without changing any defaults to compare the result of the
-student's submission to the common solution result.
+student's submission to the common solution result. After checking if any
+solution matches, you can perform additional checks or you can call \code{\link[=fail]{fail()}}
+with the \link[=gradethis_setup]{default message} or with \code{hint = TRUE}. \code{\link[=fail]{fail()}}
+will automatically provide code feedback for the most likely solution.
 
 By default, \code{pass_if_equal()} will compare \link{.result} with \link{.solution}, or the
 final value returned by the entire \code{-solution} chunk (in other words, the
