@@ -535,6 +535,23 @@ test_that("give_code_feedback() doesn't add feedback twice", {
     )
 
   expect_equal(str_count(feedback, "I expected"), 1)
+
+  ## Multiple Solutions ----
+  feedback <- expect_exercise_checker(
+    user_code = "sum(1:10)",
+    solution_code = "
+# mean ----
+mean(1:10)
+# median ----
+median(1:10)",
+    check_code = 'grade_this({
+       fail("{maybe_code_feedback()}", hint = TRUE)
+     })',
+    is_correct = FALSE,
+    msg = NULL
+  )$message
+
+  expect_equal(str_count(feedback, "I expected"), 1)
 })
 
 test_that("give_code_feedback() works with pipes", {

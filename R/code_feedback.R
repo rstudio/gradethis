@@ -420,7 +420,11 @@ give_code_feedback_.gradethis_graded <- function(
   env = rlang::env_parent(n = 2),
   location = "after"
 ) {
-  solution_code <- get0(".solution_code", envir = env, ifnotfound = NULL)
+  # Use code for multiple solutions if available, otherwise single solution
+  solution_code <-
+    get0(".solution_code_all", envir = env, ifnotfound = NULL) %||%
+    get0(".solution_code", envir = env, ifnotfound = NULL)
+
   user_code <- get0(".user_code", envir = env, ifnotfound = NULL)
 
   if (is.null(solution_code) || !identical(grade$correct, FALSE)) {
