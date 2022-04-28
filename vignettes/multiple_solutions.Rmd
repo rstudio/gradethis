@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
 )
 
 library(gradethis)
-library(dplyr)
-library(tidyr)
 fibonacci <- c(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
 
 grade_html <- function(grade) {
@@ -131,27 +129,22 @@ Multiple solution code is saved in a list called `.solution_code_all`, and grade
 ```{r setup}`r ''`
 library(learnr)
 library(gradethis)
-library(dplyr)
-library(tidyr)
 ```
 
-Use `filter()` or `drop_na()` to remove rows from the `starwars` dataset where `hair_color` is `NA`.
+Round 5.2 to the nearest whole number.
 
-```{r starwars, exercise = TRUE}`r ''`
-starwars %>%
-  ____
+```{r round, exercise = TRUE}`r ''`
+____(5.2)
 ```
 
-```{r starwars-solution}`r ''`
-# filter ----
-starwars %>%
-  filter(!is.na(hair_color))
-# drop_na ----
-starwars %>%
-  drop_na(hair_color)
+```{r round-solution}`r ''`
+# round ----
+round(5.2)
+# floor ----
+floor(5.2)
 ```
 
-```{r starwars-check}`r ''`
+```{r round-check}`r ''`
 grade_this({
   pass_if_equal()
   fail(hint = TRUE)
@@ -159,41 +152,37 @@ grade_this({
 ```
 ````
 
-If a student gives an incorrect answer using `filter()`, code feedback will nudge them towards the correct `filter()` solution:
+If a student gives an incorrect answer using `round()`, code feedback will nudge them towards the correct `round()` solution:
 
-```{r filter_wrong, eval = FALSE}
-starwars %>%
-  filter(!hair_color == NA)
+```{r round_wrong, eval = FALSE}
+round(5.2, digits = 1)
 ```
 
 ```{r echo = FALSE}
 solution_code <- "
-# filter ----
-starwars %>%
-  filter(!is.na(hair_color))
-# drop_na ----
-starwars %>%
-  drop_na(hair_color)"
+# round ----
+round(5.2)
+# floor ----
+floor(5.2)"
 
 grader <- grade_this({
   pass_if_equal()
   fail(hint = TRUE)
 })
 
-user_code <- paste(knitr::knit_code$get()$filter_wrong, collapse = "\n")
+user_code <- paste(knitr::knit_code$get()$round_wrong, collapse = "\n")
 
 grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
 ```
 
-And if a student gives an incorrect answer using `drop_na()`, code feedback will nudge them towards the correct `drop_na()` solution:
+And if a student gives an incorrect answer but their text is closer to `floor()`, code feedback will nudge them towards the correct `floor()` solution:
 
-```{r drop_na_wrong, eval = FALSE}
-starwars %>%
-  drop_na()
+```{r floor_wrong, eval = FALSE}
+flor(5.2)
 ```
 
 ```{r echo = FALSE}
-user_code <- paste(knitr::knit_code$get()$drop_na_wrong, collapse = "\n")
+user_code <- paste(knitr::knit_code$get()$floor_wrong, collapse = "\n")
 
 grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
 ```
@@ -214,34 +203,12 @@ Using `is.null(code_feedback(...))` is a robust way of testing if user code matc
 #### Example
 
 ````markdown
-```{r setup}`r ''`
-library(learnr)
-library(gradethis)
-library(dplyr)
-library(tidyr)
-```
-
-Remove rows from the `starwars` dataset where `hair_color` is `NA`.
-
-```{r starwars, exercise = TRUE}`r ''`
-starwars %>%
-  ____
-```
-
-```{r starwars-solution}`r ''`
-# filter ----
-starwars %>%
-  filter(!is.na(hair_color))
-# drop_na ----
-starwars %>%
-  drop_na(hair_color)
-```
-
-```{r starwars-check}`r ''`
+```{r round-check}`r ''`
 grade_this({
   pass_if(
-    is.null(code_feedback(solution_code = .solution_code_all[["filter"]])),
-    "That's right, but an easier way to get the solution is with `{.solution_code_all[['drop_na']]}`."
+    is.null(code_feedback(solution_code = .solution_code_all[["floor"]])),
+    "Correct, but remember that `floor()` always rounds down.
+    If you want to round to the nearest whole number, `round()` is usually safer."
   )
   pass_if_equal()
   fail(hint = TRUE)
@@ -249,22 +216,22 @@ grade_this({
 ```
 ````
 
-```{r filter_right, eval = FALSE}
-starwars %>%
-  filter(!is.na(hair_color))
+```{r floor_right, eval = FALSE}
+floor(5.2)
 ```
 
 ```{r echo = FALSE}
 grader <- grade_this({
   pass_if(
-    is.null(code_feedback(solution_code = .solution_code_all[["filter"]])),
-    "That's right, but an easier way to get the solution is with `{.solution_code_all[['drop_na']]}`."
+    is.null(code_feedback(solution_code = .solution_code_all[["floor"]])),
+    "Correct, but remember that `floor()` always rounds down.
+    If you want to round to the closest whole number, `round()` is usually safer."
   )
   pass_if_equal()
   fail(hint = TRUE)
 })
 
-user_code <- paste(knitr::knit_code$get()$filter_right, collapse = "\n")
+user_code <- paste(knitr::knit_code$get()$floor_right, collapse = "\n")
 
 grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
 ```
