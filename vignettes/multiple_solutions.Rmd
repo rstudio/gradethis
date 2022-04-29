@@ -71,8 +71,11 @@ grade_html <- function(grade) {
 
 ## Overview
 
-Sometimes we want to provide feedback for exercises that have multiple possible solutions.
-With a little setup, gradethis can handle exercises with multiple solutions just as well as any other!
+Not all exercises have exactly one right answer:
+there could be a few different ways to arrive at the same result,
+or the exercise prompt could be open-ended and ask the student to pick from a selection of possibilities.
+In either case, and with minimal changes to your learnr tutorial,
+gradethis can accommodate exercises with multiple solutions!
 
 There are two types of exercises with multiple solutions.
 Some exercises include multiple ways of reaching the same result.
