@@ -19,11 +19,14 @@ knitr::opts_chunk$set(
 library(gradethis)
 fibonacci <- c(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
 
+# stable feedback messages
+set.seed(2022-04-29)
+
 grade_html <- function(grade) {
   htmltools::tags$div(
     role = "alert",
     class = if (!length(grade$correct)) {
-      "alert" 
+      "alert"
     } else if (isTRUE(grade$correct)) {
       "alert alert-success"
     } else {
@@ -31,6 +34,19 @@ grade_html <- function(grade) {
     },
     htmltools::HTML(commonmark::markdown_html(grade$message))
   )
+}
+
+chunk_code <- function(label) {
+  paste(knitr::knit_code$get(label), collapse = "\n")
+}
+
+grade_example_factory <- function(solution_code, grader) {
+  default_grader <- force(grader)
+  function(label, grader = NULL) {
+    if (is.null(grader)) grader <- default_grader
+    user_code <- chunk_code(label)
+    grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+  }
 }
 ```
 
@@ -77,56 +93,71 @@ or the exercise prompt could be open-ended and ask the student to pick from a se
 In either case, and with minimal changes to your learnr tutorial,
 gradethis can accommodate exercises with multiple solutions!
 
-There are two types of exercises with multiple solutions.
-Some exercises include multiple ways of reaching the same result.
-In these exercises, multiple solutions are just used for providing code feedback.
-For more details on grading exercises where all solutions have the same result, see [Multiple solutions, same result](#same-result) below.
+To signal that your exercise has multiple solutions,
+write all of the solutions in the exercise's `-solution` chunk,
+separating the solutions with **code headers** —
+a comment followed by at least four dashes.
 
-Other exercises have more than one acceptable result.
-In these exercises, multiple solutions are used both for grading students' results and for providing code feedback.
-For more details on grading exercises where there are multiple acceptable results, see [Multiple solutions, multiple results](#multiple-results) below.
-
-But regardless of how many results your exercise has, you can setup your exercise the same way:
-
-## Setup
-
-To signal that your exercise has multiple solutions, you can separate each solution in the exercise's `-solution` chunk with code headers.
-
-A code header is a comment followed by at least four dashes:
-
-```markdown
+```
 # code header ----
 ```
 
-Your exercise code should look something like this:
+You can think of the code headers as _labels_ for each solution variant.
+(The [full exercise](#example-different-results) is presented below.)
 
 ````markdown
-```{r setup}`r ''`
-library(learnr)
-library(gradethis)
-fibonacci <- c(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
-```
-
-Use `mean()` or `median()` to find the average of `fibonacci`, a vector containing the first 10 numbers in the Fibonacci sequence.
-
-```{r average, exercise = TRUE}`r ''`
-____(fibonacci)
-```
-
 ```{r average-solution}`r ''`
 # mean ----
 mean(fibonacci)
+
 # median ----
 median(fibonacci)
 ```
 ````
 
+There are two types of exercises with multiple solutions:
+
+1. **Multiple solutions, same result.**
+   When the solutions describe multiple ways of reaching the same final result,
+   gradethis provides code feedback hints based on the closest solution to the user's code.
+
+   In most cases, you'll only need to write out the solutions in the `-solution` chunk, and gradethis will take care of the rest.
+   Learn more in [Multiple solutions, same result](#same-result) below.
+
+2. **Multiple solutions, different results.**
+   Other exercises have more than one acceptable result.
+   In these exercises, multiple solutions can be used both for grading students' results
+   and for providing code feedback.
+
+   In addition to writing out the solutions in the `-solution` chunk,
+   you may also need to modify your grading code slightly.
+   Learn more in [Multiple solutions, different results](#different-results) below.
+
+In both cases,
+multiple solutions are written in the same way in the `-solution` chunk,
+and minimal changes are needed in your grading code.
+For advanced grading requirements,
+gradethis adds two objects into the grading environment:
+[`.solution_code_all`](#solution-code-all) and [`.solution_all`](#solution-all).
+We'll cover both straight-forward and advanced uses in the examples that follow.
+
 ## Multiple solutions, same result {#same-result}
 
-If all your solutions have the same result, you don't need to do anything special in your grading code.
-Multiple solution code is saved in a list called `.solution_code_all`, and gradethis functions that use solution code, like `code_feedback()` or `fail(hint = TRUE)`, will automatically give feedback based on the closest solution to the student's input.
+If all your solutions have the same result,
+you might not need to do anything special in your grading code,
+as we'll see in the next example.
 
 ### Example
+
+In this example,
+students are asked to convert a numeric value to a whole number.
+The most likely solution is to use the `round()` function,
+but a creative student might call `floor()` or `as.integer()`.
+
+Notice that we include all three variations in the `round-solution` chunk below,
+but we've placed the answer we consider "most correct" as the last solution in the chunk.
+The last solution in the chunk will be the default solution used by gradethis
+when the student's code is not a good match for any of the solutions.
 
 ````markdown
 ```{r setup}`r ''`
@@ -134,82 +165,153 @@ library(learnr)
 library(gradethis)
 ```
 
-Round 5.2 to the nearest whole number.
+Convert 5.2 to a reasonable whole number.
 
 ```{r round, exercise = TRUE}`r ''`
 ____(5.2)
 ```
 
 ```{r round-solution}`r ''`
-# round ----
-round(5.2)
 # floor ----
 floor(5.2)
+
+# as.integer ----
+as.integer(5.2)
+
+# round ----
+round(5.2)
 ```
 
 ```{r round-check}`r ''`
 grade_this({
+  # provide code hints if submission is wrong
+  fail_if_code_feedback()
+
+  # pass if the value is correct
   pass_if_equal()
+
+  # or fallback to a failing grade
   fail(hint = TRUE)
 })
 ```
 ````
 
-If a student gives an incorrect answer using `round()`, code feedback will nudge them towards the correct `round()` solution:
-
-```{r round_wrong, eval = FALSE}
-round(5.2, digits = 1)
-```
-
 ```{r echo = FALSE}
 solution_code <- "
-# round ----
-round(5.2)
 # floor ----
-floor(5.2)"
+floor(5.2)
+
+# as.integer ----
+as.integer(5.2)
+
+# round ----
+round(5.2)"
 
 grader <- grade_this({
+  fail_if_code_feedback()
   pass_if_equal()
   fail(hint = TRUE)
 })
 
-user_code <- paste(knitr::knit_code$get()$round_wrong, collapse = "\n")
-
-grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+grade_round_example <- grade_example_factory(solution_code, grader)
 ```
 
-And if a student gives an incorrect answer but their text is closer to `floor()`, code feedback will nudge them towards the correct `floor()` solution:
+If a student enters any of the correct answers to arrive at the value `5`,
+they recieve positive feedback and encouragement.
+
+```{r round_correct, eval = FALSE}
+as.integer(5.2)
+```
+```{r round_correct_graded, echo=FALSE}
+grade_round_example("round_correct")
+```
+
+If a student gives an incorrect answer using `round()`,
+the code feedback hint provided by `fail(hint = TRUE)`
+will nudge them towards the correct `round()` solution:
+
+```{r round_wrong, eval = FALSE}
+round(5.2, digits = 1)
+```
+```{r echo = FALSE}
+grade_round_example("round_wrong")
+```
+
+And if a student gives an incorrect answer but their text is closer to one of the other solutions,
+the code feedback will nudge the student toward the correct solution.
 
 ```{r floor_wrong, eval = FALSE}
 flor(5.2)
 ```
 
 ```{r echo = FALSE}
-user_code <- paste(knitr::knit_code$get()$floor_wrong, collapse = "\n")
-
-grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+grade_round_example("floor_wrong")
 ```
 
-### Providing different messages for different solutions
+```{r as_integer_wrong, eval = FALSE}
+as.numeric(5.2)
+```
 
-In some cases, you may want to accept multiple solutions, but give different feedback depending on the solution the student gave.
-You can use code like the following template to give a special message for user input that matches a particular solution:
+```{r echo = FALSE}
+grade_round_example("as_integer_wrong")
+```
+
+### Providing different messages for different solutions {#solution-code-all}
+
+Grading functions that use solution code —
+like `fail_if_code_feedback()`, `code_feedback()` or `fail(hint = TRUE)` —
+will automatically give feedback based on the closest solution to the student's input.
+In some cases,
+you may want to accept multiple solutions,
+but give different feedback depending on the solution the student gave.
+
+To enable advanced custom grading,
+gradethis makes all of the solutions to an exercise available to grading code
+as `.solution_code_all`,
+a named list containing the code for each solution.
+
+You can use code like the following template
+to give a special message (`<message>`)
+for user input that matches a particular solution
+identified by the label used for the code heading above the solution (`<solution_label>`):
+
 ```{r eval = FALSE}
+correctly_used_solution <-
+  is.null(code_feedback(.user_code, .solution_code_all[["<solution_label>"]]))
+
 pass_if(
-  is.null(code_feedback(solution_code = .solution_code_all[["<<chunk label>>"]])),
-  "<< message >>"
+  correctly_used_solution,
+  message = "<message>"
 )
 ```
 
-Using `is.null(code_feedback(...))` is a robust way of testing if user code matches a solution code, because it ignores minor differences like spacing or whether the code uses pipes.
+Some things of note in this template:
+
+1. You can obtain the code for a specific solution using the label in its code heading:
+   e.g. `.solution_code_all[["floor"]]` in our example would return `"floor(5.2)"`.
+
+1. We need to explicitly ask for `code_feedback()` for the solution of interest.
+   Otherwise, by default, `code_feedback()` will first match the user's code
+   with the most option among the set of solutions.
+
+1. `code_feedback()` returns `NULL` when `user_code` matches `solution_code`.
+   Testing that the feedback `is.null()` is a robust way to test that
+   the student submitted code that matches a solution
+   because it ignores minor differences like whitespace and pipe usage.
 
 #### Example
+
+Using the template above,
+we can provide some feedback specifically to students who use the `floor()` solution.
 
 ````markdown
 ```{r round-check}`r ''`
 grade_this({
+  correctly_used_floor <-
+    is.null(code_feedback(.user_code, .solution_code_all[["floor"]]))
+
   pass_if(
-    is.null(code_feedback(solution_code = .solution_code_all[["floor"]])),
+    correctly_used_floor,
     "Correct, but remember that `floor()` always rounds down.
     If you want to round to the nearest whole number, `round()` is usually safer."
   )
@@ -224,7 +326,7 @@ floor(5.2)
 ```
 
 ```{r echo = FALSE}
-grader <- grade_this({
+grader_floor_specific <- grade_this({
   pass_if(
     is.null(code_feedback(solution_code = .solution_code_all[["floor"]])),
     "Correct, but remember that `floor()` always rounds down.
@@ -234,23 +336,27 @@ grader <- grade_this({
   fail(hint = TRUE)
 })
 
-user_code <- paste(knitr::knit_code$get()$floor_right, collapse = "\n")
-
-grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+grade_round_example("floor_right", grader_floor_specific)
 ```
 
-## Multiple solutions, multiple results {#multiple-results}
+## Multiple solutions, different results {#different-results}
 
-If your exercise has multiple acceptable results, you'll need to slightly adapt your code to ensure students' inputs are tested against all acceptable results.
+If your exercise has multiple acceptable results,
+you'll need to slightly adapt your code to ensure students' inputs are tested against all acceptable results.
+
+To compare the result of student input to each solution,
+you should use `.solution_all` as the first argument in `pass_if_equal()`.
 Multiple solution results are saved in an environment called `.solution_all`.
-(Because `.solution_all` is an environment, it requires some special handling. Check [Working with `.solution_all`](#working-with-.solution_all) for more details.)
+(Because `.solution_all` is an environment, it requires some special handling.
+Check [Working with `.solution_all`](#solution-all) for more details.)
 
-To compare student input to each solution, you should use `.solution_all` as the first argument in `pass_if_equal()`.
-Within `pass_if_equal()` messages, you can use the object `.solution_label`, which corresponds to the code header of the solution that the student's code matched.
+Within `pass_if_equal()` messages,
+you can use the object `.solution_label`,
+which corresponds to the code header of the solution that the student's code matched.
 
 Functions that grade students' code can still be used without any changes.
 
-### Example
+### Example {#example-different-results}
 
 ````markdown
 ```{r setup}`r ''`
@@ -266,39 +372,45 @@ ____(fibonacci)
 ```
 
 ```{r average-solution}`r ''`
+`r chunk_code("average-solution")`
+```
+
+```{r average-check}`r ''`
+`r chunk_code("average-check")`
+```
+````
+
+```{r average-solution, echo = FALSE, eval = FALSE}
 # mean ----
 mean(fibonacci)
+
 # median ----
 median(fibonacci)
 ```
 
-```{r average-check}`r ''`
-pass_if_equal(.solution_all, "You solved it with {.solution_label}()!")
-fail(hint = TRUE)
+```{r average-check, echo = FALSE, eval = FALSE}
+grade_this({
+  pass_if_equal(.solution_all, "You solved it with `{.solution_label}()`!")
+  fail(hint = TRUE)
+})
 ```
-````
 
-If a student gives either correct solution, `pass_if_equal()` will give them a passing grade:
+```{r average-grader, echo = FALSE}
+grade_average_example <- grade_example_factory(
+  chunk_code("average-solution"),
+  rlang::eval_bare(rlang::parse_expr(chunk_code("average-check")))
+)
+```
+
+If a student gives either correct solution,
+`pass_if_equal()` will give them a passing grade:
 
 ```{r mean_right, eval = FALSE}
 mean(fibonacci)
 ```
 
 ```{r echo = FALSE}
-solution_code <- "
-# mean ----
-mean(fibonacci)
-# median ----
-median(fibonacci)"
-
-grader <- grade_this({
-  pass_if_equal(.solution_all, "You solved it with `{.solution_label}()`!")
-  fail(hint = TRUE)
-})
-
-user_code <- paste(knitr::knit_code$get()$mean_right, collapse = "\n")
-
-grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+grade_average_example("mean_right")
 ```
 
 ```{r median_right, eval = FALSE}
@@ -306,11 +418,11 @@ median(fibonacci)
 ```
 
 ```{r echo = FALSE}
-user_code <- paste(knitr::knit_code$get()$median_right, collapse = "\n")
-grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+grade_average_example("median_right")
 ```
 
-If the student's input doesn't match any of the solutions, grading will proceed as normal:
+If the student's input doesn't match any of the solutions,
+grading will proceed as normal:
 
 ```{r sum_wrong, eval = FALSE}
 sum(fibonacci)
@@ -321,7 +433,7 @@ user_code <- paste(knitr::knit_code$get()$sum_wrong, collapse = "\n")
 grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
 ```
 
-### Working with `.solution_all`
+### Working with all solution results {#solution-all}
 
 `.solution_all` is an environment, not a list.
 This carries certain advantages.
@@ -333,30 +445,19 @@ The most important are:
 1. environments can't be subset with numbers, only names, and
 2. all elements of an environment need to have a unique name.
 
-To make life easy, make sure you give a label to every solution, and that you don't duplicate labels for more than one solution. Like this:
+If you need to access the results of specific solutions,
+make sure you give a unique label to every solution.
+
 ```{r eval = FALSE}
 # mean ----
 mean(fibonacci)
-# mean with na.rm ----
-mean(fibonacci, na.rm = TRUE)
+
 # median ----
 median(fibonacci)
-# median with na.rm ----
-median(fibonacci, na.rm = TRUE)
-```
-And not like this:
-```{r eval = FALSE}
-# mean ----
-mean(fibonacci)
-# mean ----
-mean(fibonacci, na.rm = TRUE)
-# median ----
-median(fibonacci)
-# median ----
-median(fibonacci, na.rm = TRUE)
 ```
 
-If you need to reference a specific solution result in grading code, you can access the `.solution_all` object by name, like this:
+To reference a specific solution result in grading code,
+use the solution label to access the result in the `.solution_all`:
 
 ```{r eval = FALSE}
 grade_this({
@@ -370,96 +471,57 @@ grade_this({
 })
 ```
 
-#### Working with `.solution_all` without unique names
-
-If you don't give your solutions unique names, `gradethis` will generate unique names for you. For example, these solutions
+If you don't give your solutions unique names,
+`gradethis` will generate unique names for you.
+For example, these solutions
 
 ```{r nonunique_names, eval = FALSE}
 # mean ----
 mean(fibonacci)
+
 # mean ----
 mean(fibonacci, na.rm = TRUE)
-# mean ----
-mean(fibonacci, na.rm = FALSE)
+
 # median ----
 median(fibonacci)
+
 # median ----
 median(fibonacci, na.rm = TRUE)
-# median ----
-median(fibonacci, na.rm = FALSE)
 ```
 
 have these names:
 
 ```{r echo = FALSE}
-solution_code <- paste(knitr::knit_code$get()$nonunique_names, collapse = "\n")
+solution_code <- chunk_code("nonunique_names")
 ex <- mock_this_exercise(.user_code = "", .solution_code = !!solution_code)
-ls(ex$.solution_all)
+names(ex$.solution_all[[".solution_labels"]])
 ```
 
-If you need to access specific solution results in your grading code, it's almost always better to give your solutions unique labels.
+This means that if you need to access specific solution results in your grading code,
+it's almost always better to give your solutions unique labels.
+On the other hand,
+if your passing message makes use of `.solution_label`,
+you may want to duplicate the solution labels.
 
-The one reason you may want to use duplicate labels is if you use `.solution_label` in your code.
-The `.solution_label` object will still work with the labels you define, not the object names generated by `gradethis`:
+Recall that the `-check` chunk for the `average` exercise was:
 
 ````markdown
-```{r setup}`r ''`
-library(learnr)
-library(gradethis)
-fibonacci <- c(0, 1, 1, 2, 3, 5, 8, 13, 21, 34)
-```
-
-Use `mean()` or `median()` to find the average of `fibonacci`, a vector containing the first 10 numbers in the Fibonacci sequence.
-
-```{r average, exercise = TRUE}`r ''`
-____(fibonacci)
-```
-
-```{r average-solution}`r ''`
-# mean ----
-mean(fibonacci)
-# mean ----
-mean(fibonacci, na.rm = TRUE)
-# mean ----
-mean(fibonacci, na.rm = FALSE)
-# median ----
-median(fibonacci)
-# median ----
-median(fibonacci, na.rm = TRUE)
-# median ----
-median(fibonacci, na.rm = FALSE)
-```
-
 ```{r average-check}`r ''`
-pass_if_equal(.solution_all, "You solved it with {.solution_label}()!")
-fail(hint = TRUE)
+`r chunk_code("average-check")`
 ```
 ````
+
+By including the `mean()` and `median()` solution variants with `na.rm = TRUE`
+we get an appropriate passing message even though the solution labels are duplicated:
 
 ```{r median_right_2, eval = FALSE}
 median(fibonacci, na.rm = TRUE)
 ```
 
-```{r echo = FALSE}
-solution_code <- "# mean ----
-mean(fibonacci)
-# mean ----
-mean(fibonacci, na.rm = TRUE)
-# mean ----
-mean(fibonacci, na.rm = FALSE)
-# median ----
-median(fibonacci)
-# median ----
-median(fibonacci, na.rm = TRUE)
-# median ----
-median(fibonacci, na.rm = FALSE)"
-
-grader <- grade_this({
-  pass_if_equal(.solution_all, "You solved it with `{.solution_label}()`!")
-  fail(hint = TRUE)
-})
-
-user_code <- paste(knitr::knit_code$get()$median_right_2, collapse = "\n")
-
-grade_html(grader(mock_this_exercise(!!user_code, !!solution_code)))
+```{r median_right_2_feedback, echo = FALSE}
+grade_median_2 <- grade_example_factory(
+  solution_code = chunk_code("nonunique_names"),
+  grader = rlang::eval_bare(rlang::parse_expr(chunk_code("average-check")))
+)
+grade_median_2("median_right_2")
 ```
