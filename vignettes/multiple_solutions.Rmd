@@ -286,7 +286,7 @@ Some things of note in this template:
 1. You can obtain the code for a specific solution using the label in its code heading:
    e.g. `.solution_code_all[["floor"]]` in our example would return `"floor(5.2)"`.
 
-1. We need to explicitly ask for `code_feedback()` for the solution of interest.
+1. You need to explicitly ask for `code_feedback()` for the solution of interest.
    Otherwise, by default, `code_feedback()` will first match the user's code
    with the most option among the set of solutions.
 
