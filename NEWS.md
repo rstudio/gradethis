@@ -29,6 +29,7 @@
 * `code_feedback()` now supports multiple solutions. By default, `code_feedback()` now looks for `.solution_code_all`. If multiple solutions are present, string distance is used to determine the closest solution to `.user_code` and give feedback based on that solution. Functions that call `code_feedback()` internally (`grade_this_code()`, `fail_if_code_feedback()` and `maybe_code_feedback()`) inherit the same functionality (#289).
 * The `solution_code` argument of `code_feedback()` is now the single entry-point for solution code in `code_feedback()`, `fail_if_code_feedback()` and other functions that work with both `.solution_code` and `.solution_code_all`. In these cases, the default argument values will use multiple solutions if they exist (#305).
 * `pass_if_equal()` supports multiple solutions when authors set `y = .solution_all` to compare the student's result with all solutions. For additional details, please see the new section, _Comparing with Multiple Solutions_, in `?pass_if_equal` (#306).
+* A new `vignette("multiple_solutions")` describes how gradethis can be used to provide feedback for exercises with more than one solution (#312).
 
 ### Breaking changes
 
@@ -57,7 +58,6 @@
 * The `x` argument of `pass_if()` and `fail_if()` has been renamed `cond` and both functions now work inside `grade_this()`, although the function and formula versions are not supported there. (#216)
 * `grade_this()` no longer automatically converts errors to `fail()` grades, instead authors need to wrap unit-test-style code in `fail_if_error()` to convert them to grades. This helps to better differentiate between unexpected errors resulting from the author's grading code and portions of the grading code where errors are expected and indicative of a problem with the user's code. (#254)
 * Errors in the grading code are now returned as _neutral_ grades rather than failing grades. The feedback message and type can be changed with two new arguments to `gradethis_setup()`: `grading_problem.message` and `grading_problem.type` (#256).
-* A new `vignette("multiple_solutions")` describes how gradethis can be used to provide feedback for exercises with more than one solution (#312).
 
 ### Bug fixes
 * Added a `NEWS.md` file to track changes to the package.
