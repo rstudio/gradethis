@@ -103,7 +103,8 @@ a comment followed by at least four dashes.
 ```
 
 You can think of the code headers as _labels_ for each solution variant.
-(The [full exercise](#example-different-results) is presented below.)
+Here's an example `-solution` chunk for an exercise with two possible solutions
+(the [full exercise](#example-different-results) is presented below).
 
 ````markdown
 ```{r average-solution}`r ''`
