@@ -112,15 +112,25 @@ equal.
 
 \section{Comparing with Multiple Solutions}{
 
-By default, \code{pass_if_equal()} will compare with \code{.solution}, or the final
-value returned by the entire \code{-solution} chunk (in other words, the last
-solution). This default behavior covers exercises with a single solution and
-exercises with multiple solutions that all return the same value.
+If your exercise includes multiple solutions that are variations of the same
+task — meaning that all solutions achieve the same result — you can call
+\code{pass_if_equal()} without changing any defaults to compare the result of the
+student's submission to the common solution result. After checking if any
+solution matches, you can perform additional checks or you can call \code{\link[=fail]{fail()}}
+with the \link[=gradethis_setup]{default message} or with \code{hint = TRUE}. \code{\link[=fail]{fail()}}
+will automatically provide code feedback for the most likely solution.
 
-When your exercise has \strong{multiple solutions with different results},
-\code{pass_if_equal()} can compare the student's result to each of the solutions
-to return a passing grade when the result matches any of the values returned
-by the set of solutions. You can opt into this behavior by calling\if{html}{\out{<div class="sourceCode r">}}\preformatted{pass_if_equal(.solution_all)
+By default, \code{pass_if_equal()} will compare \link{.result} with \link{.solution}, or the
+final value returned by the entire \code{-solution} chunk (in other words, the
+last solution). This default behavior covers both exercises with a single
+solution and exercises with multiple solutions that all return the same
+value.
+
+When your exercise has multiple solutions with \strong{different results},
+\code{pass_if_equal()} can compare the student's \link{.result} to each of the
+solutions in \link{.solution_all}, returning a passing grade when the result
+matches any of the values returned by the set of solutions. You can opt into
+this behavior by calling\if{html}{\out{<div class="sourceCode r">}}\preformatted{pass_if_equal(.solution_all)
 }\if{html}{\out{</div>}}
 
 Note that this causes \code{pass_if_equal()} to evaluate each of the solutions in
@@ -143,7 +153,7 @@ mtcars[mtcars$cyl == 8, ]
 }\if{html}{\out{</div>}}
 
 In the \code{-check} chunk, you'd call \code{\link[=grade_this]{grade_this()}} and ask \code{pass_if_equal()} to
-compare the student's result to all of the solutions.\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_check <- grade_this(\{
+compare the student's \link{.result} to \link{.solution_all} (all the solutions).\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_check <- grade_this(\{
   pass_if_equal(
     y = .solution_all,
     message = "The cars in your result all have \{.solution_label\}!"
