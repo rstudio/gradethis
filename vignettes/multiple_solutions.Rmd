@@ -107,11 +107,7 @@ You can think of the code headers as _labels_ for each solution variant.
 
 ````markdown
 ```{r average-solution}`r ''`
-# mean ----
-mean(fibonacci)
-
-# median ----
-median(fibonacci)
+`r code_chunk("average-solution")`
 ```
 ````
 
