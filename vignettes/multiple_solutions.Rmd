@@ -107,7 +107,7 @@ You can think of the code headers as _labels_ for each solution variant.
 
 ````markdown
 ```{r average-solution}`r ''`
-`r code_chunk("average-solution")`
+`r chunk_code("average-solution")`
 ```
 ````
 
@@ -213,7 +213,7 @@ grade_round_example <- grade_example_factory(solution_code, grader)
 ```
 
 If a student enters any of the correct answers to arrive at the value `5`,
-they recieve positive feedback and encouragement.
+they receive positive feedback and encouragement.
 
 ```{r round_correct, eval = FALSE}
 as.integer(5.2)
