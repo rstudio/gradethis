@@ -57,6 +57,7 @@
 * The `x` argument of `pass_if()` and `fail_if()` has been renamed `cond` and both functions now work inside `grade_this()`, although the function and formula versions are not supported there. (#216)
 * `grade_this()` no longer automatically converts errors to `fail()` grades, instead authors need to wrap unit-test-style code in `fail_if_error()` to convert them to grades. This helps to better differentiate between unexpected errors resulting from the author's grading code and portions of the grading code where errors are expected and indicative of a problem with the user's code. (#254)
 * Errors in the grading code are now returned as _neutral_ grades rather than failing grades. The feedback message and type can be changed with two new arguments to `gradethis_setup()`: `grading_problem.message` and `grading_problem.type` (#256).
+* A new `vignette("multiple_solutions")` describes how gradethis can be used to provide feedback for exercises with more than one solution (#312).
 
 ### Bug fixes
 * Added a `NEWS.md` file to track changes to the package.
