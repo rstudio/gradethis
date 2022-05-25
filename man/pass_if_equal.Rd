@@ -130,7 +130,9 @@ When your exercise has multiple solutions with \strong{different results},
 \code{pass_if_equal()} can compare the student's \link{.result} to each of the
 solutions in \link{.solution_all}, returning a passing grade when the result
 matches any of the values returned by the set of solutions. You can opt into
-this behavior by calling\if{html}{\out{<div class="sourceCode r">}}\preformatted{pass_if_equal(.solution_all)
+this behavior by calling
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pass_if_equal(.solution_all)
 }\if{html}{\out{</div>}}
 
 Note that this causes \code{pass_if_equal()} to evaluate each of the solutions in
@@ -140,7 +142,9 @@ Here's a small example. Suppose an exercise asks students to filter \code{mtcars
 to include only cars with the same number of cylinders. Students are free to
 pick cars with 4, 6, or 8 cylinders, and so your \code{-solution} chunk would
 include this code (ignoring the \code{ex_solution} variable, the chunk would
-contain the code in the string below):\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_solution <- "
+contain the code in the string below):
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_solution <- "
 # four cylinders ----
 mtcars[mtcars$cyl == 4, ]
 
@@ -153,7 +157,9 @@ mtcars[mtcars$cyl == 8, ]
 }\if{html}{\out{</div>}}
 
 In the \code{-check} chunk, you'd call \code{\link[=grade_this]{grade_this()}} and ask \code{pass_if_equal()} to
-compare the student's \link{.result} to \link{.solution_all} (all the solutions).\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_check <- grade_this(\{
+compare the student's \link{.result} to \link{.solution_all} (all the solutions).
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_check <- grade_this(\{
   pass_if_equal(
     y = .solution_all,
     message = "The cars in your result all have \{.solution_label\}!"
@@ -164,7 +170,9 @@ compare the student's \link{.result} to \link{.solution_all} (all the solutions)
 }\if{html}{\out{</div>}}
 
 What happens when a student submits one of these solutions? This function
-below mocks the process of a student submitting an attempt.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits <- function(code) \{
+below mocks the process of a student submitting an attempt.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits <- function(code) \{
   withr::local_seed(42)
   submission <- mock_this_exercise(!!code, !!ex_solution)
   ex_check(submission)
@@ -172,15 +180,23 @@ below mocks the process of a student submitting an attempt.\if{html}{\out{<div c
 }\if{html}{\out{</div>}}
 
 If they submit code that returns one of the three possible solutions, they
-receive positive feedback.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 4, ]")
-}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Correct]
+receive positive feedback.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 4, ]")
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{## <gradethis_graded: [Correct]
 ##   The cars in your result all have four cylinders!
 ## >
-}\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 6, ]")
-}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Correct]
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 6, ]")
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{## <gradethis_graded: [Correct]
 ##   The cars in your result all have six cylinders!
 ## >
-}
+}\if{html}{\out{</div>}}
 
 Notice that the solution label appears in the feedback message. When
 \code{pass_if_equal()} picks a solution as correct, three variables are made
@@ -192,12 +208,16 @@ available for use in the glue string provided to \code{message}:
 }
 
 If the student submits incorrect code, \code{pass_if_equal()} defers to later
-grading code.\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl < 8, ]")
-}\if{html}{\out{</div>}}\preformatted{## <gradethis_graded: [Incorrect]
+grading code.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl < 8, ]")
+}\if{html}{\out{</div>}}
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{## <gradethis_graded: [Incorrect]
 ##   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==`
 ##   where you called `<`. Please try again.
 ## >
-}
+}\if{html}{\out{</div>}}
 
 Here, because \code{\link[=fail]{fail()}} provides \code{\link[=code_feedback]{code_feedback()}} by default, and because
 \code{\link[=code_feedback]{code_feedback()}} is also aware of the multiple solutions for this exercise,

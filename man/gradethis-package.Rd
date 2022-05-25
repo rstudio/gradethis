@@ -6,9 +6,9 @@
 \alias{gradethis-package}
 \title{gradethis: Automated Feedback for Student Exercises in 'learnr' Tutorials}
 \description{
-\if{html}{\figure{logo.png}{options: align='right' alt='logo' width='120'}}
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Pairing with the 'learnr' R package, 'gradethis' provides multiple methods to grade 'learnr' exercises. To learn more about 'learnr' tutorials, please visit <https://rstudio.github.io/learnr/>.
+Pairing with the 'learnr' R package, 'gradethis' provides multiple methods to grade 'learnr' exercises. To learn more about 'learnr' tutorials, please visit \url{https://rstudio.github.io/learnr/}.
 }
 \seealso{
 Useful links:
