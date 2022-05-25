@@ -20,14 +20,7 @@ fail_if_code_feedback(
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
 string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
-\item{user_code}{String containing user or solution code. By
-default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
-\link{.user_code}. \code{solution_code} may also be a list containing multiple
-solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
-is found and used for \code{solution_code}. You may also use \code{.solution_code} if
-there is only one solution.}
-
-\item{solution_code}{String containing user or solution code. By
+\item{user_code, solution_code}{String containing user or solution code. By
 default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
 \link{.user_code}. \code{solution_code} may also be a list containing multiple
 solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
@@ -38,16 +31,7 @@ there is only one solution.}
   Arguments passed on to \code{\link[=graded]{graded}}
   \describe{
     \item{\code{correct}}{A logical value of whether or not the checked code is correct.}
-    \item{\code{type}}{The \code{type} and \code{location} of the feedback object
-provided to \pkg{learnr}. See
-\url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for more
-details.
-
-\code{type} may be one of "auto", "success", "info", "warning", "error", or
-"custom".
-
-\code{location} may be one of "append", "prepend", or "replace".}
-    \item{\code{location}}{The \code{type} and \code{location} of the feedback object
+    \item{\code{type,location}}{The \code{type} and \code{location} of the feedback object
 provided to \pkg{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for more
 details.
