@@ -30,6 +30,7 @@
 * The `solution_code` argument of `code_feedback()` is now the single entry-point for solution code in `code_feedback()`, `fail_if_code_feedback()` and other functions that work with both `.solution_code` and `.solution_code_all`. In these cases, the default argument values will use multiple solutions if they exist (#305).
 * `pass_if_equal()` supports multiple solutions when authors set `y = .solution_all` to compare the student's result with all solutions. For additional details, please see the new section, _Comparing with Multiple Solutions_, in `?pass_if_equal` (#306).
 * A new `vignette("multiple_solutions")` describes how gradethis can be used to provide feedback for exercises with more than one solution (#312).
+* `gradethis_error_checker()` gains the `hint` argument from `fail()` which follows the global `gradethis.fail.hint` option. When `FALSE`, the error feedback won't include code feedback hints (thanks @cswclui, #315).
 
 ### Breaking changes
 

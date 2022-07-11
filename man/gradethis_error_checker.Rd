@@ -6,12 +6,19 @@
 \usage{
 gradethis_error_checker(
   ...,
+  hint = getOption("gradethis.fail.hint", TRUE),
   message = getOption("gradethis.error_checker.message", NULL),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 )
 }
 \arguments{
 \item{...}{Ignored but included for future compatibility.}
+
+\item{hint}{Include a code feedback hint with the failing message? This
+argument only applies to \code{fail()} and \code{fail_if_equal()} and the message is
+added using the default options of \code{\link[=give_code_feedback]{give_code_feedback()}} and
+\code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
+\code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
 \item{message}{The feedback message when an error occurred and no solution is
 provided for the exercise. May reference \code{.error} or any of the
