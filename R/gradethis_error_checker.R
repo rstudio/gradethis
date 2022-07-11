@@ -41,12 +41,13 @@
 #' @export
 gradethis_error_checker <- function(
   ...,
+  hint = getOption("gradethis.fail.hint", TRUE),
   message = getOption("gradethis.error_checker.message", NULL),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
   function(check_env) {
     solution_code <- get0('.solution_code', envir = check_env, ifnotfound = NULL)
-    if (!is.null(solution_code)) {
+    if (!is.null(solution_code) && isTRUE(hint)) {
       signal_grade(grade_this_code()(check_env))
     }
 
