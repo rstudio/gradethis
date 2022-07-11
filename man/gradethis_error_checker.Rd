@@ -6,7 +6,7 @@
 \usage{
 gradethis_error_checker(
   ...,
-  hint = getOption("gradethis.fail.hint", FALSE),
+  hint = getOption("gradethis.fail.hint", TRUE),
   message = getOption("gradethis.error_checker.message", NULL),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 )
