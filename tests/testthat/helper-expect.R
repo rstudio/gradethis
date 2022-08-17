@@ -242,6 +242,7 @@ expect_exercise_checker <- function(
     envir_prep = envir_prep,
     last_value = last_value,
     stage = stage,
+    engine = "r",
     ...
   )
 
