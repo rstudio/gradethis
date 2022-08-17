@@ -14,7 +14,8 @@ gradethis_exercise_checker(
   envir_prep = NULL,
   last_value = NULL,
   stage = NULL,
-  ...
+  ...,
+  solution_eval_fn = NULL
 )
 }
 \arguments{
@@ -42,6 +43,13 @@ submission.}
 \item{stage}{The current stage of exercise checking.}
 
 \item{...}{Extra arguments supplied by learnr}
+
+\item{solution_eval_fn}{A function taking solution \code{code} and an \code{envir}
+(an environment equivalent to \code{envir_prep}) and that should return the
+value of the evaluated \code{code}. This callback function allows grading
+authors to write custom solution evaluation functions for non-R exercise
+engines. The result of the evaluated code should be an R object that will
+be accessible to the grading code in \link{.solution} or \link{.solution_all}.}
 }
 \value{
 Returns a feedback object suitable for \pkg{learnr} tutorials with

@@ -47,15 +47,15 @@ designed for use within \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()
 }
 \section{Functions}{
 \itemize{
-\item \code{random_praise}: Random praising phrase
+\item \code{random_praise()}: Random praising phrase
 
-\item \code{random_encouragement}: Random encouraging phrase
+\item \code{random_encouragement()}: Random encouraging phrase
 
-\item \code{give_praise}: Add praising message to a passing grade.
+\item \code{give_praise()}: Add praising message to a passing grade.
 
-\item \code{give_encouragement}: Add encouraging message to a failing grade.
+\item \code{give_encouragement()}: Add encouraging message to a failing grade.
+
 }}
-
 \examples{
 replicate(5, glue::glue("Random praise: {random_praise()}"))
 replicate(5, glue::glue("Random encouragement: {random_encouragement()}"))

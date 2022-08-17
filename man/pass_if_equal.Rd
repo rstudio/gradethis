@@ -103,13 +103,13 @@ functions.
 }
 \section{Functions}{
 \itemize{
-\item \code{pass_if_equal}: Signal a \emph{passing} grade only if \code{x} and \code{y} are
+\item \code{pass_if_equal()}: Signal a \emph{passing} grade only if \code{x} and \code{y} are
 equal.
 
-\item \code{fail_if_equal}: Signal a \emph{failing} grade only if \code{x} and \code{y} are
+\item \code{fail_if_equal()}: Signal a \emph{failing} grade only if \code{x} and \code{y} are
 equal.
+
 }}
-
 \section{Comparing with Multiple Solutions}{
 
 If your exercise includes multiple solutions that are variations of the same
@@ -183,19 +183,13 @@ If they submit code that returns one of the three possible solutions, they
 receive positive feedback.
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 4, ]")
-}\if{html}{\out{</div>}}
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{## <gradethis_graded: [Correct]
-##   The cars in your result all have four cylinders!
-## >
-}\if{html}{\out{</div>}}
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 6, ]")
-}\if{html}{\out{</div>}}
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{## <gradethis_graded: [Correct]
-##   The cars in your result all have six cylinders!
-## >
+#> <gradethis_graded: [Correct]
+#>   The cars in your result all have four cylinders!
+#> >
+student_submits("mtcars[mtcars$cyl == 6, ]")
+#> <gradethis_graded: [Correct]
+#>   The cars in your result all have six cylinders!
+#> >
 }\if{html}{\out{</div>}}
 
 Notice that the solution label appears in the feedback message. When
@@ -211,12 +205,10 @@ If the student submits incorrect code, \code{pass_if_equal()} defers to later
 grading code.
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl < 8, ]")
-}\if{html}{\out{</div>}}
-
-\if{html}{\out{<div class="sourceCode">}}\preformatted{## <gradethis_graded: [Incorrect]
-##   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==`
-##   where you called `<`. Please try again.
-## >
+#> <gradethis_graded: [Incorrect]
+#>   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==`
+#>   where you called `<`. Please try again.
+#> >
 }\if{html}{\out{</div>}}
 
 Here, because \code{\link[=fail]{fail()}} provides \code{\link[=code_feedback]{code_feedback()}} by default, and because
