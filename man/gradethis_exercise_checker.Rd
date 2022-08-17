@@ -44,12 +44,12 @@ submission.}
 
 \item{...}{Extra arguments supplied by learnr}
 
-\item{solution_eval_fn}{A function taking solution \code{code} and an \code{envir}
-(an environment equivalent to \code{envir_prep}) and that should return the
-value of the evaluated \code{code}. This callback function allows grading
-authors to write custom solution evaluation functions for non-R exercise
-engines. The result of the evaluated code should be an R object that will
-be accessible to the grading code in \link{.solution} or \link{.solution_all}.}
+\item{solution_eval_fn}{A function taking solution \code{code} and an \code{envir} (an
+environment equivalent to \code{envir_prep}) and that will return the value of
+the evaluated \code{code}. This callback function allows grading authors to
+write custom solution evaluation functions for non-R exercise engines. The
+result of the evaluated code should be an R object that will be accessible
+to the grading code in \link{.solution} or \link{.solution_all}.}
 }
 \value{
 Returns a feedback object suitable for \pkg{learnr} tutorials with

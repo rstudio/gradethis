@@ -28,12 +28,12 @@
 #'   submission.
 #' @param stage The current stage of exercise checking.
 #' @param ... Extra arguments supplied by learnr
-#' @param solution_eval_fn A function taking solution `code` and an `envir`
-#'   (an environment equivalent to `envir_prep`) and that should return the
-#'   value of the evaluated `code`. This callback function allows grading
-#'   authors to write custom solution evaluation functions for non-R exercise
-#'   engines. The result of the evaluated code should be an R object that will
-#'   be accessible to the grading code in [.solution] or [.solution_all].
+#' @param solution_eval_fn A function taking solution `code` and an `envir` (an
+#'   environment equivalent to `envir_prep`) and that will return the value of
+#'   the evaluated `code`. This callback function allows grading authors to
+#'   write custom solution evaluation functions for non-R exercise engines. The
+#'   result of the evaluated code should be an R object that will be accessible
+#'   to the grading code in [.solution] or [.solution_all].
 #'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
 #'   the results of the exercise grading code.
