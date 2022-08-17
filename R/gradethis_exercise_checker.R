@@ -431,6 +431,7 @@ solution_eval_r <- function(code, envir) {
 }
 
 solution_eval_fn_not_defined <- function(label, engine) {
+  engine <- knitr_engine_caption(engine)
   msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
 
   function(...) {
