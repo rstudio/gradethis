@@ -28,6 +28,12 @@
 #'   submission.
 #' @param stage The current stage of exercise checking.
 #' @param ... Extra arguments supplied by learnr
+#' @param solution_eval_fn A function taking solution `code` and an `envir`
+#'   (an environment equivalent to `envir_prep`) and that should return the
+#'   value of the evaluated `code`. This callback function allows grading
+#'   authors to write custom solution evaluation functions for non-R exercise
+#'   engines. The result of the evaluated code should be an R object that will
+#'   be accessible to the grading code in [.solution] or [.solution_all].
 #'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
 #'   the results of the exercise grading code.
@@ -45,7 +51,8 @@ gradethis_exercise_checker <- function(
   envir_prep = NULL,
   last_value = NULL,
   stage = NULL,
-  ...
+  ...,
+  solution_eval_fn = NULL
 ) {
   # Call this function in such a way that it can use other gradethis internals when called by learnr
   # (i.e., make tutorial_options(exercise.checker = gradethis::gradethis_exercise_checker) always work)
@@ -73,7 +80,8 @@ check_exercise <- function(
   envir_prep = NULL,
   last_value = NULL,
   stage = NULL,
-  ...
+  ...,
+  solution_eval_fn = NULL
 ) {
 
   learnr_args <- list(
@@ -112,7 +120,7 @@ check_exercise <- function(
   # an internal grading problem if anything goes wrong.
   check_env <- capture_errors(
     capture_graded(
-      prepare_check_env(learnr_args)
+      prepare_check_env(learnr_args, solution_eval_fn = solution_eval_fn)
     ),
     on_error = function(err, ...) {
       grade_grading_problem("Could not prepare checking environment for gradethis checking code.", error = err)
@@ -235,7 +243,11 @@ check_exercise <- function(
 }
 
 
-prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
+prepare_check_env <- function(
+  learnr_args,
+  envir_caller = rlang::caller_env(),
+  solution_eval_fn = NULL
+) {
   # The check_env starts from a copy of envir_prep which is the result of
   # evaluating all of exercise setup code, duplicated to avoid the possibility
   # of the checking code changing the prep environment
@@ -272,30 +284,12 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
 
   # Delayed evaluation of `.solution` and `.solution_all`
   engine <- knitr_engine_caption(learnr_args[["engine"]])
-  if (!identical(engine, "R")) {
-    msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
-
-    delayedAssign(
-      assign.env = check_env,
-      x = ".solution",
-      grade_grading_problem(
-        message = msg,
-        type = "warning",
-        error = list(message = msg, label = learnr_args[["label"]])
-      )
+  if (is.null(solution_eval_fn)) {
+    solution_eval_fn <- switch(
+      engine,
+      R = solution_eval_r,
+      solution_eval_fn_not_defined(learnr_args[["label"]], engine)
     )
-
-    delayedAssign(
-      assign.env = check_env,
-      x = ".solution_all",
-      grade_grading_problem(
-        message = msg,
-        type = "warning",
-        error = list(message = msg, label = learnr_args[["label"]])
-      )
-    )
-
-    return(check_env)
   }
 
   solution_eval_delayed(
@@ -304,17 +298,24 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     envir_assign = check_env,
     envir_eval = envir_base,
     envir_caller = envir_caller,
-    exercise_label = learnr_args[["label"]]
+    exercise_label = learnr_args[["label"]],
+    eval_fn = solution_eval_fn
   )
 
-  check_env[[".solution_all"]] <- solution_eval_all_delayed(solutions, envir_base)
+  check_env[[".solution_all"]] <-
+    solution_eval_all_delayed(
+      solutions,
+      envir_base,
+      eval_fn = solution_eval_fn
+    )
 
   check_env
 }
 
 solution_eval_all_delayed <- function(
   solution_code_all = NULL,
-  envir_base = parent.frame()
+  envir_base = parent.frame(),
+  eval_fn = NULL
 ) {
   if (is.null(solution_code_all) || length(solution_code_all) == 0) {
     return(NULL)
@@ -336,7 +337,8 @@ solution_eval_all_delayed <- function(
     solution_code_all,
     solution_eval_delayed,
     envir_eval = envir_base,
-    envir_assign = solutions_env
+    envir_assign = solutions_env,
+    eval_fn = eval_fn
   )
 
   solutions_env
@@ -358,7 +360,7 @@ solution_eval_delayed <- function(
   name = ".solution",
   envir_assign,
   envir_eval,
-  eval_fn = solution_eval_r,
+  eval_fn = NULL,
   exercise_label = NULL,
   envir_caller = rlang::caller_env()
 ) {
@@ -392,6 +394,18 @@ solution_eval_r <- function(code, envir) {
   }
 
   eval(expr, envir = envir)
+}
+
+solution_eval_fn_not_defined <- function(label, engine) {
+  msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
+
+  function(...) {
+    grade_grading_problem(
+      message = msg,
+      type = "warning",
+      error = list(message = msg, label = label)
+    )
+  }
 }
 
 grade_parse_error <- function(check_obj) {
