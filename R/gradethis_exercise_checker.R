@@ -298,39 +298,13 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     return(check_env)
   }
 
-  solution_expr <- parse(text = check_env[[".solution_code"]] %||% "")
-  delayedAssign(
-    assign.env = check_env,
-    x = ".solution",
-    {
-      if (length(solution_expr) == 0) {
-        solution_problem <-
-          grade_grading_problem(
-            message = "No solution is provided for this exercise.",
-            type = "warning",
-            error = list(
-              message = "No solution provided for this exercise",
-              label = learnr_args[["label"]]
-            )
-          )
-
-        if (!is.null(envir_caller)) {
-          # inside gradethis_exercise_checker or another process,
-          # return feedback from there
-          rlang::return_from(envir_caller, feedback(solution_problem))
-        } else {
-          # otherwise (e.g. mocking) just return the solution problem grade
-          solution_problem
-        }
-      } else {
-        # solution code exists...
-        # Using eval_tidy does not evaluate the expression. Using eval() instead
-        eval(
-          solution_expr,
-          envir = envir_base
-        )
-      }
-    }
+  solution_eval_delayed(
+    code = check_env[[".solution_code"]] %||% "",
+    name = ".solution",
+    envir_assign = check_env,
+    envir_eval = envir_base,
+    envir_caller = envir_caller,
+    exercise_label = learnr_args[["label"]]
   )
 
   check_env[[".solution_all"]] <- prepare_solutions_env(solutions, envir_base)
@@ -366,6 +340,58 @@ prepare_solutions_env <- function(solution_code_all = NULL, envir_base = parent.
   })
 
   solutions_env
+}
+
+solution_not_provided_grade <- function(label = NULL) {
+  grade_grading_problem(
+    message = "No solution is provided for this exercise.",
+    type = "warning",
+    error = list(
+      message = "No solution provided for this exercise",
+      label = label
+    )
+  )
+}
+
+solution_eval_delayed <- function(
+  code,
+  name = ".solution",
+  envir_assign,
+  envir_eval,
+  eval_fn = solution_eval_r,
+  exercise_label = NULL,
+  envir_caller = rlang::caller_env()
+) {
+  delayedAssign(
+    assign.env = envir_assign,
+    x = name,
+    {
+      tryCatch(
+        eval_fn(code, envir_eval),
+        error_missing_solution = function(err) {
+          grade_no_solution <- solution_not_provided_grade(exercise_label)
+
+          if (!is.null(envir_caller)) {
+            # inside gradethis_exercise_checker or another process,
+            # return feedback from there
+            rlang::return_from(envir_caller, feedback(grade_no_solution))
+          }
+
+          # otherwise (e.g. mocking) just return the solution problem grade
+          grade_no_solution
+        }
+      )
+    }
+  )
+}
+
+solution_eval_r <- function(code, envir) {
+  expr <- parse(text = code)
+  if (length(expr) == 0) {
+    rlang::abort(class = "error_missing_solution")
+  }
+
+  eval(expr, envir = envir)
 }
 
 grade_parse_error <- function(check_obj) {
