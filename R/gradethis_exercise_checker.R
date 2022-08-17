@@ -409,10 +409,14 @@ solution_eval_delayed <- function(
 }
 
 solution_eval_fn_get <- function(engine, label = NULL) {
-  default <- list(r = solution_eval_r)
+  default_fns <- list(
+    r = solution_eval_r,
+    sql = solution_eval_sql
+  )
+
   user_defined <- getOption("gradethis.exercise_checker.solution_eval_fn", list())
   names(user_defined) <- tolower(names(user_defined))
-  fns_list <- utils::modifyList(default, user_defined)
+  fns_list <- utils::modifyList(default_fns, user_defined)
 
   if (!tolower(engine) %in% names(fns_list)) {
     return(solution_eval_fn_not_defined(label, engine))
@@ -428,6 +432,18 @@ solution_eval_r <- function(code, envir) {
   }
 
   eval(expr, envir = envir)
+}
+
+solution_eval_sql <- function(code, envir) {
+  rlang::check_installed("DBI")
+
+  # Find the DB connection in the `envir` objects
+  objs <- lapply(ls(envir), get, envir = envir)
+  is_db_con <- vapply(objs, inherits, logical(1), "DBIConnection")
+  con <- objs[is_db_con][[1]]
+
+  # Execute the query
+  DBI::dbGetQuery(con, code)
 }
 
 solution_eval_fn_not_defined <- function(label, engine) {
