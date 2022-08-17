@@ -31,6 +31,7 @@
 * `pass_if_equal()` supports multiple solutions when authors set `y = .solution_all` to compare the student's result with all solutions. For additional details, please see the new section, _Comparing with Multiple Solutions_, in `?pass_if_equal` (#306).
 * A new `vignette("multiple_solutions")` describes how gradethis can be used to provide feedback for exercises with more than one solution (#312).
 * `gradethis_error_checker()` gains the `hint` argument from `fail()` which follows the global `gradethis.fail.hint` option. When `FALSE`, the error feedback won't include code feedback hints (thanks @cswclui, #315).
+* `gradethis_exercise_checker()` can now be configure to evaluate solution code for non-R exercise engines by providing a function of `code` and `envir` to the `solution_eval_fn` argument. In addition to evaluation R exercise solutions, gradethis will now also evaluate SQL exercise solutions (#316).
 
 ### Breaking changes
 
