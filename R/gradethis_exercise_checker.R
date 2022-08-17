@@ -307,12 +307,15 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
     exercise_label = learnr_args[["label"]]
   )
 
-  check_env[[".solution_all"]] <- prepare_solutions_env(solutions, envir_base)
+  check_env[[".solution_all"]] <- solution_eval_all_delayed(solutions, envir_base)
 
   check_env
 }
 
-prepare_solutions_env <- function(solution_code_all = NULL, envir_base = parent.frame()) {
+solution_eval_all_delayed <- function(
+  solution_code_all = NULL,
+  envir_base = parent.frame()
+) {
   if (is.null(solution_code_all) || length(solution_code_all) == 0) {
     return(NULL)
   }
