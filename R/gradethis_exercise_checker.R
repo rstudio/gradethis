@@ -329,15 +329,12 @@ prepare_solutions_env <- function(solution_code_all = NULL, envir_base = parent.
   names(solution_code_all) <- names(names_original)
   assign(".solution_labels", names_original, solutions_env)
 
-  solution_all_expr <- purrr::map(solution_code_all, ~ parse(text = .x))
-
-  purrr::iwalk(solution_all_expr, function(expr, name) {
-    delayedAssign(
-      x = name,
-      value = eval(expr, envir = envir_base),
-      assign.env = solutions_env
-    )
-  })
+  purrr::iwalk(
+    solution_code_all,
+    solution_eval_delayed,
+    envir_eval = envir_base,
+    envir_assign = solutions_env
+  )
 
   solutions_env
 }
