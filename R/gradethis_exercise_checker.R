@@ -54,6 +54,10 @@
 #'   )
 #'   ```
 #'
+#'  Solution evaluation functions should determine if the solution code is
+#'  missing and if so throw an error with class `error_missing_solution` (see
+#'  [rlang::abort()] for help throwing this error).
+#'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
 #'   the results of the exercise grading code.
 #'

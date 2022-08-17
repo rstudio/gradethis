@@ -67,7 +67,11 @@ echoes the solution code:
     \}
   )
 )
-}\if{html}{\out{</div>}}}
+}\if{html}{\out{</div>}}
+
+Solution evaluation functions should determine if the solution code is
+missing and if so throw an error with class \code{error_missing_solution} (see
+\code{\link[rlang:abort]{rlang::abort()}} for help throwing this error).}
 }
 \value{
 Returns a feedback object suitable for \pkg{learnr} tutorials with
