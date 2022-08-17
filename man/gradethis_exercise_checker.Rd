@@ -49,7 +49,25 @@ environment equivalent to \code{envir_prep}) and that will return the value of
 the evaluated \code{code}. This callback function allows grading authors to
 write custom solution evaluation functions for non-R exercise engines. The
 result of the evaluated code should be an R object that will be accessible
-to the grading code in \link{.solution} or \link{.solution_all}.}
+to the grading code in \link{.solution} or \link{.solution_all}.
+
+You may also provide a named list of solution evaluation functions to the
+\code{gradethis.exercise_checker.solution_eval_fn} global option. The names of
+the list should match the exercise engine for which the function should
+be applied.
+
+For example, for a hypothetical exercise engine \code{echo} that simply echoes
+the user's code, you could provide a \code{solution_eval_fn} that also just
+echoes the solution code:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{options(
+  gradethis.exercise_checker.solution_eval_fn = list(
+    echo = function(code, envir) \{
+      code
+    \}
+  )
+)
+}\if{html}{\out{</div>}}}
 }
 \value{
 Returns a feedback object suitable for \pkg{learnr} tutorials with

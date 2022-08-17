@@ -35,6 +35,25 @@
 #'   result of the evaluated code should be an R object that will be accessible
 #'   to the grading code in [.solution] or [.solution_all].
 #'
+#'   You may also provide a named list of solution evaluation functions to the
+#'   `gradethis.exercise_checker.solution_eval_fn` global option. The names of
+#'   the list should match the exercise engine for which the function should
+#'   be applied.
+#'
+#'   For example, for a hypothetical exercise engine `echo` that simply echoes
+#'   the user's code, you could provide a `solution_eval_fn` that also just
+#'   echoes the solution code:
+#'
+#'   ```
+#'   options(
+#'     gradethis.exercise_checker.solution_eval_fn = list(
+#'       echo = function(code, envir) {
+#'         code
+#'       }
+#'     )
+#'   )
+#'   ```
+#'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
 #'   the results of the exercise grading code.
 #'
@@ -283,12 +302,10 @@ prepare_check_env <- function(
   }
 
   # Delayed evaluation of `.solution` and `.solution_all`
-  engine <- knitr_engine_caption(learnr_args[["engine"]])
   if (is.null(solution_eval_fn)) {
-    solution_eval_fn <- switch(
-      engine,
-      R = solution_eval_r,
-      solution_eval_fn_not_defined(learnr_args[["label"]], engine)
+    solution_eval_fn <- solution_eval_fn_get(
+      engine = learnr_args[["engine"]],
+      learnr_args[["label"]]
     )
   }
 
@@ -385,6 +402,19 @@ solution_eval_delayed <- function(
       )
     }
   )
+}
+
+solution_eval_fn_get <- function(engine, label = NULL) {
+  default <- list(r = solution_eval_r)
+  user_defined <- getOption("gradethis.exercise_checker.solution_eval_fn", list())
+  names(user_defined) <- tolower(names(user_defined))
+  fns_list <- utils::modifyList(default, user_defined)
+
+  if (!tolower(engine) %in% names(fns_list)) {
+    return(solution_eval_fn_not_defined(label, engine))
+  }
+
+  fns_list[[tolower(engine)]]
 }
 
 solution_eval_r <- function(code, envir) {
