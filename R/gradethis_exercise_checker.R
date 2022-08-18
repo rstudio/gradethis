@@ -28,6 +28,35 @@
 #'   submission.
 #' @param stage The current stage of exercise checking.
 #' @param ... Extra arguments supplied by learnr
+#' @param solution_eval_fn A function taking solution `code` and an `envir` (an
+#'   environment equivalent to `envir_prep`) and that will return the value of
+#'   the evaluated `code`. This callback function allows grading authors to
+#'   write custom solution evaluation functions for non-R exercise engines. The
+#'   result of the evaluated code should be an R object that will be accessible
+#'   to the grading code in [.solution] or [.solution_all].
+#'
+#'   You may also provide a named list of solution evaluation functions to the
+#'   `gradethis.exercise_checker.solution_eval_fn` global option. The names of
+#'   the list should match the exercise engine for which the function should
+#'   be applied.
+#'
+#'   For example, for a hypothetical exercise engine `echo` that simply echoes
+#'   the user's code, you could provide a `solution_eval_fn` that also just
+#'   echoes the solution code:
+#'
+#'   ```
+#'   options(
+#'     gradethis.exercise_checker.solution_eval_fn = list(
+#'       echo = function(code, envir) {
+#'         code
+#'       }
+#'     )
+#'   )
+#'   ```
+#'
+#'  Solution evaluation functions should determine if the solution code is
+#'  missing and if so throw an error with class `error_missing_solution` (see
+#'  [rlang::abort()] for help throwing this error).
 #'
 #' @return Returns a feedback object suitable for \pkg{learnr} tutorials with
 #'   the results of the exercise grading code.
@@ -45,7 +74,8 @@ gradethis_exercise_checker <- function(
   envir_prep = NULL,
   last_value = NULL,
   stage = NULL,
-  ...
+  ...,
+  solution_eval_fn = NULL
 ) {
   # Call this function in such a way that it can use other gradethis internals when called by learnr
   # (i.e., make tutorial_options(exercise.checker = gradethis::gradethis_exercise_checker) always work)
@@ -73,7 +103,8 @@ check_exercise <- function(
   envir_prep = NULL,
   last_value = NULL,
   stage = NULL,
-  ...
+  ...,
+  solution_eval_fn = NULL
 ) {
 
   learnr_args <- list(
@@ -112,7 +143,7 @@ check_exercise <- function(
   # an internal grading problem if anything goes wrong.
   check_env <- capture_errors(
     capture_graded(
-      prepare_check_env(learnr_args)
+      prepare_check_env(learnr_args, solution_eval_fn = solution_eval_fn)
     ),
     on_error = function(err, ...) {
       grade_grading_problem("Could not prepare checking environment for gradethis checking code.", error = err)
@@ -235,7 +266,11 @@ check_exercise <- function(
 }
 
 
-prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
+prepare_check_env <- function(
+  learnr_args,
+  envir_caller = rlang::caller_env(),
+  solution_eval_fn = NULL
+) {
   # The check_env starts from a copy of envir_prep which is the result of
   # evaluating all of exercise setup code, duplicated to avoid the possibility
   # of the checking code changing the prep environment
@@ -271,74 +306,38 @@ prepare_check_env <- function(learnr_args, envir_caller = rlang::caller_env()) {
   }
 
   # Delayed evaluation of `.solution` and `.solution_all`
-  engine <- knitr_engine_caption(learnr_args[["engine"]])
-  if (!identical(engine, "R")) {
-    msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
-
-    delayedAssign(
-      assign.env = check_env,
-      x = ".solution",
-      grade_grading_problem(
-        message = msg,
-        type = "warning",
-        error = list(message = msg, label = learnr_args[["label"]])
-      )
+  if (is.null(solution_eval_fn)) {
+    solution_eval_fn <- solution_eval_fn_get(
+      engine = learnr_args[["engine"]],
+      learnr_args[["label"]]
     )
-
-    delayedAssign(
-      assign.env = check_env,
-      x = ".solution_all",
-      grade_grading_problem(
-        message = msg,
-        type = "warning",
-        error = list(message = msg, label = learnr_args[["label"]])
-      )
-    )
-
-    return(check_env)
   }
 
-  solution_expr <- parse(text = check_env[[".solution_code"]] %||% "")
-  delayedAssign(
-    assign.env = check_env,
-    x = ".solution",
-    {
-      if (length(solution_expr) == 0) {
-        solution_problem <-
-          grade_grading_problem(
-            message = "No solution is provided for this exercise.",
-            type = "warning",
-            error = list(
-              message = "No solution provided for this exercise",
-              label = learnr_args[["label"]]
-            )
-          )
-
-        if (!is.null(envir_caller)) {
-          # inside gradethis_exercise_checker or another process,
-          # return feedback from there
-          rlang::return_from(envir_caller, feedback(solution_problem))
-        } else {
-          # otherwise (e.g. mocking) just return the solution problem grade
-          solution_problem
-        }
-      } else {
-        # solution code exists...
-        # Using eval_tidy does not evaluate the expression. Using eval() instead
-        eval(
-          solution_expr,
-          envir = envir_base
-        )
-      }
-    }
+  solution_eval_delayed(
+    code = check_env[[".solution_code"]] %||% "",
+    name = ".solution",
+    envir_assign = check_env,
+    envir_eval = envir_base,
+    envir_caller = envir_caller,
+    exercise_label = learnr_args[["label"]],
+    eval_fn = solution_eval_fn
   )
 
-  check_env[[".solution_all"]] <- prepare_solutions_env(solutions, envir_base)
+  check_env[[".solution_all"]] <-
+    solution_eval_all_delayed(
+      solutions,
+      envir_base,
+      eval_fn = solution_eval_fn
+    )
 
   check_env
 }
 
-prepare_solutions_env <- function(solution_code_all = NULL, envir_base = parent.frame()) {
+solution_eval_all_delayed <- function(
+  solution_code_all = NULL,
+  envir_base = parent.frame(),
+  eval_fn = NULL
+) {
   if (is.null(solution_code_all) || length(solution_code_all) == 0) {
     return(NULL)
   }
@@ -355,17 +354,109 @@ prepare_solutions_env <- function(solution_code_all = NULL, envir_base = parent.
   names(solution_code_all) <- names(names_original)
   assign(".solution_labels", names_original, solutions_env)
 
-  solution_all_expr <- purrr::map(solution_code_all, ~ parse(text = .x))
-
-  purrr::iwalk(solution_all_expr, function(expr, name) {
-    delayedAssign(
-      x = name,
-      value = eval(expr, envir = envir_base),
-      assign.env = solutions_env
-    )
-  })
+  purrr::iwalk(
+    solution_code_all,
+    solution_eval_delayed,
+    envir_eval = envir_base,
+    envir_assign = solutions_env,
+    eval_fn = eval_fn
+  )
 
   solutions_env
+}
+
+solution_not_provided_grade <- function(label = NULL) {
+  grade_grading_problem(
+    message = "No solution is provided for this exercise.",
+    type = "warning",
+    error = list(
+      message = "No solution provided for this exercise",
+      label = label
+    )
+  )
+}
+
+solution_eval_delayed <- function(
+  code,
+  name = ".solution",
+  envir_assign,
+  envir_eval,
+  eval_fn = NULL,
+  exercise_label = NULL,
+  envir_caller = rlang::caller_env()
+) {
+  delayedAssign(
+    assign.env = envir_assign,
+    x = name,
+    {
+      tryCatch(
+        eval_fn(code, envir_eval),
+        error_missing_solution = function(err) {
+          grade_no_solution <- solution_not_provided_grade(exercise_label)
+
+          if (!is.null(envir_caller)) {
+            # inside gradethis_exercise_checker or another process,
+            # return feedback from there
+            rlang::return_from(envir_caller, feedback(grade_no_solution))
+          }
+
+          # otherwise (e.g. mocking) just return the solution problem grade
+          grade_no_solution
+        }
+      )
+    }
+  )
+}
+
+solution_eval_fn_get <- function(engine, label = NULL) {
+  default_fns <- list(
+    r = solution_eval_r,
+    sql = solution_eval_sql
+  )
+
+  user_defined <- getOption("gradethis.exercise_checker.solution_eval_fn", list())
+  names(user_defined) <- tolower(names(user_defined))
+  fns_list <- utils::modifyList(default_fns, user_defined)
+
+  if (!tolower(engine) %in% names(fns_list)) {
+    return(solution_eval_fn_not_defined(label, engine))
+  }
+
+  fns_list[[tolower(engine)]]
+}
+
+solution_eval_r <- function(code, envir) {
+  expr <- parse(text = code)
+  if (length(expr) == 0) {
+    rlang::abort(class = "error_missing_solution")
+  }
+
+  eval(expr, envir = envir)
+}
+
+solution_eval_sql <- function(code, envir) {
+  rlang::check_installed("DBI")
+
+  # Find the DB connection in the `envir` objects
+  objs <- lapply(ls(envir), get, envir = envir)
+  is_db_con <- vapply(objs, inherits, logical(1), "DBIConnection")
+  con <- objs[is_db_con][[1]]
+
+  # Execute the query
+  DBI::dbGetQuery(con, code)
+}
+
+solution_eval_fn_not_defined <- function(label, engine) {
+  engine <- knitr_engine_caption(engine)
+  msg <- glue::glue("{gradethis_settings$grading_problem.message()} Solution results are not available for {engine} code.")
+
+  function(...) {
+    grade_grading_problem(
+      message = msg,
+      type = "warning",
+      error = list(message = msg, label = label)
+    )
+  }
 }
 
 grade_parse_error <- function(check_obj) {

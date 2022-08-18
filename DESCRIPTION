@@ -40,6 +40,7 @@ Imports:
     waldo,
     withr
 Suggests:
+    DBI,
     knitr,
     rmarkdown,
     spelling
@@ -54,4 +55,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1

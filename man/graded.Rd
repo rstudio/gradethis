@@ -75,13 +75,13 @@ for more details about how these functions are used in \code{\link[=grade_this]{
 }
 \section{Functions}{
 \itemize{
-\item \code{graded}: Prepare and signal a graded result.
+\item \code{graded()}: Prepare and signal a graded result.
 
-\item \code{pass}: Signal a \emph{passing} grade.
+\item \code{pass()}: Signal a \emph{passing} grade.
 
-\item \code{fail}: Signal a \emph{failing} grade.
+\item \code{fail()}: Signal a \emph{failing} grade.
+
 }}
-
 \section{Usage in \code{grade_this()}}{
 
 

@@ -14,7 +14,8 @@ gradethis_exercise_checker(
   envir_prep = NULL,
   last_value = NULL,
   stage = NULL,
-  ...
+  ...,
+  solution_eval_fn = NULL
 )
 }
 \arguments{
@@ -42,6 +43,35 @@ submission.}
 \item{stage}{The current stage of exercise checking.}
 
 \item{...}{Extra arguments supplied by learnr}
+
+\item{solution_eval_fn}{A function taking solution \code{code} and an \code{envir} (an
+environment equivalent to \code{envir_prep}) and that will return the value of
+the evaluated \code{code}. This callback function allows grading authors to
+write custom solution evaluation functions for non-R exercise engines. The
+result of the evaluated code should be an R object that will be accessible
+to the grading code in \link{.solution} or \link{.solution_all}.
+
+You may also provide a named list of solution evaluation functions to the
+\code{gradethis.exercise_checker.solution_eval_fn} global option. The names of
+the list should match the exercise engine for which the function should
+be applied.
+
+For example, for a hypothetical exercise engine \code{echo} that simply echoes
+the user's code, you could provide a \code{solution_eval_fn} that also just
+echoes the solution code:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{options(
+  gradethis.exercise_checker.solution_eval_fn = list(
+    echo = function(code, envir) \{
+      code
+    \}
+  )
+)
+}\if{html}{\out{</div>}}
+
+Solution evaluation functions should determine if the solution code is
+missing and if so throw an error with class \code{error_missing_solution} (see
+\code{\link[rlang:abort]{rlang::abort()}} for help throwing this error).}
 }
 \value{
 Returns a feedback object suitable for \pkg{learnr} tutorials with

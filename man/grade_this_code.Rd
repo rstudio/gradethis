@@ -5,8 +5,7 @@
 \title{Grade student code against a solution}
 \usage{
 grade_this_code(
-  correct = getOption("gradethis.code_correct", getOption("gradethis.pass",
-    "Correct!")),
+  correct = getOption("gradethis.code_correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,

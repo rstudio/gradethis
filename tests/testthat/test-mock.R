@@ -155,3 +155,56 @@ test_that("mock_this_exercise() with non-R exercise engine", {
     mock_this_exercise(SELECT, .engine = "sql", .result = 7)
   )
 })
+
+test_that("mock_this_exercise(), non-R engine, no solution_eval_fn()", {
+  ex <- mock_this_exercise(
+    "apple",
+    .engine = "echo_fruit",
+    .result = "apple",
+    .solution_code = "banana"
+  )
+
+  expect_graded(ex$.solution, logical(), "Solution results are not available")
+  expect_graded(ex$.solution_all$solution, logical(), "Solution results are not available")
+})
+
+test_that("mock_this_exercise(), non-R engine, with solution_eval_fn()", {
+  ex <-
+    withr::with_options(
+      list(gradethis.exercise_checker.solution_eval_fn = list(
+        echo_fruit = function(code, envir) {
+          code
+        }
+      )),
+      mock_this_exercise(
+        "apple",
+        .engine = "echo_fruit",
+        .result = "apple",
+        .solution_code = "banana"
+      )
+    )
+
+  expect_equal(ex$.solution, "banana")
+  expect_equal(ex$.solution_all$solution, "banana")
+})
+
+test_that("mock_this_exercise(), non-R engine, with solution_eval_fn(), custom missing solution", {
+  ex <-
+    withr::with_options(
+      list(gradethis.exercise_checker.solution_eval_fn = list(
+        echo_fruit = function(code, envir) {
+          if (nzchar(code)) return(code)
+          rlang::abort(class = "error_missing_solution")
+        }
+      )),
+      mock_this_exercise(
+        "apple",
+        .engine = "echo_fruit",
+        .result = "apple",
+        .solution_code = ""
+      )
+    )
+
+  expect_graded(ex$.solution, logical(), "No solution is provided")
+  expect_null(ex$.solution_all$solution)
+})

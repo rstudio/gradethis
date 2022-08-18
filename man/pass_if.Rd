@@ -72,11 +72,11 @@ or \code{FALSE}.
 }
 \section{Functions}{
 \itemize{
-\item \code{pass_if}: Pass if \code{cond} is \code{TRUE}.
+\item \code{pass_if()}: Pass if \code{cond} is \code{TRUE}.
 
-\item \code{fail_if}: Fail if \code{cond} is \code{TRUE}.
+\item \code{fail_if()}: Fail if \code{cond} is \code{TRUE}.
+
 }}
-
 \examples{
 # Suppose the prompt is to find landmasses in `islands` with land area of
 # less than 20,000 square miles. (`islands` reports land mass in units of
