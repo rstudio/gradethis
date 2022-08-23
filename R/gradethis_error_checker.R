@@ -58,7 +58,7 @@ gradethis_error_checker <- function(
     )
     if (is.null(msg) || length(msg) < 1) {
       msg <-
-        "An error occurred with your R code. Check your syntax and try again." #nocov
+        "An error occurred with your code. Check your syntax and try again." #nocov
     }
     fail(msg, hint = FALSE, encourage = TRUE)
   }
