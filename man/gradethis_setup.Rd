@@ -155,7 +155,7 @@ when gradethis is loaded are shown below.\tabular{ll}{
    \code{gradethis.grading_problem.message} \tab \code{"A problem occurred with the grading code for this exercise."} \cr
    \code{gradethis.grading_problem.type} \tab \code{"warning"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
-   \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
+   \code{gradethis.error_checker.message} \tab \code{"An error occurred with your code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
 }
 }
 
