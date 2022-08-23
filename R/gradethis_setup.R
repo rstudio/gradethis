@@ -215,7 +215,7 @@ gradethis_default_options <- list(
   allow_partial_matching = NULL,
 
   # Default error checker message
-  error_checker.message = "An error occurred with your R code:\n\n```\n{.error$message}\n```\n\n\n"
+  error_checker.message = "An error occurred with your code:\n\n```\n{.error$message}\n```\n\n\n"
 )
 
 # Legacy Options ----------------------------------------------------------
