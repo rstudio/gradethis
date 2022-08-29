@@ -356,7 +356,7 @@ wrong_value <- function(this,
     intro <- ""
     this <- build_intro(enclosing_call %||% that_original, .open = "", .close = "")
   } else {
-    this <-prep(this)
+    this <- prep(this)
   }
 
   if (!is.null(this_name) && this_name != "") {
@@ -405,7 +405,7 @@ prep <- function(text) {
 build_intro <- function(.call = NULL, .arg = NULL, .open = "In ", .close = ", ") {
   is_call_fn_def <- is_function_definition(.call)
 
-  if(!is.null(.call)) {
+  if (!is.null(.call)) {
     .call_str <- deparse_to_string(.call)
     if (!is.null(.arg) && !identical(.arg, "")) {
       .call_str <- paste(.arg, "=", .call_str)

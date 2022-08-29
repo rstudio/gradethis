@@ -71,6 +71,7 @@ test_that("Grade learnr check_code", {
   )
 })
 
+# nolint start: object_name
 test_that("gradethis_setup", {
   with_options(gradethis_setup(), {
     gradethis.pass <- getOption("gradethis.pass", NULL)
@@ -84,3 +85,4 @@ test_that("gradethis_setup", {
     expect_silent(glue::glue(gradethis.fail))
   })
 })
+# nolint end

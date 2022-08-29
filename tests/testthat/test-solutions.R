@@ -1,12 +1,12 @@
 local_edition(3)
 
 test_that("split solutions", {
-  code <- '# one ----
+  code <- "# one ----
 runif(1)
 # --- two ----
     runif( 2 )
 ### ------- three ----------
-runif( 3 ) '
+runif( 3 ) "
 
   expect_equal(
     solutions_prepare(code),
@@ -17,12 +17,12 @@ runif( 3 ) '
     )
   )
 
-  code <- '
+  code <- "
 runif(1)
 # --- two ----
     runif( 2 )
 ## ----------
-runif( 3 ) '
+runif( 3 ) "
 
   expect_equal(
     solutions_prepare(code),
@@ -34,12 +34,12 @@ runif( 3 ) '
   )
 
 
-  code <- '
+  code <- "
 runif(1)
 # ----
     runif( 2 )
 ##     ----------
-runif( 3 ) '
+runif( 3 ) "
 
   expect_equal(
     solutions_prepare(code),
@@ -64,7 +64,7 @@ test_that("split solutions with empty code", {
 })
 
 test_that("split solutions with code comments", {
-  code <- '
+  code <- "
 # one ----
 
 # this solution is fine
@@ -72,7 +72,7 @@ runif(1)
 
 # two ----
 # but maybe this one would work, too
-runif(2 - 1)'
+runif(2 - 1)"
 
   code_split <- solutions_prepare(code)
   expect_equal(

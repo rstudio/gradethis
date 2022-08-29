@@ -526,9 +526,9 @@ test_that("give_code_feedback() doesn't add feedback twice", {
       expect_exercise_checker(
         user_code = "apple",
         solution_code = "banana",
-        check_code = 'grade_this({
+        check_code = "grade_this({
        give_code_feedback(fail())
-     })',
+     })",
         is_correct = FALSE,
         msg = NULL
       )$message

@@ -68,7 +68,7 @@ test_that("user and solution code are always length 1", {
     is_correct = TRUE,
     msg = "TEST PASSED",
     user_code = c("1", "2", "3"),
-    solution_code= c("1", "2", "3", "4"),
+    solution_code = c("1", "2", "3", "4"),
     check_code = "grade_this(if (length(.solution_code) == 1) pass('TEST PASSED') else fail('TEST FAILED'))",
     stage = "check"
   )
@@ -77,7 +77,7 @@ test_that("user and solution code are always length 1", {
     is_correct = TRUE,
     msg = "TEST PASSED",
     user_code = c("1", "2", "3"),
-    solution_code= c("1", "2", "3", "4"),
+    solution_code = c("1", "2", "3", "4"),
     check_code = c(
       "grade_this(",
       "if (length(.check_code) == 1)",
@@ -91,7 +91,7 @@ test_that("user and solution code are always length 1", {
 })
 
 # "A problem occurred with your teacher's grading code. Defaulting to _incorrect_."
-message_feedback_grading_problem <- feedback_grading_problem()$message
+message_feedback_grading_problem <- feedback_grading_problem()$message # nolint
 
 test_that("length 0 solution code", {
   expect_exercise_checker(

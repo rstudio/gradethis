@@ -275,7 +275,7 @@ solution_code_closest_which <- function(user_code, solution_code_all) {
   index_min[[1]]
 }
 
-which.min.last <- function(x) {
+which.min.last <- function(x) { # nolint: object_name
   x <- rev(x)
   index <- which.min(x)
   rev(seq_along(x))[index]

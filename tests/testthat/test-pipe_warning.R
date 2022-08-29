@@ -74,8 +74,8 @@ test_that("pipe_warning() message returns unpiped text", {
 })
 
 test_that("pipe_warning() can be disabled by setting equal to NULL", {
-  user_code = "x %>% b()"
-  solution_code = "x %>% a()"
+  user_code <- "x %>% b()"
+  solution_code <- "x %>% a()"
 
   with_options(
     list(pipe_warning = NULL),
@@ -106,8 +106,8 @@ test_that("pipe_warning() can be disabled by setting equal to NULL", {
 })
 
 test_that("pipe_warning() can be disabled by setting equal to empty character string", {
-  user_code = "x %>% b()"
-  solution_code = "x %>% a()"
+  user_code <- "x %>% b()"
+  solution_code <- "x %>% a()"
 
   with_gradethis_setup(
     pipe_warning = "",

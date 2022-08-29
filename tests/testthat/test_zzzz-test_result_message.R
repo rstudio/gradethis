@@ -8,9 +8,7 @@ expect_message <- function(x, message, correct) {
 
 test_that("Correct messages without random praise", {
   glue_correct_no_praise <- "{ .num_correct }/{ .num_total } correct!"
-  example_function <- function(x){
-    return(x + 1)
-  }
+  example_function <- function(x) return(x + 1)
 
   expect_grade_result_strict(
     last_value = example_function,
@@ -25,9 +23,7 @@ test_that("Correct messages without random praise", {
 
 test_that("Incorrect mesages without random praise", {
   glue_incorrect_no_praise <- "{ .num_correct }/{ .num_total } correct!"
-  example_function <- function(x){
-    return(x + 1)
-  }
+  example_function <- function(x) return(x + 1)
 
   expect_grade_result_strict(
     last_value = example_function,

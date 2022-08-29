@@ -94,7 +94,7 @@ gradethis_setup <- function(
   code_correct = NULL,
   code_incorrect = NULL,
   maybe_code_feedback = NULL,
-  maybe_code_feedback.before = NULL,
+  maybe_code_feedback.before = NULL, # nolint start: object_name
   maybe_code_feedback.after = NULL,
   pass.praise = NULL,
   fail.hint = NULL,
@@ -107,7 +107,7 @@ gradethis_setup <- function(
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
   exercise.error.check.code = NULL,
-  fail_code_feedback = NULL
+  fail_code_feedback = NULL # nolint end
 ) {
   if (isTRUE(getOption("gradethis.__require__", TRUE))) {
     # avoids cyclical loading when called by .onLoad(). Even if called as

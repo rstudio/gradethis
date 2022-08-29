@@ -22,7 +22,7 @@ grade_html <- function(grade) {
   htmltools::tags$div(
     role = "alert",
     class = if (!length(grade$correct)) {
-      "alert" 
+      "alert"
     } else if (isTRUE(grade$correct)) {
       "alert alert-success"
     } else {

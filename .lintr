@@ -1,4 +1,16 @@
-linters: with_defaults(
+linters: linters_with_defaults(
     object_usage_linter = NULL,
-    line_length_linter = line_length_linter(100)
+    line_length_linter(120),
+    T_and_F_symbol_linter,
+    absolute_path_linter,
+    nonportable_path_linter,
+    semicolon_linter,
+    undesirable_operator_linter,
+    object_length_linter(42)
+  )
+exclusions: list(
+    "R/staticimports.R",
+    "inst/tutorials/grade_code-messages/grade_code-messages.Rmd",
+    "inst/tutorials/grading-demo/grading-demo.Rmd",
+    "inst/tutorials/grading-demo/z-demo.Rmd"
   )

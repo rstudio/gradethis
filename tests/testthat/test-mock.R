@@ -1,7 +1,7 @@
 test_that("mock_this_exercise()", {
   ex1 <- mock_this_exercise(
     .user_code = x - y,
-    .solution_code = {x + y},
+    .solution_code = {x + y}, # nolint: brace
     setup_global = x <- 31,
     setup_exercise = {
       z <- 0
@@ -79,7 +79,7 @@ test_that("mock_this_exercise() works with length-1 expressions", {
   expect_equal(ex$.user_code, "a")
   expect_equal(ex$.solution_code, "b")
 
-  ex2 <- mock_this_exercise({a}, {b})
+  ex2 <- mock_this_exercise({a}, {b}) # nolint: brace
   expect_equal(ex$.user_code, "a")
   expect_equal(ex$.solution_code, "b")
 })

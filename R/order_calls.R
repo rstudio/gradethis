@@ -98,7 +98,7 @@ remove_first_arg_name <- function(call, code, fxn) {
 #   return(call)
 # }
 
-remove_null_from_call <- function(code){
+remove_null_from_call <- function(code) {
   if (is.call(code) && length(code) > 1) {
     if (is.null(code[[2]]) && is.null(names(code[2]))) {
       code[[2]] <- NULL
