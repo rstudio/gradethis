@@ -150,10 +150,13 @@ grade_this <- function(
     # Turn the grading code into a function defined in the `check_env`
     do_grade_this <- rlang::new_function(NULL, body = expr, env = check_env)
 
+    # Disable code feedback if not R code
+    engine <- tolower(get0(".engine", check_env, ifnotfound = "r"))
+    maybe_code_feedback <- identical(engine, "r") && maybe_code_feedback
+
     # make sure fail calls can get code feed back (or not) if they want
     with_maybe_code_feedback(
       maybe_code_feedback,
-
       # capture all pass/fail calls and errors thrown
       eval_gradethis(do_grade_this())
     )
