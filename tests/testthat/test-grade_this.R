@@ -43,3 +43,33 @@ test_that("grade_this() can find things in the parent of the check env", {
   expect_true(found$from_setup)
   expect_true(found$from_user)
 })
+
+test_that("grade_this() doesn't include code feedback for a non-R exercise", {
+  ex <- mock_this_exercise(
+    "1 + 1",
+    .solution_code = "1 + 2",
+    .engine = "python",
+    .result = 2
+  )
+
+  # Doesn't have code feedback as a Python exercise
+  grade_py <- grade_this(fail(), maybe_code_feedback = TRUE)(ex)
+  expect_false(grade_py$correct)
+  expect_no_match(grade_py$message, "I expected")
+
+  # Even if we ask for a hint
+  grade_py <- grade_this(fail(hint = TRUE), maybe_code_feedback = TRUE)(ex)
+  expect_false(grade_py$correct)
+  expect_no_match(grade_py$message, "I expected")
+
+  # Does have code feedback as an R exercise
+  ex$.engine <- "r"
+  grade_r <- grade_this(fail(), maybe_code_feedback = TRUE)(ex)
+  expect_false(grade_r$correct)
+  expect_match(grade_r$message, "I expected")
+
+  # Even if we turn of maybe_code_feedback but ask for a hint
+  grade_r <- grade_this(fail(hint = TRUE), maybe_code_feedback = FALSE)(ex)
+  expect_false(grade_r$correct)
+  expect_match(grade_r$message, "I expected")
+})

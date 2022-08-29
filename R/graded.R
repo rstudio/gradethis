@@ -258,10 +258,10 @@ fail <- function(
   user_provided_message <- !missing(message)
 
   this_fail_grade <- function() {
-    if (user_provided_hint && !user_provided_message) {
+    if (user_provided_hint && identical(hint, FALSE) && !user_provided_message) {
       # allow hint = FALSE, provided by the user, to override the default message
       with_maybe_code_feedback(
-        isTRUE(hint),
+        FALSE,
         graded(message = glue_message_with_env(env, message), correct = FALSE, ...)
       )
     } else {
