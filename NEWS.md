@@ -63,4 +63,5 @@
 * Errors in the grading code are now returned as _neutral_ grades rather than failing grades. The feedback message and type can be changed with two new arguments to `gradethis_setup()`: `grading_problem.message` and `grading_problem.type` (#256).
 
 ### Bug fixes
-* Added a `NEWS.md` file to track changes to the package.
+
+* Code feedback is now disabled for non-R exercise engines (#321).
