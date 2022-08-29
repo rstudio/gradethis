@@ -42,7 +42,7 @@ capture_errors <- function(expr, on_error = NULL) {
 
       if (!is.null(calls$first)) {
         calls$first <- deparse(calls$first, getOption("width", 80))
-        err$gradethis_call <- paste(calls$first, collapse= "\n")
+        err$gradethis_call <- paste(calls$first, collapse = "\n")
 
         # Log the errors locally as messages
         message(paste("#>", calls$first, collapse = "\n"))
@@ -130,11 +130,11 @@ gradethis_fail_error_handler <- function(message, env = parent.frame(), ...) {
 ## This function solves the situation of trying to execute a "single line of code" code block
 ## Because the gradethis condition is "thrown", the code block will return when the first condition is received
 ## Ex:
-# {
+# {                  # nolint start
 #   pass_if_throw(1)
 #   pass_if_throw(2)
 #   pass_if_throw(3)
-# }
+# }                  # nolint end
 capture_graded <- function(expr, on_graded = NULL) {
   if (is.null(on_graded)) {
     on_graded <- function(grade, that_env) {

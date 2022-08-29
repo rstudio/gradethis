@@ -17,10 +17,10 @@ test_that("Standarize call with formals primitive function", {
 
 test_that("Standarize call with formals user function", {
 
-  my_func <- function(x, y, z=100, a = TRUE, b = 3.14, c = "s", ...) {x + y + z + b}
+  my_func <- function(x, y, z = 100, a = TRUE, b = 3.14, c = "s", ...) x + y + z + b
 
   user <- rlang::get_expr(quote(my_func(x = 1, 20)))
-  user_stand <- gradethis:::call_standardise_formals(user,
+  user_stand <- call_standardise_formals(user,
     env = rlang::env(my_func = my_func))
 
   testthat::expect_equal(user_stand,
@@ -68,13 +68,15 @@ test_that("When an invalid function passed (i.e., corrupt language object)", {
 
 test_that("Standarize call with include_defaults = FALSE", {
   library(purrr)
-  user <- rlang::get_expr(quote(insistently(mean,quiet = TRUE)))
-  user_stand <- gradethis:::call_standardise_formals(user)
-  user_stand_mini <- gradethis:::call_standardise_formals(user,include_defaults = FALSE)
-  testthat::expect_equal(    user_stand_mini,
+  user <- rlang::get_expr(quote(insistently(mean, quiet = TRUE)))
+  user_stand <- call_standardise_formals(user)
+  user_stand_mini <- call_standardise_formals(user,include_defaults = FALSE)
+  testthat::expect_equal(
+    user_stand_mini,
     quote(insistently(f = mean, quiet = TRUE))
   )
-  testthat::expect_equal(    user_stand,
+  testthat::expect_equal(
+    user_stand,
     quote(insistently(f = mean,rate = rate_backoff(), quiet = TRUE))
   )
 

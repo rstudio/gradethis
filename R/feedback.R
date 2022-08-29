@@ -113,7 +113,7 @@ remove_dangerous_html_tags <- function(md) {
   )
 }
 
-feedback_grading_problem_validate_type <- function(type) {
+feedback_grading_problem_validate_type <- function(type) { # nolint: object_length
   tryCatch(
     match.arg(type, c("success", "info", "warning", "error", "custom")),
     error = function(e) {

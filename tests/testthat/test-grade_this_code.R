@@ -151,7 +151,7 @@ test_that("Spots differences in long calls", {
   # https://github.com/rstudio/gradethis/issues/28
 
   # stub tidyr::gather()
-  gather <- function(key = "key", value = "value", ..., na.rm = FALSE) {
+  gather <- function(key = "key", value = "value", ..., na.rm = FALSE) { # nolint: object_name
     NULL
   }
 

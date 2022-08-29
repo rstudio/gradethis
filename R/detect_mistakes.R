@@ -212,7 +212,7 @@ detect_mistakes <- function(user,
     if (length(well_matched > 0)) {
       matched_user_names <- rlang::names2(well_matched)
 
-      if ( !allow_partial_matching ) {
+      if (!allow_partial_matching) {
         ## where does partial matching occur ?
         where_pmatches <- function(user_name) {
           which(startsWith(remaining_solution_names, user_name))
@@ -342,7 +342,7 @@ detect_mistakes <- function(user,
         enclosing_arg = arg_name,
         allow_partial_matching = allow_partial_matching
       )
-      if(!is.null(res)) return(res)
+      if (!is.null(res)) return(res)
     }
 
     # Make these arguments invisible to further checks
@@ -415,7 +415,7 @@ detect_mistakes <- function(user,
         enclosing_arg = name,
         allow_partial_matching = allow_partial_matching
       )
-      if(!is.null(res)) return(res)
+      if (!is.null(res)) return(res)
     }
   }
 
@@ -429,7 +429,7 @@ real_names <- function(x) {
   x_names[x_names != ""]
 }
 
-detect_mismatched_function_arguments <- function(user, solution) {
+detect_mismatched_function_arguments <- function(user, solution) { # nolint: object_length
   is.pairlist(user) &&
     is.pairlist(solution) &&
     length(user) != length(solution)

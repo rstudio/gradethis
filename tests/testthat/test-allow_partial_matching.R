@@ -162,9 +162,7 @@ test_that("grade_this_code() - allow_partial_matching works 1 error fun", {
 
 test_that("grade_code() - allow_partial_matching works 1 error chr", {
 
-  ff <- function(p1 = "yes"){
-    print(p1)
-  }
+  ff <- function(p1 = "yes") print(p1)
 
   expect_grade_code(
     user_code = "ff(p=\"no\")",
@@ -182,9 +180,7 @@ test_that("grade_code() - allow_partial_matching works 1 error chr", {
 
 test_that("grade_this_code() - allow_partial_matching works 1 error chr", {
 
-  ff <- function(p1 = "yes"){
-    print(p1)
-  }
+  ff <- function(p1 = "yes") print(p1)
 
   expect_this_code(
     user_code = "ff(p=\"no\")",
@@ -202,11 +198,11 @@ test_that("grade_this_code() - allow_partial_matching works 1 error chr", {
 
 test_that("grade_code() - allow_partial_matching works errors multi arg type", {
 
-  ff <- function(chr = "yes", fun = ls, call =ls(), bool = TRUE) {
+  ff <- function(chr = "yes", fun = ls, call = ls(), bool = TRUE) {
     print("youpi")
   }
 
-  pmatch_FALSE <- expect_grade_code(
+  pmatch_FALSE <- expect_grade_code( # nolint: object_name
     user_code = "ff(ch = \"yes\", fu = ls, cal =ls(), boo = TRUE)",
     solution_code = "ff(chr = \"yes\", fun = ls, call =ls(), bool = TRUE)",
     allow_partial_matching = FALSE,
@@ -218,25 +214,25 @@ test_that("grade_code() - allow_partial_matching works errors multi arg type", {
       correct_name = c("chr", "fun", "call", "bool")
     )
   )
-  expect_match(object = pmatch_FALSE$message,regexp = "ch = \"yes\"")
-  expect_match(object = pmatch_FALSE$message,regexp = "chr = \"yes\"")
-  expect_match(object = pmatch_FALSE$message,regexp = "boo = TRUE")
-  expect_match(object = pmatch_FALSE$message,regexp = "bool = TRUE")
-  expect_match(object = pmatch_FALSE$message,regexp = "cal = ls()")
-  expect_match(object = pmatch_FALSE$message,regexp = "call = ls()")
-  expect_match(object = pmatch_FALSE$message,regexp = "fun = ls")
-  expect_match(object = pmatch_FALSE$message,regexp = "fu = ls")
+  expect_match(object = pmatch_FALSE$message, regexp = "ch = \"yes\"")
+  expect_match(object = pmatch_FALSE$message, regexp = "chr = \"yes\"")
+  expect_match(object = pmatch_FALSE$message, regexp = "boo = TRUE")
+  expect_match(object = pmatch_FALSE$message, regexp = "bool = TRUE")
+  expect_match(object = pmatch_FALSE$message, regexp = "cal = ls()")
+  expect_match(object = pmatch_FALSE$message, regexp = "call = ls()")
+  expect_match(object = pmatch_FALSE$message, regexp = "fun = ls")
+  expect_match(object = pmatch_FALSE$message, regexp = "fu = ls")
 
 
 })
 
 test_that("grade_this_code() - allow_partial_matching works errors multi arg type", {
 
-  ff <- function(chr = "yes", fun = ls, call =ls(), bool = TRUE) {
+  ff <- function(chr = "yes", fun = ls, call = ls(), bool = TRUE) {
     print("youpi")
   }
 
-  pmatch_FALSE <- expect_this_code(
+  pmatch_FALSE <- expect_this_code( # nolint: object_name
     user_code = "ff(ch = \"yes\", fu = ls, cal =ls(), boo = TRUE)",
     solution_code = "ff(chr = \"yes\", fun = ls, call =ls(), bool = TRUE)",
     allow_partial_matching = FALSE,
@@ -248,21 +244,21 @@ test_that("grade_this_code() - allow_partial_matching works errors multi arg typ
       correct_name = c("chr", "fun", "call", "bool")
     )
   )
-  expect_match(object = pmatch_FALSE$message,regexp = "ch = \"yes\"")
-  expect_match(object = pmatch_FALSE$message,regexp = "chr = \"yes\"")
-  expect_match(object = pmatch_FALSE$message,regexp = "boo = TRUE")
-  expect_match(object = pmatch_FALSE$message,regexp = "bool = TRUE")
-  expect_match(object = pmatch_FALSE$message,regexp = "cal = ls()")
-  expect_match(object = pmatch_FALSE$message,regexp = "call = ls()")
-  expect_match(object = pmatch_FALSE$message,regexp = "fun = ls")
-  expect_match(object = pmatch_FALSE$message,regexp = "fu = ls")
+  expect_match(object = pmatch_FALSE$message, regexp = "ch = \"yes\"")
+  expect_match(object = pmatch_FALSE$message, regexp = "chr = \"yes\"")
+  expect_match(object = pmatch_FALSE$message, regexp = "boo = TRUE")
+  expect_match(object = pmatch_FALSE$message, regexp = "bool = TRUE")
+  expect_match(object = pmatch_FALSE$message, regexp = "cal = ls()")
+  expect_match(object = pmatch_FALSE$message, regexp = "call = ls()")
+  expect_match(object = pmatch_FALSE$message, regexp = "fun = ls")
+  expect_match(object = pmatch_FALSE$message, regexp = "fu = ls")
 
 
 })
 
 test_that("grade_code() - allow_partial_matching works with multiple matches", {
 
-  ff <-  function(ab, abc, abcd) { 1 }
+  ff <-  function(ab, abc, abcd) return(1)
 
   expect_grade_code(
     user_code = "ff(ab = 1)",
@@ -280,16 +276,16 @@ test_that("grade_code() - allow_partial_matching works with multiple matches", {
     expect_grade_code(
       user_code = "ff(abc = 1)",
       solution_code = "ff(ab = 1, abc = 1)",
-      glue_correct = '{ .message } { .correct }',
-      glue_incorrect = '{ .message } { .incorrect }',
+      glue_correct = "{ .message } { .correct }",
+      glue_incorrect = "{ .message } { .incorrect }",
       allow_partial_matching = FALSE,
       is_correct = FALSE
     ),
     expect_grade_code(
       user_code = "ff(abc = 1)",
       solution_code = "ff(ab = 1, abc = 1)",
-      glue_correct = '{ .message } { .correct }',
-      glue_incorrect = '{ .message } { .incorrect }',
+      glue_correct = "{ .message } { .correct }",
+      glue_incorrect = "{ .message } { .incorrect }",
       allow_partial_matching = TRUE,
       is_correct = FALSE
     )
@@ -310,7 +306,7 @@ test_that("grade_code() - allow_partial_matching works with multiple matches", {
 
 test_that("grade_this_code() - allow_partial_matching works with multiple matches", {
 
-  ff <-  function(ab, abc, abcd) { 1 }
+  ff <-  function(ab, abc, abcd) return(1)
 
   expect_this_code(
     user_code = "ff(ab = 1)",

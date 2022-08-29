@@ -181,6 +181,7 @@ test_that("detect_mistakes works with atomic solutions", {
 
 })
 
+# nolint start: comment_code
 test_that("detect_mistakes works with infix operators", {
 
   user <- quote(123)
@@ -438,7 +439,7 @@ test_that("detect_mistakes works with infix operators", {
   #     wrong_value(this = "pi(1)", that = "1 + pi")
   #   )
   #
-  #   user <-     quote(1(1)) # nolint
+  #   user <-     quote(1(1))
   #   solution <- quote(b(1) + 2)
   #   expect_equal(
   #     detect_mistakes(user, solution)
@@ -472,14 +473,14 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(sqrt(1))
-  solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
+  solution <- quote(sqrt(1 %>% log() %>% abs()))
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(this = user[[2]], that = solution[[2]][[3]], enclosing_call = user)
   )
 
   user <-     quote(sqrt(1 %>% log()))
-  solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
+  solution <- quote(sqrt(1 %>% log() %>% abs()))
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(this = user[[2]][[3]], that = solution[[2]][[3]], enclosing_call = user)
@@ -503,8 +504,8 @@ test_that("detect_mistakes works with pipes", {
   )
 
   # DOES MESSAGE AUTOMATICALLY UNPIPE INNER ARGUMENTS?
-  # user <-     quote(a(2 %>% abs() %>% sqrt())) # nolint
-  # solution <- quote(a(2 %>% log() %>% sqrt())) # nolint
+  # user <-     quote(a(2 %>% abs() %>% sqrt()))
+  # solution <- quote(a(2 %>% log() %>% sqrt()))
   # expect_equal(
   #   detect_mistakes(user, solution),
   #   wrong_call(this = user[[2]][[2]][[3]], that = solution[[2]][[2]][[3]], enclosing_call = user[[2]])
@@ -535,14 +536,14 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(1)
-  solution <- quote(1 %>% log() %>% abs()) # nolint
+  solution <- quote(1 %>% log() %>% abs())
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(this = quote(1), that = quote(abs()))
   )
 
   user <-     quote(1 %>% log())
-  solution <- quote(1 %>% log() %>% abs()) # nolint
+  solution <- quote(1 %>% log() %>% abs())
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(this = user[[3]], that = quote(abs()))
@@ -565,8 +566,8 @@ test_that("detect_mistakes works with pipes", {
     wrong_call(this = unpipe(user), that = as.name("log()"))
   )
 
-  user <-     quote(2 %>% abs() %>% sqrt()) # nolint
-  solution <- quote(2 %>% log() %>% sqrt()) # nolint
+  user <-     quote(2 %>% abs() %>% sqrt())
+  solution <- quote(2 %>% log() %>% sqrt())
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(this = unpipe(unpipe(user)[[2]]),
@@ -872,7 +873,7 @@ test_that("detect_mistakes works with function arguments", {
   expect_match(
     detect_mistakes(
       as.pairlist(alist(x = , y = )),
-      as.pairlist(alist(x = , y = , z =))
+      as.pairlist(alist(x = , y = , z = ))
     ),
     "I expected argument `z`"
   )
@@ -955,3 +956,4 @@ test_that("detect_mistakes says 'didn't expect' when there are too many things",
     msg = "I didn't expect `*` where you wrote `a * b`."
   )
 })
+# nolint end

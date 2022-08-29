@@ -1,4 +1,4 @@
-deparse_to_string <- function(x, width.cutoff = 500L, ...) {
+deparse_to_string <- function(x, width.cutoff = 500L, ...) { # nolint: object_name
   paste0(deparse(x, width.cutoff = width.cutoff, ...), collapse = "\n")
 }
 

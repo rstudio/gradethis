@@ -163,7 +163,8 @@ check_exercise <- function(
         {
           eval(parsed_check_code, envir = rlang::env_parent(check_env))
         },
-        # if a `pass()`/`fail()` is used in the regular check chunk with no user submission context, it should be an error
+        # if a `pass()`/`fail()` is used in the regular check chunk with no user
+        # submission context, it should be an error
         on_graded = function(grade, ignore) {
           fn_used <- if (isTRUE(grade$correct)) "`pass()`" else "`fail()`"
 
@@ -206,7 +207,8 @@ check_exercise <- function(
       error = function(e) {
         # Add the error object to the checking object
         check_env$.error <- e
-        # Overwrite `to_check_fn` to validate the parse error function accepts `check_obj_envir`
+        # Overwrite `to_check_fn` to validate the parse error function accepts
+        # `check_obj_envir`
         to_check_fn <<- getOption("exercise.parse.error", grade_parse_error)
       }
     )
