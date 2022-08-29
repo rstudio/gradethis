@@ -424,10 +424,14 @@ give_code_feedback_.gradethis_graded <- function(
   solution_code <-
     get0(".solution_code_all", envir = env, ifnotfound = NULL) %||%
     get0(".solution_code", envir = env, ifnotfound = NULL)
-
   user_code <- get0(".user_code", envir = env, ifnotfound = NULL)
+  engine <- tolower(get0(".engine", envir = env, ifnotfound = "r"))
 
-  if (is.null(solution_code) || !identical(grade$correct, FALSE)) {
+  is_not_r_ex <- !identical(engine, "r")
+  is_missing_solution <- is.null(solution_code)
+  is_correct <- identical(grade$correct, TRUE)
+
+  if (is_not_r_ex || is_missing_solution || is_correct) {
     signal_grade(grade)
   }
 
