@@ -204,7 +204,7 @@ grade_this_code <- function(
           }
         } else {
           if ("fail" %in% get(".__action")) {
-            fail(get(".__incorrect"))
+            fail(get(".__incorrect"), hint = FALSE)
           }
         }
 
