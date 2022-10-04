@@ -87,29 +87,29 @@ str_extract <- function(text, pattern) {
 # ======================================================================
 
 `%||%` <- function(lhs, rhs) {
-	if (length(lhs) == 0) return(rhs)
-	lhs
+  if (length(lhs) == 0) return(rhs)
+  lhs
 }
 
 fixed <- function(pattern, ignore_case = FALSE) {
-	structure(
-		pattern,
-		options = list(case_insensitive = ignore_case),
-		class = c("fixed", "pattern", "character")
-	)
+  structure(
+    pattern,
+    options = list(case_insensitive = ignore_case),
+    class = c("fixed", "pattern", "character")
+  )
 }
 
 str_count <- function(string, pattern) {
-	is_fixed <- inherits(pattern, "fixed")
-	ignore.case <- attr(pattern, "options")$case_insensitive %||% FALSE
+  is_fixed <- inherits(pattern, "fixed")
+  ignore.case <- attr(pattern, "options")$case_insensitive %||% FALSE
 
-	lengths(
-		gregexpr(
-			pattern,
-			text = string,
-			ignore.case = ignore.case,
-			perl = !is_fixed,
-			fixed = is_fixed
-		)
-	)
+  lengths(
+    gregexpr(
+      pattern,
+      text = string,
+      ignore.case = ignore.case,
+      perl = !is_fixed,
+      fixed = is_fixed
+    )
+  )
 }
