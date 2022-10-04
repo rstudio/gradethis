@@ -191,3 +191,24 @@ test_that("grade_this_code() doesn't have to return a grade", {
   expect_graded(grade_this_code(action = "pass")(ex_ok), is_correct = TRUE)
   expect_null(grade_this_code(action = "fail")(ex_ok))
 })
+
+test_that("grade_this_code() doesn't duplicate feedback", {
+  ex <- mock_this_exercise("1", "2")
+  feedback <- code_feedback(ex$.user_code, ex$.solution_code)
+
+  withr::with_options(
+    list(gradethis.fail.hint = FALSE),
+    expect_equal(
+      str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      1
+    )
+  )
+
+  withr::with_options(
+    list(gradethis.fail.hint = TRUE),
+    expect_equal(
+      str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      1
+    )
+  )
+})
