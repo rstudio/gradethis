@@ -1,4 +1,3 @@
-context("Check code with calls")
 a <<- function(x) x
 b <<- function(x) x
 
