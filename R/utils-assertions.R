@@ -6,7 +6,7 @@ is_pipe <- function(x) {
 }
 
 # From `?base::Syntax` but lightly organized into groups
-.infixes_assign <- c("<-", "<<-", "->", "->>", "=")
+.infixes_assign <- c("<-", "<<-", "->", "->>", "=", ":=")
 .infixes_comp <- c("==", "!=", ">", ">=", "<", "<=")
 .infixes_operator <- c(
   "$", "@", "[", "[[", "^", "-", "+", ":", "*", "/",
