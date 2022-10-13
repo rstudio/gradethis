@@ -1,16 +1,22 @@
-.pipes <- c("%>%")
+.pipes <- c("%>%", "|>")
 
 is_pipe <- function(x) {
   if (is.character(x)) x <- parse(text = x)[[1]]
   ifelse(is.call(x), as.character(x[[1]]) %in% .pipes, FALSE)
 }
 
+# From `?base::Syntax` but lightly organized into groups
 .infixes_assign <- c("<-", "<<-", "->", "->>", "=")
 .infixes_comp <- c("==", "!=", ">", ">=", "<", "<=")
+.infixes_operator <- c(
+  "$", "@", "[", "[[", "^", "-", "+", ":", "*", "/",
+  "!", "&", "&&", "|", "||", "~", "?"
+)
 .infixes <- c(
-  "+", "-", "*", "/", "^", "$", "[", "[[", "!", "%%", "%/%", "%in%",
+  "%%", "%/%", "%in%",
   .infixes_assign,
-  .infixes_comp
+  .infixes_comp,
+  .infixes_operator
 )
 
 is_infix <- function(x, infix_vals = .infixes) {
