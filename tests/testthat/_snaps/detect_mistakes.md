@@ -26,3 +26,10 @@
     Output
       I expected you to call `~` where you called `<-`.
 
+---
+
+    Code
+      detect_mistakes(quote(1 - 4), quote(1:4))
+    Output
+      I expected you to call `:` where you called `-`.
+

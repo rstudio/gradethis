@@ -229,6 +229,7 @@ test_that("detect_mistakes works with infix operators", {
   expect_snapshot(detect_mistakes(quote(2^2), quote(2*2)))
   expect_snapshot(detect_mistakes(quote(obj$value), quote(obj@value)))
   expect_snapshot(detect_mistakes(quote(y <- m * x + b), quote(y ~ m * x + b)))
+  expect_snapshot(detect_mistakes(quote(1-4), quote(1:4)))
 
   #   # surplus
   #   user <-     quote(b(1 + 2))
