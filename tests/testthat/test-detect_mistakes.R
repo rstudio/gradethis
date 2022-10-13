@@ -1,3 +1,5 @@
+local_edition(3)
+
 a <<- function(x) x
 b <<- function(x) x
 
@@ -221,6 +223,12 @@ test_that("detect_mistakes works with infix operators", {
     detect_mistakes(user, solution),
     wrong_call(this = user, that = solution)
   )
+
+  # other operators
+  expect_snapshot(detect_mistakes(quote(TRUE & FALSE), quote(TRUE | FALSE)))
+  expect_snapshot(detect_mistakes(quote(2^2), quote(2*2)))
+  expect_snapshot(detect_mistakes(quote(obj$value), quote(obj@value)))
+  expect_snapshot(detect_mistakes(quote(y <- m * x + b), quote(y ~ m * x + b)))
 
   #   # surplus
   #   user <-     quote(b(1 + 2))
