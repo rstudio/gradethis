@@ -33,3 +33,10 @@
     Output
       I expected you to call `:` where you called `-`.
 
+---
+
+    Code
+      detect_mistakes(quote(a %like% b), quote(a %LIKE% b))
+    Output
+      I expected you to call `%LIKE%` where you called `%like%`.
+
