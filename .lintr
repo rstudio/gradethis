@@ -1,12 +1,11 @@
 linters: linters_with_defaults(
     object_usage_linter = NULL,
     line_length_linter(120),
-    T_and_F_symbol_linter,
-    absolute_path_linter,
-    nonportable_path_linter,
-    semicolon_linter,
-    undesirable_operator_linter,
-    object_length_linter(42)
+    absolute_path_linter(),
+    nonportable_path_linter(),
+    undesirable_operator_linter(),
+    object_length_linter(42),
+    backport_linter(r_version = "oldrel-4", except = c("str2expression", "str2lang"))
   )
 exclusions: list(
     "R/staticimports.R",
