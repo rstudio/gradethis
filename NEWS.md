@@ -65,3 +65,4 @@
 ### Bug fixes
 
 * Code feedback is now disabled for non-R exercise engines (#321).
+* More operators were added to our list of infixes (#327).
