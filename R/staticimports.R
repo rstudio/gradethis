@@ -101,11 +101,11 @@ str_extract <- function(text, pattern) {
 #' @return An integer vector.
 #' @noRd
 fixed <- function(pattern, ignore_case = FALSE) {
-	structure(
-		pattern,
-		options = list(case_insensitive = ignore_case),
-		class = c("fixed", "pattern", "character")
-	)
+  structure(
+    pattern,
+    options = list(case_insensitive = ignore_case),
+    class = c("fixed", "pattern", "character")
+  )
 }
 
 #' Count the number of matches in a string
@@ -127,16 +127,16 @@ fixed <- function(pattern, ignore_case = FALSE) {
 #' @return An integer vector.
 #' @noRd
 str_count <- function(string, pattern = "") {
-	is_fixed <- inherits(pattern, "fixed")
-	ignore.case <- isTRUE(attr(pattern, "options")$case_insensitive)
+  is_fixed <- inherits(pattern, "fixed")
+  ignore.case <- isTRUE(attr(pattern, "options")$case_insensitive)
 
-	lengths(
-		gregexpr(
-			pattern,
-			text = string,
-			ignore.case = ignore.case,
-			perl = !is_fixed,
-			fixed = is_fixed
-		)
-	)
+  lengths(
+    gregexpr(
+      pattern,
+      text = string,
+      ignore.case = ignore.case,
+      perl = !is_fixed,
+      fixed = is_fixed
+    )
+  )
 }
