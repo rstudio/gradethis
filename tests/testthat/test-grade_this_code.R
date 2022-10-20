@@ -196,19 +196,39 @@ test_that("grade_this_code() doesn't duplicate feedback", {
   ex <- mock_this_exercise("1", "2")
   feedback <- code_feedback(ex$.user_code, ex$.solution_code)
 
-  withr::with_options(
-    list(gradethis.fail.hint = FALSE),
-    expect_equal(
-      str_count(grade_this_code()(ex)$message, fixed(feedback)),
-      1
-    )
-  )
+  local({
+    gradethis_setup(fail.hint = FALSE, maybe_code_feedback = FALSE)
 
-  withr::with_options(
-    list(gradethis.fail.hint = TRUE),
     expect_equal(
       str_count(grade_this_code()(ex)$message, fixed(feedback)),
       1
     )
-  )
+  })
+
+  local({
+    gradethis_setup(fail.hint = TRUE, maybe_code_feedback = FALSE)
+
+    expect_equal(
+      str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      1
+    )
+  })
+
+  local({
+    gradethis_setup(fail.hint = FALSE, maybe_code_feedback = TRUE)
+
+    expect_equal(
+      str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      1
+    )
+  })
+
+  local({
+    gradethis_setup(fail.hint = TRUE, maybe_code_feedback = TRUE)
+
+    expect_equal(
+      str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      1
+    )
+  })
 })
