@@ -20,7 +20,9 @@ answer matches a known correct answer.}
 \item{incorrect}{A \code{glue}-able character string to display if the student
 answer does not match the known correct answer. Use \code{code_feedback()} in
 this string to control the placement of the auto-generated feedback message
-produced by comparing the student's submission with the solution.}
+produced by comparing the student's submission with the solution.
+Use a string that doesn't include \code{code_feedback()} to grade the student's
+code without providing feedback.}
 
 \item{...}{Ignored}
 
@@ -125,6 +127,8 @@ message.
 \enumerate{
 \item \code{\link[=code_feedback]{code_feedback()}}: Adds feedback about the first observed difference
 between the student's submitted code and the model solution code.
+If you want to grade the student's code without providing feedback,
+leave \code{\link[=code_feedback]{code_feedback()}} out of your string.
 \item \code{\link[=pipe_warning]{pipe_warning()}}: Informs the user that their code was unpiped prior to
 comparison. This message is included by default to help clarify cases
 when the code feedback makes more sense in the unpiped context.
