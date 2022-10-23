@@ -197,10 +197,7 @@ test_that("grade_this_code() doesn't duplicate feedback", {
   feedback <- code_feedback(ex$.user_code, ex$.solution_code)
 
   withr::with_options(
-    list(
-      gradethis.fail.hint = FALSE,
-      gradethis.maybe_code_feedback = FALSE
-    ),
+    list(gradethis.fail.hint = FALSE),
     expect_equal(
       str_count(grade_this_code()(ex)$message, fixed(feedback)),
       1
@@ -208,35 +205,46 @@ test_that("grade_this_code() doesn't duplicate feedback", {
   )
 
   withr::with_options(
-    list(
-      gradethis.fail.hint = TRUE,
-      gradethis.maybe_code_feedback = FALSE
-    ),
+    list(gradethis.fail.hint = TRUE),
     expect_equal(
       str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      1
+    )
+  )
+})
+
+test_that("maybe_code_feedback() always gives feedback in grade_this_code()", {
+  ex <- mock_this_exercise("1", "2")
+  feedback <- code_feedback(ex$.user_code, ex$.solution_code)
+
+  withr::with_options(
+    list(gradethis.maybe_code_feedback = TRUE),
+    expect_equal(
+      str_count(
+        grade_this_code(incorrect = "{maybe_code_feedback()}")(ex)$message,
+        fixed(feedback)
+      ),
       1
     )
   )
 
   withr::with_options(
-    list(
-      gradethis.fail.hint = FALSE,
-      gradethis.maybe_code_feedback = TRUE
-    ),
+    list(gradethis.maybe_code_feedback = FALSE),
     expect_equal(
-      str_count(grade_this_code()(ex)$message, fixed(feedback)),
+      str_count(
+        grade_this_code(incorrect = "{maybe_code_feedback()}")(ex)$message,
+        fixed(feedback)
+      ),
       1
     )
   )
 
-  withr::with_options(
-    list(
-      gradethis.fail.hint = TRUE,
-      gradethis.maybe_code_feedback = TRUE
-    ),
-    expect_equal(
-      str_count(grade_this_code()(ex)$message, fixed(feedback)),
-      1
-    )
+  expect_equal(
+    grade_this_code(incorrect = "incorrect")(ex)$message,
+    "incorrect"
   )
+
+  # Add documentation for how to not include code feedback.
+  # - in incorrect argument
+  # - in description when talking about customizable incorrect message
 })
