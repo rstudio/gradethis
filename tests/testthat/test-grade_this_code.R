@@ -243,8 +243,4 @@ test_that("maybe_code_feedback() always gives feedback in grade_this_code()", {
     grade_this_code(incorrect = "incorrect")(ex)$message,
     "incorrect"
   )
-
-  # Add documentation for how to not include code feedback.
-  # - in incorrect argument
-  # - in description when talking about customizable incorrect message
 })
