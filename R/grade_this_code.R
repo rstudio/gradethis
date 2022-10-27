@@ -78,6 +78,8 @@
 #'
 #'   1. [code_feedback()]: Adds feedback about the first observed difference
 #'      between the student's submitted code and the model solution code.
+#'      If you want to grade the student's code without providing feedback,
+#'      leave [code_feedback()] out of your string.
 #'
 #'   2. [pipe_warning()]: Informs the user that their code was unpiped prior to
 #'      comparison. This message is included by default to help clarify cases
@@ -138,6 +140,8 @@
 #'   answer does not match the known correct answer. Use `code_feedback()` in
 #'   this string to control the placement of the auto-generated feedback message
 #'   produced by comparing the student's submission with the solution.
+#'   Use a string that doesn't include `code_feedback()` to grade the student's
+#'   code without providing feedback.
 #' @param ... Ignored
 #' @param action The action to take:
 #'
@@ -204,7 +208,7 @@ grade_this_code <- function(
           }
         } else {
           if ("fail" %in% get(".__action")) {
-            fail(get(".__incorrect"))
+            fail(get(".__incorrect"), hint = FALSE)
           }
         }
 

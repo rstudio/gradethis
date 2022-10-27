@@ -27,3 +27,6 @@ NULL
 
 # @staticimports pkg:staticimports
 #   str_extract
+
+# @staticimports pkg:stringstatic
+#   str_count fixed
