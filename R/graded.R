@@ -568,21 +568,12 @@ grade_if_equal <- function(
     error = function(e) {
       # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
       # waldo::compare() calls diffobj::ses() — these functions try hard to create
-      # a usable diff to describe the differences. These filters below cover
-      # cases where the diff description throws an error, but we know they only
-      # arise when a difference has occurred. Since we aren't (currently)
+      # a usable diff to describe the differences.
+      # If these functions throw an error, we fall back to `identical()`.
+      # Since we aren't (currently)
       # interested in reporting the differences between `x` and `y`, we mark
-      # these as known to be different
-      if (grepl("Exceeded buffer for finding fake snake", e$message, fixed = TRUE)) {
-        "different"
-      } else if (grepl("reached theoretically unreachable branch 2", e$message, fixed = TRUE)) {
-        "different"
-      } else {
-        warning(
-          "Error in grade_if_equal(): ", deparse(e$call), ": ", e$message, call. = FALSE
-        )
-        capture_graded(grade_grading_problem(error = e))
-      }
+      # these cases as simply "different" if they aren't identical.
+      if (!identical(x, y)) "different"
     }
   )
 
