@@ -520,6 +520,21 @@ test_that("grade_if_equal() edge cases with diffobj::ses()", {
   expect_null(
     grade_if_equal(a, b, message = "TEST_FAILED", FALSE)
   )
+
+  a <- structure(c(
+    `0` = 0.0160069994947357, `1` = -0.0954295831831162,
+    `2` = -0.060342605088278, `3` = 0.0993515771117325, `4` = 0.101717325946816
+  ), .Dim = 5L, .Dimnames = list(c("0", "1", "2", "3", "4")))
+
+  b <- structure(c(
+    `0` = 1.53731223147442, `1` = -9.16505716890648,
+    `2` = -5.79530379267822, `3` = 9.54172546581079, `4` = 9.76893198393223
+  ), .Dim = 5L, .Dimnames = list(c("0", "1", "2", "3", "4")))
+  # names(lines) <- format(c("", row_idx), align = "right"):
+  # 'names' attribute [11] must be the same length as the vector [3]
+  expect_null(
+    grade_if_equal(a, b, message = "TEST_FAILED", FALSE)
+  )
 })
 
 test_that("praise argument works with passing grades", {
