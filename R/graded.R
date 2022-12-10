@@ -564,7 +564,15 @@ grade_if_equal <- function(
   local_options_waldo_compare()
 
   compare_msg <- tryCatch(
-    waldo::compare(x, y, tolerance = tolerance),
+    {
+      time_limit <- knitr::opts_chunk$get("exercise.timelimit") %||%
+        gradethis_default_learnr_options$exercise.timelimit
+      time_limit <- time_limit * 0.8
+      # If `waldo::compare()` takes too long to evaluate,
+      # just skip to the fallback (`identical()`)
+      setTimeLimit(elapsed = time_limit, transient = TRUE)
+      waldo::compare(x, y, tolerance = tolerance)
+    },
     error = function(e) {
       # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
       # waldo::compare() calls diffobj::ses() — these functions try hard to create
