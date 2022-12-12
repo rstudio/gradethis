@@ -23,6 +23,7 @@ gradethis_setup(
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
+  diff.timelimit = NULL,
   exercise.error.check.code = NULL,
   fail_code_feedback = NULL
 )
@@ -107,6 +108,15 @@ partial matching is allowed in \code{grade_this_code()}. Sets the
 \item{exercise.timelimit}{Number of seconds to limit execution time to
 (defaults to \code{30}).}
 
+\item{diff.timelimit}{\code{\link[=pass_if_equal]{pass_if_equal()}} and \code{\link[=fail_if_equal]{fail_if_equal()}} call
+\code{\link[waldo:compare]{waldo::compare()}} internally.
+This helps ensure an accurate comparison, but sometimes takes a long time.
+\code{diff.timelimit} is the time limit in seconds
+for the execution of \code{\link[waldo:compare]{waldo::compare()}}
+(defaults to 80\% of \code{exercise.timelimit}).
+If the time limit is exceeded,
+\code{identical()} is used instead of \code{\link[waldo:compare]{waldo::compare()}}.}
+
 \item{exercise.error.check.code}{A string containing R code to use for checking
 code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
 
@@ -156,6 +166,7 @@ when gradethis is loaded are shown below.\tabular{ll}{
    \code{gradethis.grading_problem.type} \tab \code{"warning"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
    \code{gradethis.error_checker.message} \tab \code{"An error occurred with your code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
+   \code{gradethis.diff.timelimit} \tab \code{NULL} \cr
 }
 }
 

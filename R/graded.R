@@ -565,9 +565,8 @@ grade_if_equal <- function(
 
   compare_msg <- tryCatch(
     {
-      time_limit <- knitr::opts_chunk$get("exercise.timelimit") %||%
-        gradethis_default_learnr_options$exercise.timelimit
-      time_limit <- time_limit * 0.8
+      time_limit <- gradethis_settings$diff.timelimit() %||%
+        (knitr::opts_chunk$get("exercise.timelimit") * 0.8)
       # If `waldo::compare()` takes too long to evaluate,
       # just skip to the fallback (`identical()`)
       setTimeLimit(elapsed = time_limit, transient = TRUE)
