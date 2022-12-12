@@ -574,15 +574,13 @@ grade_if_equal <- function(
       waldo::compare(x, y, tolerance = tolerance)
     },
     error = function(e) {
-      # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
-      # waldo::compare() calls diffobj::ses() — these functions try hard to create
-      # a usable diff to describe the differences.
-      # We're engaging in some off-label usage of these functions,
-      # so they will sometimes error when we give them unusual inputs.
-      # If these functions throw an error, we fall back to `identical()`.
-      # Since we aren't (currently)
-      # interested in reporting the differences between `x` and `y`, we mark
-      # these cases as simply "different" if they aren't identical.
+      # waldo::compare() takes into account a lot of the things we'd have to
+      # think about in comparing two objects, but its goal is to create a
+      # readable diff. Since we're engaging in some off-label usage of these
+      # functions, they will sometimes error or take longer than desired when we
+      # give them unusual inputs. In these cases, we fall back to `identical()`.
+      # Since we aren't (currently) interested in reporting the differences
+      # between `x` and `y`, we mark them "different" if they aren't identical.
       if (!identical(x, y)) "different"
     }
   )
