@@ -564,14 +564,9 @@ grade_if_equal <- function(
   local_options_waldo_compare()
 
   compare_msg <- tryCatch(
-    {
-      time_limit <- gradethis_settings$diff.timelimit() %||%
-        (knitr::opts_chunk$get("exercise.timelimit") * 0.8)
-      # If `waldo::compare()` takes too long to evaluate,
-      # just skip to the fallback (`identical()`)
-      setTimeLimit(elapsed = time_limit, transient = TRUE)
+    try_with_timelimit(
       waldo::compare(x, y, tolerance = tolerance)
-    },
+    ),
     error = function(e) {
       # waldo::compare() takes into account a lot of the things we'd have to
       # think about in comparing two objects, but its goal is to create a
