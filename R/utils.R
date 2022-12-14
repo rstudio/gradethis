@@ -81,7 +81,7 @@ local_env_insert_parent <- function(
 
 try_with_timelimit <- function(expr, timelimit = NULL, call = parent.frame()) {
 
-  timelimit <- gradethis_settings$diff.timelimit() %||%
+  timelimit <- gradethis_settings$compare_timelimit() %||%
     ((knitr::opts_chunk$get("exercise.timelimit") %||% 30) * 0.8)
 
   setTimeLimit(elapsed = timelimit, transient = TRUE)
