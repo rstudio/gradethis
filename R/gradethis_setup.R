@@ -81,6 +81,14 @@
 #' @param fail_code_feedback Deprecated. Use `maybe_code_feedback`.
 #' @inheritParams learnr::tutorial_options
 #' @inheritDotParams learnr::tutorial_options
+#' @param compare_timelimit [pass_if_equal()] and [fail_if_equal()] call
+#'   [waldo::compare()] internally.
+#'   This helps ensure an accurate comparison, but sometimes takes a long time.
+#'   `compare_timelimit` is the time limit in seconds
+#'   for the execution of [waldo::compare()]
+#'   (defaults to 80% of `exercise.timelimit`).
+#'   If the time limit is exceeded,
+#'   `identical()` is used instead of [waldo::compare()].
 #'
 #' @return Invisibly returns the global options as they were prior to setting
 #'   them with `gradethis_setup()`.
@@ -106,6 +114,7 @@ gradethis_setup <- function(
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
+  compare_timelimit = NULL,
   exercise.error.check.code = NULL,
   fail_code_feedback = NULL # nolint end
 ) {
@@ -215,7 +224,9 @@ gradethis_default_options <- list(
   allow_partial_matching = NULL,
 
   # Default error checker message
-  error_checker.message = "An error occurred with your code:\n\n```\n{.error$message}\n```\n\n\n"
+  error_checker.message = "An error occurred with your code:\n\n```\n{.error$message}\n```\n\n\n",
+
+  compare_timelimit = NULL
 )
 
 # Legacy Options ----------------------------------------------------------

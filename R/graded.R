@@ -564,25 +564,18 @@ grade_if_equal <- function(
   local_options_waldo_compare()
 
   compare_msg <- tryCatch(
-    waldo::compare(x, y, tolerance = tolerance),
+    try_with_timelimit(
+      waldo::compare(x, y, tolerance = tolerance)
+    ),
     error = function(e) {
-      # https://github.com/brodieG/diffobj/issues/152#issuecomment-788083359
-      # waldo::compare() calls diffobj::ses() — these functions try hard to create
-      # a usable diff to describe the differences. These filters below cover
-      # cases where the diff description throws an error, but we know they only
-      # arise when a difference has occurred. Since we aren't (currently)
-      # interested in reporting the differences between `x` and `y`, we mark
-      # these as known to be different
-      if (grepl("Exceeded buffer for finding fake snake", e$message, fixed = TRUE)) {
-        "different"
-      } else if (grepl("reached theoretically unreachable branch 2", e$message, fixed = TRUE)) {
-        "different"
-      } else {
-        warning(
-          "Error in grade_if_equal(): ", deparse(e$call), ": ", e$message, call. = FALSE
-        )
-        capture_graded(grade_grading_problem(error = e))
-      }
+      # waldo::compare() takes into account a lot of the things we'd have to
+      # think about in comparing two objects, but its goal is to create a
+      # readable diff. Since we're engaging in some off-label usage of these
+      # functions, they will sometimes error or take longer than desired when we
+      # give them unusual inputs. In these cases, we fall back to `identical()`.
+      # Since we aren't (currently) interested in reporting the differences
+      # between `x` and `y`, we mark them "different" if they aren't identical.
+      if (!identical(x, y)) "different"
     }
   )
 

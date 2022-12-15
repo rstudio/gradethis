@@ -79,6 +79,32 @@ local_env_insert_parent <- function(
   invisible(child)
 }
 
+try_with_timelimit <- function(expr, timelimit = NULL, call = parent.frame()) {
+
+  timelimit <- gradethis_settings$compare_timelimit() %||%
+    ((knitr::opts_chunk$get("exercise.timelimit") %||% 30) * 0.8)
+
+  setTimeLimit(elapsed = timelimit, transient = TRUE)
+  on.exit(setTimeLimit(cpu = Inf, elapsed = Inf, transient = FALSE), add = TRUE)
+
+  tryCatch(
+    expr,
+    error = function(err) {
+      msg_timed_out <- gettext("reached elapsed time limit")
+      timed_out <- grepl(msg_timed_out, conditionMessage(err), fixed = TRUE)
+      if (timed_out) {
+        rlang::abort(
+          msg_timed_out,
+          class = "elapsed_time_limit",
+          call = call,
+          timelimit = timelimit
+        )
+      } else {
+        rlang::cnd_signal(err)
+      }
+    }
+  )
+}
 
 # nocov start
 env_rls <- function(env, show_contents = TRUE) {

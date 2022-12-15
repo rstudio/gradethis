@@ -48,3 +48,51 @@ test_that("gradethis_setup() sets default learnr options via chunk opts", {
     expect_equal(knitr::opts_chunk$get("exercise.timelimit"), 42)
   })
 })
+
+test_that("gradethis_setup() sets time limit for waldo::compare()", {
+  local_knitr_opts_chunk()
+
+  with_options(list(gradethis.compare_timelimit = NULL), {
+    with_knitr_opts_chunk(list(exercise.timelimit = NULL), {
+      gradethis_setup()
+      expect_equal(
+        gradethis_settings$compare_timelimit() %||%
+          (knitr::opts_chunk$get("exercise.timelimit") * 0.8),
+        48
+      )
+    })
+  })
+
+  with_options(list(gradethis.compare_timelimit = NULL), {
+    with_knitr_opts_chunk(list(exercise.timelimit = NULL), {
+      gradethis_setup(exercise.timelimit = 10)
+      expect_equal(
+        gradethis_settings$compare_timelimit() %||%
+          (knitr::opts_chunk$get("exercise.timelimit") * 0.8),
+        8
+      )
+    })
+  })
+
+  with_options(list(gradethis.compare_timelimit = NULL), {
+    with_knitr_opts_chunk(list(exercise.timelimit = NULL), {
+      gradethis_setup(compare_timelimit = 10)
+      expect_equal(
+        gradethis_settings$compare_timelimit() %||%
+          (knitr::opts_chunk$get("exercise.timelimit") * 0.8),
+        10
+      )
+    })
+  })
+
+  with_options(list(gradethis.compare_timelimit = NULL), {
+    with_knitr_opts_chunk(list(exercise.timelimit = NULL), {
+      gradethis_setup(exercise.timelimit = 10, compare_timelimit = 10)
+      expect_equal(
+        gradethis_settings$compare_timelimit() %||%
+          (knitr::opts_chunk$get("exercise.timelimit") * 0.8),
+        10
+      )
+    })
+  })
+})
