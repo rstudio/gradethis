@@ -91,13 +91,12 @@ detect_name_problems <- function(
     }
 
     matches <- vapply(remaining_user_names, pmatches_per_arg, 1)
-    offenders <- matches[matches > 1]
     unused <- matches[matches == 0]
     well_matched <- matches[matches == 1]
 
     # names that match multiple arguments are a syntax error
     bad_argument_names <- detect_bad_argument_names(
-      user, offenders, enclosing_call, enclosing_arg
+      user, matches, enclosing_call, enclosing_arg
     )
     if (!is.null(bad_argument_names)) {
       return(bad_argument_names)
@@ -200,20 +199,22 @@ detect_too_many_matches <- function(
 }
 
 detect_bad_argument_names <- function(
-    user, offenders, enclosing_call, enclosing_arg
+    user, matches, enclosing_call, enclosing_arg
 ) {
-  if (length(offenders) > 0) {
-    bad_name <- rlang::names2(offenders[1])
-    return(
-      bad_argument_name(
-        submitted_call = user,
-        submitted = user[[bad_name]],
-        submitted_name = bad_name,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
-      )
-    )
+  offenders <- matches[matches > 1]
+  
+  if (length(offenders) == 0) {
+    return()
   }
+  
+  bad_name <- rlang::names2(offenders[1])
+  bad_argument_name(
+    submitted_call = user,
+    submitted = user[[bad_name]],
+    submitted_name = bad_name,
+    enclosing_call = enclosing_call,
+    enclosing_arg = enclosing_arg
+  )
 }
 
 detect_surplus_argument <- function(
