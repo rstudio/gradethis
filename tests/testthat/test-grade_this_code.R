@@ -6,7 +6,7 @@ test_that("Spots differences in atomics", {
 
   expect_this_code(
     "1", "2", is_correct = FALSE,
-    msg = wrong_value(submitted = quote(1), solution = quote(2))
+    msg = message_wrong_value(submitted = quote(1), solution = quote(2))
   )
 })
 
@@ -16,11 +16,11 @@ test_that("Spots differences in names", {
   expect_this_code("x", "x", is_correct = TRUE)
   expect_this_code(
     "x", "y", is_correct = FALSE,
-    msg = wrong_value(submitted = quote(x), solution = quote(y))
+    msg = message_wrong_value(submitted = quote(x), solution = quote(y))
   )
   expect_this_code(
     "5", "y", is_correct = FALSE,
-    msg = wrong_value(submitted = quote(5), solution = quote(y))
+    msg = message_wrong_value(submitted = quote(5), solution = quote(y))
   )
 })
 
@@ -33,13 +33,13 @@ test_that("Spots differences in calls", {
   expect_this_code(a, a, is_correct = TRUE)
   expect_this_code(
     a, b, is_correct = FALSE,
-    msg = wrong_value(submitted = quote(lists), solution = quote(vecs))
+    msg = message_wrong_value(submitted = quote(lists), solution = quote(vecs))
   )
 
   expect_this_code(
     a, c,
     is_correct = FALSE,
-    msg = surplus_argument(
+    msg = message_surplus_argument(
       submitted_call = quote(vapply()),
       submitted_name = "na.rm",
       submitted = quote(TRUE)
@@ -49,7 +49,7 @@ test_that("Spots differences in calls", {
   expect_this_code(
     c, a,
     is_correct = FALSE,
-    msg = missing_argument(
+    msg = message_missing_argument(
       submitted_call = quote(vapply()),
       solution_name = "na.rm"
     )
@@ -65,15 +65,15 @@ test_that("Mentions only first non-matching element", {
   expect_this_code(w, w, is_correct = TRUE)
   expect_this_code(
     w, z, is_correct = FALSE,
-    msg = wrong_value(submitted = quote(1), solution = quote(sqrt()))
+    msg = message_wrong_value(submitted = quote(1), solution = quote(sqrt()))
   )
   expect_this_code(
     x, z, is_correct = FALSE,
-    msg = wrong_call(submitted = quote(log()), solution = quote(sqrt()))
+    msg = message_wrong_call(submitted = quote(log()), solution = quote(sqrt()))
   )
   expect_this_code(
     y, z, is_correct = FALSE,
-    msg = wrong_value(submitted = quote(2), solution = quote(1))
+    msg = message_wrong_value(submitted = quote(2), solution = quote(1))
   )
 
 })
@@ -90,7 +90,7 @@ test_that("Spots differences in argument names", {
   expect_this_code(
     c, a,
     is_correct = FALSE,
-    msg = surplus_argument(
+    msg = message_surplus_argument(
       submitted_call = quote(test_fn()),
       submitted = 1,
       submitted_name = "w"
@@ -182,7 +182,7 @@ test_that("Spots differences in long calls", {
   expect_this_code(
     user, solution,
     is_correct = FALSE,
-    msg = wrong_value(submitted = quote(TRUE), solution = quote(FALSE), submitted_name = quote(na.rm))
+    msg = message_wrong_value(submitted = quote(TRUE), solution = quote(FALSE), submitted_name = quote(na.rm))
   )
 
   user <- "gather(key = key, value = value, new_sp_m014:newrel_f65, na.rm = TRUE)" # nolint

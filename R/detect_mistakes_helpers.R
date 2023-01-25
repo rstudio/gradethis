@@ -14,7 +14,7 @@ detect_wrong_value <- function(
     solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
   }
 
-  wrong_value(
+  message_wrong_value(
     submitted = submitted,
     solution = solution,
     submitted_name = enclosing_arg,
@@ -33,7 +33,7 @@ detect_wrong_call <- function(user, solution, enclosing_arg, enclosing_call) {
     return()
   }
 
-  wrong_call(
+  message_wrong_call(
     submitted = user,
     solution = solution,
     submitted_name = enclosing_arg,
@@ -114,12 +114,15 @@ detect_name_problems <- function(
     if (length(well_matched > 0)) {
       matched_user_names <- rlang::names2(well_matched)
 
-      if ( !allow_partial_matching ) {
+      if (!allow_partial_matching) {
         pmatches_argument_name <- detect_pmatches_argument_name(
           user,
-          remaining_user_names, remaining_solution_names,
-          matched_user_names, matched_solution_names,
-          enclosing_call, enclosing_arg
+          remaining_user_names,
+          remaining_solution_names,
+          matched_user_names,
+          matched_solution_names,
+          enclosing_call,
+          enclosing_arg
         )
         if (!is.null(pmatches_argument_name)) {
           return(pmatches_argument_name)
@@ -158,7 +161,7 @@ detect_duplicate_names <- function(
     for (name in duplicates) {
       if (!identical(user_arg_ns[name], solution_arg_ns[name])) {
         return(
-          duplicate_name(
+          message_duplicate_name(
             submitted_call = user,
             submitted_name = name,
             enclosing_call = enclosing_call,
@@ -188,7 +191,7 @@ detect_too_many_matches <- function(
   if (length(offenders) > 0) {
     overmatched_name <- rlang::names2(offenders[1])
     return(
-      too_many_matches(
+      message_too_many_matches(
         submitted_call = user,
         solution_name = overmatched_name,
         enclosing_call = enclosing_call,
@@ -208,7 +211,7 @@ detect_bad_argument_names <- function(
   }
   
   bad_name <- rlang::names2(offenders[1])
-  bad_argument_name(
+  message_bad_argument_name(
     submitted_call = user,
     submitted = user[[bad_name]],
     submitted_name = bad_name,
@@ -223,7 +226,7 @@ detect_surplus_argument <- function(
   if (length(unused) > 0) {
     surplus_name <- rlang::names2(unused[1])
     return(
-      surplus_argument(
+      message_surplus_argument(
         submitted_call = user,
         submitted = user[[surplus_name]],
         submitted_name = surplus_name,
@@ -251,7 +254,7 @@ detect_pmatches_argument_name <- function(
   matches <- vapply(remaining_user_names, where_pmatches, 1)
   matched_solution_name <- remaining_solution_names[matches]
 
-  pmatches_argument_name(
+  message_pmatches_argument_name(
     submitted_call = user,
     submitted = unname(as.list(user)[matched_user_names]),
     submitted_name = matched_user_names,
@@ -272,7 +275,7 @@ detect_unnamed_surplus_argument <- function(
   if (n_remaining_user > n_remaining_solution) {
     i <- n_remaining_solution + 1
     return(
-      surplus_argument(
+      message_surplus_argument(
         submitted_call = user,
         submitted = user_args[[i]],
         submitted_name = rlang::names2(user_args[i]),
@@ -306,7 +309,7 @@ detect_missing_argument <- function(
   }
 
   missing_name <- missing_args[1]
-  missing_argument(
+  message_missing_argument(
     submitted_call = explicit_solution,
     solution_name = missing_name,
     enclosing_call = enclosing_call,
@@ -324,7 +327,7 @@ detect_surplus_dots_argument <- function(
   }
 
   surplus_name <- unmatched_user_names[1]
-  surplus_argument(
+  message_surplus_argument(
     submitted_call = user,
     submitted = user[[surplus_name]],
     submitted_name = surplus_name,

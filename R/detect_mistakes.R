@@ -22,14 +22,14 @@ detect_mistakes <- function(
     for (i in seq_len(max_len)) {
       if (i > length(user)) {
         return(
-          missing_answer(
+          message_missing_answer(
             this_prior_line = user[[length(user)]]
           )
         )
       }
       if (i > length(solution)) {
         return(
-          extra_answer(
+          message_extra_answer(
             this_line = user[[i]]
           )
         )
@@ -180,7 +180,7 @@ detect_mistakes <- function(
       }
 
       return(
-        missing_argument(
+        message_missing_argument(
           submitted_call = solution,
           solution_name = name,
           enclosing_call = enclosing_call,
@@ -193,7 +193,7 @@ detect_mistakes <- function(
       arg_name <- rlang::names2(user_args[i])
       if (!(arg_name %in% submitted_names)) arg_name <- ""
       return(
-        surplus_argument(
+        message_surplus_argument(
           submitted_call = user,
           submitted = user_args[[i]],
           submitted_name = arg_name,

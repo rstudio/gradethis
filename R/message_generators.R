@@ -3,9 +3,7 @@
 # because it is not at hand in the submission. "this" always refers to
 # incorrect/user code, which is always at hand). Cases:
 
-
-
-extra_answer <- function(this_line) {
+message_extra_answer <- function(this_line) {
   glue::glue_data(
     list(
       this_line = prep(this_line)
@@ -15,7 +13,7 @@ extra_answer <- function(this_line) {
 
 }
 
-missing_answer <- function(this_prior_line) {
+message_missing_answer <- function(this_prior_line) {
   glue::glue_data(
     list(
       this_prior_line = prep(this_prior_line)
@@ -24,15 +22,14 @@ missing_answer <- function(this_prior_line) {
   )
 }
 
-
-
-
 # bad argument name
-bad_argument_name <- function(submitted_call,
-                              submitted,
-                              submitted_name,
-                              enclosing_call = NULL,
-                              enclosing_arg = NULL) { # only if the user supplied one (to match user code)
+message_bad_argument_name <- function(
+    submitted_call,
+    submitted,
+    submitted_name,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) { # only if the user supplied one (to match user code)
 
   # f(1, g(1, h(b = i(1))))
   # f(1, a = g(1, a = h(ba = i(1)), bb = i(2)))
@@ -68,12 +65,12 @@ bad_argument_name <- function(submitted_call,
 }
 
 # duplicate_name
-
-duplicate_name <- function(submitted_call,
-                           submitted_name,
-                           enclosing_call = NULL,
-                           enclosing_arg = NULL) {
-
+message_duplicate_name <- function(
+    submitted_call,
+    submitted_name,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(a = 1, a = 2)
   # f(a = 1)
 
@@ -102,11 +99,12 @@ duplicate_name <- function(submitted_call,
 
 # WHAT TO DO IF THE MISSING ARGUMENT DOESN'T HAVE A NAME IN THE SOLUTION?
 # missing argument
-missing_argument <- function(submitted_call,
-                             solution_name = NULL,
-                             enclosing_call = NULL,
-                             enclosing_arg = NULL) {
-
+message_missing_argument <- function(
+    submitted_call,
+    solution_name = NULL,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(1, g(1, h(i(1))))
   # f(1, a = g(1, a = h(a = i(1)), b = i(2)))
 
@@ -143,12 +141,13 @@ missing_argument <- function(submitted_call,
 }
 
 # surplus argument
-surplus_argument <- function(submitted_call,
-                             submitted,
-                             submitted_name = NULL,
-                             enclosing_call = NULL,
-                             enclosing_arg = NULL) {
-
+message_surplus_argument <- function(
+    submitted_call,
+    submitted,
+    submitted_name = NULL,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(1, g(1, h(1, b = i(1))))
   # f(1, a = g(1, a = h(a = 1)))
 
@@ -187,14 +186,14 @@ surplus_argument <- function(submitted_call,
 
 
 # partial matching
-pmatches_argument_name <- function(submitted_call,
-                                   submitted,
-                                   submitted_name = NULL,
-                                   solution_name = NULL,
-                                   enclosing_call = NULL,
-                                   enclosing_arg = NULL) {
-
-
+message_pmatches_argument_name <- function(
+    submitted_call,
+    submitted,
+    submitted_name = NULL,
+    solution_name = NULL,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # "{intro}I did not expect your call to {submitted_call} to ",
   # "include {submitted}. You ",
   # "may have included an unnecessary argument, or you ",
@@ -242,11 +241,12 @@ pmatches_argument_name <- function(submitted_call,
 }
 
 # too_many_matches
-too_many_matches <- function(submitted_call,
-                             solution_name,
-                             enclosing_call = NULL,
-                             enclosing_arg = NULL) {
-
+message_too_many_matches <- function(
+    submitted_call,
+    solution_name,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(1, g(1, h(b = i(1), ba = 2)))
   # f(1, a = g(1, a = h(bab = 1)))
 
@@ -280,7 +280,7 @@ too_many_matches <- function(submitted_call,
 }
 
 # wrong call
-wrong_call <- function(submitted,
+message_wrong_call <- function(submitted,
                        solution,
                        submitted_name = NULL,
                        enclosing_call = NULL) {
@@ -323,10 +323,12 @@ wrong_call <- function(submitted,
 # wrong value for wrong value and wrong call, the enclosing argument is the
 # argument that appears before the call or value. It should be passed to
 # submitted_name
-wrong_value <- function(submitted,
-                        solution,
-                        submitted_name = NULL,
-                        enclosing_call = NULL) {
+message_wrong_value <- function(
+    submitted,
+    solution,
+    submitted_name = NULL,
+    enclosing_call = NULL
+) {
   if (is_missing(submitted)) {
     submitted <- NULL
   }
