@@ -42,10 +42,9 @@ detect_mistakes <- function(
         enclosing_arg = enclosing_arg,
         allow_partial_matching = allow_partial_matching
       )
-      if (!is.null(res)) {
-        # found a non-NULL result, return it!
-        return(res)
-      }
+
+      # found a non-NULL result, return it!
+      return_if_not_null(res)
     }
     # no mistakes found above!
     return(NULL)
@@ -68,10 +67,7 @@ detect_mistakes <- function(
   wrong_value <- detect_wrong_value(
     user, solution, submitted, enclosing_arg, enclosing_call
   )
-  if (!is.null(wrong_value)) {
-    return(wrong_value)
-  }
-
+  return_if_not_null(wrong_value)
   # We can assume anything below here is a call
 
   # Dividing cases into groups based on the relative lengths of the user's code
@@ -82,9 +78,7 @@ detect_mistakes <- function(
   # 2. Check that the user and the solution use the same call
   # SHOULD WE HAVE A TARGETED WRONG CALL FUNCTION?
   wrong_call <- detect_wrong_call(user, solution, enclosing_arg, enclosing_call)
-  if (!is.null(wrong_call)) {
-    return(wrong_call)
-  }
+  return_if_not_null(wrong_call)
 
   # 3. Check that the user code is not malformed and can be safely passed to
   # call_standardise_formals(), which uses match.call(). Malformed code may
@@ -94,9 +88,7 @@ detect_mistakes <- function(
   name_problems <- detect_name_problems(
     user, solution, enclosing_arg, enclosing_call, allow_partial_matching
   )
-  if (!is.null(name_problems)) {
-    return(name_problems)
-  }
+  return_if_not_null(name_problems)
 
   # 5. Check that every named argument in the solution appears in the user code.
   #    The outcome of this order is that when a user writes na = TRUE, gradethis
@@ -105,9 +97,7 @@ detect_mistakes <- function(
   missing_argument <- detect_missing_argument(
     submitted, solution_original, env, enclosing_call, enclosing_arg
   )
-  if (!is.null(missing_argument)) {
-    return(missing_argument)
-  }
+  return_if_not_null(missing_argument)
 
   # It is now safe to call call_standardise_formals on student code
   user <- suppressWarnings(call_standardise_formals(user, env = env))
@@ -123,9 +113,7 @@ detect_mistakes <- function(
   surplus_dots_argument <- detect_surplus_dots_argument(
     user, user_names, solution_names, enclosing_call, enclosing_arg
   )
-  if (!is.null(surplus_dots_argument)) {
-    return(surplus_dots_argument)
-  }
+  return_if_not_null(surplus_dots_argument)
 
   # 7. Check that every named argument in the solution matches every
   #    correspondingly named argument in the user code. We know each
@@ -149,7 +137,7 @@ detect_mistakes <- function(
         enclosing_arg = arg_name,
         allow_partial_matching = allow_partial_matching
       )
-      if (!is.null(res)) return(res)
+      return_if_not_null(res)
     }
 
     # Make these arguments invisible to further checks
@@ -222,7 +210,7 @@ detect_mistakes <- function(
         enclosing_arg = name,
         allow_partial_matching = allow_partial_matching
       )
-      if (!is.null(res)) return(res)
+      return_if_not_null(res)
     }
   }
 

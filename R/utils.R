@@ -140,3 +140,8 @@ r_format_code <- function(code, name = "solution") {
   })
 }
 # nocov end
+
+
+return_if_not_null <- function(value, frame = parent.frame()) {
+  if (!is.null(value)) rlang::return_from(frame, value)
+}

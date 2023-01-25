@@ -55,9 +55,7 @@ detect_name_problems <- function(
   duplicate_names <- detect_duplicate_names(
     user, user_names, solution_names, enclosing_arg, enclosing_call
   )
-  if (!is.null(duplicate_names)) {
-    return(duplicate_names)
-  }
+  return_if_not_null(duplicate_names)
 
   ## Remove exact matches from further scrutiny
   for (name in user_names) {
@@ -81,9 +79,7 @@ detect_name_problems <- function(
       user, remaining_solution_names, remaining_user_names,
       enclosing_call, enclosing_arg
     )
-    if (!is.null(too_many_matches)) {
-      return(too_many_matches)
-    }
+    return_if_not_null(too_many_matches)
 
     ## How many formals does each remaining user arg partially match?
     pmatches_per_arg <- function(user_name) {
@@ -98,17 +94,13 @@ detect_name_problems <- function(
     bad_argument_names <- detect_bad_argument_names(
       user, matches, enclosing_call, enclosing_arg
     )
-    if (!is.null(bad_argument_names)) {
-      return(bad_argument_names)
-    }
+    return_if_not_null(bad_argument_names)
 
     # Unmatched named arguments are surplus
     surplus_argument <- detect_surplus_argument(
       user, unused, enclosing_call, enclosing_arg
     )
-    if (!is.null(surplus_argument)) {
-      return(surplus_argument)
-    }
+    return_if_not_null(surplus_argument)
 
 
     if (length(well_matched > 0)) {
@@ -124,9 +116,7 @@ detect_name_problems <- function(
           enclosing_call,
           enclosing_arg
         )
-        if (!is.null(pmatches_argument_name)) {
-          return(pmatches_argument_name)
-        }
+        return_if_not_null(pmatches_argument_name)
       }
 
       # Remove partially matched arguments from further consideration
@@ -144,9 +134,7 @@ detect_name_problems <- function(
   unnamed_surplus_argument <- detect_unnamed_surplus_argument(
     user, user_args, solution_args, enclosing_call, enclosing_arg
   )
-  if (!is.null(unnamed_surplus_argument)) {
-    return(unnamed_surplus_argument)
-  }
+  return_if_not_null(unnamed_surplus_argument)
 
   invisible()
 }
@@ -205,11 +193,11 @@ detect_bad_argument_names <- function(
     user, matches, enclosing_call, enclosing_arg
 ) {
   offenders <- matches[matches > 1]
-  
+
   if (length(offenders) == 0) {
     return()
   }
-  
+
   bad_name <- rlang::names2(offenders[1])
   message_bad_argument_name(
     submitted_call = user,
