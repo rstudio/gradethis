@@ -21,23 +21,23 @@ expect_message <- function(x, message) {
 }
 
 expect_condi <- function(x) {
-    checkmate::expect_names(names(x), identical.to = c("x", "message", "correct", "type"))
-    checkmate::expect_character(x$message, null.ok = TRUE)
-    checkmate::expect_logical(x$correct, null.ok = FALSE, len = 1)
-    checkmate::expect_choice(x$type, choices = c("formula", "function", "value"))
-    checkmate::expect_class(x, "gradethis_condition")
+  checkmate::expect_names(names(x), identical.to = c("x", "message", "correct", "type"))
+  checkmate::expect_character(x$message, null.ok = TRUE)
+  checkmate::expect_logical(x$correct, null.ok = FALSE, len = 1)
+  checkmate::expect_choice(x$type, choices = c("formula", "function", "value"))
+  checkmate::expect_class(x, "gradethis_condition")
 }
 
 expect_condi_correct <- function(x, message = NULL) {
-    expect_condi(x)
-    expect_equal(x$message, message)
-    expect_true(x$correct)
+  expect_condi(x)
+  expect_equal(x$message, message)
+  expect_true(x$correct)
 }
 
 expect_condi_error <- function(x, message = NULL) {
-    expect_condi(x)
-    expect_equal(x$message, message)
-    expect_false(x$correct)
+  expect_condi(x)
+  expect_equal(x$message, message)
+  expect_false(x$correct)
 }
 
 
@@ -49,7 +49,9 @@ expect_grade_result <- function(
   msg = NULL
 ) {
   user_code <- deparse_to_string(last_value)
-  check_env <- create_learnr_env(user_code, solution_code = NULL, envir_prep)
+  check_env <- create_learnr_env(
+    user_code, solution_code = NULL, solution_code_all = NULL, envir_prep
+  )
   grader <- grade_result(...)
   grade <- grader(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
@@ -62,7 +64,9 @@ expect_grade_result_strict <- function(
   msg = NULL
 ) {
   user_code <- deparse_to_string(last_value)
-  check_env <- create_learnr_env(user_code, solution_code = NULL, envir_prep)
+  check_env <- create_learnr_env(
+    user_code, solution_code = NULL, solution_code_all = NULL, envir_prep
+  )
   grade <- grade_result_strict(...)(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
@@ -71,12 +75,15 @@ expect_grade_result_strict <- function(
 expect_grade_code <- function(
   ...,
   user_code,
-  solution_code,
+  solution_code = NULL,
+  solution_code_all = NULL,
   envir_prep = new.env(parent = parent.frame()),
   is_correct,
   msg = NULL
 ) {
-  check_env <- create_learnr_env(user_code, solution_code, envir_prep, eval = FALSE)
+  check_env <- create_learnr_env(
+    user_code, solution_code, solution_code_all, envir_prep, eval = FALSE
+  )
   grader <- grade_code(...)
   grade <- grader(check_env)
   expect_graded(grade, is_correct = is_correct, msg = msg)
@@ -86,15 +93,15 @@ expect_grade_this <- function(
   expr,
   user_code,
   solution_code = NULL,
-  envir_prep = new.env(parent = parent.frame()),
   is_correct,
-  msg = NULL
+  msg = NULL,
+  ...
 ) {
-  env <- create_learnr_env(user_code, solution_code, envir_prep)
+  ex <- mock_this_exercise(!!user_code, !!solution_code, ...)
 
   expr_quo <- rlang::enquo(expr)
   grader <- grade_this(!!expr_quo)
-  grade <- grader(env)
+  grade <- grader(ex)
 
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
@@ -102,15 +109,15 @@ expect_grade_this <- function(
 expect_this_code <- function(
   user_code,
   solution_code,
-  envir_prep = new.env(parent = parent.frame()),
   correct = "valid",
   incorrect = "{.message}",
   is_correct,
   msg = NULL,
-  allow_partial_matching = TRUE
+  allow_partial_matching = TRUE,
+  ...
 ) {
-  env <- create_learnr_env(user_code, solution_code, envir_prep, eval = FALSE)
-  grade <- grade_this_code(correct, incorrect, allow_partial_matching = allow_partial_matching)(env)
+  ex <- mock_this_exercise(!!user_code, !!solution_code, ..., eval = FALSE)
+  grade <- grade_this_code(correct, incorrect, allow_partial_matching = allow_partial_matching)(ex)
   expect_graded(grade, is_correct = is_correct, msg = msg)
 }
 
@@ -119,6 +126,7 @@ expect_graded <- function(
   is_correct,
   msg = NULL
 ) {
+  grade <- eval_gradethis(grade)
   expect_s3_class(grade, "gradethis_graded")
   if (identical(is_correct, logical(0))) {
     expect_equal(grade$correct, logical(0))
@@ -147,7 +155,7 @@ expect_feedback <- function(
   if (is_graded(feedback)) {
     feedback <- feedback(feedback)
   }
-  
+
   expect_s3_class(feedback, "gradethis_feedback")
   if (identical(is_correct, logical(0))) {
     expect_equal(feedback$correct, logical(0))
@@ -173,16 +181,23 @@ expect_feedback <- function(
 }
 
 
-create_learnr_env <- function(user_code, solution_code = NULL, envir_prep, eval = TRUE) {
+create_learnr_env <- function(
+  user_code,
+  solution_code = NULL,
+  solution_code_all = NULL,
+  envir_prep,
+  eval = TRUE
+) {
   env <- new.env(parent = envir_prep)
   env$.envir_prep <- envir_prep
   env$.envir_result <- new.env(parent = envir_prep)
   env$.user_code <- as.character(user_code)
   env$.solution_code <- as.character(solution_code)
+  env$.solution_code_all <- solution_code_all
   if (isTRUE(eval)) {
     env$.result <-
       env$.last_value <-
-        eval(parse(text = user_code), envir = env$.envir_result)
+      eval(parse(text = user_code), envir = env$.envir_result)
     env$.solution <-
       if (is.null(solution_code)) {
         NULL
@@ -203,7 +218,10 @@ expect_exercise_checker <- function(
   is_correct,
   msg,
   msg_type = NULL,
-  msg_fixed = TRUE
+  msg_fixed = TRUE,
+  error_message = NULL,
+  stage = NULL,
+  expect_feedback = TRUE
 ) {
   envir_prep <- new.env(parent = .GlobalEnv)
   eval(parse(text = prep_code), envir = envir_prep)
@@ -222,10 +240,17 @@ expect_exercise_checker <- function(
     envir_result = envir_result,
     evaluate_result = "ignore",
     envir_prep = envir_prep,
-    last_value = last_value
+    last_value = last_value,
+    stage = stage,
+    engine = "r",
+    ...
   )
 
-  checkmate::expect_names(names(feedback), identical.to = c("message", "correct", "type", "location"))
+  if (!expect_feedback) {
+    return(feedback)
+  }
+
+  checkmate::expect_names(names(feedback), must.include = c("message", "correct", "type", "location"))
   checkmate::expect_string(feedback$message, null.ok = TRUE)
   checkmate::expect_logical(feedback$correct, null.ok = FALSE, max.len = 1)
   checkmate::expect_string(feedback$type, null.ok = FALSE)
@@ -233,11 +258,24 @@ expect_exercise_checker <- function(
   testthat::expect_equal(feedback$location, "append")
 
   expect_equal(feedback$correct, is_correct)
-  msg_type <- msg_type %||% (if (isTRUE(is_correct)) "success" else "error")
+  if (is.null(msg_type)) {
+    msg_type <-
+      if (!length(is_correct)) {
+        gradethis_settings$grading_problem.type()
+      } else if (isTRUE(is_correct)) {
+        "success"
+      } else {
+        "error"
+      }
+  }
   expect_equal(feedback$type, msg_type)
-  
+
   msg <- message_md(msg)
   expect_match(feedback$message, msg, fixed = msg_fixed)
-  
+
+  if (!is.null(error_message)) {
+    expect_match(feedback$error$message, error_message)
+  }
+
   invisible(feedback)
 }

@@ -7,7 +7,7 @@
 fail_if_code_feedback(
   message = NULL,
   user_code = .user_code,
-  solution_code = .solution_code,
+  solution_code = .solution_code_all,
   ...,
   env = parent.frame(),
   hint = TRUE,
@@ -20,28 +20,18 @@ fail_if_code_feedback(
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
 string that will be processed with \code{\link[glue:glue]{glue::glue()}}.}
 
-\item{user_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
-default retrieved from the calling environment.}
-
-\item{solution_code}{String containing user or solution code. For
-ease of use in \code{grade_this()}, \code{.user_code} or \code{.solution_code} are by
-default retrieved from the calling environment.}
+\item{user_code, solution_code}{String containing user or solution code. By
+default, when used in \code{\link[=grade_this]{grade_this()}}, \link{.user_code} is retrieved for the
+\link{.user_code}. \code{solution_code} may also be a list containing multiple
+solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \link{.solution_code_all}
+is found and used for \code{solution_code}. You may also use \code{.solution_code} if
+there is only one solution.}
 
 \item{...}{
   Arguments passed on to \code{\link[=graded]{graded}}
   \describe{
     \item{\code{correct}}{A logical value of whether or not the checked code is correct.}
-    \item{\code{type}}{The \code{type} and \code{location} of the feedback object
-provided to \pkg{learnr}. See
-\url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for more
-details.
-
-\code{type} may be one of "auto", "success", "info", "warning", "error", or
-"custom".
-
-\code{location} may be one of "append", "prepend", or "replace".}
-    \item{\code{location}}{The \code{type} and \code{location} of the feedback object
+    \item{\code{type,location}}{The \code{type} and \code{location} of the feedback object
 provided to \pkg{learnr}. See
 \url{https://rstudio.github.io/learnr/exercises.html#Custom_checking} for more
 details.
@@ -52,8 +42,8 @@ details.
 \code{location} may be one of "append", "prepend", or "replace".}
   }}
 
-\item{env}{Environment used to standardise formals of the user and solution
-code. Defaults to retrieving \code{.envir_prep} from the calling environment. If
+\item{env}{Environment used to standardize formals of the user and solution
+code. Defaults to retrieving \link{.envir_prep} from the calling environment. If
 not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
 \item{hint}{Include a code feedback hint with the failing message? This
@@ -62,7 +52,7 @@ added using the default options of \code{\link[=give_code_feedback]{give_code_fe
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
 \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
-\item{encourage}{Incude a random encouraging phrase with
+\item{encourage}{Include a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 
@@ -95,17 +85,17 @@ functions.
 # chosen the correct sampling function.
 
 grader <-
-# ```{r example-check}
+  # ```{r example-check}
   grade_this({
     fail_if(length(.result) != 5, "I expected 5 numbers.")
     fail_if(
-      any(.result < 0 | .result > 1), 
+      any(.result < 0 | .result > 1),
       "I expected all numbers to be between 0 and 1."
     )
-    
+
     # Specific checks passed, but now we want to check the code.
     fail_if_code_feedback()
-    
+
     # All good!
     pass()
   })
@@ -129,7 +119,6 @@ grader(mock_this_exercise(rbinom(5, 1, 0.5), !!.solution_code))
 
 # Perfect!
 grader(mock_this_exercise(runif(n = 5), !!.solution_code))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

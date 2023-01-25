@@ -70,7 +70,9 @@
 #' @keywords internal
 #' @export
 #' @examples
-#' \dontrun{gradethis_demo()}
+#' \dontrun{
+#' gradethis_demo()
+#' }
 #'
 #' # This is a manual example, see grading demo for `learnr` tutorial usage
 #' y <- expression(sqrt(log(2)))
@@ -117,8 +119,14 @@ grade_code <- function(
       ))
     }
 
-    solution_code <- check_env$.solution_code
-    if (is.null(solution_code) || length(str2expression(solution_code)) == 0) {
+    solution_code_all <- check_env$.solution_code_all
+    # If `.solution_code_all` is missing, make it from `.solution_code`
+    if (is.null(solution_code_all) || length(str2expression(solution_code_all)) == 0) {
+      solution_code_all <- solutions_prepare(check_env$.solution_code)
+    }
+
+    # If `.solution_code_all` is still missing, return an error
+    if (is.null(solution_code_all) || length(str2expression(solution_code_all)) == 0) {
       return(legacy_graded(
         correct = FALSE,
         message = "No exercise solution provided. Defaulting to _incorrect_."
@@ -127,7 +135,7 @@ grade_code <- function(
 
     message <- code_feedback(
       user_code = user_code,
-      solution_code = solution_code,
+      solution_code = solution_code_all,
       env = check_env,
       allow_partial_matching = allow_partial_matching
     )
@@ -145,8 +153,8 @@ grade_code <- function(
         )
       ))
     }
-    
-   # is incorrect
+
+    # is incorrect
     message <- glue_message(
       glue_incorrect %||% gradethis_legacy_options$gradethis.glue_incorrect,
       .is_correct = FALSE,

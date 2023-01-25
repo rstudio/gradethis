@@ -1,0 +1,11 @@
+on:
+  pull_request_target:
+    types: [opened, synchronize, labeled]
+  push:
+    branches: main
+
+name: Package Maintenance
+
+jobs:
+  auto-pkg-maintenance:
+    uses: rstudio/education-workflows/.github/workflows/auto-pkg-maintenance.yaml@v1

@@ -11,6 +11,7 @@ pass_if_equal(
   x = .result,
   ...,
   env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
   praise = getOption("gradethis.pass.praise", FALSE)
 )
 
@@ -20,15 +21,25 @@ fail_if_equal(
   x = .result,
   ...,
   env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
   hint = getOption("gradethis.fail.hint", FALSE),
   encourage = getOption("gradethis.fail.encourage", FALSE)
 )
 }
 \arguments{
 \item{y}{The expected value against which \code{x} is compared using
-\code{waldo::compare(x, y)}. In \code{pass_if_equal()}, if no value is provided, the
-exercise \code{.solution}, or the result of evaluating the code in the
-exercise's \verb{*-solution} chunk, will be used for the comparison.}
+\code{waldo::compare(x, y)}.
+
+In \code{pass_if_equal()}, if no value is provided, the exercise \code{.solution}
+(i.e. the result of evaluating the code in the exercise's \verb{*-solution}
+chunk) will be used for the comparison.
+
+If the exercise uses multiple solutions with \emph{different results}, set
+\code{y = .solution_all}. In this case, \code{pass_if_equal()} will test each of the
+solutions and provide a passing grade if \code{x} matches \emph{any} values contained
+in \code{y}. Note that if the exercise has multiple solutions but they all
+return the same result, it will be faster to use the default value of
+\code{y = .solution}.}
 
 \item{message}{A character string of the message to be displayed. In all
 grading helper functions other than \code{\link[=graded]{graded()}}, \code{message} is a template
@@ -45,6 +56,18 @@ the student's submission against a specific value, \code{y}.}
 \item{env}{environment to evaluate the glue \code{message}. Most users of
 \pkg{gradethis} will not need to use this argument.}
 
+\item{tolerance}{If non-\code{NULL}, used as threshold for ignoring small
+floating point difference when comparing numeric vectors. Setting to
+any non-\code{NULL} value will cause integer and double vectors to be compared
+based on their values, rather than their types.
+
+It uses the same algorithm as \code{\link[=all.equal]{all.equal()}}, i.e., first we generate
+\code{x_diff} and \code{y_diff} by subsetting \code{x} and \code{y} to look only locations
+with differences. Then we check that
+\code{mean(abs(x_diff - y_diff)) / mean(abs(y_diff))} (or just
+\code{mean(abs(x_diff - y_diff))} if \code{y_diff} is small) is less than
+\code{tolerance}.}
+
 \item{praise}{Include a random praising phrase with \code{\link[=random_praise]{random_praise()}}? The
 default value of \code{praise} can be set using \code{\link[=gradethis_setup]{gradethis_setup()}} or the
 \code{gradethis.pass.praise} option.}
@@ -55,7 +78,7 @@ added using the default options of \code{\link[=give_code_feedback]{give_code_fe
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
 \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
-\item{encourage}{Incude a random encouraging phrase with
+\item{encourage}{Include a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 }
@@ -80,32 +103,139 @@ functions.
 }
 \section{Functions}{
 \itemize{
-\item \code{pass_if_equal}: Signal a \emph{passing} grade only if \code{x} and \code{y} are
+\item \code{pass_if_equal()}: Signal a \emph{passing} grade only if \code{x} and \code{y} are
 equal.
 
-\item \code{fail_if_equal}: Signal a \emph{failing} grade only if \code{x} and \code{y} are
+\item \code{fail_if_equal()}: Signal a \emph{failing} grade only if \code{x} and \code{y} are
 equal.
+
 }}
+\section{Comparing with Multiple Solutions}{
+
+If your exercise includes multiple solutions that are variations of the same
+task — meaning that all solutions achieve the same result — you can call
+\code{pass_if_equal()} without changing any defaults to compare the result of the
+student's submission to the common solution result. After checking if any
+solution matches, you can perform additional checks or you can call \code{\link[=fail]{fail()}}
+with the \link[=gradethis_setup]{default message} or with \code{hint = TRUE}. \code{\link[=fail]{fail()}}
+will automatically provide code feedback for the most likely solution.
+
+By default, \code{pass_if_equal()} will compare \link{.result} with \link{.solution}, or the
+final value returned by the entire \code{-solution} chunk (in other words, the
+last solution). This default behavior covers both exercises with a single
+solution and exercises with multiple solutions that all return the same
+value.
+
+When your exercise has multiple solutions with \strong{different results},
+\code{pass_if_equal()} can compare the student's \link{.result} to each of the
+solutions in \link{.solution_all}, returning a passing grade when the result
+matches any of the values returned by the set of solutions. You can opt into
+this behavior by calling
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{pass_if_equal(.solution_all)
+}\if{html}{\out{</div>}}
+
+Note that this causes \code{pass_if_equal()} to evaluate each of the solutions in
+the set, and may increase the computation time.
+
+Here's a small example. Suppose an exercise asks students to filter \code{mtcars}
+to include only cars with the same number of cylinders. Students are free to
+pick cars with 4, 6, or 8 cylinders, and so your \code{-solution} chunk would
+include this code (ignoring the \code{ex_solution} variable, the chunk would
+contain the code in the string below):
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_solution <- "
+# four cylinders ----
+mtcars[mtcars$cyl == 4, ]
+
+# six cylinders ----
+mtcars[mtcars$cyl == 6, ]
+
+# eight cylinders ----
+mtcars[mtcars$cyl == 8, ]
+"
+}\if{html}{\out{</div>}}
+
+In the \code{-check} chunk, you'd call \code{\link[=grade_this]{grade_this()}} and ask \code{pass_if_equal()} to
+compare the student's \link{.result} to \link{.solution_all} (all the solutions).
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{ex_check <- grade_this(\{
+  pass_if_equal(
+    y = .solution_all,
+    message = "The cars in your result all have \{.solution_label\}!"
+   )
+
+  fail()
+\})
+}\if{html}{\out{</div>}}
+
+What happens when a student submits one of these solutions? This function
+below mocks the process of a student submitting an attempt.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits <- function(code) \{
+  withr::local_seed(42)
+  submission <- mock_this_exercise(!!code, !!ex_solution)
+  ex_check(submission)
+\}
+}\if{html}{\out{</div>}}
+
+If they submit code that returns one of the three possible solutions, they
+receive positive feedback.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl == 4, ]")
+#> <gradethis_graded: [Correct]
+#>   The cars in your result all have four cylinders!
+#> >
+student_submits("mtcars[mtcars$cyl == 6, ]")
+#> <gradethis_graded: [Correct]
+#>   The cars in your result all have six cylinders!
+#> >
+}\if{html}{\out{</div>}}
+
+Notice that the solution label appears in the feedback message. When
+\code{pass_if_equal()} picks a solution as correct, three variables are made
+available for use in the glue string provided to \code{message}:
+\itemize{
+\item \code{.solution_label}: The heading label of the matching solution
+\item \code{.solution_code}: The code of the matching solution
+\item \code{.solution}: The value of the evaluated matching solution code
+}
+
+If the student submits incorrect code, \code{pass_if_equal()} defers to later
+grading code.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{student_submits("mtcars[mtcars$cyl < 8, ]")
+#> <gradethis_graded: [Incorrect]
+#>   Incorrect. In `mtcars[mtcars$cyl < 8, ]`, I expected you to call `==`
+#>   where you called `<`. Please try again.
+#> >
+}\if{html}{\out{</div>}}
+
+Here, because \code{\link[=fail]{fail()}} provides \code{\link[=code_feedback]{code_feedback()}} by default, and because
+\code{\link[=code_feedback]{code_feedback()}} is also aware of the multiple solutions for this exercise,
+the code feedback picks the \emph{eight cylinders} solution and gives advice
+based on that particular solution.
+}
 
 \examples{
 # Suppose our prompt is to find the cars in `mtcars` with 6 cylinders...
 
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_this({
     # Automatically pass if .result equal to .solution
     pass_if_equal()
-    
+
     fail_if_equal(mtcars[mtcars$cyl == 4, ], message = "Not four cylinders")
     fail_if_equal(mtcars[mtcars$cyl == 8, ], message = "Not eight cylinders")
-    
+
     # Default to failing grade with feedback
     fail()
   })
 # ```
 
-.solution <- 
-# ```{r example-solution}
+.solution <-
+  # ```{r example-solution}
   mtcars[mtcars$cyl == 6, ]
 # ```
 
@@ -118,7 +248,6 @@ grader(mock_this_exercise(mtcars[mtcars$cyl == 8, ], !!.solution))
 
 # This fails with default feedback message
 grader(mock_this_exercise(mtcars[mtcars$mpg == 8, ], !!.solution))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

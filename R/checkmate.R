@@ -6,7 +6,7 @@ chkm8_item_class <- function(x, class, name = checkmate::vname(x)) {
   })
 }
 
-chkm8_single_character <- function(x, name = checkmate::vname(x), null.ok = TRUE, any.missing = FALSE, ...) {
+chkm8_single_character <- function(x, name = checkmate::vname(x), null.ok = TRUE, any.missing = FALSE, ...) { # nolint: object_name
   checkmate::assert_character(x, null.ok = null.ok, len = 1, any.missing = any.missing, .var.name = name, ...)
 }
 

@@ -2,7 +2,7 @@
 test_that("pipe_warning() in grade_this_code() is equivalent to grade_code()", {
   user_code <-  "penguins %>% pull(year) %>% min(year)"
   solution_code <-  "penguins %>% pull(year) %>% min()"
-  
+
   expect_equal(
     expect_this_code(
       user_code = user_code,
@@ -24,21 +24,21 @@ test_that("pipe_warning() in grade_this_code() is equivalent to grade_code()", {
 test_that("pipe_warning() requires a pipe in the user code for the warning", {
   user_code <-  unpipe_all_str("penguins %>% pull(year) %>% min(year)")
   solution_code <-  "penguins %>% pull(year) %>% min()"
-  
+
   feedback_grade_this_code <- expect_this_code(
     user_code = user_code,
     solution_code = solution_code,
     incorrect = "{pipe_warning()}{.message}",
     is_correct = FALSE
   )
-  
+
   feedback_grade_code <- expect_grade_code(
     user_code = user_code,
     solution_code = solution_code,
     glue_incorrect = "{pipe_warning()}{.message}",
     is_correct = FALSE
   )
-  
+
   expect_equal(feedback_grade_this_code, feedback_grade_this_code)
   expect_match(
     feedback_grade_this_code$message,
@@ -61,7 +61,7 @@ test_that("pipe_warning() message returns unpiped text", {
       msg = unpipe_all_str(user_code)
     )
   )
-  
+
   with_options(
     list(gradethis.glue_pipe = gradethis_default_options$gradethis.pipe_warning),
     expect_grade_code(
@@ -74,9 +74,9 @@ test_that("pipe_warning() message returns unpiped text", {
 })
 
 test_that("pipe_warning() can be disabled by setting equal to NULL", {
-  user_code = "x %>% b()"
-  solution_code = "x %>% a()"
-  
+  user_code <- "x %>% b()"
+  solution_code <- "x %>% a()"
+
   with_options(
     list(pipe_warning = NULL),
     {
@@ -90,7 +90,7 @@ test_that("pipe_warning() can be disabled by setting equal to NULL", {
         )$message,
         "INCORRECT"
       )
-      
+
       expect_equal(
         expect_this_code(
           user_code = user_code,
@@ -106,9 +106,9 @@ test_that("pipe_warning() can be disabled by setting equal to NULL", {
 })
 
 test_that("pipe_warning() can be disabled by setting equal to empty character string", {
-  user_code = "x %>% b()"
-  solution_code = "x %>% a()"
-  
+  user_code <- "x %>% b()"
+  solution_code <- "x %>% a()"
+
   with_gradethis_setup(
     pipe_warning = "",
     {
@@ -122,7 +122,7 @@ test_that("pipe_warning() can be disabled by setting equal to empty character st
         )$message,
         "INCORRECT"
       )
-      
+
       expect_equal(
         expect_this_code(
           user_code = user_code,

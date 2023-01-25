@@ -5,12 +5,48 @@ test_that("code_feedback() returns a string if there are differences or NULL", {
   expect_null(code_feedback("a", "a"))
   expect_null(code_feedback("runif(1)", "runif(1)"))
   expect_null(code_feedback("a %>% b(x = 1) %>% c(y = 2)", "c(b(a, x = 1), y = 2)"))
-  
+
   expect_type(code_feedback("a", "b"), "character")
   expect_type(code_feedback("runif(1)", "rnorm(1)"), "character")
   expect_type(
     code_feedback("a %>% b(x = 1) %>% c(y = 2)", "d(b(a, x = 1), y = 2)"),
     "character"
+  )
+})
+
+test_that("code_feedback() finds the closest match if multiple solutions", {
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("aa", "bb")),
+    "I expected `aa` where you wrote `a`."
+  )
+
+  # If there's a tie including the last option, the last option is selected
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("b", "c")),
+    "I expected `c` where you wrote `a`."
+  )
+
+  # If there's a tie not including the last option, the first option is selected
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("b", "c", "xyz")),
+    "I expected `b` where you wrote `a`."
+  )
+})
+
+test_that("code_feedback() converts solution_code to solution_code_all", {
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("aa", "bb")),
+    "I expected `aa` where you wrote `a`."
+  )
+
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("b", "c")),
+    "I expected `c` where you wrote `a`."
+  )
+
+  expect_equal(
+    code_feedback("a", solution_code = gradethis_solutions("b", "c", "xyz")),
+    "I expected `b` where you wrote `a`."
   )
 })
 
@@ -27,7 +63,7 @@ test_that("to_expr() accepts quosures or strings", {
     to_expr(rlang::quo(base::acos(0.42)), name = "solution"),
     to_expr("base::acos(0.42)", name = "solution")
   )
-  
+
   expect_match(
     code_feedback(
       rlang::quo(base::acos(0.42)),
@@ -35,7 +71,7 @@ test_that("to_expr() accepts quosures or strings", {
     ),
     "expected.+atan.+acos"
   )
-  
+
   expect_error(to_expr(42))
 })
 
@@ -48,7 +84,7 @@ test_that("maybe_code_feedback() formals match with code_feedback()", {
 })
 
 test_that("maybe_code_feedback() spaces", {
-  
+
   expect_equal(
     expect_grade_this(
       fail("{maybe_code_feedback()}"),
@@ -138,7 +174,7 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     " In `log(2)`, I expected `3` where you wrote `2`. "
   )
-  
+
   expect_equal(
     expect_grade_this(
       fail("{ maybe_code_feedback(before = NULL, after = c('', '')) }"),
@@ -148,7 +184,7 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     "In `log(2)`, I expected `3` where you wrote `2`.\n"
   )
-  
+
   expect_equal(
     expect_grade_this(
       fail("{ maybe_code_feedback(before = '\n', after = '\n') }"),
@@ -158,7 +194,7 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     "\nIn `log(2)`, I expected `3` where you wrote `2`.\n"
   )
-  
+
   expect_equal(
     expect_grade_this(
       fail("{ maybe_code_feedback(before = '<span class=\"cf\">', after = '</span>') }"),
@@ -171,18 +207,18 @@ test_that("maybe_code_feedback() spaces", {
 })
 
 test_that("maybe_code_feedback() is used in grade_this_code", {
-  
+
   expect_this_code(
     "sqrt(log(2))",
     "sqrt(log(3))",
     incorrect = "A fail message.{maybe_code_feedback()}",
     is_correct = FALSE
   )
-  
+
 })
 
 test_that("maybe_code_feedback() is not used when no solution is available", {
-  
+
   with_gradethis_setup(
     fail = "A fail message.{maybe_code_feedback()}",
     {
@@ -198,7 +234,7 @@ test_that("maybe_code_feedback() is not used when no solution is available", {
       )
     }
   )
-  
+
   with_gradethis_setup(
     fail = "A fail message. {maybe_code_feedback(default = 'No feedback!')}",
     {
@@ -214,11 +250,11 @@ test_that("maybe_code_feedback() is not used when no solution is available", {
       )
     }
   )
-  
+
 })
 
 test_that("maybe_code_feedback() is used when solution is available", {
-  
+
   with_gradethis_setup(
     fail = "A fail message.{maybe_code_feedback()}",
     {
@@ -235,7 +271,7 @@ test_that("maybe_code_feedback() is used when solution is available", {
       )
     }
   )
-  
+
 })
 
 test_that("maybe_code_feedback() is not included when gradethis.maybe_code_feedback is FALSE", {
@@ -261,7 +297,7 @@ test_that("maybe_code_feedback() is not included when gradethis.maybe_code_feedb
 })
 
 test_that("maybe_code_feedback() can be overwritten by local fail() message", {
-  
+
   with_gradethis_setup(
     fail = "A fail message.{ maybe_code_feedback() }",
     {
@@ -278,7 +314,7 @@ test_that("maybe_code_feedback() can be overwritten by local fail() message", {
       )
     }
   )
-  
+
 })
 
 test_that("maybe_code_feedback() returned default message if no feedback", {
@@ -303,7 +339,7 @@ test_that("maybe_code_feedback() returned default message if no feedback", {
 # give_code_feedback() ----------------------------------------------------
 
 submission_wrong <- mock_this_exercise(
-  .user_code = "log(4)", 
+  .user_code = "log(4)",
   .solution_code = "sqrt(4)"
 )
 
@@ -382,7 +418,7 @@ test_that("give_code_feedback() wraps grades, does not affect passing grades", {
     )$message,
     "I expected.+sqrt.+log"
   )
-  
+
   expect_false(
     grepl(
       "I expected",
@@ -409,7 +445,7 @@ test_that("give_code_feedback() catches testthat errors", {
       user_code = "5",
       solution_code = "5L",
       check_code = 'grade_this({
-       give_code_feedback(testthat::expect_type(.result, "integer"))
+       give_code_feedback(fail_if_error(testthat::expect_type(.result, "integer")))
        pass()
      })',
       is_correct = FALSE,
@@ -417,13 +453,13 @@ test_that("give_code_feedback() catches testthat errors", {
     )$message,
     "\\.result.+has type.+I expected"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "5",
       solution_code = "5L",
       check_code = 'give_code_feedback(grade_this({
-       testthat::expect_type(.result, "integer")
+       fail_if_error(testthat::expect_type(.result, "integer"))
        pass()
      }))',
       is_correct = FALSE,
@@ -439,7 +475,7 @@ test_that("give_code_feedback() catches plain errors", {
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       give_code_feedback(stop("nope;"))
+       give_code_feedback(fail_if_error(stop("nope;")))
        pass()
      })',
       is_correct = FALSE,
@@ -447,13 +483,13 @@ test_that("give_code_feedback() catches plain errors", {
     )$message,
     "nope; I expected"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "apple",
       solution_code = "banana",
       check_code = 'give_code_feedback(grade_this({
-       stop("nope;")
+       fail_if_error(stop("nope;"))
        pass()
      }))',
       is_correct = FALSE,
@@ -470,7 +506,7 @@ test_that("give_code_feedback() doesn't add feedback twice", {
     if (m[1] < 0) return(0)
     length(m)
   }
-  
+
   feedback <- expect_exercise_checker(
     user_code = "apple",
     solution_code = "banana",
@@ -480,24 +516,41 @@ test_that("give_code_feedback() doesn't add feedback twice", {
     is_correct = FALSE,
     msg = NULL
   )$message
-    
+
   expect_equal(str_count(feedback, "I expected"), 1)
-  
-  feedback <- 
+
+  feedback <-
     with_gradethis_setup(
       fail = "{maybe_code_feedback()}",
       maybe_code_feedback = TRUE,
       expect_exercise_checker(
         user_code = "apple",
         solution_code = "banana",
-        check_code = 'grade_this({
+        check_code = "grade_this({
        give_code_feedback(fail())
-     })',
+     })",
         is_correct = FALSE,
         msg = NULL
       )$message
     )
-  
+
+  expect_equal(str_count(feedback, "I expected"), 1)
+
+  ## Multiple Solutions ----
+  feedback <- expect_exercise_checker(
+    user_code = "sum(1:10)",
+    solution_code = "
+# mean ----
+mean(1:10)
+# median ----
+median(1:10)",
+    check_code = 'grade_this({
+       fail("{maybe_code_feedback()}", hint = TRUE)
+     })',
+    is_correct = FALSE,
+    msg = NULL
+  )$message
+
   expect_equal(str_count(feedback, "I expected"), 1)
 })
 
@@ -518,7 +571,7 @@ test_that("give_code_feedback() works with pipes", {
     )$message,
     "I expected.+sqrt.+log"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "log(4)",
@@ -535,13 +588,13 @@ test_that("give_code_feedback() works with pipes", {
     )$message,
     "I expected.+sqrt.+log"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       stop("nope;") %>% give_code_feedback()
+       fail_if_error(stop("nope;")) %>% give_code_feedback()
        pass()
      })',
       is_correct = FALSE,
@@ -549,13 +602,13 @@ test_that("give_code_feedback() works with pipes", {
     )$message,
     "nope; I expected"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "apple",
       solution_code = "banana",
       check_code = 'grade_this({
-       stop("nope;")
+       fail_if_error(stop("nope;"))
        pass()
      }) %>% give_code_feedback()',
       is_correct = FALSE,
@@ -596,7 +649,7 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
       pass("TEST FAILED")
     })
   )
-  
+
   expect_exercise_checker(
     user_code = "1",
     solution_code = "4",
@@ -604,7 +657,7 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
     is_correct = FALSE,
     msg = "Nothing special."
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "2",
@@ -615,7 +668,7 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
     )$message,
     "Not two! I expected"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "3",
@@ -626,7 +679,7 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
     )$message,
     "Not three! I expected"
   )
-  
+
   expect_match(
     expect_exercise_checker(
       user_code = "5",
@@ -637,7 +690,7 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
     )$message,
     "Not five! I expected"
   )
-  
+
   expect_false(
     grepl(
       "I expected",
@@ -655,34 +708,34 @@ test_that("fail('msg', hint = TRUE) gives code feedback with custom message", {
 test_that("fail() message doesn't duplicate hints", {
   ex <- mock_this_exercise(.user_code = 2, .solution_code = 1)
   ex_feedback <- code_feedback("2", "1")
-  
+
   expect_fail_message <- function(expr, global_hint_true, global_hint_false = global_hint_true) {
-    expr <- rlang::enexpr(expr)
+    expr <- rlang::enquo(expr)
     msg <- list(
       global_hint_true = with_options(
         list(
-          gradethis.fail.hint = TRUE, 
+          gradethis.fail.hint = TRUE,
           gradethis.fail = "PREFACE.{maybe_code_feedback()} CONCLUSION"
         ),
-        rlang::eval_bare(expr)$message
+        rlang::eval_tidy(expr)$message
       ),
       global_hint_false = with_options(
         list(
-          gradethis.fail.hint = FALSE, 
+          gradethis.fail.hint = FALSE,
           gradethis.fail = "PREFACE.{maybe_code_feedback()} CONCLUSION"
         ),
-        rlang::eval_bare(expr)$message
+        rlang::eval_tidy(expr)$message
       )
     )
     msg <- lapply(msg, as.character)
-    
+
     global_hint_true <- as.character(glue::glue(global_hint_true, .envir = parent.frame()))
     global_hint_false <- as.character(glue::glue(global_hint_false, .envir = parent.frame()))
-    
+
     expect_equal(!!msg$global_hint_true, !!global_hint_true)
     expect_equal(!!msg$global_hint_false, !!global_hint_false)
   }
-  
+
   # default message, fall back on global fail.hint option
   expect_fail_message(
     grade_this({
@@ -691,7 +744,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     "PREFACE. {ex_feedback} CONCLUSION"
   )
-  
+
   # default message but hint = FALSE locally
   # => hint = FALSE wins
   expect_fail_message(
@@ -701,7 +754,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     global_hint_true = "PREFACE. CONCLUSION"
   )
-  
+
   # default fail message, but hint = TRUE locally
   # => hint is added by default message
   expect_fail_message(
@@ -711,7 +764,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     global_hint_true = "PREFACE. {ex_feedback} CONCLUSION"
   )
-  
+
   # custom fail message with feedback, inherit hint
   # => template wins in both
   expect_fail_message(
@@ -721,7 +774,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     global_hint_true = "Nice try, but {ex_feedback}"
   )
-  
+
   # custom fail message with feedback, with local hint = FALSE
   # => template wins in all
   expect_fail_message(
@@ -731,7 +784,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     global_hint_true = "Nice try, but {ex_feedback}"
   )
-  
+
   # custom fail message with feedback, with local hint = TRUE
   # => template wins in all
   expect_fail_message(
@@ -741,7 +794,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     global_hint_true = "Nice try, but {ex_feedback}"
   )
-  
+
   # custom fail message without feedback, inherit hint
   # => global option decides
   expect_fail_message(
@@ -752,7 +805,7 @@ test_that("fail() message doesn't duplicate hints", {
     global_hint_true = "Nice try! {ex_feedback}",
     global_hint_false = "Nice try!"
   )
-  
+
   # custom fail message without feedback, with local hint = FALSE
   # => local option overrides global option
   expect_fail_message(
@@ -762,7 +815,7 @@ test_that("fail() message doesn't duplicate hints", {
     })(ex),
     global_hint_true = "Nice try!"
   )
-  
+
   # custom fail message without feedback, with local hint = TRUE
   # => local option overrides global option
   expect_fail_message(

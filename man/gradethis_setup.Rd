@@ -17,10 +17,13 @@ gradethis_setup(
   fail.hint = NULL,
   fail.encourage = NULL,
   pipe_warning = NULL,
+  grading_problem.message = NULL,
+  grading_problem.type = NULL,
   error_checker.message = NULL,
   allow_partial_matching = NULL,
   exercise.checker = gradethis_exercise_checker,
   exercise.timelimit = NULL,
+  compare_timelimit = NULL,
   exercise.error.check.code = NULL,
   fail_code_feedback = NULL
 )
@@ -38,6 +41,10 @@ gradethis_setup(
 see some default output (defaults to \code{FALSE}).}
     \item{\code{exercise.lines}}{Lines of code for exercise editor (defaults to the
 number of lines in the code chunk).}
+    \item{\code{exercise.blanks}}{A regular expression to be used to identify blanks in
+submitted code that the user should fill in. If \code{TRUE} (default), blanks
+are three or more underscores in a row. If \code{FALSE}, blank checking is not
+performed.}
     \item{\code{exercise.completion}}{Use code completion in exercise editors.}
     \item{\code{exercise.diagnostics}}{Show diagnostics in exercise editors.}
     \item{\code{exercise.startover}}{Show "Start Over" button on exercise.}
@@ -80,6 +87,13 @@ encouraging phrase should be automatically appended to any \code{\link[=fail]{fa
 \item{pipe_warning}{The default message used in \code{\link[=pipe_warning]{pipe_warning()}}. Sets the
 \code{gradethis.pipe_warning} option.}
 
+\item{grading_problem.message}{The feedback message used when a grading error occurs.
+Sets the \code{gradethis.grading_problem.message} option.}
+
+\item{grading_problem.type}{The feedback type used when a grading error occurs.
+Must be one of \code{"success"}, \code{"info"}, \code{"warning"} (default), \code{"error"}, or
+\code{"custom"}. Sets the \code{gradethis.grading_problem.type} option.}
+
 \item{error_checker.message}{The default message used by gradethis's default
 error checker, \code{\link[=gradethis_error_checker]{gradethis_error_checker()}}. Sets the
 \code{gradethis.error_checker.message} option.}
@@ -93,6 +107,15 @@ partial matching is allowed in \code{grade_this_code()}. Sets the
 
 \item{exercise.timelimit}{Number of seconds to limit execution time to
 (defaults to \code{30}).}
+
+\item{compare_timelimit}{\code{\link[=pass_if_equal]{pass_if_equal()}} and \code{\link[=fail_if_equal]{fail_if_equal()}} call
+\code{\link[waldo:compare]{waldo::compare()}} internally.
+This helps ensure an accurate comparison, but sometimes takes a long time.
+\code{compare_timelimit} is the time limit in seconds
+for the execution of \code{\link[waldo:compare]{waldo::compare()}}
+(defaults to 80\% of \code{exercise.timelimit}).
+If the time limit is exceeded,
+\code{identical()} is used instead of \code{\link[waldo:compare]{waldo::compare()}}.}
 
 \item{exercise.error.check.code}{A string containing R code to use for checking
 code when an exercise evaluation error occurs (e.g., \code{"gradethis::grade_code()"}).}
@@ -111,9 +134,7 @@ To use \pkg{gradethis} in your \pkg{learnr} tutorial, you only need to call
 library(learnr)
 library(gradethis)
 ```
-}
-
-\if{html}{\out{</div>}}
+}\if{html}{\out{</div>}}
 
 Use \code{gradethis_setup()} to change the default options suggested by gradethis.
 This function also describes in detail each of the global options available
@@ -130,19 +151,22 @@ These global package options can be set by \code{\link[=gradethis_setup]{gradeth
 directly setting the global option. The default values set for each option
 when gradethis is loaded are shown below.\tabular{ll}{
    Option \tab Default Value \cr
-   \code{gradethis.pass} \tab \code{"{random_praise()} Correct!"} \cr
+   \code{gradethis.pass} \tab \code{"{gradethis::random_praise()} Correct!"} \cr
    \code{gradethis.pass.praise} \tab \code{FALSE} \cr
-   \code{gradethis.fail} \tab \code{"Incorrect.{maybe_code_feedback()} {random_encouragement()}"} \cr
+   \code{gradethis.fail} \tab \code{"Incorrect.{gradethis::maybe_code_feedback()} {gradethis::random_encouragement()}"} \cr
    \code{gradethis.fail.hint} \tab \code{FALSE} \cr
    \code{gradethis.fail.encourage} \tab \code{FALSE} \cr
    \code{gradethis.maybe_code_feedback} \tab \code{TRUE} \cr
    \code{gradethis.maybe_code_feedback.before} \tab \code{" "} \cr
    \code{gradethis.maybe_code_feedback.after} \tab \code{NULL} \cr
    \code{gradethis.code_correct} \tab \code{NULL} \cr
-   \code{gradethis.code_incorrect} \tab \code{"{pipe_warning()}{code_feedback()} {random_encouragement()}"} \cr
-   \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpretting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
+   \code{gradethis.code_incorrect} \tab \code{"{gradethis::pipe_warning()}{gradethis::code_feedback()} {gradethis::random_encouragement()}"} \cr
+   \code{gradethis.pipe_warning} \tab \code{"I see that you are using pipe operators (e.g. \%>\%), so I want to let you know that this is how I am interpreting your code before I check it:\\n\\n```r\\n{.user_code_unpiped}\\n```\\n\\n"} \cr
+   \code{gradethis.grading_problem.message} \tab \code{"A problem occurred with the grading code for this exercise."} \cr
+   \code{gradethis.grading_problem.type} \tab \code{"warning"} \cr
    \code{gradethis.allow_partial_matching} \tab \code{NULL} \cr
-   \code{gradethis.error_checker.message} \tab \code{"An error occurred with your R code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
+   \code{gradethis.error_checker.message} \tab \code{"An error occurred with your code:\\n\\n```\\n{.error$message}\\n```\\n\\n\\n"} \cr
+   \code{gradethis.compare_timelimit} \tab \code{NULL} \cr
 }
 }
 
@@ -150,7 +174,7 @@ when gradethis is loaded are shown below.\tabular{ll}{
 # Not run in package documentation because this function changes global opts
 if (FALSE) {
   old_opts <- gradethis_setup(
-    pass = "Great work!", 
+    pass = "Great work!",
     fail = "{random_encouragement()}"
   )
 }
@@ -158,7 +182,6 @@ if (FALSE) {
 # Use getOption() to see the default value
 getOption("gradethis.pass")
 getOption("gradethis.maybe_code_feedback")
-
 }
 \seealso{
 \code{\link[=gradethis_exercise_checker]{gradethis_exercise_checker()}}

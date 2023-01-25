@@ -36,7 +36,7 @@ encouragement phrase.}
 \itemize{
 \item \code{random_praise()} and \code{random_encouragement()} each return a length-one
 string with a praising or encouraging phrase.
-\item \code{give_praise()} and \code{give_encouragment()} add praise or encouragement
+\item \code{give_praise()} and \code{give_encouragement()} add praise or encouragement
 phrases to passing and failing grades, respectively.
 }
 }
@@ -47,15 +47,15 @@ designed for use within \code{\link[=pass]{pass()}} or \code{\link[=fail]{fail()
 }
 \section{Functions}{
 \itemize{
-\item \code{random_praise}: Random praising phrase
+\item \code{random_praise()}: Random praising phrase
 
-\item \code{random_encouragement}: Random encouraging phrase
+\item \code{random_encouragement()}: Random encouraging phrase
 
-\item \code{give_praise}: Add praising message to a passing grade.
+\item \code{give_praise()}: Add praising message to a passing grade.
 
-\item \code{give_encouragement}: Add encouraging message to a failing grade.
+\item \code{give_encouragement()}: Add encouraging message to a failing grade.
+
 }}
-
 \examples{
 replicate(5, glue::glue("Random praise: {random_praise()}"))
 replicate(5, glue::glue("Random encouragement: {random_encouragement()}"))
@@ -65,5 +65,4 @@ give_praise(pass("That's absolutely correct."))
 
 # give_encouragement() encouragement to failing grade messages
 give_encouragement(fail("Sorry, but no."))
-
 }

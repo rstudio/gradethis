@@ -56,7 +56,7 @@ added using the default options of \code{\link[=give_code_feedback]{give_code_fe
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
 \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
-\item{encourage}{Incude a random encouraging phrase with
+\item{encourage}{Include a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 }
@@ -75,13 +75,13 @@ for more details about how these functions are used in \code{\link[=grade_this]{
 }
 \section{Functions}{
 \itemize{
-\item \code{graded}: Prepare and signal a graded result.
+\item \code{graded()}: Prepare and signal a graded result.
 
-\item \code{pass}: Signal a \emph{passing} grade.
+\item \code{pass()}: Signal a \emph{passing} grade.
 
-\item \code{fail}: Signal a \emph{failing} grade.
+\item \code{fail()}: Signal a \emph{failing} grade.
+
 }}
-
 \section{Usage in \code{grade_this()}}{
 
 
@@ -93,8 +93,8 @@ The helper functions follow these common patterns:
 \enumerate{
 \item If you don't provide a custom \code{message}, the default pass or fail
 messages will be used. With the default \pkg{gradethis} setup, the pass
-message follows the pattern \verb{\{random_praise()\} Correct!} , and
-the fail message follows \verb{Incorrect.\{maybe_code_feedback()\} \{random_encouragement()\}}.
+message follows the pattern \verb{\{gradethis::random_praise()\} Correct!} , and
+the fail message follows \verb{Incorrect.\{gradethis::maybe_code_feedback()\} \{gradethis::random_encouragement()\}}.
 
 You can set the default message pattern using the \code{pass} and \code{fail} in
 \code{\link[=gradethis_setup]{gradethis_setup()}}, or the options \code{gradethis.pass} and
@@ -154,9 +154,7 @@ grade_this(\{
   pass()
 \})
 ```
-}
-
-\if{html}{\out{</div>}}
+}\if{html}{\out{</div>}}
 
 Notice that it's important to choose a final fallback grade as the last
 value in your \code{\link[=grade_this]{grade_this()}} checking code. This last value is the default
@@ -178,7 +176,7 @@ phrase.
 # check code when the student clicks "Submit Answer" in a learnr tutorial.
 
 grader <-
-# ```{r example-check}
+  # ```{r example-check}
   grade_this({
     # Automatically use .result to compare to an expected value
     pass_if_equal(42, "Great work!")
@@ -201,7 +199,7 @@ grader <-
     if (.result * 100 == .solution) {
       pass("Right answer, but {.result} is two orders of magnitude too small.")
     }
-    
+
     # Fail with a hint if student code differs from the solution
     # (Skipped automatically if there isn't a -solution chunk)
     fail_if_code_feedback()
@@ -233,7 +231,6 @@ grader(mock_this_exercise(.user_code = 0.42, .solution_code = 42))
 
 # Finally fall back to the final answer...
 grader(mock_this_exercise(.user_code = "20 + 13", .solution_code = "20 + 22"))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

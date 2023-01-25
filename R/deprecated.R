@@ -7,7 +7,7 @@
 NULL
 
 
-#' @describeIn gradethis-deprecated `r lifecycle::badge("deprecated")` Removed 
+#' @describeIn gradethis-deprecated `r lifecycle::badge("deprecated")` Removed
 #'   from package
 #' @export
 grade_feedback <- function(...) {

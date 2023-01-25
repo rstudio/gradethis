@@ -191,7 +191,7 @@ test_that("detect_mistakes detects wrong calls", {
 test_that("detect_mistakes detects wrong values", {
   x <- 1
   y <- 1
-  X <- 1
+  X <- 1 # nolint: object_name
 
   solution <- quote(1)
   user <-     quote(2)

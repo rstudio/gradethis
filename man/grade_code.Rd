@@ -94,7 +94,9 @@ student submits when it runs \code{grade_code()}.
 For best results, name all arguments provided in the solution code.
 }
 \examples{
-\dontrun{gradethis_demo()}
+\dontrun{
+gradethis_demo()
+}
 
 # This is a manual example, see grading demo for `learnr` tutorial usage
 y <- expression(sqrt(log(2)))

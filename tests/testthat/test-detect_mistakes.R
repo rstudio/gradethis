@@ -1,4 +1,5 @@
-context("Check code with calls")
+local_edition(3)
+
 a <<- function(x) x
 b <<- function(x) x
 
@@ -187,6 +188,7 @@ test_that("detect_mistakes works with atomic solutions", {
 
 })
 
+# nolint start: comment_code
 test_that("detect_mistakes works with infix operators", {
 
   user <- quote(123)
@@ -228,239 +230,247 @@ test_that("detect_mistakes works with infix operators", {
     wrong_call(submitted = user, solution = solution)
   )
 
-#   # surplus
-#   user <-     quote(b(1 + 2))
-#   solution <- quote(b(1))
-#   expect_equal(
-#                detect_mistakes(user, solution)
-#                ,
-#                wrong_value("1 + 2", quote(1))
-#                )
-#
-#   # missing
-#   user <-     quote(sqrt(1))
-#   solution <- quote(sqrt(1 + 2))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = quote(1), that = "1 + 2")
-#   )
-#
-#   user <-     quote(sqrt(1))
-#   solution <- quote(sqrt(1 + 2 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = quote(1), that = "1 + 2 + 3")
-#   )
-#
-#   user <-     quote(sqrt(1 + 2))
-#   solution <- quote(sqrt(1 + 2 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(sqrt(1 + 3))
-#   solution <- quote(sqrt(1 + 2 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1", that = "1 + 2")
-#   )
-#
-#   # internal infix
-#   user <-     quote(a(1 + 2))
-#   solution <- quote(a(1 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(a(1 + 2 + 4))
-#   solution <- quote(a(1 + 3 + 4))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(a(1 + 2 + 4))
-#   solution <- quote(a(1 + 3 + 5))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 4", that = "+ 5")
-#   )
-#
-#   user <-     quote(a(2 + 1))
-#   solution <- quote(a(3 + 1))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "2", that = "3")
-#   )
-#
-#   user <-     quote(a(1 + 1))
-#   solution <- quote(a(1 - 1))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   user <-     quote(a(1 + 1 + 1))
-#   solution <- quote(a(1 - 1 + 1))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   # surplus
-#   user <-     quote(1 + 2)
-#   solution <- quote(1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value("1 + 2", quote(1))
-#   )
-#
-#   # missing
-#   user <-     quote(1)
-#   solution <- quote(1 + 2)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = quote(1), that = "1 + 2")
-#   )
-#
-#   user <-     quote(1)
-#   solution <- quote(1 + 2 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = quote(1), that = "1 + 2 + 3")
-#   )
-#
-#   user <-     quote(1 + 2)
-#   solution <- quote(1 + 2 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(1 + 3)
-#   solution <- quote(1 + 2 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1", that = "1 + 2")
-#   )
-#
-#   # internal infix
-#   user <-     quote(1 + 2)
-#   solution <- quote(1 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(1 + 2 + 4)
-#   solution <- quote(1 + 3 + 4)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(1 + 2 + 4)
-#   solution <- quote(1 + 3 + 5)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "+ 4", that = "+ 5")
-#   )
-#
-#   user <-     quote(2 + 1)
-#   solution <- quote(3 + 1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "2", that = "3")
-#   )
-#
-#   user <-     quote(1 + 1)
-#   solution <- quote(1 - 1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   user <-     quote(1 + 1 + 1)
-#   solution <- quote(1 - 1 + 1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   # function
-#   user <-     quote(a(1))
-#   solution <- quote(1 + pi)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "a(1)", that = "1 + pi")
-#   )
-#
-#   user <-     quote(b(1))
-#   solution <- quote(b(1) + 2)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "b(1)", that = "b(1) + 2")
-#   )
-#
-#   user <-     quote(b(1))
-#   solution <- quote(b(1) + a(2))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "b(1)", that = "b(1) + a(2)")
-#   )
-#
-#   # non-function
-#   user <-     quote(pi(1))
-#   solution <- quote(1 + pi)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "pi(1)", that = "1 + pi")
-#   )
-#
-#   user <-     quote(1(1)) # nolint
-#   solution <- quote(b(1) + 2)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     wrong_value(this = "1(1)", that = "b(1) + 2")
-#   )
-#
-#   # internal atomics, functions, non-functions, infixes,
-#   # and pipes will not matter if the above tests pass.
-#   # Why? Because checking will stop at the initial call
-#   # because it is not an infix.
-#
+  # other operators
+  expect_snapshot(detect_mistakes(quote(TRUE & FALSE), quote(TRUE | FALSE)))
+  expect_snapshot(detect_mistakes(quote(2^2), quote(2*2)))
+  expect_snapshot(detect_mistakes(quote(obj$value), quote(obj@value)))
+  expect_snapshot(detect_mistakes(quote(y <- m * x + b), quote(y ~ m * x + b)))
+  expect_snapshot(detect_mistakes(quote(1-4), quote(1:4)))
+  expect_snapshot(detect_mistakes(quote(a %like% b), quote(a %LIKE% b)))
+
+  #   # surplus
+  #   user <-     quote(b(1 + 2))
+  #   solution <- quote(b(1))
+  #   expect_equal(
+  #                detect_mistakes(user, solution)
+  #                ,
+  #                wrong_value("1 + 2", quote(1))
+  #                )
+  #
+  #   # missing
+  #   user <-     quote(sqrt(1))
+  #   solution <- quote(sqrt(1 + 2))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = quote(1), that = "1 + 2")
+  #   )
+  #
+  #   user <-     quote(sqrt(1))
+  #   solution <- quote(sqrt(1 + 2 + 3))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = quote(1), that = "1 + 2 + 3")
+  #   )
+  #
+  #   user <-     quote(sqrt(1 + 2))
+  #   solution <- quote(sqrt(1 + 2 + 3))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 2", that = "+ 3")
+  #   )
+  #
+  #   user <-     quote(sqrt(1 + 3))
+  #   solution <- quote(sqrt(1 + 2 + 3))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1", that = "1 + 2")
+  #   )
+  #
+  #   # internal infix
+  #   user <-     quote(a(1 + 2))
+  #   solution <- quote(a(1 + 3))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 2", that = "+ 3")
+  #   )
+  #
+  #   user <-     quote(a(1 + 2 + 4))
+  #   solution <- quote(a(1 + 3 + 4))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 2", that = "+ 3")
+  #   )
+  #
+  #   user <-     quote(a(1 + 2 + 4))
+  #   solution <- quote(a(1 + 3 + 5))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 4", that = "+ 5")
+  #   )
+  #
+  #   user <-     quote(a(2 + 1))
+  #   solution <- quote(a(3 + 1))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "2", that = "3")
+  #   )
+  #
+  #   user <-     quote(a(1 + 1))
+  #   solution <- quote(a(1 - 1))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1 + 1", that = "1 - 1")
+  #   )
+  #
+  #   user <-     quote(a(1 + 1 + 1))
+  #   solution <- quote(a(1 - 1 + 1))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1 + 1", that = "1 - 1")
+  #   )
+  #
+  #   # surplus
+  #   user <-     quote(1 + 2)
+  #   solution <- quote(1)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value("1 + 2", quote(1))
+  #   )
+  #
+  #   # missing
+  #   user <-     quote(1)
+  #   solution <- quote(1 + 2)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = quote(1), that = "1 + 2")
+  #   )
+  #
+  #   user <-     quote(1)
+  #   solution <- quote(1 + 2 + 3)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = quote(1), that = "1 + 2 + 3")
+  #   )
+  #
+  #   user <-     quote(1 + 2)
+  #   solution <- quote(1 + 2 + 3)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 2", that = "+ 3")
+  #   )
+  #
+  #   user <-     quote(1 + 3)
+  #   solution <- quote(1 + 2 + 3)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1", that = "1 + 2")
+  #   )
+  #
+  #   # internal infix
+  #   user <-     quote(1 + 2)
+  #   solution <- quote(1 + 3)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 2", that = "+ 3")
+  #   )
+  #
+  #   user <-     quote(1 + 2 + 4)
+  #   solution <- quote(1 + 3 + 4)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 2", that = "+ 3")
+  #   )
+  #
+  #   user <-     quote(1 + 2 + 4)
+  #   solution <- quote(1 + 3 + 5)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "+ 4", that = "+ 5")
+  #   )
+  #
+  #   user <-     quote(2 + 1)
+  #   solution <- quote(3 + 1)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "2", that = "3")
+  #   )
+  #
+  #   user <-     quote(1 + 1)
+  #   solution <- quote(1 - 1)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1 + 1", that = "1 - 1")
+  #   )
+  #
+  #   user <-     quote(1 + 1 + 1)
+  #   solution <- quote(1 - 1 + 1)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1 + 1", that = "1 - 1")
+  #   )
+  #
+  #   # function
+  #   user <-     quote(a(1))
+  #   solution <- quote(1 + pi)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "a(1)", that = "1 + pi")
+  #   )
+  #
+  #   user <-     quote(b(1))
+  #   solution <- quote(b(1) + 2)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "b(1)", that = "b(1) + 2")
+  #   )
+  #
+  #   user <-     quote(b(1))
+  #   solution <- quote(b(1) + a(2))
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "b(1)", that = "b(1) + a(2)")
+  #   )
+  #
+  #   # non-function
+  #   user <-     quote(pi(1))
+  #   solution <- quote(1 + pi)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "pi(1)", that = "1 + pi")
+  #   )
+  #
+  #   user <-     quote(1(1))
+  #   solution <- quote(b(1) + 2)
+  #   expect_equal(
+  #     detect_mistakes(user, solution)
+  #     ,
+  #     wrong_value(this = "1(1)", that = "b(1) + 2")
+  #   )
+  #
+  #   # internal atomics, functions, non-functions, infixes,
+  #   # and pipes will not matter if the above tests pass.
+  #   # Why? Because checking will stop at the initial call
+  #   # because it is not an infix.
+  #
 })
 
 test_that("detect_mistakes works with pipes", {
-  
+
   # internal pipe
   user <-     quote(b(1 %>% abs()))
   solution <- quote(b(1))
@@ -469,7 +479,7 @@ test_that("detect_mistakes works with pipes", {
     wrong_value(submitted = user[[2]], solution = solution[[2]], enclosing_call = user)
     # "In `b(1 %>% abs())`, I expected `1` where you wrote `1 %>% abs()`."
   )
-  
+
   user <-     quote(sqrt(1))
   solution <- quote(sqrt(1 %>% log()))
   expect_equal(
@@ -478,14 +488,14 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(sqrt(1))
-  solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
+  solution <- quote(sqrt(1 %>% log() %>% abs()))
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(submitted = user[[2]], solution = solution[[2]][[3]], enclosing_call = user)
   )
 
   user <-     quote(sqrt(1 %>% log()))
-  solution <- quote(sqrt(1 %>% log() %>% abs())) # nolint
+  solution <- quote(sqrt(1 %>% log() %>% abs()))
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(submitted = user[[2]][[3]], solution = solution[[2]][[3]], enclosing_call = user)
@@ -509,8 +519,8 @@ test_that("detect_mistakes works with pipes", {
   )
 
   # DOES MESSAGE AUTOMATICALLY UNPIPE INNER ARGUMENTS?
-  # user <-     quote(a(2 %>% abs() %>% sqrt())) # nolint
-  # solution <- quote(a(2 %>% log() %>% sqrt())) # nolint
+  # user <-     quote(a(2 %>% abs() %>% sqrt()))
+  # solution <- quote(a(2 %>% log() %>% sqrt()))
   # expect_equal(
   #   detect_mistakes(user, solution),
   #   wrong_call(submitted = user[[2]][[2]][[3]], solution = solution[[2]][[2]][[3]], enclosing_call = user[[2]])
@@ -541,14 +551,14 @@ test_that("detect_mistakes works with pipes", {
   )
 
   user <-     quote(1)
-  solution <- quote(1 %>% log() %>% abs()) # nolint
+  solution <- quote(1 %>% log() %>% abs())
   expect_equal(
     detect_mistakes(user, solution),
     wrong_value(submitted = quote(1), solution = quote(abs()))
   )
 
   user <-     quote(1 %>% log())
-  solution <- quote(1 %>% log() %>% abs()) # nolint
+  solution <- quote(1 %>% log() %>% abs())
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(submitted = user[[3]], solution = quote(abs()))
@@ -571,8 +581,8 @@ test_that("detect_mistakes works with pipes", {
     wrong_call(submitted = unpipe(user), solution = as.name("log()"))
   )
 
-  user <-     quote(2 %>% abs() %>% sqrt()) # nolint
-  solution <- quote(2 %>% log() %>% sqrt()) # nolint
+  user <-     quote(2 %>% abs() %>% sqrt())
+  solution <- quote(2 %>% log() %>% sqrt())
   expect_equal(
     detect_mistakes(user, solution),
     wrong_call(
@@ -604,7 +614,7 @@ test_that("detect_mistakes works with pipes", {
 test_that("detect_mistakes handles a mix of named and unnamed arguments and with pipes", {
   env = new.env()
   env$fn <- function(.data, ...) .data
-  
+
   expect_equal(
     detect_mistakes(
       quote(x %>% fn(name == "John")),
@@ -613,7 +623,7 @@ test_that("detect_mistakes handles a mix of named and unnamed arguments and with
     ),
     wrong_value("John", "Paul", enclosing_call = quote(name == "John"))
   )
-  
+
   expect_equal(
     detect_mistakes(
       quote(fn(x, name == "John")),
@@ -631,7 +641,7 @@ test_that("detect_mistakes handles a mix of named and unnamed arguments and with
     ),
     surplus_argument(quote(fn()), quote(2), "")
   )
-  
+
   expect_equal(
     detect_mistakes(
       quote(fn(x = 1, 2)),
@@ -881,45 +891,45 @@ test_that("detect_mistakes : Differentiate between 'strings' and objects in mess
 test_that("detect_mistakes works with function arguments", {
   expect_match(
     detect_mistakes(
-      as.pairlist(alist(x = , y = )), 
-      as.pairlist(alist(x = , y = , z =))
+      as.pairlist(alist(x = , y = )),
+      as.pairlist(alist(x = , y = , z = ))
     ),
-    "I expected argument `z`" 
+    "I expected argument `z`"
   )
-  
+
   expect_grade_code(
     user_code = "function(x, y, z) x + y",
     solution_code = "function(x, y) x + y",
     is_correct = FALSE,
     msg = "I didn't expect argument `z` where you wrote `function(x, y, z)`."
   )
-  
+
   expect_grade_code(
-    user_code = "function(x, y) x + y", 
+    user_code = "function(x, y) x + y",
     solution_code = "function(y, x) x + y",
     is_correct = FALSE,
     msg = "In `function(x, y)`, I expected arguments `y`, `x` where you wrote arguments `x`, `y`."
   )
-  
+
   expect_grade_code(
-    user_code = "function(x, y) x + y", 
+    user_code = "function(x, y) x + y",
     solution_code = "function(x, y = 1) x + y",
     is_correct = FALSE,
     msg = "In `function(x, y)`, I expected arguments `x`, `y = 1` where you wrote arguments `x`, `y`."
   )
-  
+
   expect_grade_code(
-    user_code = "function(x = 1, y = 2) x + y", 
+    user_code = "function(x = 1, y = 2) x + y",
     solution_code = "function(x, y = 1) x + y",
     is_correct = FALSE,
     msg = "In `function(x = 1, y = 2)`, I expected arguments `x`, `y = 1` where you wrote arguments `x = 1`, `y = 2`."
   )
-  
+
   expect_equal(
     code_feedback("function(x, y = a1 %>% b) x + y", "function(x, y = b(a)) x + y"),
     "In `function(x, y = a1 %>% b)`, I expected arguments `x`, `y = b(a)` where you wrote arguments `x`, `y = a1 %>% b`."
   )
-  
+
   expect_equal(
     code_feedback("function(x, y) y2 %>% x", "function(x, y) y %>% x"),
     "In `y2 %>% x`, I expected `y` where you wrote `y2`."
@@ -929,14 +939,14 @@ test_that("detect_mistakes works with function arguments", {
 
 test_that("detect_mistakes returns a reasonable amount of intro context", {
   ggplot_1 <- 'ggplot(data = penguins, mapping = aes(x = flipper_length_mm, fill = species)) +
-    geom_density(alpha = 0.4) + 
-    labs(title = "Gentoos have the longest flippers", x = "Flipper length (mm)", y = "Density") + 
+    geom_density(alpha = 0.4) +
+    labs(title = "Gentoos have the longest flippers", x = "Flipper length (mm)", y = "Density") +
     scale_color_brewer(palette = "Set1")'
   ggplot_2 <- 'ggplot(data = penguins, mapping = aes(x = flipper_length_mm, fill = species)) +
-    geom_density(alpha = 0.4) + 
-    labs(title = "Gentoos have the longest flippers", x = "Flipper length (mm)", y = "Density") + 
+    geom_density(alpha = 0.4) +
+    labs(title = "Gentoos have the longest flippers", x = "Flipper length (mm)", y = "Density") +
     scale_fill_brewer(palette = "Set1")'
-  
+
   feedback <- code_feedback(ggplot_1, ggplot_2)
   expect_false(grepl("^In ", feedback))
   expect_match(feedback, "scale_color_brewer", fixed = TRUE)
@@ -950,14 +960,14 @@ test_that("detect_mistakes says 'didn't expect' when there are too many things",
     is_correct = FALSE,
     msg = "I didn't expect `$` where you wrote `a$b`."
   )
-  
+
   expect_grade_code(
     user_code = "a == b",
     solution_code = "a",
     is_correct = FALSE,
     msg = "I didn't expect `==` where you wrote `a == b`."
   )
-  
+
   expect_grade_code(
     user_code = "a * b",
     solution_code = "a",
@@ -965,3 +975,4 @@ test_that("detect_mistakes says 'didn't expect' when there are too many things",
     msg = "I didn't expect `*` where you wrote `a * b`."
   )
 })
+# nolint end

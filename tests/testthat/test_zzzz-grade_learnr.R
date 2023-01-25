@@ -38,20 +38,20 @@ test_that("Grade learnr check_code", {
     is_correct = FALSE,
     msg = I("might not be valid R code") # from default parse error in grade_parse_error()
   )
-  
+
   # Code scaffolding produces informative parsing error message
   expect_exercise_checker(
     user_code = "____(mtcars, cyl)",
     is_correct = FALSE,
     msg = I("contains 1 blank")
   )
-  
+
   expect_exercise_checker(
     user_code = "________(___, ____)",
     is_correct = FALSE,
     msg = I("contains 3 blanks")
   )
-  
+
   # Can customize the feedback through an exercise.parse.error function
   parse_error_func <- function(x) {
     graded(
@@ -71,6 +71,7 @@ test_that("Grade learnr check_code", {
   )
 })
 
+# nolint start: object_name
 test_that("gradethis_setup", {
   with_options(gradethis_setup(), {
     gradethis.pass <- getOption("gradethis.pass", NULL)
@@ -79,8 +80,9 @@ test_that("gradethis_setup", {
     expect_type(gradethis.pass, "character")
     expect_type(gradethis.fail, "character")
     expect_type(gradethis.code_incorrect, "character")
-    
+
     expect_silent(glue::glue(gradethis.pass))
     expect_silent(glue::glue(gradethis.fail))
   })
 })
+# nolint end

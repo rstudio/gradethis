@@ -28,7 +28,9 @@ to debug an exercise and a submission.
 
 \code{debug_this()} gives you a few ways to see the objects that are
 available inside \code{\link[=grade_this]{grade_this()}} for you to use when grading exercise
-submissions. Suppose we have this example exercise:\if{html}{\out{<div class="markdown">}}\preformatted{```\{r example-setup\}
+submissions. Suppose we have this example exercise:
+
+\if{html}{\out{<div class="sourceCode markdown">}}\preformatted{```\{r example-setup\}
 x <- 1
 ```
 
@@ -56,10 +58,12 @@ paste("\\\out{\n<blockquote>", gradethis::debug_this(submission)$message, "</blo
 
 The first method is the most straight-forward.
 Inside the \verb{*-check} or \verb{*-error-check} chunks for your exercise,
-simply call \code{debug_this()}:\preformatted{```\{r example-check\}
+simply call \code{debug_this()}:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
 debug_this()
 ```
-}
+}\if{html}{\out{</div>}}
 
 Every time you submit code for feedback via \strong{Submit Answer},
 the debug information will be printed.
@@ -69,7 +73,9 @@ the debug information will be printed.
 
 On the other hand, if you want to debug a specific submission,
 such as a case where a submission isn't matching any of your current grading conditions,
-you can call \code{debug_this()} wherever you like inside \code{\link[=grade_this]{grade_this()}}.\preformatted{```\{r example-check\}
+you can call \code{debug_this()} wherever you like inside \code{\link[=grade_this]{grade_this()}}.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
 grade_this(\{
   pass_if_equal(3, "Good work?")
   
@@ -79,7 +85,7 @@ grade_this(\{
   \}
 \})
 ```
-}
+}\if{html}{\out{</div>}}
 }
 
 \subsection{Debug default fail condition}{
@@ -91,24 +97,28 @@ During development of a tutorial,
 you may want to have this default \code{fail()} return the debugging information
 rather than a failure.
 
-By setting the global option \code{gradethis.fail} to use \code{debug_this()},\preformatted{```\{r setup\}
+By setting the global option \code{gradethis.fail} to use \code{debug_this()},
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r setup\}
 library(learnr)
 library(gradethis)
 gradethis_setup()
 
 option(gradethis.fail = "\{debug_this()\}")
 ```
-}
+}\if{html}{\out{</div>}}
 
 you can see the values that are available to you during the submission check
-whenever your test submissions pass through your other checks.\preformatted{```\{r example-check\}
+whenever your test submissions pass through your other checks.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
 grade_this(\{
   pass_if_equal(3, "Good work?")
   
   fail()
 \})
 ```
-}
+}\if{html}{\out{</div>}}
 
 Don't forget to reset or unset the \code{gradethis.fail} option
 when you're done working on your tutorial.
@@ -124,27 +134,27 @@ debug_this()(submission)$message
 
 # The remaining examples produce equivalent output
 \dontrun{
-  # Or you can call `debug_this()` inside a `grade_this()` call
-  # at the point where you want to get debug feedback.
-  grade_this({
-    pass_if_equal(42, "Good stuff!")
-  
-    # Find out why this is failing??
-    debug_this()
-  })(submission)
-  
-  # Set default `fail()` message to show debug information
-  # (for tutorial development only!)
-  old_opts <- options(gradethis.fail = "{debug_this()}")
-  
-  grade_this({
-    pass_if_equal(42, "Good stuff!")
-  
-    fail()
-  })(submission)
-  
-  # default fail() will show debug until you reset gradethis.fail option
-  options(old_opts)
+# Or you can call `debug_this()` inside a `grade_this()` call
+# at the point where you want to get debug feedback.
+grade_this({
+  pass_if_equal(42, "Good stuff!")
+
+  # Find out why this is failing??
+  debug_this()
+})(submission)
+
+# Set default `fail()` message to show debug information
+# (for tutorial development only!)
+old_opts <- options(gradethis.fail = "{debug_this()}")
+
+grade_this({
+  pass_if_equal(42, "Good stuff!")
+
+  fail()
+})(submission)
+
+# default fail() will show debug until you reset gradethis.fail option
+options(old_opts)
 }
 
 }

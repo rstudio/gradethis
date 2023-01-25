@@ -67,7 +67,7 @@ more details.}
 
 \item{x}{A formula, function, or value, that returns \code{TRUE} or \code{FALSE}.
 When comparing objects that are greater than length 1
-(e.g., vectors, dataframes, matricies, etc)
+(e.g., vectors, dataframes, matrices, etc)
 A logical vector will be returned if the user uses \code{==}, not a single logical value.
 \code{gradethis} will run the vector through
 \code{all(..., na.rm = TRUE)} to check for the logical value.
@@ -98,7 +98,7 @@ controlled by \code{default_correct} and \code{default_message}).
 # The student submits code that returns `5`
 submitted_5 <- mock_this_exercise(.user_code = 2 + 3)
 
-# grade_result() returns a function that is called on the student's 
+# grade_result() returns a function that is called on the student's
 # submission. The *-check chunk of the exercise might contain the following
 # grade_result() code. When you're writing your tutorial, you can ignore the
 # `(submitted_5)`, we're using that notation here to preview what this
@@ -130,7 +130,9 @@ grade_result(
 )(submitted_fn)
 
 # To learn more about using grade_result() and grade_code() with learnr, see:
-\dontrun{gradethis_demo()}
+\dontrun{
+gradethis_demo()
+}
 }
 \seealso{
 \code{\link[=grade_code]{grade_code()}}

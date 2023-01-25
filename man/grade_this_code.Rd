@@ -5,12 +5,12 @@
 \title{Grade student code against a solution}
 \usage{
 grade_this_code(
-  correct = getOption("gradethis.code_correct", getOption("gradethis.pass",
-    "Correct!")),
+  correct = getOption("gradethis.code_correct", getOption("gradethis.pass", "Correct!")),
   incorrect = getOption("gradethis.code_incorrect", getOption("gradethis.fail",
     "Incorrect")),
   ...,
-  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
+  allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
+  action = c("both", "pass", "fail")
 )
 }
 \arguments{
@@ -20,7 +20,9 @@ answer matches a known correct answer.}
 \item{incorrect}{A \code{glue}-able character string to display if the student
 answer does not match the known correct answer. Use \code{code_feedback()} in
 this string to control the placement of the auto-generated feedback message
-produced by comparing the student's submission with the solution.}
+produced by comparing the student's submission with the solution.
+Use a string that doesn't include \code{code_feedback()} to grade the student's
+code without providing feedback.}
 
 \item{...}{Ignored}
 
@@ -29,6 +31,15 @@ argument names is not allowed and e.g. \code{runif(1, mi = 0)} will return a
 message indicating that the full formal name \code{min} should be used. The
 default is set via the \code{gradethis.allow_partial_matching} option, or by
 \code{\link[=gradethis_setup]{gradethis_setup()}}.}
+
+\item{action}{The action to take:
+\enumerate{
+\item \code{"pass"} provide passing \code{correct} feedback when the user's code
+matches the solution code.
+\item \code{"fail"} provide failing \code{incorrect} feedback when the user's code does
+not match the solution code.
+\item \code{"both"} always provide passing or failing feedback.
+}}
 }
 \value{
 Returns a function whose first parameter will be an environment
@@ -51,20 +62,27 @@ In most cases, to use \code{grade_this_code()}, ensure that your exercise has a
 \if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-solution\}
 sqrt(log(1))
 ```
-}
+}\if{html}{\out{</div>}}
 
-\if{html}{\out{</div>}}
-
-Then, call \code{grade_this_code()} in your exercise's \code{-check} chunk:
+Then, call \code{grade_this_code()} in your exercise's \code{-check} or \code{-code-check} chunk:
 
 \if{html}{\out{<div class="sourceCode">}}\preformatted{```\{r example-check\}
 grade_this_code()
 ```
-}
+}\if{html}{\out{</div>}}
 
-\if{html}{\out{</div>}}
+If \code{grade_this_code()} is called in a \code{-code-check} chunk and returns
+feedback, either passing or failing feedback, then the user's code is not
+executed. If you want the user to see the output of their code, call
+\code{grade_this_code()} in the \code{-check} chunk. You can also use
+\code{grade_this_code()} as a pre-check to avoid running code when it fails or
+passes by calling \code{grade_this_code()} inside the \code{-code-check} chunk and
+setting \code{action = "pass"} or \code{action = "fail"} to only return feedback when
+the user's code passes or fails, respectively. (Note: requires \pkg{learnr}
+version 0.10.1.9017 or later.)
 
 Learn more about how to use \code{grade_this_code()} in the \strong{Details} section
+below.
 }
 \section{Details}{
 
@@ -109,6 +127,8 @@ message.
 \enumerate{
 \item \code{\link[=code_feedback]{code_feedback()}}: Adds feedback about the first observed difference
 between the student's submitted code and the model solution code.
+If you want to grade the student's code without providing feedback,
+leave \code{\link[=code_feedback]{code_feedback()}} out of your string.
 \item \code{\link[=pipe_warning]{pipe_warning()}}: Informs the user that their code was unpiped prior to
 comparison. This message is included by default to help clarify cases
 when the code feedback makes more sense in the unpiped context.
@@ -121,6 +141,7 @@ grades, by default.
 \examples{
 # For an interactive example run: gradethis_demo()
 
+# # These are manual examples, see grading demo for `learnr` tutorial usage
 
 grade_this_code()(
   mock_this_exercise(

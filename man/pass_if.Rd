@@ -51,7 +51,7 @@ added using the default options of \code{\link[=give_code_feedback]{give_code_fe
 \code{\link[=maybe_code_feedback]{maybe_code_feedback()}}. The default value of \code{hint} can be set using
 \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.hint} option.}
 
-\item{encourage}{Incude a random encouraging phrase with
+\item{encourage}{Include a random encouraging phrase with
 \code{\link[=random_encouragement]{random_encouragement()}}? The default value of \code{encourage} can be set
 using \code{\link[=gradethis_setup]{gradethis_setup()}} or the \code{gradethis.fail.encourage} option.}
 }
@@ -72,35 +72,35 @@ or \code{FALSE}.
 }
 \section{Functions}{
 \itemize{
-\item \code{pass_if}: Pass if \code{cond} is \code{TRUE}.
+\item \code{pass_if()}: Pass if \code{cond} is \code{TRUE}.
 
-\item \code{fail_if}: Fail if \code{cond} is \code{TRUE}.
+\item \code{fail_if()}: Fail if \code{cond} is \code{TRUE}.
+
 }}
-
 \examples{
 # Suppose the prompt is to find landmasses in `islands` with land area of
 # less than 20,000 square miles. (`islands` reports land mass in units of
 # 10,000 sq. miles.)
 
-grader <- 
-# ```{r example-check}
+grader <-
+  # ```{r example-check}
   grade_this({
     fail_if(any(is.na(.result)), "You shouldn't have missing values.")
-    
+
     diff_len <- length(.result) - length(.solution)
     fail_if(diff_len < 0, "You missed {abs(diff_len)} island(s).")
     fail_if(diff_len > 0, "You included {diff_len} too many islands.")
-    
+
     pass_if(all(.result < 20), "Great work!")
-    
+
     # Fall back grade
     fail()
   })
 # ```
 
-.solution <- 
-# ```{r example-solution}
-    islands[islands < 20]
+.solution <-
+  # ```{r example-solution}
+  islands[islands < 20]
 # ```
 
 # Peek at the right answer
@@ -117,7 +117,6 @@ grader(mock_this_exercise(islands[islands < 16], !!.solution))
 
 # Just right!
 grader(mock_this_exercise(islands[islands < 20], !!.solution))
-
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

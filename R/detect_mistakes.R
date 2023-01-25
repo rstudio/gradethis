@@ -1,9 +1,9 @@
 detect_mistakes <- function(user,
-                            solution,
-                            env = rlang::env_parent(),
-                            enclosing_call = NULL,
-                            enclosing_arg = NULL,
-                            allow_partial_matching = TRUE) {
+  solution,
+  env = rlang::env_parent(),
+  enclosing_call = NULL,
+  enclosing_arg = NULL,
+  allow_partial_matching = TRUE) {
   force(env)
 
   if (rlang::is_quosure(user)) {
@@ -53,7 +53,7 @@ detect_mistakes <- function(user,
   solution_original <- solution
 
   if (is.call(user)) {
-    user <- unpipe_all(user) # cannot standardise yet without risking error
+    user <- unpipe_all(user) # cannot standardize yet without risking error
     submitted_names <- rlang::names2(user)
   }
   if (is.call(solution)) {
@@ -69,11 +69,11 @@ detect_mistakes <- function(user,
   if (!is.null(wrong_value)) {
     return(wrong_value)
   }
-  
+
   # We can assume anything below here is a call
 
   # Dividing cases into groups based on the relative lengths of the user's code
-  # and the solution code produces unitelligible messages as in issue #84. To
+  # and the solution code produces unintelligible messages as in issue #84. To
   # produce more transparent messages that accord with how a user thinks of calls,
   # check these things in this order:
 
@@ -114,9 +114,9 @@ detect_mistakes <- function(user,
 
 
   # 6. Check that the user code does not contain any named arguments that do not
-  #    appear in the solution code. Since both calls have been standardised, these
+  #    appear in the solution code. Since both calls have been standardized, these
   #    named arguments can only be being passed to ... and we should not match by
-  #    position a named argument that is passed to ... with an unamed argument
+  #    position a named argument that is passed to ... with an unnamed argument
   #    passed to ...
   surplus_dots_argument <- detect_surplus_dots_argument(
     user, user_names, solution_names, enclosing_call, enclosing_arg
@@ -147,7 +147,7 @@ detect_mistakes <- function(user,
         enclosing_arg = arg_name,
         allow_partial_matching = allow_partial_matching
       )
-      if(!is.null(res)) return(res)
+      if (!is.null(res)) return(res)
     }
 
     # Make these arguments invisible to further checks
@@ -186,7 +186,7 @@ detect_mistakes <- function(user,
         )
       )
 
-    # if user argument is unmatched due to no remaining solution arguments
+      # if user argument is unmatched due to no remaining solution arguments
     } else if (i > solution_len) {
       arg_name <- rlang::names2(user_args[i])
       if (!(arg_name %in% submitted_names)) arg_name <- ""
@@ -200,16 +200,16 @@ detect_mistakes <- function(user,
         )
       )
 
-    # The user argument has a matching solution argument, are they identical?
+      # The user argument has a matching solution argument, are they identical?
     } else if (!identical(user_args[[i]], solution_args[[i]])) {
       name <- rlang::names2(user_args[i])
       if (!(name %in% submitted_names)) name <- ""
-      
+
       # find user arg as submitted
       user_args_submitted <- as.list(call_standardise_formals(unpipe(submitted), env = env))
       user_args_ignore <- which(names(user_args_submitted) %in% user_named_args_ignore_list)
       user_args_submitted <- user_args_submitted[-c(1, user_args_ignore)]
-      
+
       res <- detect_mistakes(
         # unpipe only one level to detect mistakes in the argument as submitted
         user = user_args_submitted[[i]],
@@ -220,11 +220,11 @@ detect_mistakes <- function(user,
         enclosing_arg = name,
         allow_partial_matching = allow_partial_matching
       )
-      if(!is.null(res)) return(res)
+      if (!is.null(res)) return(res)
     }
   }
 
-  # No missmatch found
+  # No mismatch found
   return(NULL)
 }
 

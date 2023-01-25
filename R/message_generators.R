@@ -68,6 +68,7 @@ bad_argument_name <- function(submitted_call,
 }
 
 # duplicate_name
+
 duplicate_name <- function(submitted_call,
                            submitted_name,
                            enclosing_call = NULL,
@@ -99,7 +100,7 @@ duplicate_name <- function(submitted_call,
   )
 }
 
-# WHAT TO DO IF THE MISSING ARGUMENT DOESN"T HAVE A NAME IN THE SOLUTION?
+# WHAT TO DO IF THE MISSING ARGUMENT DOESN'T HAVE A NAME IN THE SOLUTION?
 # missing argument
 missing_argument <- function(submitted_call,
                              solution_name = NULL,
@@ -301,8 +302,8 @@ wrong_call <- function(submitted,
     solution <- md_code_prepend(paste(submitted_name, "= "), solution)
     submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
   }
-  
-  action <- 
+
+  action <-
     if (is_infix_assign(solution_original)) {
       "assign something to something else with"
     } else {
@@ -326,6 +327,9 @@ wrong_value <- function(submitted,
                         solution,
                         submitted_name = NULL,
                         enclosing_call = NULL) {
+  if (is_missing(submitted)) {
+    submitted <- NULL
+  }
 
   # f(1, g(1, h(1)))
   # f(1, a = g(1, a = h(2)))
@@ -342,19 +346,19 @@ wrong_value <- function(submitted,
     solution <- submitted
     submitted <- NULL
   }
-  
+
   where <- " where you wrote "
-  
+
   solution_original <- solution
   solution <- prep(solution)
-   
+
   if (is.null(submitted)) {
     intro <- ""
     submitted <- build_intro(enclosing_call %||% solution_original, .open = "", .close = "")
   } else {
-    submitted <-prep(submitted)
+    submitted <- prep(submitted)
   }
-      
+
   if (!is.null(submitted_name) && submitted_name != "") {
     solution <- md_code_prepend(paste(submitted_name, "= "), solution)
     submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
@@ -363,7 +367,7 @@ wrong_value <- function(submitted,
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
-  action <- 
+  action <-
     if (is_infix_assign(solution_original)) {
       "you to assign something to something else with "
     } else if (grepl("\\(\\)", solution)) {
@@ -401,11 +405,11 @@ prep <- function(text) {
 build_intro <- function(.call = NULL, .arg = NULL, .open = "In ", .close = ", ") {
   is_call_fn_def <- is_function_definition(.call)
 
-  if(!is.null(.call)) {
+  if (!is.null(.call)) {
     .call_str <- deparse_to_string(.call)
     if (!is.null(.arg) && !identical(.arg, "")) {
       .call_str <- paste(.arg, "=", .call_str)
-    } 
+    }
     if (is_call_fn_def) {
       # strip function body
       .call_str <- sub("^(function\\(.+?\\))(.+)$", "\\1", .call_str)

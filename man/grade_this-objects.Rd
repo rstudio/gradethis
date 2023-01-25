@@ -7,12 +7,15 @@
 \alias{.user}
 \alias{.last_value}
 \alias{.solution}
+\alias{.solution_all}
 \alias{.user_code}
 \alias{.solution_code}
+\alias{.solution_code_all}
 \alias{.envir_prep}
 \alias{.envir_result}
 \alias{.evaluate_result}
 \alias{.label}
+\alias{.stage}
 \alias{.engine}
 \title{Checking environment objects for use in \code{grade_this()}}
 \format{
@@ -24,9 +27,13 @@ An object of class \code{.last_value} (inherits from \code{.result}, \code{grade
 
 An object of class \code{.solution} (inherits from \code{gradethis_placeholder}) of length 0.
 
+An object of class \code{.solution_all} (inherits from \code{gradethis_placeholder}) of length 0.
+
 An object of class \code{.user_code} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.solution_code} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.solution_code_all} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.envir_prep} (inherits from \code{gradethis_placeholder}) of length 0.
 
@@ -35,6 +42,8 @@ An object of class \code{.envir_result} (inherits from \code{gradethis_placehold
 An object of class \code{.evaluate_result} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.label} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.stage} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) of length 0.
 }
@@ -47,9 +56,13 @@ An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) o
 
 .solution
 
+.solution_all
+
 .user_code
 
 .solution_code
+
+.solution_code_all
 
 .envir_prep
 
@@ -58,6 +71,8 @@ An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) o
 .evaluate_result
 
 .label
+
+.stage
 
 .engine
 }
@@ -78,14 +93,17 @@ instructor code, the names of these objects all start with \code{.}.
 \item \code{.user_code}: A string containing the code submitted by the user.
 \item \code{.check_code}: A string containing the code provided within the \verb{*-check} or \verb{*-code-check} chunk for the exercise.
 \item \code{.envir_prep}: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.
-\item \code{.envir_result}: The R environemnt after running the student's submitted code.
+\item \code{.envir_result}: The R environment after running the student's submitted code.
 \item \code{.evaluate_result}: The return value from the \code{\link[evaluate:evaluate]{evaluate::evaluate()}} function (see learnr's documentation).
+\item \code{.stage}: The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'
 }
 
 In addition, \pkg{gradethis} has provided some extra objects:
 \itemize{
 \item \code{.user}, \code{.result}: The last value returned from evaluating the user's exercise submission.
 \item \code{.solution}: The last value returned from evaluating the \code{.solution_code} for the exercise (evaluated in \code{.envir_prep}).
+\item \code{.solution_all}: A list containing all solutions when multiple solutions are provided in the \verb{*-solution} chunk for the exercise. Solutions are separated by header comments, e.g. \verb{# base_r ----}.
+\item \code{.solution_code_all}: A list containing the code of all solutions when multiple solutions are provided in the \verb{*-solution} chunk for the exercise. Solutions are separated by header comments, e.g. \verb{# base_r ----}.
 }
 }
 \keyword{datasets}

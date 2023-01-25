@@ -52,6 +52,5 @@ eval_gradethis({
   pass("message 2")
   pass("message 3")
 })
-  
 }
 \keyword{internal}

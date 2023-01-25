@@ -5,7 +5,7 @@ detect_wrong_value <- function(user, solution, submitted, enclosing_arg, enclosi
         submitted <- as.pairlist(user[setdiff(names(user), names(solution))])
         solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
       }
-      
+
       return(
         wrong_value(
           submitted = submitted,
@@ -18,8 +18,8 @@ detect_wrong_value <- function(user, solution, submitted, enclosing_arg, enclosi
   }
 }
 
-detect_mismatched_function_arguments <- function(user, solution) {
-  is.pairlist(user) && 
+detect_mismatched_function_arguments <- function(user, solution) { # nolint: object_length
+  is.pairlist(user) &&
     is.pairlist(solution) &&
     length(user) != length(solution)
 }
@@ -42,10 +42,10 @@ detect_name_problems <- function(
 ) {
   user_args <- as.list(user)
   user_names <- real_names(user)
-  
+
   solution_args <- as.list(solution)
   solution_names <- real_names(solution)
-  
+
   ## If the user duplicates an argument name, ensure that the solution does as
   ## well. This should rarely happen, but might with map() for example.
   duplicate_names <- detect_duplicate_names(
@@ -54,24 +54,24 @@ detect_name_problems <- function(
   if (!is.null(duplicate_names)) {
     return(duplicate_names)
   }
-  
+
   ## Remove exact matches from further scrutiny
   for (name in user_names) {
     if (name %in% solution_names) {
       user_args[[name]] <- NULL
       solution_args[[name]] <- NULL
-      
+
       # remove first instance of name from real solution
       # names to handle duplicated argument names
       name_index <- which(identical(solution_names, name))[1]
       solution_names[name_index] <- ""
     }
   }
-  
+
   ## Check remaining arguments for partial matches
   remaining_user_names <- real_names(user_args)
   remaining_solution_names <- real_names(solution_args)
-  
+
   if (length(remaining_user_names) > 0) {
     too_many_matches <- detect_too_many_matches(
       user, remaining_solution_names, remaining_user_names,
@@ -80,17 +80,17 @@ detect_name_problems <- function(
     if (!is.null(too_many_matches)) {
       return(too_many_matches)
     }
-    
+
     ## How many formals does each remaining user arg partially match?
     pmatches_per_arg <- function(user_name) {
       sum(startsWith(remaining_solution_names, user_name))
     }
-    
+
     matches <- vapply(remaining_user_names, pmatches_per_arg, 1)
     offenders <- matches[matches > 1]
     unused <- matches[matches == 0]
     well_matched <- matches[matches == 1]
-    
+
     # names that match multiple arguments are a syntax error
     bad_argument_names <- detect_bad_argument_names(
       user, offenders, enclosing_call, enclosing_arg
@@ -98,7 +98,7 @@ detect_name_problems <- function(
     if (!is.null(bad_argument_names)) {
       return(bad_argument_names)
     }
-    
+
     # Unmatched named arguments are surplus
     surplus_argument <- detect_surplus_argument(
       user, unused, enclosing_call, enclosing_arg
@@ -106,11 +106,11 @@ detect_name_problems <- function(
     if (!is.null(surplus_argument)) {
       return(surplus_argument)
     }
-    
-    
+
+
     if (length(well_matched > 0)) {
       matched_user_names <- rlang::names2(well_matched)
-      
+
       if ( !allow_partial_matching ) {
         pmatches_argument_name <- detect_pmatches_argument_name(
           user,
@@ -122,7 +122,7 @@ detect_name_problems <- function(
           return(pmatches_argument_name)
         }
       }
-      
+
       # Remove partially matched arguments from further consideration
       for (name in matched_user_names) {
         # which solution name does it match?
@@ -132,16 +132,16 @@ detect_name_problems <- function(
         solution_args[[matched_solution_name]] <- NULL
       }
     }
-    
+
   }
-  
+
   unnamed_surplus_argument <- detect_unnamed_surplus_argument(
     user, user_args, solution_args, enclosing_call, enclosing_arg
   )
   if (!is.null(unnamed_surplus_argument)) {
     return(unnamed_surplus_argument)
   }
-  
+
   invisible()
 }
 
@@ -173,10 +173,10 @@ detect_too_many_matches <- function(
   pmatches_per_formal <- function(solution_name) {
     sum(startsWith(solution_name, remaining_user_names))
   }
-  
+
   matches <- vapply(remaining_solution_names, pmatches_per_formal, 1)
   offenders <- matches[matches > 1]
-  
+
   if (length(offenders) > 0) {
     overmatched_name <- rlang::names2(offenders[1])
     return(
@@ -234,10 +234,10 @@ detect_pmatches_argument_name <- function(
   where_pmatches <- function(user_name) {
     which(startsWith(remaining_solution_names, user_name))
   }
-  
+
   matches <- vapply(remaining_user_names, where_pmatches, 1)
   matched_solution_name <- remaining_solution_names[matches]
-  
+
   return(
     pmatches_argument_name(
       submitted_call = user,
@@ -287,7 +287,7 @@ detect_missing_argument <- function(
   explicit_user_names <- real_names(explicit_user)
   explicit_solution_names <-  real_names(explicit_solution)
   missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
-  
+
   if (length(missing_args) > 0) {
     missing_name <- missing_args[1]
     return(

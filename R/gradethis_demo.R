@@ -24,11 +24,15 @@
 #' @export
 gradethis_demo <- function() {
   gradethis_demo_path <- system.file("tutorials", "grading-demo/grading-demo.Rmd",
-                                     package = "gradethis")
+    package = "gradethis")
   if (rstudioapi::isAvailable()) {
     rstudioapi::navigateToFile(gradethis_demo_path)
   } else {
     browseURL(paste0("file://", gradethis_demo_path))
   }
-  message("I've opened a demo tutorial for you that uses gradethis.\nIf you are using the RStudio IDE, please check your source pane,\notherwise please check your web browser.")
+  message(
+    "I've opened a demo tutorial for you that uses gradethis. ",
+    "If you are using the RStudio IDE, please check your source pane, ",
+    "otherwise please check your web browser.",
+  )
 }

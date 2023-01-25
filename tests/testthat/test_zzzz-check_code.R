@@ -53,8 +53,8 @@ test_that("Spots differences in calls", {
   )
 
   expect_grade_code(
-    glue_correct = '{ .message } { .correct }',
-    glue_incorrect = '{ .message } { .incorrect }',
+    glue_correct = "{ .message } { .correct }",
+    glue_incorrect = "{ .message } { .incorrect }",
     user_code = a,
     solution_code = b,
     is_correct = FALSE,
@@ -119,7 +119,7 @@ test_that("Mentions only first non-matching element", {
 })
 
 test_that("Spots differences in argument names", {
-  test_fn <- function(x, y = 1, z = 2, ...) {return(1)}
+  test_fn <- function(x, y = 1, z = 2, ...) return(1)
 
   a <- expression(test_fn(10, y = 1, z = TRUE))
   b <- expression(test_fn(10, 1, TRUE))
@@ -151,7 +151,7 @@ test_that("Spots differences in argument names", {
 })
 
 test_that("Ignore differences in argument positions (for non ... arguments)", {
-  test_fn <- function(x, digits = 0){return(1)}
+  test_fn <- function(x, digits = 0) return(1)
   a <- expression(test_fn(x = pi, digits = 2))
   b <- expression(test_fn(pi, digits = 2))
   c <- expression(test_fn(2, x = pi))
@@ -239,7 +239,7 @@ test_that("Spots differences in long calls", {
   # https://github.com/rstudio/gradethis/issues/28
 
   # stub tidyr::gather()
-  gather <- function(key = "key", value = "value", ..., na.rm = FALSE) {
+  gather <- function(key = "key", value = "value", ..., na.rm = FALSE) { # nolint: object_name
     NULL
   }
 

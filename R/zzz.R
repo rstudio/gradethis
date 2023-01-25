@@ -10,12 +10,15 @@
       exercise.error.check.code = gradethis_default_learnr_options$exercise.error.check.code
     )
   )
-  
+
   # Set legacy options onLoad as these aren't exposed in gradethis_setup()
   toset <- !names(gradethis_legacy_options) %in% names(options())
   if (any(toset)) {
     options(gradethis_legacy_options[toset])
   }
+
+  # Set a few options required for waldo::compare() to work
+  local_options_waldo_compare(globalenv())
 
   invisible()
 }

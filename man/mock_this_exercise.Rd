@@ -10,6 +10,8 @@ mock_this_exercise(
   ...,
   .label = "mock",
   .engine = "r",
+  .stage = "check",
+  .result = rlang::missing_arg(),
   setup_global = NULL,
   setup_exercise = NULL
 )
@@ -25,8 +27,17 @@ representing the solution code to this exercise.}
 
 \item{.label}{The label of the mock exercise, defaults to \code{"mock"}.}
 
-\item{.engine}{The engine of the mock exercise, must be \code{"r"} but is included
-here for future compatibility.}
+\item{.engine}{The engine of the mock exercise. If the engine is not \code{"r"},
+then \code{.result} must be provided explicitly since \code{mock_this_exercise()}
+cannot evaluate the \code{.user_code}.}
+
+\item{.stage}{The stage of the exercise evaluation, defaults to \code{"check"}.
+\pkg{learnr} stages are \code{"code_check"}, \code{"check"} or \code{"error_check"}. When
+gradethis is used outside of learnr, this variable is typically \code{NULL}.}
+
+\item{.result}{The result of the evaluation of the \code{.user_code}. If the
+\code{.engine} is \code{"r"}, the result will be prepared automatically by evaluating
+the user code.}
 
 \item{setup_global}{An optional single string or expression in braces
 representing the global \code{setup} chunk code.}
@@ -49,7 +60,7 @@ expect when used to grade a user submission to an exercise in a \pkg{learnr}
 tutorial.
 }
 \examples{
-# First we'll create a grading function with grade_this(). The user's code 
+# First we'll create a grading function with grade_this(). The user's code
 # should return the value 42, and we have some specific messages if they're
 # close but miss this target. Otherwise, we'll fall back to the default fail
 # message, which will include code feedback.
@@ -75,7 +86,7 @@ this_grader(
       x <- 31
       y <- 11
       x + y
-    }, 
+    },
     .solution_code = 42
   )
 )
@@ -83,7 +94,7 @@ this_grader(
 # Our final submission changes the prompt slightly. Suppose we have provided
 # an `x` object in our global setup with a value of 31. We also have a `y`
 # object that we create for the user in the exercise setup chunk. We then ask
-# the student to add `x` and `y`. What happens if the student subtracts 
+# the student to add `x` and `y`. What happens if the student subtracts
 # instead? That's what this mock submission tests:
 this_grader(
   mock_this_exercise(
@@ -93,5 +104,4 @@ this_grader(
     setup_exercise = y <- 11
   )
 )
-
 }
