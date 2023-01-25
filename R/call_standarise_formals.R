@@ -95,7 +95,7 @@ call_standardise_formals_recursive <- function( # nolint
     return(code)
   }
 
-  code <- purrr::map(code, call_standardise_formals_recursive)
+  code <- purrr::map(as.list(code), call_standardise_formals_recursive)
   code <- as.call(code)
   call_standardise_formals(code)
 }
