@@ -427,10 +427,13 @@ build_intro <- function(.call = NULL, .arg = NULL, .open = "In ", .close = ", ")
 
 prep_function_arguments <- function(arg_list) {
   args <- names(arg_list)
-  values <- purrr::map_chr(arg_list, function(arg_value) {
-    if (arg_value == quote("")) return("")
-    paste(" =", deparse(arg_value))
-  })
+  values <- purrr::map_chr(
+    as.list(arg_list),
+    function(arg_value) {
+      if (arg_value == quote("")) return("")
+      paste(" =", deparse(arg_value))
+    }
+  )
   s <- if (length(args) == 1) " " else "s "
   paste0("argument", s, paste0("`", args, values, "`", collapse = ", "))
 }
