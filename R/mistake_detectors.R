@@ -1,23 +1,25 @@
 detect_wrong_value <- function(
     user, solution, submitted, enclosing_arg, enclosing_call
 ) {
-  if (!is.call(user) || !is.call(solution)) {
-    if (!identical(user, solution)) {
-      if (detect_mismatched_function_arguments(user, solution)) {
-        submitted <- as.pairlist(user[setdiff(names(user), names(solution))])
-        solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
-      }
-
-      return(
-        wrong_value(
-          submitted = submitted,
-          solution = solution,
-          submitted_name = enclosing_arg,
-          enclosing_call = enclosing_call
-        )
-      )
-    }
+  if (is.call(user) && is.call(solution)) {
+    return()
   }
+
+  if (identical(user, solution)) {
+    return()
+  }
+
+  if (detect_mismatched_function_arguments(user, solution)) {
+    submitted <- as.pairlist(user[setdiff(names(user), names(solution))])
+    solution <- as.pairlist(solution[setdiff(names(solution), names(user))])
+  }
+
+  wrong_value(
+    submitted = submitted,
+    solution = solution,
+    submitted_name = enclosing_arg,
+    enclosing_call = enclosing_call
+  )
 }
 
 detect_mismatched_function_arguments <- function(user, solution) { # nolint: object_length
@@ -27,16 +29,16 @@ detect_mismatched_function_arguments <- function(user, solution) { # nolint: obj
 }
 
 detect_wrong_call <- function(user, solution, enclosing_arg, enclosing_call) {
-  if (!identical(as.list(user)[[1]], as.list(solution)[[1]])) {
-    return(
-      wrong_call(
-        submitted = user,
-        solution = solution,
-        submitted_name = enclosing_arg,
-        enclosing_call = enclosing_call
-      )
-    )
+  if (identical(as.list(user)[[1]], as.list(solution)[[1]])) {
+    return()
   }
+
+  wrong_call(
+    submitted = user,
+    solution = solution,
+    submitted_name = enclosing_arg,
+    enclosing_call = enclosing_call
+  )
 }
 
 detect_name_problems <- function(
@@ -248,15 +250,13 @@ detect_pmatches_argument_name <- function(
   matches <- vapply(remaining_user_names, where_pmatches, 1)
   matched_solution_name <- remaining_solution_names[matches]
 
-  return(
-    pmatches_argument_name(
-      submitted_call = user,
-      submitted = unname(as.list(user)[matched_user_names]),
-      submitted_name = matched_user_names,
-      solution_name = matched_solution_name,
-      enclosing_call = enclosing_call,
-      enclosing_arg = enclosing_arg
-    )
+  pmatches_argument_name(
+    submitted_call = user,
+    submitted = unname(as.list(user)[matched_user_names]),
+    submitted_name = matched_user_names,
+    solution_name = matched_solution_name,
+    enclosing_call = enclosing_call,
+    enclosing_arg = enclosing_arg
   )
 }
 
@@ -267,6 +267,7 @@ detect_unnamed_surplus_argument <- function(
   # Any further matching will now be by position not name
   n_remaining_user <- length(user_args)
   n_remaining_solution <- length(solution_args)
+
   if (n_remaining_user > n_remaining_solution) {
     i <- n_remaining_solution + 1
     return(
@@ -295,36 +296,38 @@ detect_missing_argument <- function(
     include_defaults = FALSE
   )
   explicit_user_names <- real_names(explicit_user)
-  explicit_solution_names <-  real_names(explicit_solution)
-  missing_args <- explicit_solution_names[!(explicit_solution_names %in% explicit_user_names)]
 
-  if (length(missing_args) > 0) {
-    missing_name <- missing_args[1]
-    return(
-      missing_argument(
-        submitted_call = explicit_solution,
-        solution_name = missing_name,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
-      )
-    )
+  explicit_solution_names <- real_names(explicit_solution)
+  missing_args <- setdiff(explicit_solution_names, explicit_user_names)
+
+  if (length(missing_args) == 0) {
+    return()
   }
+
+  missing_name <- missing_args[1]
+  missing_argument(
+    submitted_call = explicit_solution,
+    solution_name = missing_name,
+    enclosing_call = enclosing_call,
+    enclosing_arg = enclosing_arg
+  )
 }
 
 detect_surplus_dots_argument <- function(
     user, user_names, solution_names, enclosing_call, enclosing_arg
 ) {
-  unmatched_user_names <- user_names[!(user_names %in% solution_names)]
-  if (length(unmatched_user_names) > 0) {
-    surplus_name <- unmatched_user_names[1]
-    return(
-      surplus_argument(
-        submitted_call = user,
-        submitted = user[[surplus_name]],
-        submitted_name = surplus_name,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg
-      )
-    )
+  unmatched_user_names <- setdiff(user_names, solution_names)
+
+  if (length(unmatched_user_names) == 0) {
+    return()
   }
+
+  surplus_name <- unmatched_user_names[1]
+  surplus_argument(
+    submitted_call = user,
+    submitted = user[[surplus_name]],
+    submitted_name = surplus_name,
+    enclosing_call = enclosing_call,
+    enclosing_arg = enclosing_arg
+  )
 }
