@@ -17,8 +17,10 @@ detect_mistakes <- function(
 
   if (is.expression(user)) {
     stopifnot(is.expression(solution))
+
     # need to preemptively return after each line if a result is returned
     max_len <- max(c(length(user), length(solution)))
+
     for (i in seq_len(max_len)) {
       if (i > length(user)) {
         return(
@@ -27,6 +29,7 @@ detect_mistakes <- function(
           )
         )
       }
+
       if (i > length(solution)) {
         return(
           message_extra_answer(
@@ -34,6 +37,7 @@ detect_mistakes <- function(
           )
         )
       }
+
       res <- detect_mistakes(
         user[[i]],
         solution[[i]],
@@ -46,6 +50,7 @@ detect_mistakes <- function(
       # found a non-NULL result, return it!
       return_if_not_null(res)
     }
+
     # no mistakes found above!
     return(NULL)
   }
@@ -102,7 +107,7 @@ detect_mistakes <- function(
   # It is now safe to call call_standardise_formals on student code
   user <- suppressWarnings(call_standardise_formals(user, env = env))
   user_names <- real_names(user)
-  solution_names <-  real_names(solution) # original solution_names was modified above
+  solution_names <- real_names(solution) # original solution_names was modified above
 
 
   # 6. Check that the user code does not contain any named arguments that do not
