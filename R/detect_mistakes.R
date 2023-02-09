@@ -96,101 +96,23 @@ detect_mistakes <- function(
   # 7. Check that every named argument in the solution matches every
   #    correspondingly named argument in the user code. We know each
   #    has a match because of Step 5.
-  user_args <- as.list(user)[-1]         # remove the call
-  solution_args <- as.list(solution)[-1] # remove the call
-  user_named_args_ignore_list <- c()
-
-  for (name in solution_names) {
-    if (!identical(user[[name]], solution[[name]])) {
-      arg_name <- ifelse(name %in% submitted_names, name, "")
-      # recover the user submission as provided by only unpiping one level
-      user_submitted <- call_standardise_formals(unpipe(submitted), env = env)
-      res <- detect_mistakes(
-        user = user_submitted[[name]],
-        solution = solution[[name]],
-        env = env,
-        # If too verbose, use user[1]
-        enclosing_call = submitted,
-        # avoid naming first arguments in messages
-        enclosing_arg = arg_name,
-        allow_partial_matching = allow_partial_matching
-      )
-      return_if_not_null(res)
-    }
-
-    # Make these arguments invisible to further checks
-    user_named_args_ignore_list <- c(user_named_args_ignore_list, name)
-    user_args[[name]] <- NULL
-    solution_args[[name]] <- NULL
-  }
-
-
   # 8. Extract the remaining arguments from the user code and the solution code.
   #    Pair them in the order that they occur, checking that each pair matches.
   #    Check pairs in sequence and address unmatched arguments when you get to
   #    them.
-  user_len <- length(user_args)
-  solution_len <- length(solution_args)
-
-  n <- max(user_len, solution_len)
-
-  for (i in seq_len(n)) {
-
-    # if solution argument is unmatched due to no remaining user arguments
-    if (i > user_len) {
-      name <- rlang::names2(solution_args[i])
-
-      # if the missing argument is unnamed, pass the value
-      if (is.null(name) || name == "") {
-        name <- solution_args[[i]]
-      }
-
-      return(
-        message_missing_argument(
-          submitted_call = solution,
-          solution_name = name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
-        )
-      )
-
-      # if user argument is unmatched due to no remaining solution arguments
-    } else if (i > solution_len) {
-      arg_name <- rlang::names2(user_args[i])
-      if (!(arg_name %in% submitted_names)) arg_name <- ""
-      return(
-        message_surplus_argument(
-          submitted_call = user,
-          submitted = user_args[[i]],
-          submitted_name = arg_name,
-          enclosing_call = enclosing_call,
-          enclosing_arg = enclosing_arg
-        )
-      )
-
-      # The user argument has a matching solution argument, are they identical?
-    } else if (!identical(user_args[[i]], solution_args[[i]])) {
-      name <- rlang::names2(user_args[i])
-      if (!(name %in% submitted_names)) name <- ""
-
-      # find user arg as submitted
-      user_args_submitted <- as.list(call_standardise_formals(unpipe(submitted), env = env))
-      user_args_ignore <- which(names(user_args_submitted) %in% user_named_args_ignore_list)
-      user_args_submitted <- user_args_submitted[-c(1, user_args_ignore)]
-
-      res <- detect_mistakes(
-        # unpipe only one level to detect mistakes in the argument as submitted
-        user = user_args_submitted[[i]],
-        solution = solution_args[[i]],
-        env = env,
-        # If too verbose, use user[1]
-        enclosing_call = submitted,
-        enclosing_arg = name,
-        allow_partial_matching = allow_partial_matching
-      )
-      return_if_not_null(res)
-    }
-  }
+  return_if_not_null(
+    detect_wrong_arguments(
+      user,
+      solution,
+      solution_names,
+      submitted,
+      submitted_names,
+      env,
+      enclosing_call,
+      enclosing_arg,
+      allow_partial_matching
+    )
+  )
 
   # No mismatch found
   return(NULL)
