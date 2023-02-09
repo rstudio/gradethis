@@ -16,43 +16,14 @@ detect_mistakes <- function(
   }
 
   if (is.expression(user)) {
-    stopifnot(is.expression(solution))
-
-    # need to preemptively return after each line if a result is returned
-    max_len <- max(c(length(user), length(solution)))
-
-    for (i in seq_len(max_len)) {
-      if (i > length(user)) {
-        return(
-          message_missing_answer(
-            this_prior_line = user[[length(user)]]
-          )
-        )
-      }
-
-      if (i > length(solution)) {
-        return(
-          message_extra_answer(
-            this_line = user[[i]]
-          )
-        )
-      }
-
-      res <- detect_mistakes(
-        user[[i]],
-        solution[[i]],
-        env = env,
-        enclosing_call = enclosing_call,
-        enclosing_arg = enclosing_arg,
-        allow_partial_matching = allow_partial_matching
+    # An expression is made up of one or more calls.
+    # This function breaks up the expression into each of its component calls
+    # and runs `detect_mistakes()` on them recursively.
+    return(
+      detect_mistakes_expression(
+        user, solution, env, enclosing_call, enclosing_arg, allow_partial_matching
       )
-
-      # found a non-NULL result, return it!
-      return_if_not_null(res)
-    }
-
-    # no mistakes found above!
-    return(NULL)
+    )
   }
 
   submitted <- user
@@ -222,6 +193,39 @@ detect_mistakes <- function(
   }
 
   # No mismatch found
+  return(NULL)
+}
+
+detect_mistakes_expression <- function(
+    user, solution, env, enclosing_call, enclosing_arg, allow_partial_matching
+) {
+  stopifnot(is.expression(solution))
+
+  # need to preemptively return after each line if a result is returned
+  max_len <- max(c(length(user), length(solution)))
+
+  for (i in seq_len(max_len)) {
+    if (i > length(user)) {
+      return(message_missing_answer(this_prior_line = user[[length(user)]]))
+    }
+
+    if (i > length(solution)) {
+      return(message_extra_answer(this_line = user[[i]]))
+    }
+
+    return_if_not_null(
+      detect_mistakes(
+        user[[i]],
+        solution[[i]],
+        env = env,
+        enclosing_call = enclosing_call,
+        enclosing_arg = enclosing_arg,
+        allow_partial_matching = allow_partial_matching
+      )
+    )
+  }
+
+  # no mistakes found above!
   return(NULL)
 }
 
