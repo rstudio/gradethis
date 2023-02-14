@@ -1,4 +1,3 @@
-
 #' Provide automated code feedback
 #'
 #' Generate a message describing the first instance of a code mismatch. Three

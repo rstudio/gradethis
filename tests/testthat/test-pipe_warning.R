@@ -1,4 +1,3 @@
-
 test_that("pipe_warning() in grade_this_code() is equivalent to grade_code()", {
   user_code <-  "penguins %>% pull(year) %>% min(year)"
   solution_code <-  "penguins %>% pull(year) %>% min()"

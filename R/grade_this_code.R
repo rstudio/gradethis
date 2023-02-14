@@ -1,4 +1,3 @@
-
 #' Grade student code against a solution
 #'
 #' @description

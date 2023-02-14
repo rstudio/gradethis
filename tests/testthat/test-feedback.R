@@ -1,4 +1,3 @@
-
 test_that("markdown utilities: is_html_tag", {
   expect_true(is_html_tag(htmltools::p(htmltools::strong("a"), htmltools::em("b"))))
   expect_true(is_html_tag(htmltools::tagList(htmltools::p("1"), htmltools::p("2"))))

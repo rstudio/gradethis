@@ -1,4 +1,3 @@
-
 test_that("grade_code() - allow_partial_matching works 2 errors", {
   expect_grade_code(
     user_code = "purrr::insistently(mean,quie = TRUE,rat = rate_backoff())",

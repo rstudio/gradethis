@@ -1,4 +1,3 @@
-
 # code_feedback() ---------------------------------------------------------
 
 test_that("code_feedback() returns a string if there are differences or NULL", {
