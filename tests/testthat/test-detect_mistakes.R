@@ -238,24 +238,22 @@ test_that("detect_mistakes works with infix operators", {
   expect_snapshot(detect_mistakes(quote(1-4), quote(1:4)))
   expect_snapshot(detect_mistakes(quote(a %like% b), quote(a %LIKE% b)))
 
-#   # surplus
-#   user <-     quote(b(1 + 2))
-#   solution <- quote(b(1))
-#   expect_equal(
-#                detect_mistakes(user, solution)
-#                ,
-#                message_wrong_value("1 + 2", quote(1))
-#                )
-#
-#   # missing
-#   user <-     quote(sqrt(1))
-#   solution <- quote(sqrt(1 + 2))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = quote(1), that = "1 + 2")
-#   )
-#
+  # surplus
+  user <- quote(b(1 + 2))
+  solution <- quote(b(1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(quote(1 + 2), quote(1), enclosing_call = user)
+  )
+
+  # missing
+  user <- quote(sqrt(1))
+  solution <- quote(sqrt(1 + 2))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(quote(1), quote(1 + 2), enclosing_call = user)
+  )
+
 #   user <-     quote(sqrt(1))
 #   solution <- quote(sqrt(1 + 2 + 3))
 #   expect_equal(
@@ -975,28 +973,5 @@ test_that("detect_mistakes returns a reasonable amount of intro context", {
   expect_false(grepl("^In ", feedback))
   expect_match(feedback, "scale_color_brewer", fixed = TRUE)
   expect_match(feedback, "scale_fill_brewer", fixed = TRUE)
-})
-
-test_that("detect_mistakes says 'didn't expect' when there are too many things", {
-  expect_grade_code(
-    user_code = "a$b",
-    solution_code = "a",
-    is_correct = FALSE,
-    msg = "I didn't expect `$` where you wrote `a$b`."
-  )
-
-  expect_grade_code(
-    user_code = "a == b",
-    solution_code = "a",
-    is_correct = FALSE,
-    msg = "I didn't expect `==` where you wrote `a == b`."
-  )
-
-  expect_grade_code(
-    user_code = "a * b",
-    solution_code = "a",
-    is_correct = FALSE,
-    msg = "I didn't expect `*` where you wrote `a * b`."
-  )
 })
 # nolint end

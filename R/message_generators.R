@@ -280,11 +280,12 @@ message_too_many_matches <- function(
 }
 
 # wrong call
-message_wrong_call <- function(submitted,
-                       solution,
-                       submitted_name = NULL,
-                       enclosing_call = NULL) {
-
+message_wrong_call <- function(
+    submitted,
+    solution,
+    submitted_name = NULL,
+    enclosing_call = NULL
+) {
   # f(1, g(1, h(a = i(1))))
   # f(1, a = g(1, a = h(a = j(1))))
 
@@ -295,6 +296,16 @@ message_wrong_call <- function(submitted,
   intro <- build_intro(.call = enclosing_call)
 
   solution_original <- solution
+
+  # If both `submitted` and `solution` are infixes, only show the infix,
+  # e.g. "I expected you to call `+` where you called `*`."
+  # Otherwise, show the context around the infix,
+  # e.g. "I expected you to call `mean()` where you called `(x + y)/2`."
+  if (is_infix(submitted) && is_infix(solution)) {
+    submitted <- submitted[[1]]
+    solution <- solution[[1]]
+  }
+
   submitted <- prep(submitted)
   solution <- prep(solution)
 
@@ -343,7 +354,7 @@ message_wrong_value <- function(
   intro <- build_intro(.call = enclosing_call)
 
   expected <- "expected"
-  if (length(submitted) > length(solution)) {
+  if (length(submitted) > length(solution) && !is_infix(submitted)) {
     expected <- "didn't expect"
     solution <- submitted
     submitted <- NULL
@@ -356,7 +367,9 @@ message_wrong_value <- function(
 
   if (is.null(submitted)) {
     intro <- ""
-    submitted <- build_intro(enclosing_call %||% solution_original, .open = "", .close = "")
+    submitted <- build_intro(
+      enclosing_call %||% solution_original, .open = "", .close = ""
+    )
   } else {
     submitted <- prep(submitted)
   }
@@ -394,8 +407,10 @@ prep <- function(text) {
   # grab whole expression ending up with: NULL <- NULL.
   # this extra condition to use `[[` works, but requires further
   # investigation for a cleaner solution.
-  if (is_infix(text)) {
+  if (is_infix_assign(text)) {
     text <- text[[1]]
+  } else if (is_infix(text)) {
+    text <- text
   } else if (is.call(text) && !is_pipe(text)) {
     text <- text[1]
   } else if (is.pairlist(text)) {
