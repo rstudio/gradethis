@@ -1,5 +1,3 @@
-
-
 #' Provide grade feedback
 #'
 #' Creates a feedback object suitable for returning in a learnr checking function

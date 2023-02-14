@@ -1,5 +1,3 @@
-
-
 #' @title Deprecated
 #' @keywords internal
 #' @aliases gradethis-deprecated

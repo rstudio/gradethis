@@ -1,4 +1,3 @@
-
 local_options_waldo_compare <- function(.local_envir = parent.frame()) {
   # These options are set by fansi and diffobj (used by waldo::compare()) but
   # may be unset by learnr when it reset options after running student & grading

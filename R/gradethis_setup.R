@@ -1,5 +1,3 @@
-
-
 #' Setup gradethis for use within learnr
 #'
 #' @description
