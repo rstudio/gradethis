@@ -254,217 +254,195 @@ test_that("detect_mistakes works with infix operators", {
     message_wrong_value(quote(1), quote(1 + 2), enclosing_call = user)
   )
 
-#   user <-     quote(sqrt(1))
-#   solution <- quote(sqrt(1 + 2 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = quote(1), that = "1 + 2 + 3")
-#   )
-#
-#   user <-     quote(sqrt(1 + 2))
-#   solution <- quote(sqrt(1 + 2 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(sqrt(1 + 3))
-#   solution <- quote(sqrt(1 + 2 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1", that = "1 + 2")
-#   )
-#
-#   # internal infix
-#   user <-     quote(a(1 + 2))
-#   solution <- quote(a(1 + 3))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(a(1 + 2 + 4))
-#   solution <- quote(a(1 + 3 + 4))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(a(1 + 2 + 4))
-#   solution <- quote(a(1 + 3 + 5))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 4", that = "+ 5")
-#   )
-#
-#   user <-     quote(a(2 + 1))
-#   solution <- quote(a(3 + 1))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "2", that = "3")
-#   )
-#
-#   user <-     quote(a(1 + 1))
-#   solution <- quote(a(1 - 1))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   user <-     quote(a(1 + 1 + 1))
-#   solution <- quote(a(1 - 1 + 1))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   # surplus
-#   user <-     quote(1 + 2)
-#   solution <- quote(1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value("1 + 2", quote(1))
-#   )
-#
-#   # missing
-#   user <-     quote(1)
-#   solution <- quote(1 + 2)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = quote(1), that = "1 + 2")
-#   )
-#
-#   user <-     quote(1)
-#   solution <- quote(1 + 2 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = quote(1), that = "1 + 2 + 3")
-#   )
-#
-#   user <-     quote(1 + 2)
-#   solution <- quote(1 + 2 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(1 + 3)
-#   solution <- quote(1 + 2 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1", that = "1 + 2")
-#   )
-#
-#   # internal infix
-#   user <-     quote(1 + 2)
-#   solution <- quote(1 + 3)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(1 + 2 + 4)
-#   solution <- quote(1 + 3 + 4)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 2", that = "+ 3")
-#   )
-#
-#   user <-     quote(1 + 2 + 4)
-#   solution <- quote(1 + 3 + 5)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "+ 4", that = "+ 5")
-#   )
-#
-#   user <-     quote(2 + 1)
-#   solution <- quote(3 + 1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "2", that = "3")
-#   )
-#
-#   user <-     quote(1 + 1)
-#   solution <- quote(1 - 1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   user <-     quote(1 + 1 + 1)
-#   solution <- quote(1 - 1 + 1)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1 + 1", that = "1 - 1")
-#   )
-#
-#   # function
-#   user <-     quote(a(1))
-#   solution <- quote(1 + pi)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "a(1)", that = "1 + pi")
-#   )
-#
-#   user <-     quote(b(1))
-#   solution <- quote(b(1) + 2)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "b(1)", that = "b(1) + 2")
-#   )
-#
-#   user <-     quote(b(1))
-#   solution <- quote(b(1) + a(2))
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "b(1)", that = "b(1) + a(2)")
-#   )
-#
-#   # non-function
-#   user <-     quote(pi(1))
-#   solution <- quote(1 + pi)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "pi(1)", that = "1 + pi")
-#   )
-#
-#   user <-     quote(1(1)) # nolint
-#   solution <- quote(b(1) + 2)
-#   expect_equal(
-#     detect_mistakes(user, solution)
-#     ,
-#     message_wrong_value(this = "1(1)", that = "b(1) + 2")
-#   )
-#
-#   # internal atomics, functions, non-functions, infixes,
-#   # and pipes will not matter if the above tests pass.
-#   # Why? Because checking will stop at the initial call
-#   # because it is not an infix.
-#
+  user <- quote(sqrt(1))
+  solution <- quote(sqrt(1 + 2 + 3))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(quote(1), quote(1 + 2 + 3), enclosing_call = user)
+  )
+
+  # TODO: Improve this
+  # user <- quote(sqrt(1 + 2))
+  # solution <- quote(sqrt(1 + 2 + 3))
+  # expect_equal(
+  #   detect_mistakes(user, solution),
+  #   message_wrong_value("+ 2", "+ 3", enclosing_call = user)
+  # )
+
+  user <- quote(sqrt(1 + 3))
+  solution <- quote(sqrt(1 + 2 + 3))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(1, quote(1 + 2), enclosing_call = quote(1 + 3))
+  )
+
+  # internal infix
+  user <- quote(a(1 + 2))
+  solution <- quote(a(1 + 3))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(1 + 2))
+  )
+
+  user <- quote(a(1 + 2 + 4))
+  solution <- quote(a(1 + 3 + 4))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(1 + 2))
+  )
+
+  user <- quote(a(1 + 2 + 4))
+  solution <- quote(a(1 + 3 + 5))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(1 + 2))
+  )
+
+  user <- quote(a(2 + 1))
+  solution <- quote(a(3 + 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(2 + 1))
+  )
+
+  user <- quote(a(1 + 1))
+  solution <- quote(a(1 - 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(`+`), quote(`-`), enclosing_call = quote(a(1 + 1)))
+  )
+
+  user <- quote(a(1 + 1 + 1))
+  solution <- quote(a(1 - 1 + 1))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(`+`), quote(`-`), enclosing_call = quote(1 + 1 + 1))
+  )
+
+  # surplus
+  user <- quote(1 + 2)
+  solution <- quote(1)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(quote(1 + 2), quote(1))
+  )
+
+  # missing
+  user <- quote(1)
+  solution <- quote(1 + 2)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(quote(1), quote(1 + 2))
+  )
+
+  user <- quote(1)
+  solution <- quote(1 + 2 + 3)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(quote(1), quote(1 + 2 + 3))
+  )
+
+  # TODO: Improve this
+  # user <- quote(1 + 2)
+  # solution <- quote(1 + 2 + 3)
+  # expect_equal(
+  #   detect_mistakes(user, solution),
+  #   message_wrong_value(2, quote(2 + 3), enclosing_call = quote(1 + 2))
+  # )
+
+  user <- quote(1 + 3)
+  solution <- quote(1 + 2 + 3)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(1, quote(1 + 2), enclosing_call = quote(1 + 3))
+  )
+
+  # internal infix
+  user <- quote(1 + 2)
+  solution <- quote(1 + 3)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(1 + 2))
+  )
+
+  user <- quote(1 + 2 + 4)
+  solution <- quote(1 + 3 + 4)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(1 + 2))
+  )
+
+  user <- quote(1 + 2 + 4)
+  solution <- quote(1 + 3 + 5)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(1 + 2))
+  )
+
+  user <- quote(2 + 1)
+  solution <- quote(3 + 1)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_value(2, 3, enclosing_call = quote(2 + 1))
+  )
+
+  user <- quote(1 + 1)
+  solution <- quote(1 - 1)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(`+`), quote(`-`))
+  )
+
+  user <- quote(1 + 1 + 1)
+  solution <- quote(1 - 1 + 1)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(`+`), quote(`-`), enclosing_call = quote(1 + 1 + 1))
+  )
+
+  # function
+  user <- quote(a(1))
+  solution <- quote(1 + pi)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(a()), quote(1 + pi))
+  )
+
+  # TODO: Improve this
+  # We should not reveal the intended contents of `b()`
+  user <- quote(b(1))
+  solution <- quote(b(1) + 2)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(b()), quote(b(1) + 2))
+  )
+
+  user <- quote(b(1))
+  solution <- quote(b(1) + a(2))
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(b(1)), quote(b(1) + a(2)))
+  )
+
+  # non-function
+  user <- quote(pi(1))
+  solution <- quote(1 + pi)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(pi(1)), quote(1 + pi))
+  )
+
+  user <- quote(1(1)) # nolint
+  solution <- quote(b(1) + 2)
+  expect_equal(
+    detect_mistakes(user, solution),
+    message_wrong_call(quote(1(1)), quote(b(1) + 2))
+  )
+
+  # internal atomics, functions, non-functions, infixes,
+  # and pipes will not matter if the above tests pass.
+  # Why? Because checking will stop at the initial call
+  # because it is not an infix.
 })
 
 test_that("detect_mistakes works with pipes", {
