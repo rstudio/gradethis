@@ -29,14 +29,14 @@ test_that("Spots differences in names", {
     user_code = "x",
     solution_code = "y",
     is_correct = FALSE,
-    msg = wrong_value(this = quote(x), that = quote(y))
+    msg = message_wrong_value(submitted = quote(x), solution = quote(y))
   )
 
   expect_grade_code(
     user_code = "5",
     solution_code = "y",
     is_correct = FALSE,
-    msg = wrong_value(this = quote(5), that = quote(y))
+    msg = message_wrong_value(submitted = quote(5), solution = quote(y))
   )
 })
 
@@ -58,17 +58,17 @@ test_that("Spots differences in calls", {
     user_code = a,
     solution_code = b,
     is_correct = FALSE,
-    msg = wrong_value(this = quote(lists), that = quote(vecs))
+    msg = message_wrong_value(submitted = quote(lists), solution = quote(vecs))
   )
 
   expect_grade_code(
     user_code = a,
     solution_code = c,
     is_correct = FALSE,
-    msg = surplus_argument(
-      this_call = quote(vapply()),
-      this_name = "na.rm",
-      this = quote(TRUE)
+    msg = message_surplus_argument(
+      submitted_call = quote(vapply()),
+      submitted_name = "na.rm",
+      submitted = quote(TRUE)
     )
   )
 
@@ -76,9 +76,9 @@ test_that("Spots differences in calls", {
     user_code = c,
     solution_code = a,
     is_correct = FALSE,
-    msg = missing_argument(
-      this_call = quote(vapply()),
-      that_name = "na.rm"
+    msg = message_missing_argument(
+      submitted_call = quote(vapply()),
+      solution_name = "na.rm"
     )
   )
 
@@ -100,21 +100,21 @@ test_that("Mentions only first non-matching element", {
     user_code = w,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_value(this = quote(1), that = quote(sqrt()))
+    msg = message_wrong_value(submitted = quote(1), solution = quote(sqrt()))
   )
 
   expect_grade_code(
     user_code = x,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_call(this = quote(log()), that = quote(sqrt()))
+    msg = message_wrong_call(submitted = quote(log()), solution = quote(sqrt()))
   )
 
   expect_grade_code(
     user_code = y,
     solution_code = z,
     is_correct = FALSE,
-    msg = wrong_value(this = quote(2), that = quote(1))
+    msg = message_wrong_value(submitted = quote(2), solution = quote(1))
   )
 })
 
@@ -142,10 +142,10 @@ test_that("Spots differences in argument names", {
     user_code = c,
     solution_code = a,
     is_correct = FALSE,
-    msg = surplus_argument(
-      this_call = c[[1]],
-      this = 1,
-      this_name = "w"
+    msg = message_surplus_argument(
+      submitted_call = c[[1]],
+      submitted = 1,
+      submitted_name = "w"
     )
   )
 })

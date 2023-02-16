@@ -15,11 +15,11 @@ test_that("grade_code() - allow_partial_matching works 2 errors", {
     solution_code = "purrr::insistently(mean,quiet = TRUE,rate = rate_backoff())",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "purrr::insistently",
-      this = list(quote(TRUE), quote(rate_backoff())),
-      this_name = c("quie", "rat"),
-      correct_name = c("quiet", "rate")
+    msg = message_pmatches_argument_name(
+      submitted_call = "purrr::insistently",
+      submitted = list(quote(TRUE), quote(rate_backoff())),
+      submitted_name = c("quie", "rat"),
+      solution_name = c("quiet", "rate")
     )
   )
 })
@@ -42,11 +42,11 @@ test_that("grade_this_code() - allow_partial_matching works 2 errors", {
     solution_code = "purrr::insistently(mean,quiet = TRUE,rate = rate_backoff())",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "purrr::insistently",
-      this = list(quote(TRUE), quote(rate_backoff())),
-      this_name = c("quie", "rat"),
-      correct_name = c("quiet", "rate")
+    msg = message_pmatches_argument_name(
+      submitted_call = "purrr::insistently",
+      submitted = list(quote(TRUE), quote(rate_backoff())),
+      submitted_name = c("quie", "rat"),
+      solution_name = c("quiet", "rate")
     )
   )
 })
@@ -69,11 +69,11 @@ test_that("grade_code() - allow_partial_matching works 1 error bool", {
     solution_code = "purrr::insistently(mean,quiet = TRUE)",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "purrr::insistently",
-      this = quote(TRUE),
-      this_name = c("quie"),
-      correct_name = c("quiet")
+    msg = message_pmatches_argument_name(
+      submitted_call = "purrr::insistently",
+      submitted = quote(TRUE),
+      submitted_name = c("quie"),
+      solution_name = c("quiet")
     )
   )
 })
@@ -96,11 +96,11 @@ test_that("grade_this_code() - allow_partial_matching works 1 error bool", {
     solution_code = "purrr::insistently(mean,quiet = TRUE)",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "purrr::insistently",
-      this = quote(TRUE),
-      this_name = c("quie"),
-      correct_name = c("quiet")
+    msg = message_pmatches_argument_name(
+      submitted_call = "purrr::insistently",
+      submitted = quote(TRUE),
+      submitted_name = c("quie"),
+      solution_name = c("quiet")
     )
   )
 })
@@ -123,11 +123,11 @@ test_that("grade_code() - allow_partial_matching works 1 error fun", {
     solution_code = "purrr::insistently(mean,rate = rate_backoff())",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "purrr::insistently",
-      this = list(quote(rate_backoff())),
-      this_name = "rat",
-      correct_name = "rate"
+    msg = message_pmatches_argument_name(
+      submitted_call = "purrr::insistently",
+      submitted = list(quote(rate_backoff())),
+      submitted_name = "rat",
+      solution_name = "rate"
     )
   )
 })
@@ -150,11 +150,11 @@ test_that("grade_this_code() - allow_partial_matching works 1 error fun", {
     solution_code = "purrr::insistently(mean,rate = rate_backoff())",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "purrr::insistently",
-      this = list(quote(rate_backoff())),
-      this_name = "rat",
-      correct_name = "rate"
+    msg = message_pmatches_argument_name(
+      submitted_call = "purrr::insistently",
+      submitted = list(quote(rate_backoff())),
+      submitted_name = "rat",
+      solution_name = "rate"
     )
   )
 })
@@ -168,11 +168,11 @@ test_that("grade_code() - allow_partial_matching works 1 error chr", {
     solution_code = "ff(p1=\"no\")",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "ff",
-      this = quote("no"),
-      this_name = "p",
-      correct_name = "p1"
+    msg = message_pmatches_argument_name(
+      submitted_call = "ff",
+      submitted = quote("no"),
+      submitted_name = "p",
+      solution_name = "p1"
     )
   )
 })
@@ -186,11 +186,11 @@ test_that("grade_this_code() - allow_partial_matching works 1 error chr", {
     solution_code = "ff(p1=\"no\")",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "ff",
-      this = quote("no"),
-      this_name = "p",
-      correct_name = "p1"
+    msg = message_pmatches_argument_name(
+      submitted_call = "ff",
+      submitted = quote("no"),
+      submitted_name = "p",
+      solution_name = "p1"
     )
   )
 })
@@ -206,11 +206,11 @@ test_that("grade_code() - allow_partial_matching works errors multi arg type", {
     solution_code = "ff(chr = \"yes\", fun = ls, call =ls(), bool = TRUE)",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "ff",
-      this = list(quote("yes"), quote(ls), quote(ls()), quote(TRUE)),
-      this_name = c("ch", "fu", "cal", "boo"),
-      correct_name = c("chr", "fun", "call", "bool")
+    msg = message_pmatches_argument_name(
+      submitted_call = "ff",
+      submitted = list(quote("yes"), quote(ls), quote(ls()), quote(TRUE)),
+      submitted_name = c("ch", "fu", "cal", "boo"),
+      solution_name = c("chr", "fun", "call", "bool")
     )
   )
   expect_match(object = pmatch_FALSE$message, regexp = "ch = \"yes\"")
@@ -236,11 +236,11 @@ test_that("grade_this_code() - allow_partial_matching works errors multi arg typ
     solution_code = "ff(chr = \"yes\", fun = ls, call =ls(), bool = TRUE)",
     allow_partial_matching = FALSE,
     is_correct = FALSE,
-    msg = pmatches_argument_name(
-      this_call = "ff",
-      this = list(quote("yes"), quote(ls), quote(ls()), quote(TRUE)),
-      this_name = c("ch", "fu", "cal", "boo"),
-      correct_name = c("chr", "fun", "call", "bool")
+    msg = message_pmatches_argument_name(
+      submitted_call = "ff",
+      submitted = list(quote("yes"), quote(ls), quote(ls()), quote(TRUE)),
+      submitted_name = c("ch", "fu", "cal", "boo"),
+      solution_name = c("chr", "fun", "call", "bool")
     )
   )
   expect_match(object = pmatch_FALSE$message, regexp = "ch = \"yes\"")

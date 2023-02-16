@@ -3,9 +3,7 @@
 # because it is not at hand in the submission. "this" always refers to
 # incorrect/user code, which is always at hand). Cases:
 
-
-
-extra_answer <- function(this_line) {
+message_extra_answer <- function(this_line) {
   glue::glue_data(
     list(
       this_line = prep(this_line)
@@ -15,7 +13,7 @@ extra_answer <- function(this_line) {
 
 }
 
-missing_answer <- function(this_prior_line) {
+message_missing_answer <- function(this_prior_line) {
   glue::glue_data(
     list(
       this_prior_line = prep(this_prior_line)
@@ -24,15 +22,14 @@ missing_answer <- function(this_prior_line) {
   )
 }
 
-
-
-
 # bad argument name
-bad_argument_name <- function(this_call,
-  this,
-  this_name,
-  enclosing_call = NULL,
-  enclosing_arg = NULL) { # only if the user supplied one (to match user code)
+message_bad_argument_name <- function(
+    submitted_call,
+    submitted,
+    submitted_name,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) { # only if the user supplied one (to match user code)
 
   # f(1, g(1, h(b = i(1))))
   # f(1, a = g(1, a = h(ba = i(1)), bb = i(2)))
@@ -41,71 +38,73 @@ bad_argument_name <- function(this_call,
   # As a result, R cannot figure out which argument you want to pass i(1) to.
   # Check how you spelled b, or write out the full argument name.
 
-  # {intro}{this_call} accepts more than one argument that begins with {this_name}.
-  # As a result, R cannot figure out which argument you want to pass {this} to.
-  # Check how you spelled {this_name}, or write out the full argument name.
+  # {intro}{submitted_call} accepts more than one argument that begins with {submitted_name}.
+  # As a result, R cannot figure out which argument you want to pass {submitted} to.
+  # Check how you spelled {submitted_name}, or write out the full argument name.
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
-  this <- prep(this)
-  this_call <- prep(this_call)
+  submitted <- prep(submitted)
+  submitted_call <- prep(submitted_call)
 
-  if (grepl("\\(\\)", this))
-    this <- paste("a call to", this)
+  if (grepl("\\(\\)", submitted))
+    submitted <- paste("a call to", submitted)
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      this_name = this_name,
-      this = this
+      submitted_call = submitted_call,
+      submitted_name = submitted_name,
+      submitted = submitted
     ),
-    "{intro}{this_call} accepts more than one argument name that begins ",
-    "with `{this_name}`. As a result, R cannot figure out which ",
-    "argument you want to pass {this} to. Check how you spelled ",
-    "`{this_name}`, or write out the full argument name."
+    "{intro}{submitted_call} accepts more than one argument name that begins ",
+    "with `{submitted_name}`. As a result, R cannot figure out which ",
+    "argument you want to pass {submitted} to. Check how you spelled ",
+    "`{submitted_name}`, or write out the full argument name."
   )
 }
 
 # duplicate_name
-duplicate_name <- function(this_call,
-  this_name,
-  enclosing_call = NULL,
-  enclosing_arg = NULL) {
-
+message_duplicate_name <- function(
+    submitted_call,
+    submitted_name,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(a = 1, a = 2)
   # f(a = 1)
 
   # "You passed multiple arguments named a to f(), which will cause "
   # "an error. Check your spelling, or remove one of the arguments."
 
-  # "You passed multiple arguments named {this_name} to {this_call}, which will cause "
-  # "an error. Check your spelling, or remove one of the arguments."
+  # "You passed multiple arguments named {submitted_name} to {submitted_call},
+  # "which will cause an error. Check your spelling, or remove one of the arguments."
 
-  this_call <- prep(this_call)
-  this_name <- prep(this_name)
+  submitted_call <- prep(submitted_call)
+  submitted_name <- prep(submitted_name)
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      this_name = this_name
+      submitted_call = submitted_call,
+      submitted_name = submitted_name
     ),
-    "You passed multiple arguments named {this_name} ",
-    "to {this_call}, which will cause an error. ",
+    "You passed multiple arguments named {submitted_name} ",
+    "to {submitted_call}, which will cause an error. ",
     "Check your spelling, or remove one of the arguments."
   )
 }
 
 # WHAT TO DO IF THE MISSING ARGUMENT DOESN'T HAVE A NAME IN THE SOLUTION?
 # missing argument
-missing_argument <- function(this_call,
-  that_name = NULL,
-  enclosing_call = NULL,
-  enclosing_arg = NULL) {
-
+message_missing_argument <- function(
+    submitted_call,
+    solution_name = NULL,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(1, g(1, h(i(1))))
   # f(1, a = g(1, a = h(a = i(1)), b = i(2)))
 
@@ -113,41 +112,42 @@ missing_argument <- function(this_call,
   # "as one of its arguments. You may have referred to it ",
   # "in a different way, or left out an important argument name."
 
-  # "{intro}Your call to {this_call} should include {that_name} ",
+  # "{intro}Your call to {submitted_call} should include {solution_name} ",
   # "as one of its arguments. You may have referred to it ",
   # "in a different way, or left out an important argument name."
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
   your_char <- ifelse(intro == "", "Y", "y")
 
-  this_call <- prep(this_call)
-  that_name <- prep(that_name)
+  submitted_call <- prep(submitted_call)
+  solution_name <- prep(solution_name)
 
-  if (grepl("\\(\\)", that_name)) {
-    that_name <- paste0("an argument, possibly unnamed, that calls ", that_name, ".")
+  if (grepl("\\(\\)", solution_name)) {
+    solution_name <- paste0("an argument, possibly unnamed, that calls ", solution_name, ".")
   } else {
-    that_name <- paste(that_name, "as one of its arguments.")
+    solution_name <- paste(solution_name, "as one of its arguments.")
   }
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      that_name = that_name
+      submitted_call = submitted_call,
+      solution_name = solution_name
     ),
-    "{intro}{your_char}our call to {this_call} should include {that_name} ",
+    "{intro}{your_char}our call to {submitted_call} should include {solution_name} ",
     "You may have misspelled an argument name, ",
     "or left out an important argument."
   )
 }
 
 # surplus argument
-surplus_argument <- function(this_call,
-  this,
-  this_name = NULL,
-  enclosing_call = NULL,
-  enclosing_arg = NULL) {
-
+message_surplus_argument <- function(
+    submitted_call,
+    submitted,
+    submitted_name = NULL,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(1, g(1, h(1, b = i(1))))
   # f(1, a = g(1, a = h(a = 1)))
 
@@ -157,27 +157,27 @@ surplus_argument <- function(this_call,
   # "may have left out or misspelled an important ",
   # "argument name."
 
-  # "{intro}I did not expect your call to {this_call} to ",
-  # "include {this}. You ",
+  # "{intro}I did not expect your call to {submitted_call} to ",
+  # "include {submitted}. You ",
   # "may have included an unnecessary argument, or you ",
   # "may have left out or misspelled an important ",
   # "argument name."
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
-  this_call <- prep(this_call)
-  this      <- prep(this)
+  submitted_call <- prep(submitted_call)
+  submitted      <- prep(submitted)
 
-  if (!is.null(this_name) && this_name != "")
-    this <- md_code_prepend(paste(this_name, "= "), this)
+  if (!is.null(submitted_name) && submitted_name != "")
+    submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
 
   glue::glue_data(
     list(
-      this = this,
-      this_call = this_call
+      submitted = submitted,
+      submitted_call = submitted_call
     ),
-    "{intro}I did not expect your call to {this_call} to ",
-    "include {this}. You ",
+    "{intro}I did not expect your call to {submitted_call} to ",
+    "include {submitted}. You ",
     "may have included an unnecessary argument, or you ",
     "may have left out or misspelled an important ",
     "argument name."
@@ -186,16 +186,16 @@ surplus_argument <- function(this_call,
 
 
 # partial matching
-pmatches_argument_name <- function(this_call,
-  this,
-  this_name = NULL,
-  correct_name = NULL,
-  enclosing_call = NULL,
-  enclosing_arg = NULL) {
-
-
-  # "{intro}I did not expect your call to {this_call} to ",
-  # "include {this}. You ",
+message_pmatches_argument_name <- function(
+    submitted_call,
+    submitted,
+    submitted_name = NULL,
+    solution_name = NULL,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
+  # "{intro}I did not expect your call to {submitted_call} to ",
+  # "include {submitted}. You ",
   # "may have included an unnecessary argument, or you ",
   # "may have left out or misspelled an important ",
   # "argument name."
@@ -203,32 +203,32 @@ pmatches_argument_name <- function(this_call,
 
 
   # "This code seems correct, but please write with full parameter(s) names."
-  # "You wrote {this} please rewrite with {correct_name} ."
-  # "You wrote {this} please rewrite with {correct_name} ."
+  # "You wrote {submitted} please rewrite with {solution_name} ."
+  # "You wrote {submitted} please rewrite with {solution_name} ."
 
 
-  this_call <- prep(this_call)
-  this <- lapply(this, prep) #yes devrait etre quoted
-  this_user <- this
+  submitted_call <- prep(submitted_call)
+  submitted <- lapply(submitted, prep) #yes devrait etre quoted
+  submitted_user <- submitted
 
-  if (!is.null(this_name)) {
-    this_name <- paste(this_name, "= ")
-    this_user <- purrr::map2(this_name, this, md_code_prepend)
+  if (!is.null(submitted_name)) {
+    submitted_name <- paste(submitted_name, "= ")
+    submitted_user <- purrr::map2(submitted_name, submitted, md_code_prepend)
   }
 
-  if (!is.null(correct_name)) {
-    correct_name <- paste(correct_name, "= ")
-    correct_name <- purrr::map2(correct_name, this, md_code_prepend)
+  if (!is.null(solution_name)) {
+    solution_name <- paste(solution_name, "= ")
+    solution_name <- purrr::map2(solution_name, submitted, md_code_prepend)
   }
 
   intro  <- "This code seems correct, but please write using full argument(s) names:\n\n"
   msg <- glue::glue_data(
     list(
-      this = this_user,
-      correct_name = correct_name,
-      this_call = this_call
+      submitted = submitted_user,
+      solution_name = solution_name,
+      submitted_call = submitted_call
     ),
-    "- Where you wrote {this}, please use the full formal name {correct_name}."
+    "- Where you wrote {submitted}, please use the full formal name {solution_name}."
   )
 
   glue::glue_data(
@@ -241,11 +241,12 @@ pmatches_argument_name <- function(this_call,
 }
 
 # too_many_matches
-too_many_matches <- function(this_call,
-  that_name,
-  enclosing_call = NULL,
-  enclosing_arg = NULL) {
-
+message_too_many_matches <- function(
+    submitted_call,
+    solution_name,
+    enclosing_call = NULL,
+    enclosing_arg = NULL
+) {
   # f(1, g(1, h(b = i(1), ba = 2)))
   # f(1, a = g(1, a = h(bab = 1)))
 
@@ -255,55 +256,55 @@ too_many_matches <- function(this_call,
   # "writing out the full argument names."
 
   # "Double check the argument names you are using. ",
-  # "{intro}{this_call} accepts an argument named {that} and it ",
+  # "{intro}{submitted_call} accepts an argument named {that} and it ",
   # "looks like more than one of your argument names will ",
   # "be matched to {that}, which will cause an error. Try ",
   # "writing out the full argument names."
 
-  this_call <- prep(this_call)
-  that_name <- prep(that_name)
+  submitted_call <- prep(submitted_call)
+  solution_name <- prep(solution_name)
 
   intro <- build_intro(.call = enclosing_call, .arg = enclosing_arg)
 
   glue::glue_data(
     list(
       intro = intro,
-      this_call = this_call,
-      that_name = that_name
+      submitted_call = submitted_call,
+      solution_name = solution_name
     ),
-    "{intro}{this_call} accepts an argument named {that_name}. ",
-    "More than one of your argument names in {this_call} will ",
-    "be matched to {that_name}, which will cause an error. Try ",
+    "{intro}{submitted_call} accepts an argument named {solution_name}. ",
+    "More than one of your argument names in {submitted_call} will ",
+    "be matched to {solution_name}, which will cause an error. Try ",
     "writing out the full argument names."
   )
 }
 
 # wrong call
-wrong_call <- function(this,
-  that,
-  this_name = NULL,
-  enclosing_call = NULL) {
+message_wrong_call <- function(submitted,
+                       solution,
+                       submitted_name = NULL,
+                       enclosing_call = NULL) {
 
   # f(1, g(1, h(a = i(1))))
   # f(1, a = g(1, a = h(a = j(1))))
 
   # "g(1, h(i(1))), I expected you to call a = j() where you called a = i()."
 
-  # "{intro}I expected you to {action} {that} where you called {this}."
+  # "{intro}I expected you to {action} {solution} where you called {submitted}."
 
   intro <- build_intro(.call = enclosing_call)
 
-  that_original <- that
-  this <- prep(this)
-  that <- prep(that)
+  solution_original <- solution
+  submitted <- prep(submitted)
+  solution <- prep(solution)
 
-  if (!is.null(this_name) && this_name != "") {
-    that <- md_code_prepend(paste(this_name, "= "), that)
-    this <- md_code_prepend(paste(this_name, "= "), this)
+  if (!is.null(submitted_name) && submitted_name != "") {
+    solution <- md_code_prepend(paste(submitted_name, "= "), solution)
+    submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
   }
 
   action <-
-    if (is_infix_assign(that_original)) {
+    if (is_infix_assign(solution_original)) {
       "assign something to something else with"
     } else {
       "call"
@@ -311,24 +312,25 @@ wrong_call <- function(this,
 
   glue::glue_data(
     list(
-      this = this,
-      that = that,
+      submitted = submitted,
+      solution = solution,
       action = action
     ),
-    "{intro}I expected you to {action} {that} where you called {this}."
+    "{intro}I expected you to {action} {solution} where you called {submitted}."
   )
 }
 
 # wrong value for wrong value and wrong call, the enclosing argument is the
 # argument that appears before the call or value. It should be passed to
-# this_name
-wrong_value <- function(this,
-  that,
-  this_name = NULL,
-  enclosing_call = NULL
+# submitted_name
+message_wrong_value <- function(
+    submitted,
+    solution,
+    submitted_name = NULL,
+    enclosing_call = NULL
 ) {
-  if (is_missing(this)) {
-    this <- NULL
+  if (is_missing(submitted)) {
+    submitted <- NULL
   }
 
   # f(1, g(1, h(1)))
@@ -336,41 +338,41 @@ wrong_value <- function(this,
 
   # "h(1), I expected 2 where you wrote 1."
 
-  # "{intro}I expected {that} where you wrote {this}."
+  # "{intro}I expected {solution} where you wrote {submitted}."
 
   intro <- build_intro(.call = enclosing_call)
 
   expected <- "expected"
-  if (length(this) > length(that)) {
+  if (length(submitted) > length(solution)) {
     expected <- "didn't expect"
-    that <- this
-    this <- NULL
+    solution <- submitted
+    submitted <- NULL
   }
 
   where <- " where you wrote "
 
-  that_original <- that
-  that <- prep(that)
+  solution_original <- solution
+  solution <- prep(solution)
 
-  if (is.null(this)) {
+  if (is.null(submitted)) {
     intro <- ""
-    this <- build_intro(enclosing_call %||% that_original, .open = "", .close = "")
+    submitted <- build_intro(enclosing_call %||% solution_original, .open = "", .close = "")
   } else {
-    this <- prep(this)
+    submitted <- prep(submitted)
   }
 
-  if (!is.null(this_name) && this_name != "") {
-    that <- md_code_prepend(paste(this_name, "= "), that)
-    this <- md_code_prepend(paste(this_name, "= "), this)
+  if (!is.null(submitted_name) && submitted_name != "") {
+    solution <- md_code_prepend(paste(submitted_name, "= "), solution)
+    submitted <- md_code_prepend(paste(submitted_name, "= "), submitted)
   }
 
   # NOTE: infix operators that are calls like `<-` also
   # need to be accounted for but perhaps there's a cleaner
   # solution than tacking on more greps.
   action <-
-    if (is_infix_assign(that_original)) {
+    if (is_infix_assign(solution_original)) {
       "you to assign something to something else with "
-    } else if (grepl("\\(\\)", that)) {
+    } else if (grepl("\\(\\)", solution)) {
       "you to call "
     }
 
@@ -378,12 +380,12 @@ wrong_value <- function(this,
     list(
       intro = intro,
       expected = expected,
-      that = that,
-      where = if (!identical(this, "")) where else "",
-      this = this,
+      solution = solution,
+      where = if (!identical(submitted, "")) where else "",
+      submitted = submitted,
       action = action %||% ""
     ),
-    "{intro}I {expected} {action}{that}{where}{this}."
+    "{intro}I {expected} {action}{solution}{where}{submitted}."
   )
 }
 
@@ -427,10 +429,13 @@ build_intro <- function(.call = NULL, .arg = NULL, .open = "In ", .close = ", ")
 
 prep_function_arguments <- function(arg_list) {
   args <- names(arg_list)
-  values <- purrr::map_chr(arg_list, function(arg_value) {
-    if (arg_value == quote("")) return("")
-    paste(" =", deparse(arg_value))
-  })
+  values <- purrr::map_chr(
+    as.list(arg_list),
+    function(arg_value) {
+      if (arg_value == quote("")) return("")
+      paste(" =", deparse(arg_value))
+    }
+  )
   s <- if (length(args) == 1) " " else "s "
   paste0("argument", s, paste0("`", args, values, "`", collapse = ", "))
 }
