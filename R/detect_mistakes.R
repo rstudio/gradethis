@@ -1,10 +1,10 @@
 detect_mistakes <- function(
-    user,
-    solution,
-    env = rlang::env_parent(),
-    enclosing_call = NULL,
-    enclosing_arg = NULL,
-    allow_partial_matching = TRUE
+  user,
+  solution,
+  env = rlang::env_parent(),
+  enclosing_call = NULL,
+  enclosing_arg = NULL,
+  allow_partial_matching = TRUE
 ) {
   force(env)
 
@@ -119,7 +119,7 @@ detect_mistakes <- function(
 }
 
 detect_mistakes_expression <- function(
-    user, solution, env, enclosing_call, enclosing_arg, allow_partial_matching
+  user, solution, env, enclosing_call, enclosing_arg, allow_partial_matching
 ) {
   stopifnot(is.expression(solution))
 
