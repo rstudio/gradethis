@@ -1,7 +1,7 @@
 call_standardise_formals <- function(code, env = rlang::current_env(), include_defaults = TRUE) {
   # try to catch invalid function, i.e., corrupt language object
   tryCatch({
-    fn <- rlang::call_fn(code, env = env)
+    fn <- call_fn(code, env = env)
   }, error = function(e) {
     return(code)
   })
@@ -100,52 +100,15 @@ call_standardise_formals_recursive <- function( # nolint
   call_standardise_formals(code)
 }
 
-# https://github.com/r-lib/rlang/blob/379b387af5ec29a583f206aa6bc6acd46378a6c5/R/lifecycle-deprecated.R#L775-L790
-call_fn <- function(call, env = rlang::caller_env()) {
-  expr <- rlang::get_expr(call)
-  env <- rlang::get_env(call, env)
-
-  stopifnot(rlang::is_call(expr))
-
-  switch(call_type(expr),
-    recursive = rlang::abort("`call` does not call a named or inlined function"),
-    inlined = rlang::node_car(expr),
-    named = ,
-    namespaced = ,
-    rlang::eval_bare(rlang::node_car(expr), env)
-  )
-}
-
-# https://github.com/r-lib/rlang/blob/47df80809cfccd3e7c0a9ca456dbd14a2ecdf2a7/R/call.R#L994-L1010
-call_type <- function(x) {
-  x <- rlang::get_expr(x)
-  stopifnot(typeof(x) == "language")
-
-  type <- typeof(rlang::node_car(x))
-  if (type == "symbol") {
-    "named"
-  } else if (is_namespaced_symbol(rlang::node_car(x))) {
-    "namespaced"
-  } else if (type == "language") {
-    "recursive"
-  } else if (type %in% c("closure", "builtin", "special")) {
-    "inlined"
-  } else {
-    rlang::abort("corrupt language object")
+call_fn <- function(code, env) {
+  if (rlang::is_quosure(code) || rlang::is_formula(code)) {
+    code <- get_expr(code)
   }
-}
+  stopifnot(rlang::is_call(code))
 
-# https://github.com/r-lib/rlang/blob/47df80809cfccd3e7c0a9ca456dbd14a2ecdf2a7/R/call.R#L980-L992
-is_namespaced_symbol <- function(x, ns = NULL, private = NULL) {
-  if (typeof(x) != "language") return(FALSE)
-  if (!is_null(ns) && !identical(rlang::node_cadr(x), rlang::sym(ns))) return(FALSE)
+  head <- code[[1]]
 
-  head <- rlang::node_car(x)
-  if (is_null(private)) {
-    identical(head, quote(`::`)) || identical(head, quote(`:::`))
-  } else if (private) {
-    identical(head, quote(`:::`))
-  } else {
-    identical(head, quote(`::`))
-  }
+  fn <- rlang::eval_bare(head, env)
+  stopifnot(rlang::is_function(fn))
+  fn
 }
