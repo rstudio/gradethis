@@ -414,7 +414,7 @@ give_code_feedback_.function <- function(x, ..., env = NULL, location = "after")
 
 #' @export
 give_code_feedback_.gradethis_graded <- function(
-  grade,
+  x,
   ...,
   env = rlang::env_parent(n = 2),
   location = "after"
@@ -428,10 +428,10 @@ give_code_feedback_.gradethis_graded <- function(
 
   is_not_r_ex <- !identical(engine, "r")
   is_missing_solution <- is.null(solution_code)
-  is_correct <- identical(grade$correct, TRUE)
+  is_correct <- identical(x$correct, TRUE)
 
   if (is_not_r_ex || is_missing_solution || is_correct) {
-    signal_grade(grade)
+    signal_grade(x)
   }
 
   # What about correct grades with differences??
@@ -443,18 +443,18 @@ give_code_feedback_.gradethis_graded <- function(
 
   # If there isn't any feedback or if the feedback message has already been
   # added to the grade message, then just re-throw the grade
-  if (identical(feedback, "") || grepl(feedback, grade$message, fixed = TRUE)) {
-    signal_grade(grade)
+  if (identical(feedback, "") || grepl(feedback, x$message, fixed = TRUE)) {
+    signal_grade(x)
   }
 
   before <- identical(location, "before")
-  grade$message <- paste0(
+  x$message <- paste0(
     if (before) feedback,
-    grade$message,
+    x$message,
     if (!before) feedback
   )
 
-  signal_grade(grade)
+  signal_grade(x)
 }
 
 #' @export
