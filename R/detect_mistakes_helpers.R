@@ -112,7 +112,6 @@ detect_name_problems <- function(
           remaining_user_names,
           remaining_solution_names,
           matched_user_names,
-          matched_solution_names,
           enclosing_call,
           enclosing_arg
         )
@@ -230,7 +229,6 @@ detect_pmatches_argument_name <- function(
   remaining_user_names,
   remaining_solution_names,
   matched_user_names,
-  matched_solution_names,
   enclosing_call,
   enclosing_arg
 ) {
