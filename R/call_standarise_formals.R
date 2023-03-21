@@ -102,7 +102,7 @@ call_standardise_formals_recursive <- function( # nolint
 
 call_fn <- function(code, env) {
   if (rlang::is_quosure(code) || rlang::is_formula(code)) {
-    code <- get_expr(code)
+    code <- rlang::get_expr(code)
   }
   stopifnot(rlang::is_call(code))
 
