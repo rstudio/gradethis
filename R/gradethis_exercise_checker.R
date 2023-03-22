@@ -307,6 +307,8 @@ prepare_check_env <- function(
     check_env[[".solution_code"]] <- solutions[[length(solutions)]]
   }
 
+  check_env[[".envir_solution"]] <- envir_base
+
   # Delayed evaluation of `.solution` and `.solution_all`
   if (is.null(solution_eval_fn)) {
     solution_eval_fn <- solution_eval_fn_get(

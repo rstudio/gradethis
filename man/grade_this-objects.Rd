@@ -13,6 +13,7 @@
 \alias{.solution_code_all}
 \alias{.envir_prep}
 \alias{.envir_result}
+\alias{.envir_solution}
 \alias{.evaluate_result}
 \alias{.label}
 \alias{.stage}
@@ -38,6 +39,8 @@ An object of class \code{.solution_code_all} (inherits from \code{gradethis_plac
 An object of class \code{.envir_prep} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.envir_result} (inherits from \code{gradethis_placeholder}) of length 0.
+
+An object of class \code{.envir_solution} (inherits from \code{gradethis_placeholder}) of length 0.
 
 An object of class \code{.evaluate_result} (inherits from \code{gradethis_placeholder}) of length 0.
 
@@ -68,6 +71,8 @@ An object of class \code{.engine} (inherits from \code{gradethis_placeholder}) o
 
 .envir_result
 
+.envir_solution
+
 .evaluate_result
 
 .label
@@ -94,6 +99,7 @@ instructor code, the names of these objects all start with \code{.}.
 \item \code{.check_code}: A string containing the code provided within the \verb{*-check} or \verb{*-code-check} chunk for the exercise.
 \item \code{.envir_prep}: A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.
 \item \code{.envir_result}: The R environment after running the student's submitted code.
+\item \code{.envir_solution}: The R environment after running the solution code.
 \item \code{.evaluate_result}: The return value from the \code{\link[evaluate:evaluate]{evaluate::evaluate()}} function (see learnr's documentation).
 \item \code{.stage}: The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'
 }

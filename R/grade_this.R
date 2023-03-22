@@ -280,6 +280,7 @@ placeholder_definition <- function(x) {
     .check_code = "A string containing the code provided within the `*-check` or `*-code-check` chunk for the exercise.",
     .envir_prep = "A copy of the R environment after running the exercise setup code and before the execution of the student's submitted code.",
     .envir_result = "The R environment after running the student's submitted code.",
+    .envir_solution = "The R environment after running the solution code.",
     .evaluate_result = "The return value from the [evaluate::evaluate()] function (see learnr's documentation).",
     .stage = "The current checking stage in the learnr exercise evaluation lifecycle: 'code_check', 'error_check', or 'check'",
     ""
@@ -306,6 +307,7 @@ placeholder_definition <- function(x) {
 #' * `.check_code`: `r placeholder_definition(".check_code")`
 #' * `.envir_prep`: `r placeholder_definition(".envir_prep")`
 #' * `.envir_result`: `r placeholder_definition(".envir_result")`
+#' * `.envir_solution`: `r placeholder_definition(".envir_solution")`
 #' * `.evaluate_result`: `r placeholder_definition(".evaluate_result")`
 #' * `.stage`: `r placeholder_definition(".stage")`
 #'
@@ -358,6 +360,10 @@ NULL
 #' @rdname grade_this-objects
 #' @export
 .envir_result <- placeholder(".envir_result")
+
+#' @rdname grade_this-objects
+#' @export
+.envir_solution <- placeholder(".envir_solution")
 
 #' @rdname grade_this-objects
 #' @export
@@ -507,6 +513,10 @@ debug_this <- function(check_env = parent.frame()) {
     tags$details(
       tags$summary(tags$code(".envir_result")),
       code_block(str_env(get_check_env(".envir_result")), engine = NULL)
+    ),
+    tags$details(
+      tags$summary(tags$code(".envir_solution")),
+      code_block(str_env(get_check_env(".envir_solution")), engine = NULL)
     ),
     tags$details(
       tags$summary(tags$code(".user_code")),
