@@ -75,7 +75,7 @@ reference:
   - '`grade_this_code`'
   - '`debug_this`'
   - '`grade_this-objects`'
-- title: Signal A Final Grade
+- title: Signal a Final Grade
   description: |
     Helper functions to create and signal a final grade when used in custom
     checking logic in `grade_this()`.
@@ -86,12 +86,18 @@ reference:
   - starts_with("fail_")
 - title: Generate Feedback Messages
   description: |
-    Create feedback messages for use in `graded()` grades or in the exercise 
+    Create feedback messages for use in `graded()` grades or in the exercise
     checking functions.
   contents:
   - '`code_feedback`'
   - '`praise`'
   - '`pipe_warning`'
+- title: Interact with Objects
+  description: |
+    These functions help you access objects created by student and solution code.
+  contents:
+  - starts_with("user_object_")
+  - starts_with("solution_object_")
 - title: Helper Functions and Utilities
   description: |
     These functions are used by gradethis to work within learnr tutorials,
@@ -101,3 +107,4 @@ reference:
   - '`gradethis_exercise_checker`'
   - '`gradethis_error_checker`'
   - '`mock_this_exercise`'
+  - '`with_exercise`'
