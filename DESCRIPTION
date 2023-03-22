@@ -37,7 +37,6 @@ Imports:
     purrr,
     rlang,
     rstudioapi,
-    testthat,
     utils,
     waldo,
     withr
@@ -45,7 +44,8 @@ Suggests:
     DBI,
     knitr,
     rmarkdown,
-    spelling
+    spelling,
+    testthat
 VignetteBuilder: 
     knitr
 Remotes: 
