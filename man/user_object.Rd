@@ -5,7 +5,10 @@
 \alias{user_object_get}
 \alias{user_object_exists}
 \alias{user_object_list}
-\title{Functions for interacting with objects created by student code}
+\alias{solution_object_get}
+\alias{solution_object_exists}
+\alias{solution_object_list}
+\title{Functions for interacting with objects created by student and solution code}
 \usage{
 user_object_get(
   x,
@@ -30,6 +33,17 @@ user_object_list(
   ...,
   gradethis_env = parent.frame()
 )
+
+solution_object_get(x, mode = "any", ..., gradethis_env = parent.frame())
+
+solution_object_exists(x, mode = "any", ..., gradethis_env = parent.frame())
+
+solution_object_list(
+  mode = "any",
+  exclude_envir = .envir_prep,
+  ...,
+  gradethis_env = parent.frame()
+)
 }
 \arguments{
 \item{x}{An object name, given as a quoted \link{character} string.}
@@ -37,19 +51,21 @@ user_object_list(
 \item{mode}{character specifying the \code{\link{mode}} of objects to
     consider.  Passed to \code{\link{exists}} and \code{\link{get}}.}
 
-\item{envir}{An \link{environment} in which to search for objects.
+\item{envir}{An \link{environment}
+in which to search for objects created by student code.
 Defaults to \code{\link{.envir_result}}.}
 
 \item{exclude_envir}{An \link{environment}.
-Objects that appear in both \code{envir} and \code{exclude_envir} will be excluded.
+Objects that appear in \code{exclude_envir} will be excluded from results.
 Defaults to \code{\link{.envir_prep}}.
 Use \code{exclude_envir = NULL} to include all objects.}
 
 \item{...}{Additional arguments passed to underlying functions:
 \itemize{
-\item For \code{user_object_exists()}, \code{\link[=exists]{exists()}}
-\item For \code{user_object_get()}, \code{\link[=get]{get()}}
-\item For \code{user_object_list()}, \code{\link[utils:ls_str]{ls.str()}}
+\item For \code{user_object_exists()} and \code{solution_object_exists()}, \code{\link[=exists]{exists()}}
+\item For \code{user_object_get()} and \code{solution_object_get()}, \code{\link[=get]{get()}}
+\item For \code{user_object_list()} and \code{solution_object_list()},
+\code{\link[utils:ls_str]{ls.str()}}
 }}
 
 \item{gradethis_env}{The \link{environment} from which to retrieve
@@ -57,57 +73,69 @@ Use \code{exclude_envir = NULL} to include all objects.}
 Most users of \pkg{gradethis} will not need to use this argument.}
 }
 \value{
-For \code{user_object_get()}, the object.
+For \code{user_object_get()} and \code{solution_object_get()}, the object.
 If the object is not found, an error.
 
-For \code{user_object_exists()}, a \code{\link{TRUE}}/\code{\link{FALSE}} value.
+For \code{user_object_exists()} and \code{solution_object_exists()},
+a \code{\link{TRUE}}/\code{\link{FALSE}} value.
 
-For \code{user_object_list()}, a \link{character} vector
-giving the names of the objects in \code{envir}.
+For \code{user_object_list()} and \code{solution_object_list()},
+a \link{character} vector giving the names of the objects
+created by the student or solution code.
 }
 \description{
-Functions for interacting with objects created by student code
+Functions for interacting with objects created by student and solution code
 }
 \examples{
-user_code <- rlang::expr({
+user_code <- quote({
   # ```{r example}
-  x <- 1
+  x <- "I'm student code!"
   y <- list(1, 2, 3)
   z <- function() print("Hello World!")
   # ```
 })
 
-exercise <- mock_this_exercise(!!user_code)
-.envir_result <- exercise$.envir_result
-.envir_prep <- exercise$.envir_prep
+solution_code <- quote({
+  # ```{r example-solution}
+  x <- "I'm solution code!"
+  y <- list("a", "b", "c")
+  z <- function() print("Goodnight Moon!")
+  # ```
+})
 
-user_object_list()
-user_object_exists("x")
-user_object_get("y")
+exercise <- mock_this_exercise(!!user_code, !!solution_code)
+
+with_exercise(exercise, user_object_list())
+with_exercise(exercise, user_object_exists("x"))
+with_exercise(exercise, user_object_get("x"))
+
+with_exercise(exercise, solution_object_list())
+with_exercise(exercise, solution_object_exists("x"))
+with_exercise(exercise, solution_object_get("x"))
 
 # Use `mode` to find only objects of a certain type ----
-user_object_list(mode = "numeric")
-user_object_list(mode = "list")
-user_object_list(mode = "function")
+with_exercise(exercise, user_object_list(mode = "character"))
+with_exercise(exercise, user_object_list(mode = "list"))
+with_exercise(exercise, user_object_list(mode = "function"))
 
-user_object_exists("x", mode = "numeric")
-user_object_exists("y", mode = "numeric")
+with_exercise(exercise, user_object_exists("x", mode = "character"))
+with_exercise(exercise, user_object_exists("y", mode = "character"))
 
-user_object_get("z", mode = "function")
+with_exercise(exercise, user_object_get("z", mode = "function"))
 
 # By default, `user_object_list()` ignores objects created by setup chunks ----
 setup_code <- rlang::expr({
   # ```{r example-setup}
-  exercise_data <- mtcars
+  setup_data <- mtcars
   # ```
 })
 
-exercise <- mock_this_exercise(!!user_code, setup_exercise = !!setup_code)
-.envir_result <- exercise$.envir_result
-.envir_prep <- exercise$.envir_prep
+setup_exercise <- mock_this_exercise(
+  !!user_code, !!solution_code, setup_exercise = !!setup_code
+)
 
-user_object_list()
+with_exercise(setup_exercise, user_object_list())
 
 ## You can disable this by setting `exclude_envir = NULL` ----
-user_object_list(exclude_envir = NULL)
+with_exercise(setup_exercise, user_object_list(exclude_envir = NULL))
 }
