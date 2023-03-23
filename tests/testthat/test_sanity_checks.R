@@ -1,5 +1,3 @@
-context("Check sanity messages")
-
 a <- function(x) x
 b <- function(x) x
 f <- function(x, y) x + y

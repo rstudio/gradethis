@@ -1,5 +1,3 @@
-context("Check grade_result_strict messages")
-
 expect_message <- function(x, message, correct) {
   expect_s3_class(x, "gradethis_graded")
   expect_equal(x$correct, correct)

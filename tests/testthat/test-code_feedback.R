@@ -93,7 +93,9 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     " In `log(2)`, I expected `3` where you wrote `2`."
   )
-  lifecycle::expect_deprecated(
+
+  with_options(
+    list(lifecycle_verbosity = "quiet"),
     expect_equal(
       expect_grade_this(
         fail("{ maybe_code_feedback(space_before = FALSE, space_after = FALSE) }"),
@@ -104,6 +106,7 @@ test_that("maybe_code_feedback() spaces", {
       "In `log(2)`, I expected `3` where you wrote `2`."
     )
   )
+
   expect_equal(
     expect_grade_this(
       fail("{ maybe_code_feedback(before = NULL, after = NULL) }"),
@@ -113,7 +116,9 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     "In `log(2)`, I expected `3` where you wrote `2`."
   )
-  lifecycle::expect_deprecated(
+
+  with_options(
+    list(lifecycle_verbosity = "quiet"),
     expect_equal(
       expect_grade_this(
         fail("{ maybe_code_feedback(space_before = FALSE, space_after = TRUE) }"),
@@ -124,6 +129,7 @@ test_that("maybe_code_feedback() spaces", {
       "In `log(2)`, I expected `3` where you wrote `2`. "
     )
   )
+
   expect_equal(
     expect_grade_this(
       fail("{ maybe_code_feedback(before = NULL, after = ' ') }"),
@@ -133,7 +139,9 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     "In `log(2)`, I expected `3` where you wrote `2`. "
   )
-  lifecycle::expect_deprecated(
+
+  with_options(
+    list(lifecycle_verbosity = "quiet"),
     expect_equal(
       expect_grade_this(
         fail("{ maybe_code_feedback(space_before = TRUE, space_after = 1) }"),
@@ -144,6 +152,7 @@ test_that("maybe_code_feedback() spaces", {
       " In `log(2)`, I expected `3` where you wrote `2`."
     )
   )
+
   expect_equal(
     expect_grade_this(
       fail("{ maybe_code_feedback(before = ' ', after = NULL) }"),
@@ -153,7 +162,9 @@ test_that("maybe_code_feedback() spaces", {
     )$message,
     " In `log(2)`, I expected `3` where you wrote `2`."
   )
-  lifecycle::expect_deprecated(
+
+  with_options(
+    list(lifecycle_verbosity = "quiet"),
     expect_equal(
       expect_grade_this(
         fail("{ maybe_code_feedback(space_before = TRUE, space_after = TRUE) }"),
