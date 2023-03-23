@@ -1,6 +1,3 @@
-context("Check grade_conditions messages")
-
-
 test_that("Correct messages without random praise", {
   glue_correct_no_praise <- "{ .message } { .correct }"
 

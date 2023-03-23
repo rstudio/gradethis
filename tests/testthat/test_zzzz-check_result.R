@@ -1,5 +1,3 @@
-context("Check Result Condi")
-
 test_that("Provide a passing solution. Give the students a fighting chance!", {
   testthat::expect_error(
     grade_result()

@@ -1,5 +1,3 @@
-context("Legacy Check Code")
-
 # these tests are largely redundant exercises that have been tested against detect_mistakes()
 
 test_that("Spots differences in atomics", {

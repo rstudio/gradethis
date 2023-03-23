@@ -1,5 +1,3 @@
-context("Check condi")
-
 last_value <- 5
 envir_prep <- new.env()
 envir_result <- new.env(parent = envir_prep)
@@ -14,8 +12,6 @@ test_that("Check condi", {
   expect_condi_correct(condi_formula_t, "my correct message")
   expect_condi_error(condi_formula_f, "my error message")
 })
-
-context("Check evaluate_condition")
 
 test_that("Condi switch statement formula", {
   expect_equal(
@@ -35,8 +31,6 @@ test_that("Condi switch statement formula", {
     )
   )
 })
-
-context("Check condi formula")
 
 test_that("Condi formula", {
   expect_true(

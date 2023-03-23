@@ -1,5 +1,3 @@
-context("Check standarize call with formals")
-
 test_that("Standarize call with formals primitive function", {
   user <- rlang::get_expr(quote(mean(1:3, na.rm = TRUE)))
   user_stand <- call_standardise_formals(user)
