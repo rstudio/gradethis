@@ -107,8 +107,8 @@ test_that("length 0 solution code", {
 
 
 test_that("pass / fail in check chunk are caught", {
-  err <- testthat::expect_message(
-    expect_exercise_checker(
+  testthat::expect_message(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
@@ -122,8 +122,8 @@ test_that("pass / fail in check chunk are caught", {
   expect_equal(err$error$call, "pass()")
   expect_equal(err$error$label, "test-check")
 
-  err <- testthat::expect_message(
-    expect_exercise_checker(
+  testthat::expect_message(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
@@ -139,8 +139,8 @@ test_that("pass / fail in check chunk are caught", {
 })
 
 test_that("check parsing error is caught", {
-  err <- testthat::expect_message(
-    expect_exercise_checker(
+  testthat::expect_message(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
@@ -157,8 +157,8 @@ test_that("check parsing error is caught", {
 })
 
 test_that("return value is a function of 1 argument", {
-  err <- testthat::expect_message(
-    expect_exercise_checker(
+  testthat::expect_message(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
@@ -173,8 +173,8 @@ test_that("return value is a function of 1 argument", {
   expect_equal(err$error$call, "1")
   expect_equal(err$error$label, "test-check")
 
-  err <- testthat::expect_message(
-    expect_exercise_checker(
+  testthat::expect_message(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
@@ -199,8 +199,8 @@ test_that("return value is a function of 1 argument", {
 })
 
 test_that("a grade is given", {
-  err <- testthat::expect_message(
-    expect_exercise_checker(
+  testthat::expect_message(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = message_feedback_grading_problem,
       user_code = "1",
@@ -281,8 +281,8 @@ test_that("pass_if() and fail_if() work in grade_this()", {
     "functions or formulas"
   )
 
-  err <- expect_warning(
-    expect_exercise_checker(
+  expect_warning(
+    err <- expect_exercise_checker(
       is_correct = logical(),
       msg = I("problem"),
       user_code = "1 + 1",

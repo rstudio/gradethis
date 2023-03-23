@@ -268,7 +268,9 @@ test_that("feedback_grading_problem() picks up grading_problem options", {
       gradethis.grading_problem.message = "TEST PASS",
       gradethis.grading_problem.type = "info"
     ), {
-      grade <- testthat::expect_message(grade_this_code()(ex))
+      suppressMessages(
+        testthat::expect_message(grade <- grade_this_code()(ex))
+      )
       expect_equal(grade$correct, logical())
       expect_equal(grade$message, "TEST PASS")
       expect_equal(grade$type, "info")
@@ -281,7 +283,9 @@ test_that("feedback_grading_problem() picks up grading_problem options", {
       gradethis.grading_problem.message = "TEST PASS",
       gradethis.grading_problem.type = "info"
     ), {
-      grade <- testthat::expect_message(grade_this(stop("TEST FAIL"))(ex))
+      suppressMessages(
+        testthat::expect_message(grade <- grade_this(stop("TEST FAIL"))(ex))
+      )
       expect_equal(grade$correct, logical())
       expect_equal(grade$message, "TEST PASS")
       expect_equal(grade$type, "info")
