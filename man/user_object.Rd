@@ -3,46 +3,33 @@
 \name{user_object}
 \alias{user_object}
 \alias{user_object_get}
-\alias{user_object_exists}
-\alias{user_object_list}
 \alias{solution_object_get}
+\alias{user_object_exists}
 \alias{solution_object_exists}
+\alias{user_object_list}
 \alias{solution_object_list}
 \title{Functions for interacting with objects created by student and solution code}
 \usage{
-user_object_get(
-  x,
-  mode = "any",
-  envir = .envir_result,
-  ...,
-  gradethis_env = parent.frame()
-)
+user_object_get(x, mode = "any", ..., check_env = parent.frame())
 
-user_object_exists(
-  x,
-  mode = "any",
-  envir = .envir_result,
-  ...,
-  gradethis_env = parent.frame()
-)
+solution_object_get(x, mode = "any", ..., check_env = parent.frame())
+
+user_object_exists(x, mode = "any", ..., check_env = parent.frame())
+
+solution_object_exists(x, mode = "any", ..., check_env = parent.frame())
 
 user_object_list(
   mode = "any",
-  envir = .envir_result,
   exclude_envir = .envir_prep,
   ...,
-  gradethis_env = parent.frame()
+  check_env = parent.frame()
 )
-
-solution_object_get(x, mode = "any", ..., gradethis_env = parent.frame())
-
-solution_object_exists(x, mode = "any", ..., gradethis_env = parent.frame())
 
 solution_object_list(
   mode = "any",
   exclude_envir = .envir_prep,
   ...,
-  gradethis_env = parent.frame()
+  check_env = parent.frame()
 )
 }
 \arguments{
@@ -51,9 +38,7 @@ solution_object_list(
 \item{mode}{character specifying the \code{\link{mode}} of objects to
     consider.  Passed to \code{\link{exists}} and \code{\link{get}}.}
 
-\item{envir}{An \link{environment}
-in which to search for objects created by student code.
-Defaults to \code{\link{.envir_result}}.}
+\item{envir}{environment to use, see \code{\link{ls}}.}
 
 \item{exclude_envir}{An \link{environment}.
 Objects that appear in \code{exclude_envir} will be excluded from results.
@@ -68,7 +53,7 @@ Use \code{exclude_envir = NULL} to include all objects.}
 \code{\link[utils:ls_str]{ls.str()}}
 }}
 
-\item{gradethis_env}{The \link{environment} from which to retrieve
+\item{check_env}{The \link{environment} from which to retrieve
 \code{\link{.envir_result}} and \code{\link{.envir_prep}}.
 Most users of \pkg{gradethis} will not need to use this argument.}
 }
@@ -114,6 +99,7 @@ with_exercise(exercise, solution_object_exists("x"))
 with_exercise(exercise, solution_object_get("x"))
 
 # Use `mode` to find only objects of a certain type ----
+
 with_exercise(exercise, user_object_list(mode = "character"))
 with_exercise(exercise, user_object_list(mode = "list"))
 with_exercise(exercise, user_object_list(mode = "function"))
@@ -124,6 +110,7 @@ with_exercise(exercise, user_object_exists("y", mode = "character"))
 with_exercise(exercise, user_object_get("z", mode = "function"))
 
 # By default, `user_object_list()` ignores objects created by setup chunks ----
+
 setup_code <- rlang::expr({
   # ```{r example-setup}
   setup_data <- mtcars
@@ -137,5 +124,6 @@ setup_exercise <- mock_this_exercise(
 with_exercise(setup_exercise, user_object_list())
 
 ## You can disable this by setting `exclude_envir = NULL` ----
+
 with_exercise(setup_exercise, user_object_list(exclude_envir = NULL))
 }
