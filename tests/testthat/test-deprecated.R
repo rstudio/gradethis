@@ -35,42 +35,55 @@ test_that("space_before and space_after in maybe_code_feedback() are deprecated"
       lifecycle::expect_deprecated(maybe_code_feedback(.user, .solution, space_before = TRUE))
       lifecycle::expect_deprecated(maybe_code_feedback(.user, .solution, space_after = TRUE))
 
-      expect_equal(
-        lifecycle::expect_deprecated(maybe_code_feedback(.user, .solution, space_before = TRUE)),
-        maybe_code_feedback(.user, .solution, before = " ")
+      with_options(
+        list(lifecycle_verbosity = "quiet"),
+        expect_equal(
+          maybe_code_feedback(.user, .solution, space_before = TRUE),
+          maybe_code_feedback(.user, .solution, before = " ")
+        )
       )
 
-      expect_equal(
-        lifecycle::expect_deprecated(
-          maybe_code_feedback(.user, .solution, space_after = TRUE)
-        ),
-        maybe_code_feedback(.user, .solution, after = " ")
+      with_options(
+        list(lifecycle_verbosity = "quiet"),
+        expect_equal(
+          maybe_code_feedback(.user, .solution, space_after = TRUE),
+          maybe_code_feedback(.user, .solution, after = " ")
+        )
       )
 
-      expect_equal(
-        lifecycle::expect_deprecated(
-          maybe_code_feedback(.user, .solution, before = "\n", space_before = TRUE)
-        ),
-        maybe_code_feedback(.user, .solution, before = "\n")
+      with_options(
+        list(lifecycle_verbosity = "quiet"),
+        expect_equal(
+          maybe_code_feedback(.user, .solution, before = "\n", space_before = TRUE),
+          maybe_code_feedback(.user, .solution, before = "\n")
+        )
       )
 
-      expect_equal(
-        lifecycle::expect_deprecated(
-          maybe_code_feedback(.user, .solution, after = "\n", space_after = TRUE)
-        ),
-        maybe_code_feedback(.user, .solution, after = "\n")
+      with_options(
+        list(lifecycle_verbosity = "quiet"),
+        expect_equal(
+          maybe_code_feedback(.user, .solution, after = "\n", space_after = TRUE),
+          maybe_code_feedback(.user, .solution, after = "\n")
+        )
       )
     }
   )
 })
 
 test_that("x is deprecated in pass_if() and fail_if()", {
-  expect_equal(
-    lifecycle::expect_deprecated(pass_if(x = TRUE, message = "deprecated")),
-    pass_if(TRUE, "deprecated")
+  with_options(
+    list(lifecycle_verbosity = "quiet"),
+    expect_equal(
+      pass_if(x = TRUE, message = "deprecated"),
+      pass_if(TRUE, "deprecated")
+    )
   )
-  expect_equal(
-    lifecycle::expect_deprecated(fail_if(x = TRUE, message = "deprecated")),
-    fail_if(TRUE, "deprecated")
+
+  with_options(
+    list(lifecycle_verbosity = "quiet"),
+    expect_equal(
+      fail_if(x = TRUE, message = "deprecated"),
+      fail_if(TRUE, "deprecated")
+    )
   )
 })

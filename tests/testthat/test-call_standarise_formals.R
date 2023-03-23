@@ -1,35 +1,33 @@
-context("Check standarize call with formals")
-
 test_that("Standarize call with formals primitive function", {
   user <- rlang::get_expr(quote(mean(1:3, na.rm = TRUE)))
   user_stand <- call_standardise_formals(user)
 
-  testthat::expect_equal(user_stand,
-    call("mean", x = 1:3, na.rm = TRUE))
+  expect_equal(user_stand, quote(mean(x = 1:3, na.rm = TRUE)))
 
   user <- quote(mean(1:3, 0, TRUE))
   user_stand <- call_standardise_formals(user)
 
-  testthat::expect_equal(user_stand,
-    call("mean", x = 1:3, 0, TRUE))
-
+  expect_equal(user_stand, quote(mean(x = 1:3, 0, TRUE)))
 })
 
 test_that("Standarize call with formals user function", {
-
-  my_func <- function(x, y, z = 100, a = TRUE, b = 3.14, c = "s", ...) x + y + z + b
+  my_func <- function(x, y, z = 100, a = TRUE, b = 3.14, c = "s", ...) {
+    x + y + z + b
+  }
 
   user <- rlang::get_expr(quote(my_func(x = 1, 20)))
-  user_stand <- call_standardise_formals(user,
-    env = rlang::env(my_func = my_func))
+  user_stand <- call_standardise_formals(
+    user,
+    env = rlang::env(my_func = my_func)
+  )
 
-  testthat::expect_equal(user_stand,
-    call("my_func", x = 1, y = 20, z = 100, a = TRUE, b = 3.14, c = "s"))
-
+  testthat::expect_equal(
+    user_stand,
+    quote(my_func(x = 1, y = 20, z = 100, a = TRUE, b = 3.14, c = "s"))
+  )
 })
 
 test_that("Standarize call with ... and kwargs", {
-
   a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, TRUE))
   b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, TRUE))
   c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, na.rm = TRUE))
@@ -44,7 +42,6 @@ test_that("Standarize call with ... and kwargs", {
   testthat::expect_equal(call_standardise_formals(b), xb)
   testthat::expect_equal(call_standardise_formals(c), xc)
   testthat::expect_equal(call_standardise_formals(d), xd)
-
 
   # use.names of vapply in the before the ...
   a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, USE.NAMES = TRUE, TRUE))
@@ -61,13 +58,11 @@ test_that("Standarize call with ... and kwargs", {
 test_that("When an invalid function passed (i.e., corrupt language object)", {
   user <- quote(1(a(1)))
 
-  testthat::expect_equal(
-    call_standardise_formals(user), user)
+  testthat::expect_equal(call_standardise_formals(user), user)
 })
 
-
 test_that("Standarize call with include_defaults = FALSE", {
-  library(purrr)
+  suppressPackageStartupMessages(library(purrr))
   user <- rlang::get_expr(quote(insistently(mean, quiet = TRUE)))
   user_stand <- call_standardise_formals(user)
   user_stand_mini <- call_standardise_formals(user,include_defaults = FALSE)
@@ -79,8 +74,6 @@ test_that("Standarize call with include_defaults = FALSE", {
     user_stand,
     quote(insistently(f = mean,rate = rate_backoff(), quiet = TRUE))
   )
-
-
 })
 
 test_that("Standardize call with ambiguous partial args", {

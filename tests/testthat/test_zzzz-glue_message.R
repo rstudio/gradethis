@@ -1,5 +1,3 @@
-context("Glue Message")
-
 test_that("Check NULL, NA", {
   testthat::expect_equal(glue_message("{.is_bool}", .is_bool = NA), "NA")
   testthat::expect_equal(glue_message("{.is_bool1}", .is_bool1 = NULL, .is_bool2 = NULL), "NA")

@@ -1,5 +1,3 @@
-context("Check grade learnr")
-
 test_that("Grade learnr grade_result", {
   expect_exercise_checker(
     user_code = "4",

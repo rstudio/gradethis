@@ -1,5 +1,3 @@
-context("Check grade_conditions messages")
-
 test_that("Correct messages without random praise", {
 
   with_gradethis_setup(
