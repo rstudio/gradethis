@@ -62,7 +62,7 @@ test_that("When an invalid function passed (i.e., corrupt language object)", {
 })
 
 test_that("Standarize call with include_defaults = FALSE", {
-  library(purrr)
+  suppressPackageStartupMessages(library(purrr))
   user <- rlang::get_expr(quote(insistently(mean, quiet = TRUE)))
   user_stand <- call_standardise_formals(user)
   user_stand_mini <- call_standardise_formals(user,include_defaults = FALSE)
