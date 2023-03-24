@@ -18,7 +18,7 @@
 #'   Most users of \pkg{gradethis} will not need to use this argument.
 #'
 #' @usage NULL
-user_object <- function(x, mode, envir, exclude_envir, ..., check_env) NULL
+user_object <- function(x, mode, exclude_envir, ..., check_env) NULL
 
 #' @rdname user_object
 #' @export

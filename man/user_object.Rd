@@ -38,8 +38,6 @@ solution_object_list(
 \item{mode}{character specifying the \code{\link{mode}} of objects to
     consider.  Passed to \code{\link{exists}} and \code{\link{get}}.}
 
-\item{envir}{environment to use, see \code{\link{ls}}.}
-
 \item{exclude_envir}{An \link{environment}.
 Objects that appear in \code{exclude_envir} will be excluded from results.
 Defaults to \code{\link{.envir_prep}}.
