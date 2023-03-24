@@ -1,3 +1,9 @@
+# gradethis 0.2.12.9000
+
+* New functions: `user_object_get()`, `user_object_exists()` and `user_object_list()` can be used to interact with objects created by the student's code. `solution_object_get()`, `solution_object_exists()` and `solution_object_list()` do the same for objects created by the solution code (#333).
+* New function: `with_exercise()` allows you to evaluate an expression as if it were run inside `grade_this()` with an associated exercise. It can be used alongside `mock_this_exercise()` for testing grading code outside the context of a learnr tutorial (#333).
+# `.envir_solution` is now included in the `grade_this()` check environment alongside `.envir_prep` and `.envir_result`. `.envir_solution` contains the state of the environment used to execute solution code, just as `.envir_result` does for student code (#333).
+
 # gradethis 0.2.11.9000
 
 ## Bug fixes
