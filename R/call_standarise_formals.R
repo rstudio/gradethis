@@ -100,7 +100,7 @@ call_standardise_formals_recursive <- function( # nolint
   call_standardise_formals(code)
 }
 
-call_fn <- function(code, env) {
+call_fn <- function(code, env = parent.frame()) {
   if (rlang::is_quosure(code) || rlang::is_formula(code)) {
     code <- rlang::get_expr(code)
   }
@@ -110,5 +110,51 @@ call_fn <- function(code, env) {
 
   fn <- rlang::eval_bare(head, env)
   stopifnot(rlang::is_function(fn))
+
+  if (utils::isS3stdGeneric(fn)) {
+    tryCatch(
+      fn <- resolve_s3_generic(fn, code, env),
+      error = function(e) return(fn)
+    )
+  }
+
+  fn
+}
+
+resolve_s3_generic <- function(fn, code, env = parent.frame()) {
+  arg <- rlang::eval_bare(code[[2]], env)
+  class <- unique(class(arg))
+
+  if ("array" %in% class) {
+    non_array_arg <- arg
+    dim(non_array_arg) <- NULL
+    non_array_class <- class(non_array_arg)
+    class <- unique(append(class, non_array_class))
+  }
+
+  if ("numeric" %in% class) {
+    class <- unique(append(class, "double", which(class == "numeric") - 1))
+  }
+
+  if ("integer" %in% class) {
+    class <- unique(append(class, "numeric", which(class == "integer")))
+  }
+
+  class <- unique(append(class, "default"))
+
+  fn_name <- as.character(code[[1]])
+  s3_method <- NULL
+
+  while(length(class) > 0) {
+    try(s3_method <- getS3method(fn_name, class[[1]]), silent = TRUE)
+
+    if (!is.null(s3_method)) {
+      fn <- s3_method
+      break
+    }
+
+    class <- class[-1]
+  }
+
   fn
 }
