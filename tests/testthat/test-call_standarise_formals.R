@@ -1,13 +1,13 @@
-test_that("Standarize call with formals primitive function", {
+test_that("Standarize call with formals S3 function", {
   user <- rlang::get_expr(quote(mean(1:3, na.rm = TRUE)))
   user_stand <- call_standardise_formals(user)
 
-  expect_equal(user_stand, quote(mean(x = 1:3, na.rm = TRUE)))
+  expect_equal(user_stand, quote(mean(x = 1:3, trim = 0, na.rm = TRUE)))
 
   user <- quote(mean(1:3, 0, TRUE))
   user_stand <- call_standardise_formals(user)
 
-  expect_equal(user_stand, quote(mean(x = 1:3, 0, TRUE)))
+  expect_equal(user_stand, quote(mean(x = 1:3, trim = 0, na.rm = TRUE)))
 })
 
 test_that("Standarize call with formals user function", {
