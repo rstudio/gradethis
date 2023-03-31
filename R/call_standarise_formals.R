@@ -112,7 +112,7 @@ call_fn <- function(code, env = parent.frame()) {
   stopifnot(rlang::is_function(fn))
 
   fn_is_s3_generic <- isS3stdGeneric(fn)
-  fn_name <- names(fn_is_s3_generic)
+  fn_name <- names(fn_is_s3_generic) %||% head
 
   if (fn_is_s3_generic) {
     tryCatch(
