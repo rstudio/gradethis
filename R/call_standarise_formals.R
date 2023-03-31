@@ -111,9 +111,12 @@ call_fn <- function(code, env = parent.frame()) {
   fn <- rlang::eval_bare(head, env)
   stopifnot(rlang::is_function(fn))
 
-  if (utils::isS3stdGeneric(fn)) {
+  fn_is_s3_generic <- utils::isS3stdGeneric(fn)
+  fn_name <- names(fn_is_s3_generic)
+
+  if (fn_is_s3_generic) {
     tryCatch(
-      fn <- resolve_s3_generic(fn, code, env),
+      fn <- resolve_s3_generic(fn_name, arg = code[[2]], env = env) %||% fn,
       error = function(e) return(fn)
     )
   }
@@ -121,8 +124,29 @@ call_fn <- function(code, env = parent.frame()) {
   fn
 }
 
-resolve_s3_generic <- function(fn, code, env = parent.frame()) {
-  arg <- rlang::eval_bare(code[[2]], env)
+resolve_s3_generic <- function(fn_name, arg, env = parent.frame()) {
+  class <- expand_class(arg, env)
+
+  while (length(class) > 0) {
+    method <- utils::getS3method(
+      fn_name,
+      class[[1]],
+      optional = TRUE,
+      envir = env
+    )
+
+    if (!is.null(method)) {
+      break
+    }
+
+    class <- class[-1]
+  }
+
+  method
+}
+
+expand_class <- function(arg, env) {
+  arg <- rlang::eval_bare(arg, env)
   class <- unique(class(arg))
 
   if ("array" %in% class) {
@@ -141,20 +165,5 @@ resolve_s3_generic <- function(fn, code, env = parent.frame()) {
   }
 
   class <- unique(append(class, "default"))
-
-  fn_name <- as.character(code[[1]])
-  s3_method <- NULL
-
-  while(length(class) > 0) {
-    try(s3_method <- utils::getS3method(fn_name, class[[1]]), silent = TRUE)
-
-    if (!is.null(s3_method)) {
-      fn <- s3_method
-      break
-    }
-
-    class <- class[-1]
-  }
-
-  fn
+  class
 }
