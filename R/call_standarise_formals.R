@@ -111,7 +111,7 @@ call_fn <- function(code, env = parent.frame()) {
   fn <- rlang::eval_bare(head, env)
   stopifnot(rlang::is_function(fn))
 
-  fn_is_s3_generic <- utils::isS3stdGeneric(fn)
+  fn_is_s3_generic <- isS3stdGeneric(fn)
   fn_name <- names(fn_is_s3_generic)
 
   if (fn_is_s3_generic) {
@@ -166,4 +166,40 @@ expand_class <- function(arg, env) {
 
   class <- unique(append(class, "default"))
   class
+}
+
+# Backport of `utils::isS3stdGeneric()` from R 4.1.0
+#
+#  File src/library/utils/R/objects.R
+#  Part of the R package, https://www.R-project.org
+#
+#  Copyright (C) 1995-2020 The R Core Team
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  A copy of the GNU General Public License is available at
+#  https://www.R-project.org/Licenses/
+isS3stdGeneric <- function(f) {
+  bdexpr <- body(if(methods::is(f, "traceable")) f@original else f)
+  ## protect against technically valid but bizarre
+  ## function(x) { { { UseMethod("gen")}}} by
+  ## repeatedly consuming the { until we get to the first non { expr
+  while(is.call(bdexpr) && bdexpr[[1L]] == "{")
+    bdexpr <- bdexpr[[2L]]
+
+  ## We only check if it is a "standard" s3 generic. i.e. the first non-{
+  ## expression is a call to UseMethod. This will return FALSE if any
+  ## work occurs before the UseMethod call ("non-standard" S3 generic)
+  ret <- is.call(bdexpr) && bdexpr[[1L]] == "UseMethod"
+  if(ret)
+    names(ret) <- bdexpr[[2L]] ## arg passed to UseMethod naming generic
+  ret
 }
