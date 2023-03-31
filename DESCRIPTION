@@ -34,6 +34,7 @@ Imports:
     learnr (>= 0.10.1.9008),
     lifecycle,
     magrittr,
+    methods,
     purrr,
     rlang,
     rstudioapi,
