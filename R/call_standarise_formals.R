@@ -146,7 +146,7 @@ resolve_s3_generic <- function(fn, code, env = parent.frame()) {
   s3_method <- NULL
 
   while(length(class) > 0) {
-    try(s3_method <- getS3method(fn_name, class[[1]]), silent = TRUE)
+    try(s3_method <- utils::getS3method(fn_name, class[[1]]), silent = TRUE)
 
     if (!is.null(s3_method)) {
       fn <- s3_method
