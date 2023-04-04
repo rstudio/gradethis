@@ -944,10 +944,25 @@ fail_if_error <- function(
 }
 
 assert_gradethis_condition_type_is_value <- function(cond, from = NULL) {
+  error <- rlang::catch_cnd(cond, "error")
+  if (rlang::is_error(error)) {
+    from <- if (!is.null(from)) paste0("to `", from, "()` ") else ""
+    msg_internal <- paste0(
+      "The `cond` argument ", from, "produced an error:", "\n",
+      "  Error in ", format(error$call), " : ", error$message
+    )
+    warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
+    grade_grading_problem(error = error)
+  }
+
   type <- condition_type(cond)
   if (!identical(type, "value")) {
-    from <- if (!is.null(from)) paste0(from, "() ") else ""
-    msg_internal <- paste0(from, "does not accept functions or formulas when used inside grade_this().")
+    from <- if (!is.null(from)) paste0("to `", from, "()` ") else ""
+    msg_internal <- paste0(
+      "The `cond` argument ",
+      from,
+      "does not accept functions or formulas when used inside `grade_this()`."
+    )
     warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
     grade_grading_problem(error = list(message = msg_internal))
   }
