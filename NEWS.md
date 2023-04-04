@@ -1,5 +1,7 @@
 # gradethis 0.2.12.9001
 
+* `pass_if()` and `fail_if()` now produce more informative error messages if their `cond` argument is invalid (#341).
+
 # gradethis 0.2.12.9000
 
 * New functions: `user_object_get()`, `user_object_exists()` and `user_object_list()` can be used to interact with objects created by the student's code. `solution_object_get()`, `solution_object_exists()` and `solution_object_list()` do the same for objects created by the solution code (#333).
