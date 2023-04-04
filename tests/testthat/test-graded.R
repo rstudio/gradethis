@@ -482,6 +482,48 @@ test_that("pass_if() and fail_if() use default pass/fail message in grade_this()
   )
 })
 
+test_that("pass_if() and fail_if() give errors for invalid cond", {
+  expect_snapshot(
+    grade <- expect_grade_this(
+      pass_if(~ TRUE),
+      user_code = "1",
+      solution_code = "2",
+      is_correct = logical(0)
+    )
+  )
+  expect_type(grade$error, "list")
+
+  expect_snapshot(
+    grade <- expect_grade_this(
+      fail_if(~ TRUE),
+      user_code = "1",
+      solution_code = "2",
+      is_correct = logical(0)
+    )
+  )
+  expect_type(grade$error, "list")
+
+  expect_snapshot(
+    grade <- expect_grade_this(
+      pass_if(all.equal(.result, .solution)),
+      user_code = "1",
+      solution_code = "2",
+      is_correct = logical(0)
+    )
+  )
+  expect_type(grade$error, "list")
+
+  expect_snapshot(
+    grade <- expect_grade_this(
+      fail_if(!all.equal(.result, .solution)),
+      user_code = "1",
+      solution_code = "2",
+      is_correct = logical(0)
+    )
+  )
+  expect_type(grade$error, "list")
+})
+
 test_that("grade_if_equal() edge cases with diffobj::ses()", {
   result <- c(39.6, 40.1, 35, 42, 34.5, 41.4, 39, 40.6, 36.5, 37.6, 35.7,
     41.3, 37.6, 41.1, 36.4, 41.6, 35.5, 41.1, 35.9, 41.8, 33.5, 39.7,

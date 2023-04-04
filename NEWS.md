@@ -1,6 +1,7 @@
 # gradethis 0.2.12.9001
 
 * `call_standardise_formals()` now attempts to standardize the arguments of calls to S3 generics (#339).
+* `pass_if()` and `fail_if()` now produce more informative error messages if their `cond` argument is invalid (#341).
 
 # gradethis 0.2.12.9000
 

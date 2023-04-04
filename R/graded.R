@@ -681,7 +681,7 @@ pass_if <- function(
   }
 
   if (detect_grade_this(env)) {
-    assert_gradethis_condition_type_is_value(cond, "pass_if")
+    assert_gradethis_condition_is_true_or_false(cond, "pass_if")
     if (cond) {
       message <- message %||% getOption("gradethis.pass", "Correct!")
       pass(message, env = env, ..., praise = praise)
@@ -714,7 +714,7 @@ fail_if <- function(
   }
 
   if (detect_grade_this(env)) {
-    assert_gradethis_condition_type_is_value(cond, "fail_if")
+    assert_gradethis_condition_is_true_or_false(cond, "fail_if")
     if (cond) {
       message <- message %||% getOption("gradethis.fail", "Incorrect.")
       fail(message, env = env, ..., hint = hint, encourage = encourage)
@@ -943,11 +943,76 @@ fail_if_error <- function(
   }
 }
 
-assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
-  type <- condition_type(x)
+assert_gradethis_condition_is_true_or_false <- function(cond, from = NULL) {
+  from <- if (!is.null(from)) paste0("to `", from, "()` ") else ""
+
+  assert_gradethis_condition_does_not_error(cond, from)
+  assert_gradethis_condition_type_is_value(cond, from)
+  assert_gradethis_condition_is_scalar(cond, from)
+  assert_gradethis_condition_is_logical(cond, from)
+  assert_gradethis_condition_is_not_na(cond, from)
+}
+
+assert_gradethis_condition_does_not_error <- function(cond, from) {
+  error <- rlang::catch_cnd(cond, "error")
+
+  if (rlang::is_error(error)) {
+    msg_internal <- paste0(
+      "The `cond` argument ", from, "produced an error:", "\n",
+      "  Error in ", format(error$call), " : ", error$message
+    )
+
+    warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
+    grade_grading_problem(error = error)
+  }
+}
+
+assert_gradethis_condition_type_is_value <- function(cond, from) {
+  type <- condition_type(cond)
+
   if (!identical(type, "value")) {
-    from <- if (!is.null(from)) paste0(from, "() ") else ""
-    msg_internal <- paste0(from, "does not accept functions or formulas when used inside grade_this().")
+    msg_internal <- paste0(
+      "The `cond` argument ",
+      from,
+      "does not accept functions or formulas when used inside `grade_this()`."
+    )
+
+    warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
+    grade_grading_problem(error = list(message = msg_internal))
+  }
+}
+
+assert_gradethis_condition_is_scalar <- function(cond, from) {
+  cond_length <- length(cond)
+
+  if (cond_length != 1) {
+    msg_internal <- paste0(
+      "The `cond` argument ", from, "must be length 1, ",
+      "not ", cond_length, "."
+    )
+
+    warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
+    grade_grading_problem(error = list(message = msg_internal))
+  }
+}
+
+assert_gradethis_condition_is_logical <- function(cond, from) {
+  cond_class <- paste0("<", paste(class(cond), collapse = "/"), ">")
+
+  if (!inherits(cond, "logical") && identical(as.logical(cond), NA)) {
+    msg_internal <- paste0(
+      "The `cond` argument ", from, "must be coercible to logical, ",
+      "not an object of class ", cond_class, "."
+    )
+
+    warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
+    grade_grading_problem(error = list(message = msg_internal))
+  }
+}
+
+assert_gradethis_condition_is_not_na <- function(cond, from) {
+  if (identical(cond, NA)) {
+    msg_internal <- paste0("The `cond` argument ", from, "must not be `NA`.")
     warning(msg_internal, immediate. = TRUE, call. = !is.null(from))
     grade_grading_problem(error = list(message = msg_internal))
   }
