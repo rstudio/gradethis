@@ -1,7 +1,7 @@
 Type: Package
 Package: gradethis
 Title: Automated Feedback for Student Exercises in 'learnr' Tutorials
-Version: 0.2.12.9000
+Version: 0.2.12.9001
 Authors@R: c(
     person("Garrick", "Aden-Buie", , "garrick@posit.co", role = "aut",
            comment = c(ORCID = "0000-0002-7111-0077")),
