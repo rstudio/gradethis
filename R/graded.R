@@ -943,8 +943,8 @@ fail_if_error <- function(
   }
 }
 
-assert_gradethis_condition_type_is_value <- function(x, from = NULL) {
-  type <- condition_type(x)
+assert_gradethis_condition_type_is_value <- function(cond, from = NULL) {
+  type <- condition_type(cond)
   if (!identical(type, "value")) {
     from <- if (!is.null(from)) paste0(from, "() ") else ""
     msg_internal <- paste0(from, "does not accept functions or formulas when used inside grade_this().")
