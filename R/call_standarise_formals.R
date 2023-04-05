@@ -100,7 +100,7 @@ call_standardise_formals_recursive <- function( # nolint
   call_standardise_formals(code)
 }
 
-call_fn <- function(code, env) {
+call_fn <- function(code, env = parent.frame()) {
   if (rlang::is_quosure(code) || rlang::is_formula(code)) {
     code <- rlang::get_expr(code)
   }
@@ -110,5 +110,59 @@ call_fn <- function(code, env) {
 
   fn <- rlang::eval_bare(head, env)
   stopifnot(rlang::is_function(fn))
+
+  try_is_s3 <- purrr::possibly(utils::isS3stdGeneric, otherwise = FALSE)
+  fn_is_s3_generic <- try_is_s3(fn)
+
+  if (fn_is_s3_generic) {
+    fn_name <- names(fn_is_s3_generic) %||% head
+    try_get_s3_method <- purrr::possibly(get_s3_method, otherwise = NULL)
+    fn <- try_get_s3_method(fn_name, arg = code[[2]], env = env) %||% fn
+  }
+
   fn
+}
+
+get_s3_method <- function(fn_name, arg, env = parent.frame()) {
+  class <- expand_class(arg, env)
+
+  while (length(class) > 0) {
+    method <- utils::getS3method(
+      fn_name,
+      class[[1]],
+      optional = TRUE,
+      envir = env
+    )
+
+    if (!is.null(method)) {
+      break
+    }
+
+    class <- class[-1]
+  }
+
+  method
+}
+
+expand_class <- function(arg, env) {
+  arg <- rlang::eval_bare(arg, env)
+  class <- unique(class(arg))
+
+  if ("array" %in% class) {
+    non_array_arg <- arg
+    dim(non_array_arg) <- NULL
+    non_array_class <- class(non_array_arg)
+    class <- unique(append(class, non_array_class))
+  }
+
+  if ("numeric" %in% class) {
+    class <- unique(append(class, "double", which(class == "numeric") - 1))
+  }
+
+  if ("integer" %in% class) {
+    class <- unique(append(class, "numeric", which(class == "integer")))
+  }
+
+  class <- unique(append(class, "default"))
+  class
 }

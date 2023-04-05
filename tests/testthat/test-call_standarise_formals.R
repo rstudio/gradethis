@@ -1,13 +1,13 @@
-test_that("Standarize call with formals primitive function", {
+test_that("Standarize call with formals S3 function", {
   user <- rlang::get_expr(quote(mean(1:3, na.rm = TRUE)))
   user_stand <- call_standardise_formals(user)
 
-  expect_equal(user_stand, quote(mean(x = 1:3, na.rm = TRUE)))
+  expect_equal(user_stand, quote(mean(x = 1:3, trim = 0, na.rm = TRUE)))
 
   user <- quote(mean(1:3, 0, TRUE))
   user_stand <- call_standardise_formals(user)
 
-  expect_equal(user_stand, quote(mean(x = 1:3, 0, TRUE)))
+  expect_equal(user_stand, quote(mean(x = 1:3, trim = 0, na.rm = TRUE)))
 })
 
 test_that("Standarize call with formals user function", {
@@ -24,6 +24,50 @@ test_that("Standarize call with formals user function", {
   testthat::expect_equal(
     user_stand,
     quote(my_func(x = 1, y = 20, z = 100, a = TRUE, b = 3.14, c = "s"))
+  )
+})
+
+test_that("Standarize call with formals user S3 function", {
+  my_func <- function(x, ...) {
+    UseMethod("my_func")
+  }
+
+  my_func.numeric <- function(x, y, z = 100, ...) {
+    x + y + z
+  }
+
+  my_func.character <- function(x, a, b = 3.14, c = "s", ...) {
+    paste(x, a, b, c)
+  }
+
+  user_numeric <- rlang::get_expr(quote(my_func(x = 1, 20)))
+  user_numeric_stand <- call_standardise_formals(
+    user_numeric,
+    env = rlang::env(
+      my_func = my_func,
+      my_func.numeric = my_func.numeric,
+      my_func.character = my_func.character
+    )
+  )
+
+  testthat::expect_equal(
+    user_numeric_stand,
+    quote(my_func(x = 1, y = 20, z = 100))
+  )
+
+  user_character <- rlang::get_expr(quote(my_func(x = "1", 20)))
+  user_character_stand <- call_standardise_formals(
+    user_character,
+    env = rlang::env(
+      my_func = my_func,
+      my_func.numeric = my_func.numeric,
+      my_func.character = my_func.character
+    )
+  )
+
+  testthat::expect_equal(
+    user_character_stand,
+    quote(my_func(x = "1", a = 20, b = 3.14, c = "s"))
   )
 })
 

@@ -727,19 +727,16 @@ test_that("detect_mistakes handles argument names correctly", {
     )
   )
 
-  # This user code looks correct (and runs!) but na.rm is an argument passed to
+  # This user code looks correct (and runs!) but invalid is an argument passed to
   # ... that does not appear in the solution, and so should be flagged wrong.
-  user <-     quote(mean(1:10, cut = 1, na.rm = TRUE))
-  solution <- quote(mean(1:10, TRUE, cut = 1))
+  user <-     quote(mean(1:10, cut = 1, invalid = TRUE))
+  solution <- quote(mean(1:10, cut = 1))
   expect_equal(
     detect_mistakes(user, solution),
-    # message_wrong_value(this = quote(1),
-    #             this_name = "cut",
-    #             that = quote(TRUE))
     message_surplus_argument(
       submitted_call = quote(mean()),
       submitted = quote(TRUE),
-      submitted_name = "na.rm"
+      submitted_name = "invalid"
     )
   )
 
