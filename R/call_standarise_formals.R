@@ -11,36 +11,36 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
     return(code)
   }
 
-  # if include_defaults == FALSE standardize, but don't bother trying to fill
-  # out default formals. For primitives like mean, we're unable to distinguish
-  # between mean() and mean.default()
-  if (is_false(include_defaults) || is_infix(code) || is.primitive(fn)) {
-    return(call_standardise_keep_partials(code, env = env))
-  }
-
-  fmls <- rlang::fn_fmls(fn)
-  args_default <- fmls[!vapply(fmls, is.symbol, logical(1), USE.NAMES = FALSE)]
-
   # order and label existing params
   code_std <- call_standardise_keep_partials(code, env = env)
 
-  # get named arguments passed from user
-  args_user <- rlang::call_args(code_std)
-  args_user <- args_user[nzchar(names(args_user))]
+  if (is_infix(code) || is.primitive(fn)) {
+    return(code_std)
+  }
 
-  args_default_missing <- names(args_default)[
-    !grepl(paste0("^", names(args_user), collapse = "|"), names(args_default))
-  ]
-  if (length(args_default_missing) > 0) {
-    ## Add implicit default args to the call
-    code_std <- call_standardise_keep_partials(
-      rlang::call_modify(code_std, !!!args_default[args_default_missing]),
-      env = env
-    )
+  fmls <- rlang::fn_fmls(fn)
+
+  # if include_defaults == FALSE: standardize, but don't bother trying to fill
+  # out default formals
+  if (is_true(include_defaults)) {
+    # get named arguments passed from user
+    args_user <- rlang::call_args(code_std)
+    args_user <- args_user[nzchar(names(args_user))]
+
+    args_default <- fmls[!vapply(fmls, is.symbol, logical(1), USE.NAMES = FALSE)]
+    args_default_missing <- names(args_default)[
+      !grepl(paste0("^", names(args_user), collapse = "|"), names(args_default))
+    ]
+    if (length(args_default_missing) > 0) {
+      ## Add implicit default args to the call
+      code_std <- call_standardise_keep_partials(
+        rlang::call_modify(code_std, !!!args_default[args_default_missing]),
+        env = env
+      )
+    }
   }
 
   code_std <- call_standardise_passed_arguments(code_std, fn, fmls, env)
-
   code_std
 }
 
