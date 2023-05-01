@@ -85,19 +85,19 @@ str_trim <- function(x, side = "both", character = "\\s") {
 #' @return An integer vector.
 #' @noRd
 fixed <- function(pattern, ignore_case = FALSE) {
-	if (!isTRUE(ignore_case)) {
-		return(structure(
-			pattern, class = c("stringr_fixed", "stringr_pattern", "character")
-		))
-	}
+  if (!isTRUE(ignore_case)) {
+    return(structure(
+      pattern, class = c("stringr_fixed", "stringr_pattern", "character")
+    ))
+  }
 
-	if (!is.null(names(pattern))) {
-		names(pattern) <- paste0("(?i)", names(pattern))
-	} else {
-		pattern <- paste0("(?i)", pattern)
-	}
+  if (!is.null(names(pattern))) {
+    names(pattern) <- paste0("(?i)", names(pattern))
+  } else {
+    pattern <- paste0("(?i)", pattern)
+  }
 
-	structure(pattern, class = c("stringr_regex", "stringr_pattern", "character"))
+  structure(pattern, class = c("stringr_regex", "stringr_pattern", "character"))
 }
 
 #' Count the number of matches in a string
@@ -121,17 +121,17 @@ fixed <- function(pattern, ignore_case = FALSE) {
 #' @return An integer vector.
 #' @noRd
 str_count <- function(string, pattern = "") {
-	if (length(string) == 0 || length(pattern) == 0) return(integer(0))
-	is_fixed <- inherits(pattern, "stringr_fixed")
-	mapply(
-		function(string, pattern) {
-			match <- unlist(
-				gregexpr(pattern, text = string, perl = !is_fixed, fixed = is_fixed)
-			)
-			length(match[match > 0])
-		},
-		string, pattern, SIMPLIFY = "vector", USE.NAMES = FALSE
-	)
+  if (length(string) == 0 || length(pattern) == 0) return(integer(0))
+  is_fixed <- inherits(pattern, "stringr_fixed")
+  mapply(
+    function(string, pattern) {
+      match <- unlist(
+        gregexpr(pattern, text = string, perl = !is_fixed, fixed = is_fixed)
+      )
+      length(match[match > 0])
+    },
+    string, pattern, SIMPLIFY = "vector", USE.NAMES = FALSE
+  )
 }
 
 #' Extract matching patterns from a string
@@ -157,26 +157,26 @@ str_count <- function(string, pattern = "") {
 #'   followed by one column for each capture group.
 #' @noRd
 str_extract <- function(string, pattern) {
-	if (length(string) == 0 || length(pattern) == 0) return(character(0))
+  if (length(string) == 0 || length(pattern) == 0) return(character(0))
 
-	is_fixed <- inherits(pattern, "stringr_fixed")
+  is_fixed <- inherits(pattern, "stringr_fixed")
 
-	result <- Map(
-		function(string, pattern) {
-			if (is.na(string) || is.na(pattern)) return(NA_character_)
+  result <- Map(
+    function(string, pattern) {
+      if (is.na(string) || is.na(pattern)) return(NA_character_)
 
-			regmatches(
-				x = string,
-				m = regexpr(
-					pattern = pattern, text = string, perl = !is_fixed, fixed = is_fixed
-				)
-			)
-		},
-		string, pattern, USE.NAMES = FALSE
-	)
+      regmatches(
+        x = string,
+        m = regexpr(
+          pattern = pattern, text = string, perl = !is_fixed, fixed = is_fixed
+        )
+      )
+    },
+    string, pattern, USE.NAMES = FALSE
+  )
 
-	result[lengths(result) == 0] <- NA_character_
-	unlist(result)
+  result[lengths(result) == 0] <- NA_character_
+  unlist(result)
 }
 
 #' Keep strings matching a pattern
@@ -202,24 +202,24 @@ str_extract <- function(string, pattern) {
 #' @return A character vector.
 #' @noRd
 str_subset <- function(string, pattern, negate = FALSE) {
-	if (length(string) == 0 || length(pattern) == 0) return(character(0))
+  if (length(string) == 0 || length(pattern) == 0) return(character(0))
 
-	ignore.case <- isTRUE(attr(pattern, "options")$case_insensitive)
-	is_fixed <- !ignore.case && inherits(pattern, "stringr_fixed")
+  ignore.case <- isTRUE(attr(pattern, "options")$case_insensitive)
+  is_fixed <- !ignore.case && inherits(pattern, "stringr_fixed")
 
-	result <- Map(
-		function(string, pattern) {
-			grep(
-				pattern,
-				x = string,
-				ignore.case = ignore.case,
-				perl = !is_fixed,
-				fixed = is_fixed,
-				invert = negate
-			)
-		},
-		string, pattern, USE.NAMES = FALSE
-	)
+  result <- Map(
+    function(string, pattern) {
+      grep(
+        pattern,
+        x = string,
+        ignore.case = ignore.case,
+        perl = !is_fixed,
+        fixed = is_fixed,
+        invert = negate
+      )
+    },
+    string, pattern, USE.NAMES = FALSE
+  )
 
-	string[which(lengths(result) > 0)]
+  string[which(lengths(result) > 0)]
 }
