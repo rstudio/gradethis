@@ -31,19 +31,15 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   args_default_missing <- names(args_default)[
     !grepl(paste0("^", names(args_user), collapse = "|"), names(args_default))
   ]
-  if (length(args_default_missing) == 0) {
-    return(code_std)
+  if (length(args_default_missing) > 0) {
+    ## Add implicit default args to the call
+    code_std <- call_standardise_keep_partials(
+      rlang::call_modify(code_std, !!!args_default[args_default_missing]),
+      env = env
+    )
   }
 
-  ## Add implicit default args to the call
-  code_std <- call_standardise_keep_partials(
-    rlang::call_modify(code_std, !!!args_default[args_default_missing]),
-    env = env
-  )
-
-  if (identical(fn, purrr::map)) {
-    code_std <- call_standardise_passed_arguments(code_std, fmls, env)
-  }
+  code_std <- call_standardise_passed_arguments(code_std, fn, fmls, env)
 
   code_std
 }
@@ -106,17 +102,15 @@ call_standardise_formals_recursive <- function( # nolint
   call_standardise_formals(code)
 }
 
-call_standardise_passed_arguments <- function(code, fmls, env) {
+call_standardise_passed_arguments <- function(code, fn, fmls, env) {
+  mappers <- mapping_function_list()
+  if (!purrr::some(unlist(mappers), identical, fn)) {
+    return(code)
+  }
+
   dot_arg_indices <- which(!names(code) %in% names(fmls))[-1]
   dot_args <- as.list(code)[dot_arg_indices]
-
-  f_arg <- code$.f %||% code$FUN
-  x_arg <- code$.x %||% code$X
-  try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
-
-  implicit_call <- rlang::call2(f_arg, x_arg, !!!dot_args)
-  implicit_call <- call_standardise_formals(implicit_call)
-  dot_args_standardised <- as.list(implicit_call)[-1:-2]
+  dot_args <- dot_args_standardise(code, fn, mappers, dot_args, env)
 
   code_without_dot_args <- if (length(dot_arg_indices) > 0) {
     code[-dot_arg_indices]
@@ -126,11 +120,85 @@ call_standardise_passed_arguments <- function(code, fmls, env) {
 
   code_list <- append(
     as.list(code_without_dot_args),
-    dot_args_standardised,
+    dot_args,
     after = which(names(fmls) == "...")
   )
 
   as.call(code_list)
+}
+
+dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
+  if (purrr::some(mappers$map_functions, identical, fn)) {
+    f_arg <- code$.f
+
+    x_arg <- code$.x
+    try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
+
+    call <- rlang::call2(f_arg, x_arg, !!!dot_args)
+    n_args <- 1
+  } else if (purrr::some(mappers$map2_functions, identical, fn)) {
+    f_arg <- code$.f
+
+    x_arg <- code$.x
+    try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
+
+    y_arg <- code$.y
+    try(y_arg <- rlang::eval_bare(y_arg, env)[[1]], silent = TRUE)
+
+    call <- rlang::call2(f_arg, x_arg, y_arg, !!!dot_args)
+    n_args <- 2
+  } else if (purrr::some(mappers$imap_functions, identical, fn)) {
+    f_arg <- code$.f
+
+    x_args <- code$.x
+    try(x_args <- rlang::eval_bare(x_args, env), silent = TRUE)
+
+    x_arg <- x_args[[1]]
+    y_arg <- names(x_args)[[1]]
+
+    call <- rlang::call2(f_arg, x_arg, y_arg, !!!dot_args)
+    n_args <- 2
+  } else if (purrr::some(mappers$lmap_functions, identical, fn)) {
+    f_arg <- code$.f
+
+    x_arg <- code$.x
+    try(x_arg <- rlang::eval_bare(x_arg, env)[1], silent = TRUE)
+
+    call <- rlang::call2(f_arg, x_arg, !!!dot_args)
+    n_args <- 1
+  } else if (purrr::some(mappers$pmap_functions, identical, fn)) {
+    f_arg <- code$.f
+
+    l_arg <- code$.l
+    try(l_arg <- rlang::eval_bare(l_arg, env), silent = TRUE)
+    try(l_arg <- purrr::map(l_arg, 1), silent = TRUE)
+
+    call <- rlang::call2(f_arg, !!!l_arg, !!!dot_args)
+    n_args <- length(l_arg)
+  } else if (purrr::some(mappers$apply_functions, identical, fn)) {
+    f_arg <- code$FUN
+
+    x_arg <- code$X
+    try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
+
+    call <- rlang::call2(f_arg, x_arg, !!!dot_args)
+    n_args <- 1
+  }
+
+  return(as.list(call_standardise_formals(call))[-seq_len(n_args + 1)])
+}
+
+mapping_function_list <- function() {
+  purrr <- utils::lsf.str(asNamespace("purrr"))
+
+  list(
+    map_functions = mget(str_subset(purrr, "^map(_.|$)"), asNamespace("purrr")),
+    map2_functions = mget(str_subset(purrr, "map2(_.|$)"), asNamespace("purrr")),
+    imap_functions = mget(str_subset(purrr, "imap(_.|$)"), asNamespace("purrr")),
+    lmap_functions = mget(str_subset(purrr, "lmap(_.|$)"), asNamespace("purrr")),
+    pmap_functions = mget(str_subset(purrr, "pmap(_.|$)"), asNamespace("purrr")),
+    apply_functions = list(apply, lapply, sapply, tapply, vapply)
+  )
 }
 
 call_fn <- function(code, env = parent.frame()) {

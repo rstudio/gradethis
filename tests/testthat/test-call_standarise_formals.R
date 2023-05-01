@@ -71,72 +71,6 @@ test_that("Standarize call with formals user S3 function", {
   )
 })
 
-test_that("Standarize call with ... and kwargs", {
-  a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, TRUE))
-  b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, TRUE))
-  c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, na.rm = TRUE))
-  d <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, na.rm = TRUE))
-
-  xa <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), 0, TRUE, USE.NAMES = TRUE)) # nolint
-  xb <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), trim = 0, TRUE, USE.NAMES = TRUE)) # nolint
-  xc <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), 0, na.rm = TRUE, USE.NAMES = TRUE)) # nolint
-  xd <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), trim = 0, na.rm = TRUE, USE.NAMES = TRUE)) # nolint
-
-  testthat::expect_equal(call_standardise_formals(a), xa)
-  testthat::expect_equal(call_standardise_formals(b), xb)
-  testthat::expect_equal(call_standardise_formals(c), xc)
-  testthat::expect_equal(call_standardise_formals(d), xd)
-
-  # use.names of vapply in the before the ...
-  a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, USE.NAMES = TRUE, TRUE))
-  b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, USE.NAMES = TRUE, TRUE))
-  c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, USE.NAMES = TRUE, na.rm = TRUE))
-  d <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, USE.NAMES = TRUE, na.rm = TRUE))
-
-  testthat::expect_equal(call_standardise_formals(a), xa)
-  testthat::expect_equal(call_standardise_formals(b), xb)
-  testthat::expect_equal(call_standardise_formals(c), xc)
-  testthat::expect_equal(call_standardise_formals(d), xd)
-})
-
-test_that("When an invalid function passed (i.e., corrupt language object)", {
-  user <- quote(1(a(1)))
-
-  testthat::expect_equal(call_standardise_formals(user), user)
-})
-
-test_that("Standarize call with include_defaults = FALSE", {
-  suppressPackageStartupMessages(library(purrr))
-  user <- rlang::get_expr(quote(insistently(mean, quiet = TRUE)))
-  user_stand <- call_standardise_formals(user)
-  user_stand_mini <- call_standardise_formals(user,include_defaults = FALSE)
-  testthat::expect_equal(
-    user_stand_mini,
-    quote(insistently(f = mean, quiet = TRUE))
-  )
-  testthat::expect_equal(
-    user_stand,
-    quote(insistently(f = mean,rate = rate_backoff(), quiet = TRUE))
-  )
-})
-
-test_that("Standardize call with ambiguous partial args", {
-  testthat::expect_equal(
-    call_standardise_formals(quote(dunif(1, m = 1, l = TRUE))),
-    quote(dunif(x = 1, log = TRUE, m = 1))
-  )
-
-  testthat::expect_equal(
-    call_standardise_formals(quote(dunif(1, m = 1, m = 1))),
-    quote(dunif(1, m = 1, m = 1, log = FALSE))
-  )
-
-  testthat::expect_equal(
-    call_standardise_formals(quote(invalid_function(1, m = 1, l = TRUE))),
-    quote(invalid_function(1, m = 1, l = TRUE))
-  )
-})
-
 test_that("Standardize call with passed ... args", {
   expect_equal(
     call_standardise_formals(quote(
@@ -181,5 +115,129 @@ test_that("Standardize call with passed ... args", {
     quote(
       purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
     )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      lapply(1, mean, 0, TRUE)
+    )),
+    quote(
+      lapply(X = 1, FUN = mean, trim = 0, na.rm = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      sapply(1, mean, 0, TRUE)
+    )),
+    quote(
+      sapply(X = 1, FUN = mean, trim = 0, na.rm = TRUE, simplify = TRUE, USE.NAMES = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      vapply(1, mean, 0, TRUE, FUN.VALUE = numeric(1))
+    )),
+    quote(
+      vapply(X = 1, FUN = mean, FUN.VALUE = numeric(1), trim = 0, na.rm = TRUE, USE.NAMES = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map2(1, 0, mean, TRUE)
+    )),
+    quote(
+      purrr::map2(.x = 1, .y = 0, .f = mean, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::imap(c("0" = 1), mean, TRUE)
+    )),
+    quote(
+      purrr::imap(.x = c("0" = 1), .f = mean, na.rm = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::lmap(1, mean, 0, TRUE)
+    )),
+    quote(
+      purrr::lmap(.x = 1, .f = mean, trim = 0, na.rm = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::pmap(list(1, 0), mean, TRUE)
+    )),
+    quote(
+      purrr::pmap(.l = list(1, 0), .f = mean, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, TRUE))
+  b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, TRUE))
+  c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, na.rm = TRUE))
+  d <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, na.rm = TRUE))
+
+  xd <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), trim = 0, na.rm = TRUE, USE.NAMES = TRUE)) # nolint
+
+  testthat::expect_equal(call_standardise_formals(a), xd)
+  testthat::expect_equal(call_standardise_formals(b), xd)
+  testthat::expect_equal(call_standardise_formals(c), xd)
+  testthat::expect_equal(call_standardise_formals(d), xd)
+
+  # use.names of vapply in the before the ...
+  a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, USE.NAMES = TRUE, TRUE))
+  b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, USE.NAMES = TRUE, TRUE))
+  c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, USE.NAMES = TRUE, na.rm = TRUE))
+  d <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, USE.NAMES = TRUE, na.rm = TRUE))
+
+  testthat::expect_equal(call_standardise_formals(a), xd)
+  testthat::expect_equal(call_standardise_formals(b), xd)
+  testthat::expect_equal(call_standardise_formals(c), xd)
+  testthat::expect_equal(call_standardise_formals(d), xd)
+})
+
+test_that("When an invalid function passed (i.e., corrupt language object)", {
+  user <- quote(1(a(1)))
+
+  testthat::expect_equal(call_standardise_formals(user), user)
+})
+
+test_that("Standarize call with include_defaults = FALSE", {
+  suppressPackageStartupMessages(library(purrr))
+  user <- rlang::get_expr(quote(insistently(mean, quiet = TRUE)))
+  user_stand <- call_standardise_formals(user)
+  user_stand_mini <- call_standardise_formals(user,include_defaults = FALSE)
+  testthat::expect_equal(
+    user_stand_mini,
+    quote(insistently(f = mean, quiet = TRUE))
+  )
+  testthat::expect_equal(
+    user_stand,
+    quote(insistently(f = mean,rate = rate_backoff(), quiet = TRUE))
+  )
+})
+
+test_that("Standardize call with ambiguous partial args", {
+  testthat::expect_equal(
+    call_standardise_formals(quote(dunif(1, m = 1, l = TRUE))),
+    quote(dunif(x = 1, log = TRUE, m = 1))
+  )
+
+  testthat::expect_equal(
+    call_standardise_formals(quote(dunif(1, m = 1, m = 1))),
+    quote(dunif(1, m = 1, m = 1, log = FALSE))
+  )
+
+  testthat::expect_equal(
+    call_standardise_formals(quote(invalid_function(1, m = 1, l = TRUE))),
+    quote(invalid_function(1, m = 1, l = TRUE))
   )
 })
