@@ -36,10 +36,16 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   }
 
   ## Add implicit default args to the call
-  call_standardise_keep_partials(
+  code_std <- call_standardise_keep_partials(
     rlang::call_modify(code_std, !!!args_default[args_default_missing]),
     env = env
   )
+
+  if (identical(fn, purrr::map)) {
+    code_std <- call_standardise_passed_arguments(code_std, fmls, env)
+  }
+
+  code_std
 }
 
 call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
@@ -98,6 +104,33 @@ call_standardise_formals_recursive <- function( # nolint
   code <- purrr::map(as.list(code), call_standardise_formals_recursive)
   code <- as.call(code)
   call_standardise_formals(code)
+}
+
+call_standardise_passed_arguments <- function(code, fmls, env) {
+  dot_arg_indices <- which(!names(code) %in% names(fmls))[-1]
+  dot_args <- as.list(code)[dot_arg_indices]
+
+  f_arg <- code$.f %||% code$FUN
+  x_arg <- code$.x %||% code$X
+  try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
+
+  implicit_call <- rlang::call2(f_arg, x_arg, !!!dot_args)
+  implicit_call <- call_standardise_formals(implicit_call)
+  dot_args_standardised <- as.list(implicit_call)[-1:-2]
+
+  code_without_dot_args <- if (length(dot_arg_indices) > 0) {
+    code[-dot_arg_indices]
+  } else {
+    code
+  }
+
+  code_list <- append(
+    as.list(code_without_dot_args),
+    dot_args_standardised,
+    after = which(names(fmls) == "...")
+  )
+
+  as.call(code_list)
 }
 
 call_fn <- function(code, env = parent.frame()) {

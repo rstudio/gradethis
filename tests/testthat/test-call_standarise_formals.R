@@ -136,3 +136,50 @@ test_that("Standardize call with ambiguous partial args", {
     quote(invalid_function(1, m = 1, l = TRUE))
   )
 })
+
+test_that("Standardize call with passed ... args", {
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean, 0, TRUE)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(list(1:2, 1:3), mean, 0, TRUE)
+    )),
+    quote(
+      purrr::map(.x = list(1:2, 1:3), .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean, na.rm = TRUE, 0)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = FALSE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean, na.rm = TRUE)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+})
