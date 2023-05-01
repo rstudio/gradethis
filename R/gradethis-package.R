@@ -25,8 +25,8 @@ NULL
 #   str_trim
 #   knitr_engine_caption
 
-# @staticimports pkg:staticimports
-#   str_extract
-
 # @staticimports pkg:stringstatic
-#   str_count fixed
+#   fixed
+#   str_count
+#   str_extract
+#   str_subset
