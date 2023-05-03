@@ -71,20 +71,125 @@ test_that("Standarize call with formals user S3 function", {
   )
 })
 
-test_that("Standarize call with ... and kwargs", {
+test_that("Standardize call with passed ... args", {
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean, 0, TRUE)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(list(1:2, 1:3), mean, 0, TRUE)
+    )),
+    quote(
+      purrr::map(.x = list(1:2, 1:3), .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean, na.rm = TRUE, 0)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = FALSE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(1, mean, na.rm = TRUE)
+    )),
+    quote(
+      purrr::map(.x = 1, .f = mean, trim = 0, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      lapply(1, mean, 0, TRUE)
+    )),
+    quote(
+      lapply(X = 1, FUN = mean, trim = 0, na.rm = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      sapply(1, mean, 0, TRUE)
+    )),
+    quote(
+      sapply(X = 1, FUN = mean, trim = 0, na.rm = TRUE, simplify = TRUE, USE.NAMES = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      vapply(1, mean, 0, TRUE, FUN.VALUE = numeric(1))
+    )),
+    quote(
+      vapply(X = 1, FUN = mean, FUN.VALUE = numeric(1), trim = 0, na.rm = TRUE, USE.NAMES = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map2(1, 0, mean, TRUE)
+    )),
+    quote(
+      purrr::map2(.x = 1, .y = 0, .f = mean, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::imap(c("0" = 1), mean, TRUE)
+    )),
+    quote(
+      purrr::imap(.x = c("0" = 1), .f = mean, na.rm = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::lmap(1, mean, 0, TRUE)
+    )),
+    quote(
+      purrr::lmap(.x = 1, .f = mean, trim = 0, na.rm = TRUE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::pmap(list(1, 0), mean, TRUE)
+    )),
+    quote(
+      purrr::pmap(.l = list(1, 0), .f = mean, na.rm = TRUE, .progress = FALSE)
+    )
+  )
+
   a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, TRUE))
   b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, TRUE))
   c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, na.rm = TRUE))
   d <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, na.rm = TRUE))
 
-  xa <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), 0, TRUE, USE.NAMES = TRUE)) # nolint
-  xb <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), trim = 0, TRUE, USE.NAMES = TRUE)) # nolint
-  xc <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), 0, na.rm = TRUE, USE.NAMES = TRUE)) # nolint
   xd <- quote(vapply(X = list(1:3, 4:6), FUN = mean, FUN.VALUE = numeric(1), trim = 0, na.rm = TRUE, USE.NAMES = TRUE)) # nolint
 
-  testthat::expect_equal(call_standardise_formals(a), xa)
-  testthat::expect_equal(call_standardise_formals(b), xb)
-  testthat::expect_equal(call_standardise_formals(c), xc)
+  testthat::expect_equal(call_standardise_formals(a), xd)
+  testthat::expect_equal(call_standardise_formals(b), xd)
+  testthat::expect_equal(call_standardise_formals(c), xd)
   testthat::expect_equal(call_standardise_formals(d), xd)
 
   # use.names of vapply in the before the ...
@@ -93,9 +198,9 @@ test_that("Standarize call with ... and kwargs", {
   c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, USE.NAMES = TRUE, na.rm = TRUE))
   d <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, USE.NAMES = TRUE, na.rm = TRUE))
 
-  testthat::expect_equal(call_standardise_formals(a), xa)
-  testthat::expect_equal(call_standardise_formals(b), xb)
-  testthat::expect_equal(call_standardise_formals(c), xc)
+  testthat::expect_equal(call_standardise_formals(a), xd)
+  testthat::expect_equal(call_standardise_formals(b), xd)
+  testthat::expect_equal(call_standardise_formals(c), xd)
   testthat::expect_equal(call_standardise_formals(d), xd)
 })
 

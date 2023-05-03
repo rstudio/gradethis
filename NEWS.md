@@ -1,3 +1,7 @@
+# gradethis 0.2.12.9003
+
+* `call_standardise_formals()` now attempts to standardize arguments passed through `...` in mapping functions like `lapply()` or `purrr::map()` (#344).
+
 # gradethis 0.2.12.9002
 
 * `call_standardise_formals()` now attempts to standardize the arguments of calls to S3 generics (#339).
