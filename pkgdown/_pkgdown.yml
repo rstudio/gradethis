@@ -108,3 +108,4 @@ reference:
   - '`gradethis_error_checker`'
   - '`mock_this_exercise`'
   - '`with_exercise`'
+  - '`gradethis_equal`'
