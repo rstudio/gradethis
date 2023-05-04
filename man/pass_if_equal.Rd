@@ -28,7 +28,7 @@ fail_if_equal(
 }
 \arguments{
 \item{y}{The expected value against which \code{x} is compared using
-\code{waldo::compare(x, y)}.
+\code{gradethis_equal(x, y)}.
 
 In \code{pass_if_equal()}, if no value is provided, the exercise \code{.solution}
 (i.e. the result of evaluating the code in the exercise's \verb{*-solution}

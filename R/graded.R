@@ -432,7 +432,7 @@ fail <- function(
 #'   the first argument since you will often want to compare the final value of
 #'   the student's submission against a specific value, `y`.
 #' @param y The expected value against which `x` is compared using
-#'   `waldo::compare(x, y)`.
+#'   `gradethis_equal(x, y)`.
 #'
 #'   In `pass_if_equal()`, if no value is provided, the exercise `.solution`
 #'   (i.e. the result of evaluating the code in the exercise's `*-solution`
@@ -444,7 +444,7 @@ fail <- function(
 #'   in `y`. Note that if the exercise has multiple solutions but they all
 #'   return the same result, it will be faster to use the default value of
 #'   `y = .solution`.
-#' @inheritParams waldo::compare
+#' @inheritParams gradethis_equal
 #' @param ... Additional arguments passed to [graded()]
 #'
 #' @return Returns a passing or failing grade if `x` and `y` are equal.
@@ -561,30 +561,14 @@ fail_if_equal <- function(
 grade_if_equal <- function(
   x, y, message, correct, env, tolerance = sqrt(.Machine$double.eps), ...
 ) {
-  local_options_waldo_compare()
+  comparison <- gradethis_equal(x, y, tolerance)
 
-  compare_msg <- tryCatch(
-    try_with_timelimit(
-      waldo::compare(x, y, tolerance = tolerance)
-    ),
-    error = function(e) {
-      # waldo::compare() takes into account a lot of the things we'd have to
-      # think about in comparing two objects, but its goal is to create a
-      # readable diff. Since we're engaging in some off-label usage of these
-      # functions, they will sometimes error or take longer than desired when we
-      # give them unusual inputs. In these cases, we fall back to `identical()`.
-      # Since we aren't (currently) interested in reporting the differences
-      # between `x` and `y`, we mark them "different" if they aren't identical.
-      if (!identical(x, y)) "different"
-    }
-  )
-
-  if (is_graded(compare_msg)) {
+  if (is_graded(comparison)) {
     # an internal grading problem occurred with waldo::compare()
-    return(compare_msg)
+    return(comparison)
   }
 
-  if (length(compare_msg) > 0) {
+  if (is_false(comparison)) {
     # not equal! quit early
     return()
   }
