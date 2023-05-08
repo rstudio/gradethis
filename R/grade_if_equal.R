@@ -1,11 +1,11 @@
 grade_if_equal <- function(
-    x,
-    y,
-    message,
-    correct,
-    env,
-    tolerance = sqrt(.Machine$double.eps),
-    ...
+  x,
+  y,
+  message,
+  correct,
+  env,
+  tolerance = sqrt(.Machine$double.eps),
+  ...
 ) {
   comparison <- gradethis_equal(x, y, tolerance)
 
@@ -24,13 +24,13 @@ grade_if_equal <- function(
 }
 
 grade_if_not_equal <- function(
-    x,
-    y,
-    message,
-    correct,
-    env,
-    tolerance = sqrt(.Machine$double.eps),
-    ...
+  x,
+  y,
+  message,
+  correct,
+  env,
+  tolerance = sqrt(.Machine$double.eps),
+  ...
 ) {
   comparison <- gradethis_equal(x, y, tolerance)
 
@@ -226,13 +226,13 @@ grade_if_not_equal <- function(
 #'   equal.
 #' @export
 pass_if_equal <- function(
-    y = .solution,
-    message = getOption("gradethis.pass", "Correct!"),
-    x = .result,
-    ...,
-    env = parent.frame(),
-    tolerance = sqrt(.Machine$double.eps),
-    praise = getOption("gradethis.pass.praise", FALSE)
+  y = .solution,
+  message = getOption("gradethis.pass", "Correct!"),
+  x = .result,
+  ...,
+  env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
+  praise = getOption("gradethis.pass.praise", FALSE)
 ) {
 
   x <- resolve_placeholder(x, env)
@@ -303,14 +303,14 @@ pass_if_equal <- function(
 #'   equal.
 #' @export
 fail_if_equal <- function(
-    y,
-    message = getOption("gradethis.fail", "Incorrect"),
-    x = .result,
-    ...,
-    env = parent.frame(),
-    tolerance = sqrt(.Machine$double.eps),
-    hint = getOption("gradethis.fail.hint", FALSE),
-    encourage = getOption("gradethis.fail.encourage", FALSE)
+  y,
+  message = getOption("gradethis.fail", "Incorrect"),
+  x = .result,
+  ...,
+  env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
+  hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
   x <- resolve_placeholder(x, env)
 
@@ -334,14 +334,14 @@ fail_if_equal <- function(
 #'   equal.
 #' @export
 fail_if_not_equal <- function(
-    y,
-    message = getOption("gradethis.fail", "Incorrect"),
-    x = .result,
-    ...,
-    env = parent.frame(),
-    tolerance = sqrt(.Machine$double.eps),
-    hint = getOption("gradethis.fail.hint", FALSE),
-    encourage = getOption("gradethis.fail.encourage", FALSE)
+  y,
+  message = getOption("gradethis.fail", "Incorrect"),
+  x = .result,
+  ...,
+  env = parent.frame(),
+  tolerance = sqrt(.Machine$double.eps),
+  hint = getOption("gradethis.fail.hint", FALSE),
+  encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
   x <- resolve_placeholder(x, env)
 
