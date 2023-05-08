@@ -1,6 +1,7 @@
 # gradethis 0.2.12.9004
 
-* `grade_if_equal()` now calls `gradethis_equal()`, an S3 generic which calls `waldo::compare()` by default. This allows other methods for `gradethis_equal()` to handle special cases (#346).
+* Add `fail_if_not_equal()` (#346).
+* `pass_if_equal()`, `fail_if_equal()`, and `fail_if_not_equal()` now call `gradethis_equal()`, an S3 generic which calls `waldo::compare()` by default. This allows other methods for `gradethis_equal()` to handle special cases (#346).
 
 # gradethis 0.2.12.9003
 
