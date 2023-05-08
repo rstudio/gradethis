@@ -23,6 +23,29 @@ grade_if_equal <- function(
   graded(message = glue_message_with_env(env, message), correct = correct, ...)
 }
 
+grade_if_not_equal <- function(
+    x,
+    y,
+    message,
+    correct,
+    env,
+    tolerance = sqrt(.Machine$double.eps),
+    ...
+) {
+  comparison <- gradethis_equal(x, y, tolerance)
+
+  if (is_graded(comparison)) {
+    # an internal grading problem occurred
+    return(comparison)
+  }
+
+  if (is_true(comparison)) {
+    return()
+  }
+
+  graded(message = glue_message_with_env(env, message), correct = correct, ...)
+}
+
 #' Signal a passing or failing grade if two values are equal
 #'
 #' @description
@@ -290,6 +313,37 @@ fail_if_equal <- function(
 
   maybe_extras(
     grade_if_equal(
+      x = x,
+      y = y,
+      message = message,
+      correct = FALSE,
+      env = env,
+      tolerance = tolerance,
+      ...
+    ),
+    env = env,
+    hint = hint,
+    encourage = encourage
+  )
+}
+
+#' @describeIn pass_if_equal Signal a _failing_ grade if `x` and `y` are _not_
+#'   equal.
+#' @export
+fail_if_not_equal <- function(
+    y,
+    message = getOption("gradethis.fail", "Incorrect"),
+    x = .result,
+    ...,
+    env = parent.frame(),
+    tolerance = sqrt(.Machine$double.eps),
+    hint = getOption("gradethis.fail.hint", FALSE),
+    encourage = getOption("gradethis.fail.encourage", FALSE)
+) {
+  x <- resolve_placeholder(x, env)
+
+  maybe_extras(
+    grade_if_not_equal(
       x = x,
       y = y,
       message = message,
