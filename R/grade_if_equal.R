@@ -49,14 +49,17 @@ grade_if_not_equal <- function(
 #' Signal a passing or failing grade if two values are equal
 #'
 #' @description
-#' `pass_if_equal()` and `fail_if_equal()` are two [graded()] helper functions
-#' that signal a passing or a failing grade if two values are equal. They are
-#' designed to easily compare the returned value of the student's submitted
-#' code with the value returned by the solution or another known value:
+#' `pass_if_equal()`, `fail_if_equal()`, and `fail_if_not_equal()`
+#' are three [graded()] helper functions
+#' that signal a passing or a failing grade
+#' based on the whether two values are equal.
+#' They are designed to easily compare
+#' the returned value of the student's submitted code
+#' with the value returned by the solution or another known value:
 #'
-#' - Both functions find and use `.result` as the default for `x`, the first
-#'   item in the comparison. `.result` is the last value returned from the
-#'   user's submitted code.
+#' - Each function finds and uses `.result` as the default for `x`,
+#'   the first item in the comparison.
+#'   `.result` is the last value returned from the user's submitted code.
 #' - `pass_if_equal()` additionally finds and uses `.solution` as the default
 #'   expected value `y`.
 #'
