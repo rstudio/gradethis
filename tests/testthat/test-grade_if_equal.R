@@ -27,7 +27,11 @@ test_that("pass_if_equal() finds .result and .solution automatically", {
   # Missing .solution but comparison value provided
   expect_silent(pass_if_equal(0, env = env))
   expect_condition(pass_if_equal(12, env = env))
-  expect_match(pass_if_equal(12, env = env, message = "YES")$message, "YES", fixed = TRUE)
+  expect_match(
+    pass_if_equal(12, env = env, message = "YES")$message,
+    "YES",
+    fixed = TRUE
+  )
 
   # Has solution (not equal, doesn't pass)
   eval(quote(.solution <- 0), envir = env)
@@ -36,7 +40,11 @@ test_that("pass_if_equal() finds .result and .solution automatically", {
   # Has solution (equal, does pass)
   eval(quote(.solution <- 12), envir = env)
   expect_condition(pass_if_equal(env = env))
-  expect_match(pass_if_equal(env = env, message = "YES")$message, "YES", fixed = TRUE)
+  expect_match(
+    pass_if_equal(env = env, message = "YES")$message,
+    "YES",
+    fixed = TRUE
+  )
 })
 
 test_that("fail_if_equal() finds .result", {
@@ -58,7 +66,37 @@ test_that("fail_if_equal() finds .result", {
   expect_silent(fail_if_equal(0, env = env))
   # Has .result (equal, does fail)
   expect_condition(fail_if_equal(12, env = env))
-  expect_match(fail_if_equal(12, env = env, message = "YES")$message, "YES", fixed = TRUE)
+  expect_match(
+    fail_if_equal(12, env = env, message = "YES")$message,
+    "YES",
+    fixed = TRUE
+  )
+})
+
+test_that("fail_if_not_equal() finds .result", {
+  env <- new.env()
+
+  # missing .result
+  fail1 <- testthat::expect_message(
+    expect_graded(
+      fail_if_not_equal(env = env),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ),
+    regexp = ".result",
+    fixed = TRUE
+  )
+
+  # Has .result (equal, doesn't fail)
+  eval(quote(.result <- 12), envir = env)
+  expect_silent(fail_if_not_equal(12, env = env))
+  # Has .result (not equal, does fail)
+  expect_condition(fail_if_not_equal(12, env = env))
+  expect_match(
+    fail_if_not_equal(0, env = env, message = "YES")$message,
+    "YES",
+    fixed = TRUE
+  )
 })
 
 test_that("pass_if_equal() in grade_this()", {
@@ -210,6 +248,36 @@ test_that("fail_if_equal() in grade_this()", {
   )
 })
 
+test_that("fail_if_not_equal() in grade_this()", {
+  grader <- grade_this({
+    fail_if_not_equal(40, message = "NO")
+    pass("YES")
+  })
+
+  expect_graded(
+    grader(mock_this_exercise(40, 40)),
+    msg = "YES",
+    is_correct = TRUE
+  )
+
+  expect_graded(
+    grader(mock_this_exercise(42, 40)),
+    msg = "NO",
+    is_correct = FALSE
+  )
+
+  # bad: no .result object
+  testthat::expect_message(
+    expect_graded(
+      grader(list(.user_code = "12")),
+      is_correct = logical(),
+      msg = "problem occurred"
+    ),
+    regexp = ".result",
+    fixed = TRUE
+  )
+})
+
 test_that("pass_if_equal() with tolerance", {
   # pass
   expect_graded(
@@ -230,6 +298,17 @@ test_that("fail_if_equal() with tolerance", {
 
   # no fail
   expect_null(fail_if_equal(y = 2, x = sqrt(2) ^ 2, tolerance = 0))
+})
+
+test_that("fail_if_not_equal() with tolerance", {
+  # no fail
+  expect_null(fail_if_not_equal(y = 2, x = sqrt(2) ^ 2))
+
+  # fail
+  expect_graded(
+    fail_if_not_equal(y = 2, x = sqrt(2) ^ 2, tolerance = 0),
+    is_correct = FALSE
+  )
 })
 
 test_that("grade_if_equal() edge cases with diffobj::ses()", {
