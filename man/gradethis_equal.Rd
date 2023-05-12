@@ -5,9 +5,9 @@
 \alias{gradethis_equal.default}
 \title{Compare the values of two objects to check whether they are equal}
 \usage{
-gradethis_equal(x, y, ...)
+gradethis_equal(x = .result, y = .solution, ...)
 
-\method{gradethis_equal}{default}(x, y, tolerance, ...)
+\method{gradethis_equal}{default}(x, y, tolerance = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
 \item{x, y}{Two objects to compare}
@@ -15,9 +15,10 @@ gradethis_equal(x, y, ...)
 \item{...}{Additional arguments passed to methods}
 
 \item{tolerance}{If non-\code{NULL}, used as threshold for ignoring small
-floating point difference when comparing numeric vectors. Setting to
-any non-\code{NULL} value will cause integer and double vectors to be compared
-based on their values, rather than their types.
+floating point difference when comparing numeric vectors. Using any
+non-\code{NULL} value will cause integer and double vectors to be compared
+based on their values, not their types, and will ignore the difference
+between \code{NaN} and \code{NA_real_}.
 
 It uses the same algorithm as \code{\link[=all.equal]{all.equal()}}, i.e., first we generate
 \code{x_diff} and \code{y_diff} by subsetting \code{x} and \code{y} to look only locations

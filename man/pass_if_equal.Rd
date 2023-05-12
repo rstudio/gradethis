@@ -69,9 +69,10 @@ the student's submission against a specific value, \code{y}.}
 \pkg{gradethis} will not need to use this argument.}
 
 \item{tolerance}{If non-\code{NULL}, used as threshold for ignoring small
-floating point difference when comparing numeric vectors. Setting to
-any non-\code{NULL} value will cause integer and double vectors to be compared
-based on their values, rather than their types.
+floating point difference when comparing numeric vectors. Using any
+non-\code{NULL} value will cause integer and double vectors to be compared
+based on their values, not their types, and will ignore the difference
+between \code{NaN} and \code{NA_real_}.
 
 It uses the same algorithm as \code{\link[=all.equal]{all.equal()}}, i.e., first we generate
 \code{x_diff} and \code{y_diff} by subsetting \code{x} and \code{y} to look only locations
