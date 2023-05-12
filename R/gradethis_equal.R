@@ -24,10 +24,10 @@ gradethis_equal <- function(x = .result, y = .solution, ...) {
 #' @inheritParams waldo::compare
 #' @export
 gradethis_equal.default <- function(
-    x,
-    y,
-    tolerance = sqrt(.Machine$double.eps),
-    ...
+  x,
+  y,
+  tolerance = sqrt(.Machine$double.eps),
+  ...
 ) {
   local_options_waldo_compare()
 
