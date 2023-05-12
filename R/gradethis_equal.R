@@ -17,7 +17,12 @@ gradethis_equal <- function(x, y, ...) {
 #'   The default comparison method, which uses [waldo::compare]
 #' @inheritParams waldo::compare
 #' @export
-gradethis_equal.default <- function(x, y, tolerance, ...) {
+gradethis_equal.default <- function(
+    x,
+    y,
+    tolerance = sqrt(.Machine$double.eps),
+    ...
+) {
   local_options_waldo_compare()
 
   tryCatch(
