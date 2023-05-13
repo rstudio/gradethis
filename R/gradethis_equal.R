@@ -9,7 +9,13 @@
 #' @examples
 #' gradethis_equal(mtcars[mtcars$cyl == 6, ], mtcars[mtcars$cyl == 6, ])
 #' gradethis_equal(mtcars[mtcars$cyl == 6, ], mtcars[mtcars$cyl == 4, ])
-gradethis_equal <- function(x, y, ...) {
+gradethis_equal <- function(x = .result, y = .solution, ...) {
+  if (is_placeholder(x) || is_placeholder(y)) {
+    x <- resolve_placeholder(x)
+    y <- resolve_placeholder(y)
+    return(gradethis_equal(x, y, ...))
+  }
+
   UseMethod("gradethis_equal")
 }
 
@@ -17,7 +23,12 @@ gradethis_equal <- function(x, y, ...) {
 #'   The default comparison method, which uses [waldo::compare]
 #' @inheritParams waldo::compare
 #' @export
-gradethis_equal.default <- function(x, y, tolerance, ...) {
+gradethis_equal.default <- function(
+  x,
+  y,
+  tolerance = sqrt(.Machine$double.eps),
+  ...
+) {
   local_options_waldo_compare()
 
   tryCatch(

@@ -1,3 +1,8 @@
+# gradethis 0.2.12.9005
+
+* `gradethis_equal()` now has default arguments of `x = .result` and `y = .solution` (#347).
+    * `gradethis_equal.default()` now has a default argument of `tolerance = sqrt(.Machine$double.eps)`.
+
 # gradethis 0.2.12.9004
 
 * Add `fail_if_not_equal()` (#346).
