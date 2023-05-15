@@ -1,4 +1,6 @@
-# gradethis (development version)
+# gradethis 0.2.12.9006
+
+* `code_feedback()` now standardizes arguments to functions defined within student and solution code before comparing code. It also now successfully standardizes arguments passed through `...` by mapping functions into functions defined by setup code (#349).
 
 # gradethis 0.2.12.9005
 
