@@ -191,6 +191,7 @@ create_learnr_env <- function(
   env <- new.env(parent = envir_prep)
   env$.envir_prep <- envir_prep
   env$.envir_result <- new.env(parent = envir_prep)
+  env$.envir_solution <- new.env(parent = envir_prep)
   env$.user_code <- as.character(user_code)
   env$.solution_code <- as.character(solution_code)
   env$.solution_code_all <- solution_code_all
@@ -202,7 +203,7 @@ create_learnr_env <- function(
       if (is.null(solution_code)) {
         NULL
       } else {
-        eval(parse(text = solution_code), envir = new.env(parent = envir_prep))
+        eval(parse(text = solution_code), envir = env$.envir_solution)
       }
   }
 
