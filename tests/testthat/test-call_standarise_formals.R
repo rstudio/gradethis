@@ -226,6 +226,22 @@ test_that("code_feedback() stadardizes arguments", {
       code_feedback()
     )
   )
+
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "
+          foo <- function(bar, baz) bar + baz
+          purrr::map(1:10, foo, 2)
+        ",
+        .solution_code = "
+          foo <- function(bar, baz) bar + baz
+          purrr::map(1:10, foo, baz = 2)
+        "
+      ),
+      code_feedback()
+    )
+  )
 })
 
 test_that("When an invalid function passed (i.e., corrupt language object)", {
