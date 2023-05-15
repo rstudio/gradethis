@@ -42,6 +42,8 @@ Imports:
     withr
 Suggests:
     DBI,
+    ggcheck,
+    ggplot2,
     knitr,
     rmarkdown,
     spelling,
