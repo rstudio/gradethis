@@ -131,9 +131,12 @@
 #'   solution variations, so by default in [grade_this()] [.solution_code_all]
 #'   is found and used for `solution_code`. You may also use `.solution_code` if
 #'   there is only one solution.
-#' @param env Environment used to standardize formals of the user and solution
-#'   code. Defaults to retrieving [.envir_prep] from the calling environment. If
-#'   not found, the [parent.frame()] will be used.
+#' @param user_env Environment used to standardize formals of the user code.
+#'   Defaults to retrieving [.envir_result] from the calling environment.
+#'   If not found, the [parent.frame()] will be used.
+#' @param solution_env Environment used to standardize formals of the solution code.
+#'   Defaults to retrieving [.envir_solution] from the calling environment.
+#'   If not found, the [parent.frame()] will be used.
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In
 #'   `give_code_feedback()`, `...` are passed to `maybe_code_feedback()`.
 #' @param allow_partial_matching A logical. If `FALSE`, the partial matching of

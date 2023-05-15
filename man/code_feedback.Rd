@@ -44,6 +44,14 @@ solution variations, so by default in \code{\link[=grade_this]{grade_this()}} \l
 is found and used for \code{solution_code}. You may also use \code{.solution_code} if
 there is only one solution.}
 
+\item{user_env}{Environment used to standardize formals of the user code.
+Defaults to retrieving \link{.envir_result} from the calling environment.
+If not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
+
+\item{solution_env}{Environment used to standardize formals of the solution code.
+Defaults to retrieving \link{.envir_solution} from the calling environment.
+If not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
+
 \item{...}{Ignored in \code{code_feedback()} and \code{maybe_code_feedback()}. In
 \code{give_code_feedback()}, \code{...} are passed to \code{maybe_code_feedback()}.}
 
@@ -67,10 +75,6 @@ of any incorrect grades using \code{\link[=maybe_code_feedback]{maybe_code_feedb
 include the code feedback, if possible. If \code{expr} is a character string,
 \code{"{maybe_code_feedback()}"} is pasted into the string, without
 customization.}
-
-\item{env}{Environment used to standardize formals of the user and solution
-code. Defaults to retrieving \link{.envir_prep} from the calling environment. If
-not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
 
 \item{location}{Should the code feedback message be added before or after?}
 }

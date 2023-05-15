@@ -469,6 +469,9 @@ fail_if <- function(
 #'
 #' # Perfect!
 #' grader(mock_this_exercise(runif(n = 5), !!.solution_code))
+#'
+#' @param env Environment used to standardize formals of the user and solution code.
+#'   Defaults to retrieving [.envir_result] and [.envir_solution] from [parent.frame()].
 #' @inheritParams code_feedback
 #' @inheritParams graded
 #' @inheritDotParams graded
