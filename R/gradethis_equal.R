@@ -50,3 +50,33 @@ gradethis_equal.default <- function(
   # If `waldo::compare()` found no differences, `x` and `y` are equal
   length(compare_message) == 0
 }
+
+#' @describeIn gradethis_equal The comparison method for lists
+#' @inheritParams waldo::compare
+#' @export
+gradethis_equal.list <- function(
+  x,
+  y,
+  tolerance = sqrt(.Machine$double.eps),
+  ...
+) {
+  # Only use this method for objects of class `list`,
+  # not just anything that inherits list (like data frames)
+  if (!rlang::is_bare_list(x) || !rlang::is_bare_list(y)) {
+    NextMethod()
+  }
+
+  # First check if the lengths are the same
+  if (length(x) != length(y)) {
+    return(FALSE)
+  }
+
+  # Then check with `identical()`, since it's fast
+  if (identical(x, y)) {
+    return(TRUE)
+  }
+
+  # If `identical()` returned `FALSE`, map over each element individually,
+  # since `identical()` is prone to false negatives
+  all(purrr::map2_lgl(x, y, gradethis_equal))
+}
