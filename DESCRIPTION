@@ -42,7 +42,7 @@ Imports:
     withr
 Suggests:
     DBI,
-    ggcheck,
+    ggcheck (>= 0.0.5),
     ggplot2,
     knitr,
     rmarkdown,
@@ -50,8 +50,9 @@ Suggests:
     testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
-Remotes: 
-    rstudio/learnr
+Remotes:  
+    rstudio/learnr,
+    rstudio/ggcheck
 Config/Needs/connect: rsconnect
 Config/Needs/coverage: covr
 Config/Needs/website: pkgdown, tidyverse/tidytemplate
