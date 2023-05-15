@@ -76,6 +76,9 @@ include the code feedback, if possible. If \code{expr} is a character string,
 \code{"{maybe_code_feedback()}"} is pasted into the string, without
 customization.}
 
+\item{env}{Environment used to standardize formals of the user and solution code.
+Defaults to retrieving \link{.envir_result} and \link{.envir_solution} from \code{\link[=parent.frame]{parent.frame()}}.}
+
 \item{location}{Should the code feedback message be added before or after?}
 }
 \value{
