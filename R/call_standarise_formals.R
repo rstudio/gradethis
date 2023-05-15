@@ -185,7 +185,7 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     n_args <- 1
   }
 
-  return(as.list(call_standardise_formals(call))[-seq_len(n_args + 1)])
+  return(as.list(call_standardise_formals(call, env))[-seq_len(n_args + 1)])
 }
 
 mapping_function_list <- function() {
