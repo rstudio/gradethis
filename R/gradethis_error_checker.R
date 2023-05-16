@@ -46,11 +46,6 @@ gradethis_error_checker <- function(
   encourage = getOption("gradethis.fail.encourage", FALSE)
 ) {
   function(check_env) {
-    solution_code <- get0(".solution_code", envir = check_env, ifnotfound = NULL)
-    if (!is.null(solution_code) && isTRUE(hint)) {
-      signal_grade(grade_this_code()(check_env))
-    }
-
     .error <- get0(".last_value", envir = check_env, ifnotfound = NULL)
     msg <- glue::glue(
       message %||% gradethis_default_options$error_checker.message,
@@ -60,6 +55,12 @@ gradethis_error_checker <- function(
       msg <-
         "An error occurred with your code. Check your syntax and try again." #nocov
     }
-    fail(msg, hint = FALSE, encourage = TRUE)
+
+    solution_code <- get0(".solution_code", envir = check_env, ifnotfound = NULL)
+    if (is.null(solution_code)) {
+      return(fail(msg, hint = FALSE, encourage = encourage))
+    }
+
+    fail(msg, hint = hint, encourage = encourage, env = check_env)
   }
 }
