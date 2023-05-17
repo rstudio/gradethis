@@ -229,6 +229,21 @@ test_that("Standardize call with ggplot2 functions", {
         geom_point(colour = "red")
     )
   )
+
+  # Don't change `ggplot` arguments if it would lead to a name collision
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(
+        ggplot(mpg, aes(displ, hwy)) +
+          geom_point(color = "red", colour = "blue")
+      ),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+        geom_point(color = "red", colour = "blue")
+    )
+  )
 })
 
 test_that("When an invalid function passed (i.e., corrupt language object)", {
