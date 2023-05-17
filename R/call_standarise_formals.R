@@ -41,6 +41,11 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   }
 
   code_std <- call_standardise_passed_arguments(code_std, fn, fmls, env)
+
+  if (rlang::is_installed("ggplot2") && is_ggplot2_function(fn)) {
+    names(code_std) <- ggplot2::standardise_aes_names(names(code_std))
+  }
+
   code_std
 }
 
@@ -282,4 +287,11 @@ expand_class <- function(arg, env) {
 
   class <- unique(append(class, "default"))
   class
+}
+
+is_ggplot2_function <- function(fn) {
+  identical(
+    try(getNamespaceInfo(environment(fn), "spec")[["name"]], silent = TRUE),
+    "ggplot2"
+  )
 }
