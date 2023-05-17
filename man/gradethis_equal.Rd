@@ -3,11 +3,14 @@
 \name{gradethis_equal}
 \alias{gradethis_equal}
 \alias{gradethis_equal.default}
+\alias{gradethis_equal.list}
 \title{Compare the values of two objects to check whether they are equal}
 \usage{
 gradethis_equal(x = .result, y = .solution, ...)
 
 \method{gradethis_equal}{default}(x, y, tolerance = sqrt(.Machine$double.eps), ...)
+
+\method{gradethis_equal}{list}(x, y, tolerance = sqrt(.Machine$double.eps), ...)
 }
 \arguments{
 \item{x, y}{Two objects to compare}
@@ -36,6 +39,8 @@ Compare the values of two objects to check whether they are equal
 \section{Methods (by class)}{
 \itemize{
 \item \code{gradethis_equal(default)}: The default comparison method, which uses \link[waldo:compare]{waldo::compare}
+
+\item \code{gradethis_equal(list)}: The comparison method for lists
 
 }}
 \examples{

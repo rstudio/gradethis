@@ -204,6 +204,88 @@ test_that("Standardize call with passed ... args", {
   testthat::expect_equal(call_standardise_formals(d), xd)
 })
 
+test_that("Standardize call with ggplot2 functions", {
+  skip_if_not_installed("ggplot2")
+  withr::local_package("ggplot2")
+
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(ggplot(mpg, aes(displ, hwy, color = class)) + geom_point()),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = class)) +
+        geom_point()
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(ggplot(mpg, aes(displ, hwy)) + geom_point(color = "red")),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+        geom_point(colour = "red")
+    )
+  )
+
+  # Don't change `ggplot` arguments if it would lead to a name collision
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(
+        ggplot(mpg, aes(displ, hwy)) +
+          geom_point(color = "red", colour = "blue")
+      ),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+        geom_point(color = "red", colour = "blue")
+    )
+  )
+})
+
+test_that("code_feedback() standardizes arguments", {
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "foo(1, 2)",
+        .solution_code = "foo(bar = 1, baz = 2)",
+        setup_exercise = foo <- function(bar, baz) bar + baz
+      ),
+      code_feedback()
+    )
+  )
+
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "purrr::map(1:10, foo, 2)",
+        .solution_code = "purrr::map(1:10, foo, baz = 2)",
+        setup_exercise = foo <- function(bar, baz) bar + baz
+      ),
+      code_feedback()
+    )
+  )
+
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "
+          foo <- function(bar, baz) bar + baz
+          purrr::map(1:10, foo, 2)
+        ",
+        .solution_code = "
+          foo <- function(bar, baz) bar + baz
+          purrr::map(1:10, foo, baz = 2)
+        "
+      ),
+      code_feedback()
+    )
+  )
+})
+
 test_that("When an invalid function passed (i.e., corrupt language object)", {
   user <- quote(1(a(1)))
 

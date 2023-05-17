@@ -157,13 +157,13 @@ test_that("detect_mistakes detects wrong calls", {
   solution <- quote(g(1))
   user <-     quote(g(1, y = a(1)))
   expect_null(
-    detect_mistakes(user, solution, env = testing_env)
+    detect_mistakes(user, solution, user_env = testing_env, solution_env = testing_env)
   )
 
   solution <- quote(g(1))
   user <-     quote(g(1, y = b(1)))
   expect_equal(
-    detect_mistakes(user, solution, env = testing_env),
+    detect_mistakes(user, solution, user_env = testing_env, solution_env = testing_env),
     message_wrong_call(
       submitted = user[[3]],
       solution = formals(g)[[2]],
@@ -175,7 +175,7 @@ test_that("detect_mistakes detects wrong calls", {
   solution <- quote(f(1, y = a(1)))
   user <-     quote(f(1, y = f(1)))
   expect_equal(
-    detect_mistakes(user, solution, env = testing_env),
+    detect_mistakes(user, solution, user_env = testing_env, solution_env = testing_env),
     message_wrong_call(
       submitted = user[[3]],
       solution = formals(g)[[2]],
@@ -360,7 +360,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(tricky(a = 1))
   expect_equal(
-    detect_mistakes(user, solution, env = tricky_env),
+    detect_mistakes(user, solution, user_env = tricky_env, solution_env = tricky_env),
     message_bad_argument_name(
       submitted_call = user,
       submitted = user[[2]],
@@ -371,7 +371,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(tricky(1, 2, a = 1))
   expect_equal(
-    detect_mistakes(user, solution, env = tricky_env),
+    detect_mistakes(user, solution, user_env = tricky_env, solution_env = tricky_env),
     message_bad_argument_name(
       submitted_call = user,
       submitted = user[[4]],
@@ -382,7 +382,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(1 %>% tricky(a = 2))
   expect_equal(
-    detect_mistakes(user, solution, env = tricky_env),
+    detect_mistakes(user, solution, user_env = tricky_env, solution_env = tricky_env),
     message_bad_argument_name(
       submitted_call = user[[3]],
       submitted = user[[3]][[2]],
@@ -393,7 +393,7 @@ test_that("detect_mistakes detects bad argument names", {
   solution <- quote(tricky(ab = 1))
   user <-     quote(1 %>% tricky(a = .))
   expect_equal(
-    detect_mistakes(user, solution, env = tricky_env),
+    detect_mistakes(user, solution, user_env = tricky_env, solution_env = tricky_env),
     message_bad_argument_name(
       submitted_call = user[[3]],
       submitted = user[[2]],
@@ -412,7 +412,7 @@ test_that("detect_mistakes detects too many matches", {
   solution <- quote(tricky2(ambiguous = 2))
   user <-     quote(tricky2(a = 2, am = 2))
   expect_equal(
-    detect_mistakes(user, solution, env = tricky2_env),
+    detect_mistakes(user, solution, user_env = tricky2_env, solution_env = tricky2_env),
     message_too_many_matches(
       submitted_call = user,
       solution_name = names(as.list(solution)[2])
@@ -422,13 +422,13 @@ test_that("detect_mistakes detects too many matches", {
   solution <- quote(not_tricky(ambiguous = 2))
   user <-     quote(not_tricky(a = 1, am = 2))
   expect_null(
-    suppressWarnings(detect_mistakes(user, solution, env = tricky2_env))
+    suppressWarnings(detect_mistakes(user, solution, user_env = tricky2_env, solution_env = tricky2_env))
   )
 
   solution <- quote(tricky2(ambiguous = 2))
   user <-     quote(2 %>% tricky2(a = ., am = 2))
   expect_equal(
-    detect_mistakes(user, solution, env = tricky2_env),
+    detect_mistakes(user, solution, user_env = tricky2_env, solution_env = tricky2_env),
     message_too_many_matches(
       submitted_call = user[[3]],
       solution_name = names(as.list(solution)[2])
@@ -535,7 +535,7 @@ test_that("detect_mistakes detects missing argument", {
   solution <- quote(f(x = 1, y = 1))
   user <-     quote(f(1))
   expect_equal(
-    detect_mistakes(user, solution, env = testing_env),
+    detect_mistakes(user, solution, user_env = testing_env, solution_env = testing_env),
     message_missing_argument(
       submitted_call = user,
       solution_name = names(as.list(solution)[3])
@@ -545,7 +545,7 @@ test_that("detect_mistakes detects missing argument", {
   solution <- quote(f(x = 1, y = 1))
   user <-     quote(1 %>% f())
   expect_equal(
-    detect_mistakes(user, solution, env = testing_env),
+    detect_mistakes(user, solution, user_env = testing_env, solution_env = testing_env),
     message_missing_argument(
       submitted_call = user[[3]],
       solution_name = names(as.list(solution)[3])
@@ -555,7 +555,7 @@ test_that("detect_mistakes detects missing argument", {
   solution <- quote(a(f(x = 1, y = 1)))
   user <-     quote(a(1 %>% f()))
   expect_equal(
-    detect_mistakes(user, solution, env = testing_env),
+    detect_mistakes(user, solution, user_env = testing_env, solution_env = testing_env),
     message_missing_argument(
       submitted_call = user[[2]][[3]],
       solution_name = names(as.list(solution[[2]])[3]),

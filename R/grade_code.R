@@ -136,7 +136,8 @@ grade_code <- function(
     message <- code_feedback(
       user_code = user_code,
       solution_code = solution_code_all,
-      env = check_env,
+      user_env = check_env$.envir_result,
+      solution_env = check_env$.envir_solution,
       allow_partial_matching = allow_partial_matching
     )
 

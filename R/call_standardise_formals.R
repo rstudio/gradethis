@@ -6,7 +6,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
     return(code)
   })
 
-  if (!exists("fn") || !is_function(fn)) {
+  if (!exists("fn") || !is_function(fn) || is_infix(code)) {
     ## if for some reason the above tryCatch doesn't go to the error part
     return(code)
   }
@@ -14,7 +14,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   # order and label existing params
   code_std <- call_standardise_keep_partials(code, env = env)
 
-  if (is_infix(code) || is.primitive(fn)) {
+  if (is.primitive(fn)) {
     return(code_std)
   }
 
@@ -41,6 +41,11 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   }
 
   code_std <- call_standardise_passed_arguments(code_std, fn, fmls, env)
+
+  if (rlang::is_installed("ggplot2") && is_ggplot2_function(fn)) {
+    code_std <- call_standardise_ggplot_arguments(code_std)
+  }
+
   code_std
 }
 
@@ -51,7 +56,7 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   if (is.null(fn)) return(code)
 
   tryCatch(
-    rlang::call_match(code, fn),
+    suppressWarnings(rlang::call_match(code, fn)),
     error = function(e) {
       # Check that error is caused by an ambiguous partial argument, which we
       # are forced to identify from its error message. The \Q...\E regex meta
@@ -86,10 +91,19 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
 }
 
 call_standardise_formals_recursive <- function( # nolint
-  code, env = rlang::current_env(), include_defaults = TRUE
+  code,
+  env = rlang::current_env(),
+  include_defaults = TRUE
 ) {
-  if (is.list(code)) {
-    return(lapply(code, call_standardise_formals_recursive))
+  if (rlang::is_bare_list(code)) {
+    return(
+      purrr::map(
+        code,
+        call_standardise_formals_recursive,
+        env = env,
+        include_defaults = include_defaults
+      )
+    )
   }
 
   # `code` must be parsed call
@@ -97,9 +111,18 @@ call_standardise_formals_recursive <- function( # nolint
     return(code)
   }
 
-  code <- purrr::map(as.list(code), call_standardise_formals_recursive)
-  code <- as.call(code)
-  call_standardise_formals(code)
+  code <- call_standardise_formals(
+    code,
+    env = env,
+    include_defaults = include_defaults
+  )
+  code <- purrr::map(
+    as.list(code),
+    call_standardise_formals_recursive,
+    env = env,
+    include_defaults = include_defaults
+  )
+  as.call(code)
 }
 
 call_standardise_passed_arguments <- function(code, fn, fmls, env) {
@@ -185,7 +208,7 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     n_args <- 1
   }
 
-  return(as.list(call_standardise_formals(call))[-seq_len(n_args + 1)])
+  return(as.list(call_standardise_formals(call, env))[-seq_len(n_args + 1)])
 }
 
 mapping_function_list <- function() {
@@ -266,4 +289,23 @@ expand_class <- function(arg, env) {
 
   class <- unique(append(class, "default"))
   class
+}
+
+call_standardise_ggplot_arguments <- function(code) {
+  argument_names <- names(code)[-1]
+  standardised_argument_names <- ggplot2::standardise_aes_names(argument_names)
+
+  if (any(duplicated(standardised_argument_names))) {
+    return(code)
+  }
+
+  names(code)[-1] <- standardised_argument_names
+  code
+}
+
+is_ggplot2_function <- function(fn) {
+  identical(
+    try(getNamespaceInfo(environment(fn), "spec")[["name"]], silent = TRUE),
+    "ggplot2"
+  )
 }
