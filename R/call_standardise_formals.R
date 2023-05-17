@@ -6,7 +6,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
     return(code)
   })
 
-  if (!exists("fn") || !is_function(fn)) {
+  if (!exists("fn") || !is_function(fn) || is_infix(code)) {
     ## if for some reason the above tryCatch doesn't go to the error part
     return(code)
   }
@@ -14,7 +14,7 @@ call_standardise_formals <- function(code, env = rlang::current_env(), include_d
   # order and label existing params
   code_std <- call_standardise_keep_partials(code, env = env)
 
-  if (is_infix(code) || is.primitive(fn)) {
+  if (is.primitive(fn)) {
     return(code_std)
   }
 
