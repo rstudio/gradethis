@@ -42,6 +42,8 @@ Imports:
     withr
 Suggests:
     DBI,
+    ggcheck (>= 0.0.5),
+    ggplot2,
     knitr,
     rmarkdown,
     spelling,
@@ -49,6 +51,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Remotes: 
+    rstudio/ggcheck,
     rstudio/learnr
 Config/Needs/connect: rsconnect
 Config/Needs/coverage: covr
