@@ -42,9 +42,8 @@ details.
 \code{location} may be one of "append", "prepend", or "replace".}
   }}
 
-\item{env}{Environment used to standardize formals of the user and solution
-code. Defaults to retrieving \link{.envir_prep} from the calling environment. If
-not found, the \code{\link[=parent.frame]{parent.frame()}} will be used.}
+\item{env}{Environment used to standardize formals of the user and solution code.
+Defaults to retrieving \link{.envir_result} and \link{.envir_solution} from \code{\link[=parent.frame]{parent.frame()}}.}
 
 \item{hint}{Include a code feedback hint with the failing message? This
 argument only applies to \code{fail()} and \code{fail_if_equal()} and the message is
@@ -119,6 +118,7 @@ grader(mock_this_exercise(rbinom(5, 1, 0.5), !!.solution_code))
 
 # Perfect!
 grader(mock_this_exercise(runif(n = 5), !!.solution_code))
+
 }
 \seealso{
 Other grading helper functions: \code{\link[=graded]{graded()}}, \code{\link[=pass]{pass()}}, \code{\link[=fail]{fail()}},

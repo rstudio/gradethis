@@ -86,10 +86,19 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
 }
 
 call_standardise_formals_recursive <- function( # nolint
-  code, env = rlang::current_env(), include_defaults = TRUE
+  code,
+  env = rlang::current_env(),
+  include_defaults = TRUE
 ) {
   if (is.list(code)) {
-    return(lapply(code, call_standardise_formals_recursive))
+    return(
+      purrr::map(
+        code,
+        call_standardise_formals_recursive,
+        env = env,
+        include_defaults = include_defaults
+      )
+    )
   }
 
   # `code` must be parsed call
@@ -97,9 +106,14 @@ call_standardise_formals_recursive <- function( # nolint
     return(code)
   }
 
-  code <- purrr::map(as.list(code), call_standardise_formals_recursive)
+  code <- purrr::map(
+    as.list(code),
+    call_standardise_formals_recursive,
+    env = env,
+    include_defaults = include_defaults
+  )
   code <- as.call(code)
-  call_standardise_formals(code)
+  call_standardise_formals(code, env = env, include_defaults = include_defaults)
 }
 
 call_standardise_passed_arguments <- function(code, fn, fmls, env) {
@@ -185,7 +199,7 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     n_args <- 1
   }
 
-  return(as.list(call_standardise_formals(call))[-seq_len(n_args + 1)])
+  return(as.list(call_standardise_formals(call, env))[-seq_len(n_args + 1)])
 }
 
 mapping_function_list <- function() {
