@@ -204,6 +204,33 @@ test_that("Standardize call with passed ... args", {
   testthat::expect_equal(call_standardise_formals(d), xd)
 })
 
+test_that("Standardize call with ggplot2 functions", {
+  skip_if_not_installed("ggplot2")
+  withr::local_package("ggplot2")
+
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(ggplot(mpg, aes(displ, hwy, color = class)) + geom_point()),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = class)) +
+        geom_point()
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(ggplot(mpg, aes(displ, hwy)) + geom_point(color = "red")),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+        geom_point(colour = "red")
+    )
+  )
+})
+
 test_that("When an invalid function passed (i.e., corrupt language object)", {
   user <- quote(1(a(1)))
 
