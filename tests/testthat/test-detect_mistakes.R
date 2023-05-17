@@ -619,7 +619,8 @@ test_that("detect_mistakes handles a mix of named and unnamed arguments and with
     detect_mistakes(
       quote(x %>% fn(name == "John")),
       quote(x %>% fn(name == "Paul")),
-      env = env
+      user_env = env,
+      solution_env = env
     ),
     message_wrong_value("John", "Paul", enclosing_call = quote(name == "John"))
   )
@@ -628,7 +629,8 @@ test_that("detect_mistakes handles a mix of named and unnamed arguments and with
     detect_mistakes(
       quote(fn(x, name == "John")),
       quote(fn(.data = x, name == "Paul")),
-      env = env
+      user_env = env,
+      solution_env = env
     ),
     message_wrong_value("John", "Paul", enclosing_call = quote(name == "John"))
   )
@@ -637,7 +639,8 @@ test_that("detect_mistakes handles a mix of named and unnamed arguments and with
     detect_mistakes(
       quote(fn(x = 1, 2)),
       quote(fn(x = 1)),
-      env = env
+      user_env = env,
+      solution_env = env
     ),
     message_surplus_argument(quote(fn()), quote(2), "")
   )
@@ -646,7 +649,8 @@ test_that("detect_mistakes handles a mix of named and unnamed arguments and with
     detect_mistakes(
       quote(fn(x = 1, 2)),
       quote(fn(x = 1)),
-      env = env
+      user_env = env,
+      solution_env = env
     ),
     message_surplus_argument(quote(fn()), quote(2), "")
   )

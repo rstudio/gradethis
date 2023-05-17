@@ -131,9 +131,14 @@
 #'   solution variations, so by default in [grade_this()] [.solution_code_all]
 #'   is found and used for `solution_code`. You may also use `.solution_code` if
 #'   there is only one solution.
-#' @param env Environment used to standardize formals of the user and solution
-#'   code. Defaults to retrieving [.envir_prep] from the calling environment. If
-#'   not found, the [parent.frame()] will be used.
+#' @param user_env Environment used to standardize formals of the user code.
+#'   Defaults to retrieving [.envir_result] from the calling environment.
+#'   If not found, the [parent.frame()] will be used.
+#' @param solution_env Environment used to standardize formals of the solution code.
+#'   Defaults to retrieving [.envir_solution] from the calling environment.
+#'   If not found, the [parent.frame()] will be used.
+#' @param env Environment used to standardize formals of the user and solution code.
+#'   Defaults to retrieving [.envir_result] and [.envir_solution] from [parent.frame()].
 #' @param ... Ignored in `code_feedback()` and `maybe_code_feedback()`. In
 #'   `give_code_feedback()`, `...` are passed to `maybe_code_feedback()`.
 #' @param allow_partial_matching A logical. If `FALSE`, the partial matching of
@@ -160,7 +165,8 @@
 code_feedback <- function(
   user_code = .user_code,
   solution_code = .solution_code_all,
-  env = .envir_prep,
+  user_env = .envir_result,
+  solution_env = .envir_solution,
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE)
 ) {
@@ -173,17 +179,25 @@ code_feedback <- function(
       throw_grade = FALSE
     )
 
-  env <- resolve_placeholder_parent(env, default = parent.frame())
+  user_env <- resolve_placeholder_parent(user_env, default = parent.frame())
+  solution_env <- resolve_placeholder_parent(solution_env, default = parent.frame())
   user_code <- resolve_placeholder_parent(user_code, default = NULL)
   solution_code <- resolve_placeholder_parent(solution_code, default = NULL)
 
   if (inherits(solution_code, "gradethis_solutions") || is.list(solution_code)) {
-    solution_code <- solution_code_closest(user_code, solution_code)
+    # pass env?
+    solution_code <- solution_code_closest(
+      user_code,
+      solution_code,
+      user_env,
+      solution_env
+    )
   }
 
   user_expr <- to_expr(user_code, "user_code")
   solution_expr <- to_expr(solution_code, "solution_code")
-  checkmate::assert_environment(env, null.ok = FALSE, .var.name = "env")
+  checkmate::assert_environment(user_env, null.ok = FALSE, .var.name = "user_env")
+  checkmate::assert_environment(solution_env, null.ok = FALSE, .var.name = "solution_env")
 
   if (identical(user_expr, solution_expr)) {
     # identical! return early
@@ -194,7 +208,8 @@ code_feedback <- function(
   detect_mistakes(
     user = user_expr,
     solution = solution_expr,
-    env = new.env(parent = env),
+    user_env = new.env(parent = user_env),
+    solution_env = new.env(parent = solution_env),
     allow_partial_matching = isTRUE(allow_partial_matching)
   )
 }
@@ -219,12 +234,27 @@ with_maybe_code_feedback <- function(val, expr) {
   )
 }
 
-solution_code_closest <- function(user_code, solution_code_all) {
-  closest_solution <- solution_code_closest_which(user_code, solution_code_all)
+solution_code_closest <- function(
+  user_code,
+  solution_code_all,
+  user_env,
+  solution_env
+) {
+  closest_solution <- solution_code_closest_which(
+    user_code,
+    solution_code_all,
+    user_env,
+    solution_env
+  )
   unlist(solution_code_all[closest_solution])
 }
 
-solution_code_closest_which <- function(user_code, solution_code_all) {
+solution_code_closest_which <- function(
+  user_code,
+  solution_code_all,
+  user_env,
+  solution_env
+) {
   # If there's no solution code or only one solution,
   # we don't need to find the closest match
   if (length(solution_code_all) < 2) {
@@ -234,19 +264,19 @@ solution_code_closest_which <- function(user_code, solution_code_all) {
   # Convert from list to character vector
   solution_code_all <- unlist(solution_code_all)
 
-  standardise_code_text <- function(code) {
+  standardise_code_text <- function(code, env) {
     code %>%
       unpipe_all_str() %>%
       rlang::parse_exprs() %>%
-      call_standardise_formals_recursive() %>%
+      call_standardise_formals_recursive(env = env) %>%
       purrr::map_chr(rlang::expr_text) %>%
       paste(collapse = "\n")
   }
 
-  user_code <- standardise_code_text(user_code)
+  user_code <- standardise_code_text(user_code, env = user_env)
 
   solution_code_all <- solution_code_all %>%
-    purrr::map_chr(standardise_code_text)
+    purrr::map_chr(standardise_code_text, env = solution_env)
 
   # Find the index of the solution code that the user code is closest to
   # which.min.last() uses the last index if there is a tie
@@ -294,7 +324,8 @@ which.min.last <- function(x) { # nolint: object_name
 maybe_code_feedback <- function(
   user_code = get0(".user_code", parent.frame()),
   solution_code = get0(".solution_code_all", parent.frame()),
-  env = get0(".envir_prep", parent.frame(), ifnotfound = parent.frame()),
+  user_env = get0(".envir_result", parent.frame(), ifnotfound = parent.frame()),
+  solution_env = get0(".envir_solution", parent.frame(), ifnotfound = parent.frame()),
   ...,
   allow_partial_matching = getOption("gradethis.allow_partial_matching", TRUE),
   default = "",
@@ -337,7 +368,8 @@ maybe_code_feedback <- function(
       code_feedback_val <- code_feedback(
         user_code = user_code,
         solution_code = solution_code,
-        env = env,
+        user_env = user_env,
+        solution_env = solution_env,
         allow_partial_matching = allow_partial_matching
       )
       if (is.null(code_feedback_val)) {

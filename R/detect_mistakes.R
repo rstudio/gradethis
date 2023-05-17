@@ -1,12 +1,14 @@
 detect_mistakes <- function(
   user,
   solution,
-  env = rlang::env_parent(),
+  user_env = rlang::env_parent(),
+  solution_env = rlang::env_parent(),
   enclosing_call = NULL,
   enclosing_arg = NULL,
   allow_partial_matching = TRUE
 ) {
-  force(env)
+  force(user_env)
+  force(solution_env)
 
   if (rlang::is_quosure(user)) {
     user <- rlang::get_expr(user)
@@ -21,7 +23,13 @@ detect_mistakes <- function(
     # and runs `detect_mistakes()` on them recursively.
     return(
       detect_mistakes_expression(
-        user, solution, env, enclosing_call, enclosing_arg, allow_partial_matching
+        user,
+        solution,
+        user_env,
+        solution_env,
+        enclosing_call,
+        enclosing_arg,
+        allow_partial_matching
       )
     )
   }
@@ -36,7 +44,7 @@ detect_mistakes <- function(
   if (is.call(solution)) {
     solution <- solution %>%
       unpipe_all() %>%
-      call_standardise_formals_recursive(env = env)
+      call_standardise_formals_recursive(env = solution_env)
   }
 
   # If the code contains a bare value, then the user and solution value
@@ -74,12 +82,17 @@ detect_mistakes <- function(
   #    argument.
   return_if_not_null(
     detect_missing_argument(
-      submitted, solution_original, env, enclosing_call, enclosing_arg
+      submitted,
+      solution_original,
+      user_env,
+      solution_env,
+      enclosing_call,
+      enclosing_arg
     )
   )
 
   # It is now safe to call call_standardise_formals on student code
-  user <- suppressWarnings(call_standardise_formals_recursive(user, env = env))
+  user <- suppressWarnings(call_standardise_formals_recursive(user, env = user_env))
   user_names <- real_names(user)
   solution_names <- real_names(solution) # original solution_names was modified above
 
@@ -109,7 +122,8 @@ detect_mistakes <- function(
       solution_names,
       submitted,
       submitted_names,
-      env,
+      user_env,
+      solution_env,
       enclosing_call,
       enclosing_arg,
       allow_partial_matching
@@ -121,7 +135,13 @@ detect_mistakes <- function(
 }
 
 detect_mistakes_expression <- function(
-  user, solution, env, enclosing_call, enclosing_arg, allow_partial_matching
+  user,
+  solution,
+  user_env,
+  solution_env,
+  enclosing_call,
+  enclosing_arg,
+  allow_partial_matching
 ) {
   stopifnot(is.expression(solution))
 
@@ -141,7 +161,8 @@ detect_mistakes_expression <- function(
       detect_mistakes(
         user[[i]],
         solution[[i]],
-        env = env,
+        user_env = user_env,
+        solution_env = solution_env,
         enclosing_call = enclosing_call,
         enclosing_arg = enclosing_arg,
         allow_partial_matching = allow_partial_matching

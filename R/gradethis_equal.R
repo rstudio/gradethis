@@ -29,30 +29,54 @@ gradethis_equal.default <- function(
   tolerance = sqrt(.Machine$double.eps),
   ...
 ) {
+  # First check with `identical()`, since it's much faster than `waldo::compare()`
+  if (identical(x, y)) {
+    return(TRUE)
+  }
+
+  # If `identical()` returned `FALSE`, try `waldo::compare()`,
+  # since `identical()` is prone to false negatives
   local_options_waldo_compare()
-
-  tryCatch(
-    {
-      compare_message <- try_with_timelimit(
-        waldo::compare(x, y, tolerance = tolerance)
-      )
-
-      if (is_graded(compare_message)) {
-        # an internal grading problem occurred with waldo::compare()
-        return(compare_message)
-      }
-
-      length(compare_message) == 0
-    },
-    error = function(e) {
-      # waldo::compare() takes into account a lot of the things we'd have to
-      # think about in comparing two objects, but its goal is to create a
-      # readable diff. Since we're engaging in some off-label usage of these
-      # functions, they will sometimes error or take longer than desired when we
-      # give them unusual inputs. In these cases, we fall back to `identical()`.
-      # Since we aren't (currently) interested in reporting the differences
-      # between `x` and `y`, we mark them "different" if they aren't identical.
-      identical(x, y)
-    }
+  compare_message <- try(
+    waldo::compare(x, y, tolerance = tolerance),
+    silent = TRUE
   )
+
+  if (is_graded(compare_message)) {
+    # An internal grading problem occurred with waldo::compare()
+    return(compare_message)
+  }
+
+  # If `waldo::compare()` found no differences, `x` and `y` are equal
+  length(compare_message) == 0
+}
+
+#' @describeIn gradethis_equal The comparison method for lists
+#' @inheritParams waldo::compare
+#' @export
+gradethis_equal.list <- function(
+  x,
+  y,
+  tolerance = sqrt(.Machine$double.eps),
+  ...
+) {
+  # Only use this method for objects of class `list`,
+  # not just anything that inherits list (like data frames)
+  if (!rlang::is_bare_list(x) || !rlang::is_bare_list(y)) {
+    NextMethod()
+  }
+
+  # First check if the lengths are the same
+  if (length(x) != length(y)) {
+    return(FALSE)
+  }
+
+  # Then check with `identical()`, since it's fast
+  if (identical(x, y)) {
+    return(TRUE)
+  }
+
+  # If `identical()` returned `FALSE`, map over each element individually,
+  # since `identical()` is prone to false negatives
+  all(purrr::map2_lgl(x, y, gradethis_equal))
 }

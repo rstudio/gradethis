@@ -1,3 +1,8 @@
+# gradethis 0.2.12.9006
+
+* `code_feedback()` now standardizes arguments to functions defined within student and solution code before comparing code. It also now successfully standardizes arguments passed through `...` by mapping functions into functions defined by setup code (#349).
+* `gradethis_equal()` now has a method for objects of class `list`. If two lists are not `identical()` and their lengths are the same, `gradethis_equal()` is applied to each element pairwise. This allows special logic for specific classes to be used for list elements of that class (#351).
+
 # gradethis 0.2.12.9005
 
 * `gradethis_equal()` now has default arguments of `x = .result` and `y = .solution` (#347).
