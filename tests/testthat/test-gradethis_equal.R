@@ -1,3 +1,7 @@
+test_that("gradethis_equal.list() checks names", {
+  expect_false(gradethis_equal(list(pi, letters), list(a = pi, b = letters)))
+})
+
 test_that("gradethis_equal uses methods from ggcheck", {
   skip_if_not_installed("ggcheck", "0.0.5")
   skip_if_not_installed("ggplot2")
