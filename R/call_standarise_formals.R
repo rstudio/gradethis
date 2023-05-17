@@ -56,7 +56,7 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
   if (is.null(fn)) return(code)
 
   tryCatch(
-    rlang::call_match(code, fn),
+    suppressWarnings(rlang::call_match(code, fn)),
     error = function(e) {
       # Check that error is caused by an ambiguous partial argument, which we
       # are forced to identify from its error message. The \Q...\E regex meta
