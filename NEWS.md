@@ -3,6 +3,7 @@
 * `code_feedback()` now standardizes arguments to functions defined within student and solution code before comparing code. It also now successfully standardizes arguments passed through `...` by mapping functions into functions defined by setup code (#349).
 * `gradethis_equal()` now has a method for objects of class `list`. If two lists are not `identical()` and their lengths are the same, `gradethis_equal()` is applied to each element pairwise. This allows special logic for specific classes to be used for list elements of that class (#351).
 * `call_standardise_formals()` now applies `ggplot2::standardise_aes_names()` to all arguments of `ggplot2` functions. This means it no longer detects inconsequential differences between, e.g., `color =` and `colour =` (#353).
+* When an exercise without an `-error-check` chunk returns an error, the default feedback now includes both the error message and code feedback if `fail.hint = TRUE`. Previously the error message was only shown when `fail.hint = FALSE` and code feedback was only shown when `fail.hint = TRUE` (#352).
 
 # gradethis 0.2.12.9005
 
