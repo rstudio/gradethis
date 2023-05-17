@@ -204,7 +204,49 @@ test_that("Standardize call with passed ... args", {
   testthat::expect_equal(call_standardise_formals(d), xd)
 })
 
-test_that("code_feedback() stadardizes arguments", {
+test_that("Standardize call with ggplot2 functions", {
+  skip_if_not_installed("ggplot2")
+  withr::local_package("ggplot2")
+
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(ggplot(mpg, aes(displ, hwy, color = class)) + geom_point()),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy, colour = class)) +
+        geom_point()
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(ggplot(mpg, aes(displ, hwy)) + geom_point(color = "red")),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+        geom_point(colour = "red")
+    )
+  )
+
+  # Don't change `ggplot` arguments if it would lead to a name collision
+  expect_equal(
+    call_standardise_formals_recursive(
+      quote(
+        ggplot(mpg, aes(displ, hwy)) +
+          geom_point(color = "red", colour = "blue")
+      ),
+      include_defaults = FALSE
+    ),
+    quote(
+      ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) +
+        geom_point(color = "red", colour = "blue")
+    )
+  )
+})
+
+test_that("code_feedback() standardizes arguments", {
   expect_null(
     with_exercise(
       mock_this_exercise(
