@@ -66,14 +66,19 @@ gradethis_equal.list <- function(
     NextMethod()
   }
 
-  # First check if the lengths are the same
+  # First check with `identical()`, since it's fast
+  if (identical(x, y)) {
+    return(TRUE)
+  }
+
+  # Then check if the lengths are the same
   if (length(x) != length(y)) {
     return(FALSE)
   }
 
-  # Then check with `identical()`, since it's fast
-  if (identical(x, y)) {
-    return(TRUE)
+  # Then check if the attributes are the same
+  if (!identical(attributes(x), attributes(y))) {
+    return(FALSE)
   }
 
   # If `identical()` returned `FALSE`, map over each element individually,
