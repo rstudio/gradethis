@@ -88,7 +88,7 @@ call_standardise_keep_partials <- function(code, env = rlang::caller_env()) {
 call_standardise_formals_recursive <- function( # nolint
   code, env = rlang::current_env(), include_defaults = TRUE
 ) {
-  if (is.list(code)) {
+  if (rlang::is_bare_list(code)) {
     return(
       purrr::map(
         code,
