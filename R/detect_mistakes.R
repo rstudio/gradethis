@@ -34,7 +34,9 @@ detect_mistakes <- function(
     submitted_names <- rlang::names2(user)
   }
   if (is.call(solution)) {
-    solution <- call_standardise_formals(unpipe_all(solution), env = env)
+    solution <- solution %>%
+      unpipe_all() %>%
+      call_standardise_formals_recursive(env = env)
   }
 
   # If the code contains a bare value, then the user and solution value
@@ -77,7 +79,7 @@ detect_mistakes <- function(
   )
 
   # It is now safe to call call_standardise_formals on student code
-  user <- suppressWarnings(call_standardise_formals(user, env = env))
+  user <- suppressWarnings(call_standardise_formals_recursive(user, env = env))
   user_names <- real_names(user)
   solution_names <- real_names(solution) # original solution_names was modified above
 
