@@ -469,6 +469,7 @@ fail_if <- function(
 #'
 #' # Perfect!
 #' grader(mock_this_exercise(runif(n = 5), !!.solution_code))
+#'
 #' @inheritParams code_feedback
 #' @inheritParams graded
 #' @inheritDotParams graded
@@ -509,12 +510,14 @@ fail_if_code_feedback <- function(
     return()
   }
 
-  env_feedback <- get0(".envir_prep", env, ifnotfound = env)
+  user_env <- get0(".envir_result", env, ifnotfound = env)
+  solution_env <- get0(".envir_result", env, ifnotfound = env)
 
   feedback <- code_feedback(
     user_code = user_code,
     solution_code = solution_code,
-    env = env_feedback,
+    user_env = user_env,
+    solution_env = solution_env,
     allow_partial_matching = allow_partial_matching
   )
 

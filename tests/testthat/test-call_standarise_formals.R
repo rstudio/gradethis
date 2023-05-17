@@ -204,6 +204,46 @@ test_that("Standardize call with passed ... args", {
   testthat::expect_equal(call_standardise_formals(d), xd)
 })
 
+test_that("code_feedback() stadardizes arguments", {
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "foo(1, 2)",
+        .solution_code = "foo(bar = 1, baz = 2)",
+        setup_exercise = foo <- function(bar, baz) bar + baz
+      ),
+      code_feedback()
+    )
+  )
+
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "purrr::map(1:10, foo, 2)",
+        .solution_code = "purrr::map(1:10, foo, baz = 2)",
+        setup_exercise = foo <- function(bar, baz) bar + baz
+      ),
+      code_feedback()
+    )
+  )
+
+  expect_null(
+    with_exercise(
+      mock_this_exercise(
+        .user_code = "
+          foo <- function(bar, baz) bar + baz
+          purrr::map(1:10, foo, 2)
+        ",
+        .solution_code = "
+          foo <- function(bar, baz) bar + baz
+          purrr::map(1:10, foo, baz = 2)
+        "
+      ),
+      code_feedback()
+    )
+  )
+})
+
 test_that("When an invalid function passed (i.e., corrupt language object)", {
   user <- quote(1(a(1)))
 

@@ -273,16 +273,21 @@ detect_unnamed_surplus_argument <- function(
 }
 
 detect_missing_argument <- function(
-  submitted, solution_original, env, enclosing_call, enclosing_arg
+  submitted,
+  solution_original,
+  user_env,
+  solution_env,
+  enclosing_call,
+  enclosing_arg
 ) {
   explicit_user <- suppressWarnings(call_standardise_formals(
     unpipe_all(submitted),
-    env = env,
+    env = user_env,
     include_defaults = FALSE
   ))
   explicit_solution <- call_standardise_formals(
     unpipe_all(solution_original),
-    env = env,
+    env = solution_env,
     include_defaults = FALSE
   )
   explicit_user_names <- real_names(explicit_user)
@@ -328,7 +333,8 @@ detect_wrong_arguments <- function(
   solution_names,
   submitted,
   submitted_names,
-  env,
+  user_env,
+  solution_env,
   enclosing_call,
   enclosing_arg,
   allow_partial_matching
@@ -344,11 +350,12 @@ detect_wrong_arguments <- function(
     if (!identical(user[[name]], solution[[name]])) {
       arg_name <- ifelse(name %in% submitted_names, name, "")
       # recover the user submission as provided by only unpiping one level
-      user_submitted <- call_standardise_formals(unpipe(submitted), env = env)
+      user_submitted <- call_standardise_formals(unpipe(submitted), env = user_env)
       res <- detect_mistakes(
         user = user_submitted[[name]],
         solution = solution[[name]],
-        env = env,
+        user_env = user_env,
+        solution_env = solution_env,
         # If too verbose, use user[1]
         enclosing_call = submitted,
         # avoid naming first arguments in messages
@@ -413,7 +420,7 @@ detect_wrong_arguments <- function(
       if (!(name %in% submitted_names)) name <- ""
 
       # find user arg as submitted
-      user_args_submitted <- as.list(call_standardise_formals(unpipe(submitted), env = env))
+      user_args_submitted <- as.list(call_standardise_formals(unpipe(submitted), env = user_env))
       user_args_ignore <- which(names(user_args_submitted) %in% user_named_args_ignore_list)
       user_args_submitted <- user_args_submitted[-c(1, user_args_ignore)]
 
@@ -421,7 +428,8 @@ detect_wrong_arguments <- function(
         # unpipe only one level to detect mistakes in the argument as submitted
         user = user_args_submitted[[i]],
         solution = solution_args[[i]],
-        env = env,
+        user_env = user_env,
+        solution_env = solution_env,
         # If too verbose, use user[1]
         enclosing_call = submitted,
         enclosing_arg = name,
