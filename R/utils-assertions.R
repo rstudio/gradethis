@@ -35,7 +35,7 @@ is_infix <- function(x, infix_vals = .infixes, exact = FALSE) {
 
     call_text <- as.character(out[[1]])
 
-    is_known_infix <- any(call_text %in% infix_vals)
+    is_known_infix <- purrr::some(infix_vals, identical, call_text)
     if (exact) return(is_known_infix)
 
     is_known_infix || any(grepl("^%.*%$", call_text))
