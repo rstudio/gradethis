@@ -74,6 +74,16 @@ test_that("to_expr() accepts quosures or strings", {
   expect_error(to_expr(42))
 })
 
+test_that("code_feedback() works with S3 methods", {
+  expect_equal(
+    gradethis::code_feedback(
+      "mydata <- head(THIS_VARIABLE_DOES_NOT_EXIST)",
+      "mydata <- head(mtcars)"
+    ),
+    "In `head(THIS_VARIABLE_DOES_NOT_EXIST)`, I expected `mtcars` where you wrote `THIS_VARIABLE_DOES_NOT_EXIST`."
+  )
+})
+
 # maybe_code_feedback() ---------------------------------------------------
 
 test_that("maybe_code_feedback() formals match with code_feedback()", {
