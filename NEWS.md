@@ -1,3 +1,7 @@
+# gradethis (development version)
+
+* `grade_code()` no longer fails if `.envir_result` or `.envir_solution` is missing (#355).
+
 # gradethis 0.2.13
 
 * `code_feedback()` now standardizes arguments to functions defined within student and solution code before comparing code. It also now successfully standardizes arguments passed through `...` by mapping functions into functions defined by setup code (#349).
