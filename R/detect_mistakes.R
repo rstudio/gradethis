@@ -41,17 +41,36 @@ detect_mistakes <- function(
     user <- unpipe_all(user) # cannot standardize yet without risking error
     submitted_names <- rlang::names2(user)
   }
+
   if (is.call(solution)) {
-    solution <- solution %>%
-      unpipe_all() %>%
-      call_standardise_formals_recursive(env = solution_env)
+    solution <- unpipe_all(solution)
+
+    solution_with_defaults <- call_standardise_formals(
+      solution,
+      env = solution_env,
+      include_defaults = TRUE
+    )
+
+    solution <- call_standardise_formals(
+      solution,
+      env = solution_env,
+      include_defaults = FALSE
+    )
+  } else {
+    solution_with_defaults <- solution
   }
 
   # If the code contains a bare value, then the user and solution value
   # should be identical.
   # BUT WHAT IF ONE IS A CALL THAT EVALUATES TO THE VALUE OF THE OTHER?
   return_if_not_null(
-    detect_wrong_value(user, solution, submitted, enclosing_arg, enclosing_call)
+    detect_wrong_value(
+      user,
+      solution,
+      submitted,
+      enclosing_arg,
+      enclosing_call
+    )
   )
   # We can assume anything below here is a call
 
@@ -72,7 +91,11 @@ detect_mistakes <- function(
   # partially matches more than one formal.
   return_if_not_null(
     detect_name_problems(
-      user, solution, enclosing_arg, enclosing_call, allow_partial_matching
+      user,
+      solution_with_defaults,
+      enclosing_arg,
+      enclosing_call,
+      allow_partial_matching
     )
   )
 
@@ -92,10 +115,12 @@ detect_mistakes <- function(
   )
 
   # It is now safe to call call_standardise_formals on student code
-  user <- suppressWarnings(call_standardise_formals_recursive(user, env = user_env))
-  user_names <- real_names(user)
-  solution_names <- real_names(solution) # original solution_names was modified above
-
+  user_with_defaults <- suppressWarnings(
+    call_standardise_formals(user, user_env, include_defaults = TRUE)
+  )
+  user <- suppressWarnings(
+    call_standardise_formals(user, user_env, include_defaults = FALSE)
+  )
 
   # 6. Check that the user code does not contain any named arguments that do not
   #    appear in the solution code. Since both calls have been standardized, these
@@ -104,7 +129,12 @@ detect_mistakes <- function(
   #    passed to ...
   return_if_not_null(
     detect_surplus_dots_argument(
-      user, user_names, solution_names, enclosing_call, enclosing_arg
+      user,
+      solution_with_defaults,
+      user_env,
+      solution_env,
+      enclosing_call,
+      enclosing_arg
     )
   )
 
@@ -119,9 +149,9 @@ detect_mistakes <- function(
     detect_wrong_arguments(
       user,
       solution,
-      solution_names,
+      user_with_defaults,
+      solution_with_defaults,
       submitted,
-      submitted_names,
       user_env,
       solution_env,
       enclosing_call,

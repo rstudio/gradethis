@@ -42,13 +42,17 @@ detect_wrong_call <- function(user, solution, enclosing_arg, enclosing_call) {
 }
 
 detect_name_problems <- function(
-  user, solution, enclosing_arg, enclosing_call, allow_partial_matching
+  user,
+  solution_with_defaults,
+  enclosing_arg,
+  enclosing_call,
+  allow_partial_matching
 ) {
   user_args <- as.list(user)
   user_names <- real_names(user)
 
-  solution_args <- as.list(solution)
-  solution_names <- real_names(solution)
+  solution_args <- as.list(solution_with_defaults)
+  solution_names <- real_names(solution_with_defaults)
 
   ## If the user duplicates an argument name, ensure that the solution does as
   ## well. This should rarely happen, but might with map() for example.
@@ -309,8 +313,16 @@ detect_missing_argument <- function(
 }
 
 detect_surplus_dots_argument <- function(
-  user, user_names, solution_names, enclosing_call, enclosing_arg
+  user,
+  solution_with_defaults,
+  user_env,
+  solution_env,
+  enclosing_call,
+  enclosing_arg
 ) {
+  solution_names <- real_names(solution_with_defaults)
+  user_names <- real_names(user)
+
   unmatched_user_names <- setdiff(user_names, solution_names)
 
   if (length(unmatched_user_names) == 0) {
@@ -330,24 +342,29 @@ detect_surplus_dots_argument <- function(
 detect_wrong_arguments <- function(
   user,
   solution,
-  solution_names,
+  user_with_defaults,
+  solution_with_defaults,
   submitted,
-  submitted_names,
   user_env,
   solution_env,
   enclosing_call,
   enclosing_arg,
   allow_partial_matching
 ) {
-  user_args <- as.list(user)[-1]         # remove the call
-  solution_args <- as.list(solution)[-1] # remove the call
+  user_args <- as.list(user)[-1] # remove the call
+  solution_args <- as.list(solution)[-1]
+  user_args_with_defaults <- as.list(user_with_defaults)[-1]
+  solution_args_with_defaults <- as.list(solution_with_defaults)[-1]
+
+  submitted_names <- real_names(submitted)
+
   user_named_args_ignore_list <- c()
 
   # Check that every named argument in the solution matches every
   # correspondingly named argument in the user code. We know each
   # has a match because of Step 5.
-  for (name in solution_names) {
-    if (!identical(user[[name]], solution[[name]])) {
+  for (name in real_names(solution_args)) {
+    if (!identical(user_with_defaults[[name]], solution[[name]])) {
       arg_name <- ifelse(name %in% submitted_names, name, "")
       # recover the user submission as provided by only unpiping one level
       user_submitted <- call_standardise_formals(unpipe(submitted), env = user_env)
@@ -369,6 +386,8 @@ detect_wrong_arguments <- function(
     user_named_args_ignore_list <- c(user_named_args_ignore_list, name)
     user_args[[name]] <- NULL
     solution_args[[name]] <- NULL
+    user_args_with_defaults[[name]] <- NULL
+    solution_args_with_defaults[[name]] <- NULL
   }
 
 
@@ -376,15 +395,11 @@ detect_wrong_arguments <- function(
   # Pair them in the order that they occur, checking that each pair matches.
   # Check pairs in sequence and address unmatched arguments when you get to
   # them.
-  user_len <- length(user_args)
-  solution_len <- length(solution_args)
-
-  n <- max(user_len, solution_len)
+  n <- max(length(user_args), length(solution_args))
 
   for (i in seq_len(n)) {
     # if solution argument is unmatched due to no remaining user arguments
-    if (i > user_len) {
-      name <- rlang::names2(solution_args[i])
+    if (i > length(user_args_with_defaults)) {
 
       # if the missing argument is unnamed, pass the value
       if (is.null(name) || name == "") {
@@ -399,24 +414,34 @@ detect_wrong_arguments <- function(
           enclosing_arg = enclosing_arg
         )
       )
+    }
 
-      # if user argument is unmatched due to no remaining solution arguments
-    } else if (i > solution_len) {
-      arg_name <- rlang::names2(user_args[i])
-      if (!(arg_name %in% submitted_names)) arg_name <- ""
+    this_user_arg <- user_args[[i]]
+    name <- rlang::names2(user_args[i])
+
+    # if user argument is unmatched due to no remaining solution arguments
+    if (i > length(solution_args_with_defaults)) {
+      if (!(name %in% submitted_names)) name <- ""
+
       return(
         message_surplus_argument(
           submitted_call = user,
-          submitted = user_args[[i]],
-          submitted_name = arg_name,
+          submitted = this_user_arg,
+          submitted_name = name,
           enclosing_call = enclosing_call,
           enclosing_arg = enclosing_arg
         )
       )
+    }
 
-      # The user argument has a matching solution argument, are they identical?
-    } else if (!identical(user_args[[i]], solution_args[[i]])) {
-      name <- rlang::names2(user_args[i])
+    this_solution_arg <- if (name == "") {
+      solution_args[[i]]
+    } else {
+      solution_args_with_defaults[[name]]
+    }
+
+    # The user argument has a matching solution argument, are they identical?
+    if (!identical(this_user_arg, this_solution_arg)) {
       if (!(name %in% submitted_names)) name <- ""
 
       # find user arg as submitted
@@ -427,7 +452,7 @@ detect_wrong_arguments <- function(
       res <- detect_mistakes(
         # unpipe only one level to detect mistakes in the argument as submitted
         user = user_args_submitted[[i]],
-        solution = solution_args[[i]],
+        solution = this_solution_arg,
         user_env = user_env,
         solution_env = solution_env,
         # If too verbose, use user[1]
