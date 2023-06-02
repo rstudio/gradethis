@@ -3,6 +3,8 @@
 * `grade_code()` no longer fails if `.envir_result` or `.envir_solution` is missing (#355).
 * `detect_mistakes()` now keeps a version of standardized user and solution code with and without default arguments added. Missing arguments are detected by comparing the user code with defaults to the solution code without defaults. Surplus arguments are detected by comparing the user code without defaults to the solution code with defaults (#356).
     * This helps avoid spurious feedback when comparing code that involves S3 methods. If the user's code differs from the solution code in a way that means a different S3 method is used, the standardized code may gain different default arguments. This could result in feedback about missing or surplus arguments that were added by code standardization rather than by the student, which is not actionable feedback. By no longer looking for default arguments that are missing or surplus in the user code, we ensure that students receive more actionable feedback, likely about the incorrect argument that resulted in the use of a different S3 method.
+* The `gradethis_equal.list()` method is now only used if both `x` and `y` are bare lists (as defined by `rlang::is_bare_list()`) (#357).
+    * This fixes a bug where a list could be marked as equal to another object with the same contents but a different class, e.g. `list(a = 1, b = 2)` and `c(a = 1, b = 2)` or `data.frame(a = 1, b = 2)`.
 
 # gradethis 0.2.13
 
