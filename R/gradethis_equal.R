@@ -63,7 +63,7 @@ gradethis_equal.list <- function(
   # Only use this method for objects of class `list`,
   # not just anything that inherits list (like data frames)
   if (!rlang::is_bare_list(x) || !rlang::is_bare_list(y)) {
-    NextMethod()
+    return(NextMethod())
   }
 
   # First check with `identical()`, since it's fast
