@@ -157,8 +157,8 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     x_arg <- code$.x
     try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
 
-    call <- rlang::call2(f_arg, x_arg, !!!dot_args)
-    n_args <- 1
+    args <- append(dot_args, list(x_arg), after = 0)
+    n_mapped_args <- 1
   } else if (purrr::some(mappers$map2_functions, identical, fn)) {
     f_arg <- code$.f
 
@@ -168,8 +168,8 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     y_arg <- code$.y
     try(y_arg <- rlang::eval_bare(y_arg, env)[[1]], silent = TRUE)
 
-    call <- rlang::call2(f_arg, x_arg, y_arg, !!!dot_args)
-    n_args <- 2
+    args <- append(dot_args, list(x_arg, y_arg), after = 0)
+    n_mapped_args <- 2
   } else if (purrr::some(mappers$imap_functions, identical, fn)) {
     f_arg <- code$.f
 
@@ -179,16 +179,16 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     x_arg <- x_args[[1]]
     y_arg <- names(x_args)[[1]]
 
-    call <- rlang::call2(f_arg, x_arg, y_arg, !!!dot_args)
-    n_args <- 2
+    args <- append(dot_args, list(x_arg, y_arg), after = 0)
+    n_mapped_args <- 2
   } else if (purrr::some(mappers$lmap_functions, identical, fn)) {
     f_arg <- code$.f
 
     x_arg <- code$.x
     try(x_arg <- rlang::eval_bare(x_arg, env)[1], silent = TRUE)
 
-    call <- rlang::call2(f_arg, x_arg, !!!dot_args)
-    n_args <- 1
+    args <- append(dot_args, list(x_arg), after = 0)
+    n_mapped_args <- 1
   } else if (purrr::some(mappers$pmap_functions, identical, fn)) {
     f_arg <- code$.f
 
@@ -196,19 +196,27 @@ dot_args_standardise <- function(code, fn, mappers, dot_args, env) {
     try(l_arg <- rlang::eval_bare(l_arg, env), silent = TRUE)
     try(l_arg <- purrr::map(l_arg, 1), silent = TRUE)
 
-    call <- rlang::call2(f_arg, !!!l_arg, !!!dot_args)
-    n_args <- length(l_arg)
+    args <- append(dot_args, l_arg, after = 0)
+    n_mapped_args <- length(l_arg)
   } else if (purrr::some(mappers$apply_functions, identical, fn)) {
     f_arg <- code$FUN
 
     x_arg <- code$X
     try(x_arg <- rlang::eval_bare(x_arg, env)[[1]], silent = TRUE)
 
-    call <- rlang::call2(f_arg, x_arg, !!!dot_args)
-    n_args <- 1
+    args <- append(dot_args, list(x_arg), after = 0)
+    n_mapped_args <- 1
   }
 
-  return(as.list(call_standardise_formals(call, env))[-seq_len(n_args + 1)])
+  tryCatch(
+    {
+      call <- rlang::call2(f_arg, !!!args)
+      as.list(call_standardise_formals(call, env))[-seq_len(n_mapped_args + 1)]
+    },
+    error = function(e) {
+      dot_args
+    }
+  )
 }
 
 mapping_function_list <- function() {

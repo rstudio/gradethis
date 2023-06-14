@@ -155,6 +155,21 @@ test_that("Standardize call with passed ... args", {
 
   expect_equal(
     call_standardise_formals(quote(
+      purrr::map2(list(1:2, 1:3), list(1:2, 1:3), mean, TRUE)
+    )),
+    quote(
+      purrr::map2(
+        .x = list(1:2, 1:3),
+        .y = list(1:2, 1:3),
+        .f = mean,
+        na.rm = TRUE,
+        .progress = FALSE
+      )
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
       purrr::imap(c("0" = 1), mean, TRUE)
     )),
     quote(
@@ -180,6 +195,20 @@ test_that("Standardize call with passed ... args", {
     )
   )
 
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::pmap(list(list(1:2, 1:3), list(1:2, 1:3)), mean, TRUE)
+    )),
+    quote(
+      purrr::pmap(
+        .l = list(list(1:2, 1:3), list(1:2, 1:3)),
+        .f = mean,
+        na.rm = TRUE,
+        .progress = FALSE
+      )
+    )
+  )
+
   a <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, TRUE))
   b <- quote(vapply(list(1:3, 4:6), mean, numeric(1), trim = 0, TRUE))
   c <- quote(vapply(list(1:3, 4:6), mean, numeric(1), 0, na.rm = TRUE))
@@ -202,6 +231,30 @@ test_that("Standardize call with passed ... args", {
   testthat::expect_equal(call_standardise_formals(b), xd)
   testthat::expect_equal(call_standardise_formals(c), xd)
   testthat::expect_equal(call_standardise_formals(d), xd)
+})
+
+test_that("Standardize map() when .f is an index", {
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(list(c(1, 2), c("a", "b")), 2)
+    )),
+    quote(
+      purrr::map(.x = list(c(1, 2), c("a", "b")), .f = 2, .progress = FALSE)
+    )
+  )
+
+  expect_equal(
+    call_standardise_formals(quote(
+      purrr::map(list(c(a = 1, b = 2), c(a = "a", b = "b")), "b")
+    )),
+    quote(
+      purrr::map(
+        .x = list(c(a = 1, b = 2), c(a = "a", b = "b")),
+        .f = "b",
+        .progress = FALSE
+      )
+    )
+  )
 })
 
 test_that("Standardize call with ggplot2 functions", {
