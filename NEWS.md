@@ -1,4 +1,4 @@
-# gradethis (development version)
+# gradethis 0.2.14
 
 * `grade_code()` no longer fails if `.envir_result` or `.envir_solution` is missing (#355).
 * `detect_mistakes()` now keeps a version of standardized user and solution code with and without default arguments added. Missing arguments are detected by comparing the user code with defaults to the solution code without defaults. Surplus arguments are detected by comparing the user code without defaults to the solution code with defaults (#356).
