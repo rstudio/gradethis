@@ -21,13 +21,13 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alexander Rossell Hayes \email{alex.rossellhayes@posit.co} (\href{https://orcid.org/0000-0001-9412-0457}{ORCID})
+\strong{Maintainer}: Garrick Aden-Buie \email{garrick@posit.co} (\href{https://orcid.org/0000-0002-7111-0077}{ORCID})
 
 Authors:
 \itemize{
-  \item Garrick Aden-Buie \email{garrick@posit.co} (\href{https://orcid.org/0000-0002-7111-0077}{ORCID})
   \item Daniel Chen \email{daniel.chen@posit.co} (\href{https://orcid.org/0000-0003-3857-1741}{ORCID})
   \item Garrett Grolemund \email{garrett@posit.co} (\href{https://orcid.org/0000-0002-7765-6011}{ORCID}) [conceptor]
+  \item Alexander Rossell Hayes \email{alex.rossellhayes@posit.co} (\href{https://orcid.org/0000-0001-9412-0457}{ORCID})
   \item Barret Schloerke \email{barret@posit.co} (\href{https://orcid.org/0000-0001-9986-114X}{ORCID})
 }
 
