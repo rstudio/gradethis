@@ -48,7 +48,7 @@ Use \code{exclude_envir = NULL} to include all objects.}
 \item For \code{user_object_exists()} and \code{solution_object_exists()}, \code{\link[=exists]{exists()}}
 \item For \code{user_object_get()} and \code{solution_object_get()}, \code{\link[=get]{get()}}
 \item For \code{user_object_list()} and \code{solution_object_list()},
-\code{\link[utils:ls_str]{ls.str()}}
+\code{\link[utils:ls.str]{ls.str()}}
 }}
 
 \item{check_env}{The \link{environment} from which to retrieve
