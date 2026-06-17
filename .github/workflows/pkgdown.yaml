@@ -32,29 +32,14 @@ jobs:
             connect
             website
 
-      - name: Build Site
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
-        run: |
-          pkgdown::build_site(new_process = FALSE)
 
-      - name: Set environment variable $GIT_BRANCH_NAME
-        id: git-branch-name
-        uses: EthanSK/git-branch-name-action@v1
-
-      - name: Deploy to Netlify
-        if: github.event_name == 'push'
-        id: netlify-deploy
-        uses: nwtgck/actions-netlify@v1.1
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          publish-dir: 'reference'
-          production-branch: main
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message:
-            'Deploy from GHA: ${{ github.event.head_commit.message }} (${{ github.sha }})'
-          enable-pull-request-comment: false
-          enable-commit-comment: false
-          enable-commit-status: true
-          alias: deploy-preview-${{ env.GIT_BRANCH_NAME }}
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          clean: false
+          branch: gh-pages
+          folder: docs

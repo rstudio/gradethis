@@ -28,7 +28,7 @@ is found and used for \code{solution_code}. You may also use \code{.solution_cod
 there is only one solution.}
 
 \item{...}{
-  Arguments passed on to \code{\link[=graded]{graded}}
+  Arguments passed on to \code{\link{graded}}
   \describe{
     \item{\code{correct}}{A logical value of whether or not the checked code is correct.}
     \item{\code{type,location}}{The \code{type} and \code{location} of the feedback object
@@ -40,6 +40,9 @@ details.
 "custom".
 
 \code{location} may be one of "append", "prepend", or "replace".}
+    \item{\code{praise}}{Include a random praising phrase with \code{\link[=random_praise]{random_praise()}}? The
+default value of \code{praise} can be set using \code{\link[=gradethis_setup]{gradethis_setup()}} or the
+\code{gradethis.pass.praise} option.}
   }}
 
 \item{env}{Environment used to standardize formals of the user and solution code.
