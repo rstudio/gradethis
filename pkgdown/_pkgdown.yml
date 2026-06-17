@@ -1,6 +1,6 @@
 destination: reference
 
-url: https://pkgs.rstudio.com/gradethis
+url: https://rstudio.github.io/gradethis
 
 template:
   package: tidytemplate
