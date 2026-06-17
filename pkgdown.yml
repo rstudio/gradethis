@@ -1,10 +1,10 @@
-pandoc: 2.7.3
-pkgdown: 1.6.1.9001
-pkgdown_sha: 672b8fc2d10d98ed9bab242c2af56662e5983e9b
+pandoc: 3.8.3
+pkgdown: 2.2.0
+pkgdown_sha: ~
 articles:
   gradethis: gradethis.html
-last_built: 2021-03-26T16:49Z
+  multiple_solutions: multiple_solutions.html
+last_built: 2026-06-17T21:51Z
 urls:
-  reference: https://rstudio-education.github.io/gradethis/reference
-  article: https://rstudio-education.github.io/gradethis/articles
-
+  reference: https://rstudio.github.io/gradethis/reference
+  article: https://rstudio.github.io/gradethis/articles

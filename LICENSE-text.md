@@ -1,0 +1,4 @@
+# License
+
+    YEAR: 2021
+    COPYRIGHT HOLDER: Posit Software, PBC
