@@ -169,6 +169,6 @@ grade_code(grader_args = list(user_quo = y, solution_quo = z))
 #>         .user_code = user_code)
 #>     legacy_graded(correct = FALSE, message = message)
 #> }
-#> <bytecode: 0x557cef7c8820>
-#> <environment: 0x557cef74e6b0>
+#> <bytecode: 0x560230447e98>
+#> <environment: 0x560230433760>
 ```

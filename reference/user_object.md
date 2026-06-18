@@ -138,7 +138,7 @@ with_exercise(exercise, user_object_exists("y", mode = "character"))
 with_exercise(exercise, user_object_get("z", mode = "function"))
 #> function () 
 #> print("Hello World!")
-#> <environment: 0x557cf2cec660>
+#> <environment: 0x5602358e05c0>
 
 # By default, `user_object_list()` ignores objects created by setup chunks ----
 
