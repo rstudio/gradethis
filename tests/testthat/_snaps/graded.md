@@ -3,7 +3,8 @@
     Code
       grade <- expect_grade_this(pass_if(~TRUE), user_code = "1", solution_code = "2",
       is_correct = logical(0))
-    Warning <simpleWarning>
+    Condition
+      Warning in `assert_gradethis_condition_type_is_value()`:
       The `cond` argument to `pass_if()` does not accept functions or formulas when used inside `grade_this()`.
 
 ---
@@ -11,7 +12,8 @@
     Code
       grade <- expect_grade_this(fail_if(~TRUE), user_code = "1", solution_code = "2",
       is_correct = logical(0))
-    Warning <simpleWarning>
+    Condition
+      Warning in `assert_gradethis_condition_type_is_value()`:
       The `cond` argument to `fail_if()` does not accept functions or formulas when used inside `grade_this()`.
 
 ---
@@ -19,7 +21,8 @@
     Code
       grade <- expect_grade_this(pass_if(all.equal(.result, .solution)), user_code = "1",
       solution_code = "2", is_correct = logical(0))
-    Warning <simpleWarning>
+    Condition
+      Warning in `assert_gradethis_condition_is_logical()`:
       The `cond` argument to `pass_if()` must be coercible to logical, not an object of class <character>.
 
 ---
@@ -27,7 +30,8 @@
     Code
       grade <- expect_grade_this(fail_if(!all.equal(.result, .solution)), user_code = "1",
       solution_code = "2", is_correct = logical(0))
-    Warning <simpleWarning>
+    Condition
+      Warning in `assert_gradethis_condition_does_not_error()`:
       The `cond` argument to `fail_if()` produced an error:
         Error in !all.equal(.result, .solution) : invalid argument type
 
