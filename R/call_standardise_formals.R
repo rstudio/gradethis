@@ -313,7 +313,7 @@ call_standardise_ggplot_arguments <- function(code) {
 
 is_ggplot2_function <- function(fn) {
   identical(
-    try(getNamespaceInfo(environment(fn), "spec")[["name"]], silent = TRUE),
+    try(getNamespaceInfo(topenv(environment(fn)), "spec")[["name"]], silent = TRUE),
     "ggplot2"
   )
 }

@@ -471,7 +471,8 @@ test_that("give_code_feedback() catches testthat errors", {
       is_correct = FALSE,
       msg = NULL
     )$message,
-    "\\.result.+has type.+I expected"
+    "\\.result[\\s\\S]+I expected",
+    perl = TRUE
   )
 
   expect_match(
@@ -485,7 +486,8 @@ test_that("give_code_feedback() catches testthat errors", {
       is_correct = FALSE,
       msg = NULL
     )$message,
-    "\\.result.+has type.+I expected"
+    "\\.result[\\s\\S]+I expected",
+    perl = TRUE
   )
 })
 

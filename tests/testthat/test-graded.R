@@ -459,7 +459,7 @@ test_that("errors in fail_if_error() become fail() grades", {
       pass("Good job!")
     })(ex),
     is_correct = FALSE,
-    msg = "is not TRUE"
+    msg = "to be TRUE"
   )
 
   expect_graded(
@@ -481,7 +481,7 @@ test_that("errors in fail_if_error() become fail() grades", {
 
 test_that("extra phrases aren't duplicated", {
   local_edition(2)
-  local_mock(
+  local_mocked_bindings(
     random_encouragement = function() "RANDOM ENCOURAGEMENT.",
     random_praise = function() "RANDOM PRAISE."
   )
